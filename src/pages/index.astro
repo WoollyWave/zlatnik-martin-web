@@ -1,7 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Button from '../components/Button.astro';
-import ImagePlaceholder from '../components/ImagePlaceholder.astro';
 import Testimonial from '../components/Testimonial.astro';
 import CTA from '../components/CTA.astro';
 
@@ -40,6 +39,9 @@ const portfolioItems = [
     description: 'Prsten s australským opálem zasazeným do ručně tepaného zlata. Navržen podle příběhu klientky.',
     href: '/tvorba/zlaty-prsten-s-opalem',
     label: 'Zakázka 01',
+    image: '/images/homepage--portfolio-1--prsten-tahitska-perla.webp',
+    image2x: '/images/homepage--portfolio-1--prsten-tahitska-perla@2x.webp',
+    alt: 'Zlatý prsten s tahitskou perlou',
   },
   {
     title: 'Stříbrná sada s granáty',
@@ -47,6 +49,9 @@ const portfolioItems = [
     description: 'Náušnice a prsten s českými granáty v minimalistickém moderním designu.',
     href: '/tvorba/stribrna-sada-s-granaty',
     label: 'Zakázka 02',
+    image: '/images/homepage--portfolio-2--privesek-citrin.webp',
+    image2x: '/images/homepage--portfolio-2--privesek-citrin@2x.webp',
+    alt: 'Stříbrný přívěsek s citrínem',
   },
   {
     title: 'Snubní prsteny na míru',
@@ -54,6 +59,9 @@ const portfolioItems = [
     description: 'Pár snubních prstenů s ručně rytým vzorem. Každý je originál.',
     href: '/tvorba/snubni-prsteny-na-miru',
     label: 'Zakázka 03',
+    image: '/images/homepage--portfolio-3--snubni-prsteny-zlate.webp',
+    image2x: '/images/homepage--portfolio-3--snubni-prsteny-zlate@2x.webp',
+    alt: 'Zlaté snubní prsteny na míru',
   },
 ];
 
@@ -115,8 +123,24 @@ const processSteps = [
 
       <!-- Asymmetric photo grid -->
       <div class="grid grid-cols-1 md:grid-cols-[1.15fr_0.85fr] gap-4 mt-12" data-animate="fade" data-animate-delay="0.2">
-        <ImagePlaceholder aspect="4/3" alt="Šperk od Martina Ševra — ruční práce" class="w-full" />
-        <ImagePlaceholder aspect="4/3" alt="Detail zlatnické práce v dílně" class="w-full" />
+        <img
+          src="/images/homepage--hero--ametystovy-cluster-na-ruce.webp"
+          srcset="/images/homepage--hero--ametystovy-cluster-na-ruce.webp 1x, /images/homepage--hero--ametystovy-cluster-na-ruce@2x.webp 2x"
+          width="1200" height="900"
+          alt="Ametystový prsten na ruce — ruční práce Martina Ševra"
+          loading="eager"
+          decoding="async"
+          class="w-full h-full object-cover"
+        />
+        <img
+          src="/images/homepage--portfolio-1--prsten-tahitska-perla.webp"
+          srcset="/images/homepage--portfolio-1--prsten-tahitska-perla.webp 1x, /images/homepage--portfolio-1--prsten-tahitska-perla@2x.webp 2x"
+          width="800" height="600"
+          alt="Zlatý prsten s tahitskou perlou"
+          loading="eager"
+          decoding="async"
+          class="w-full h-full object-cover"
+        />
       </div>
     </div>
   </section>
@@ -155,7 +179,15 @@ const processSteps = [
         {portfolioItems.map((item, i) => (
           <a href={item.href} class="group grid grid-cols-1 md:grid-cols-[1.15fr_0.85fr] gap-4 items-end" data-animate="up">
             <div class={`relative overflow-hidden ${i % 2 === 1 ? 'md:order-2' : ''}`}>
-              <ImagePlaceholder aspect="4/3" alt={item.title} class="w-full" />
+              <img
+                src={item.image}
+                srcset={`${item.image} 1x, ${item.image2x} 2x`}
+                width="800" height="600"
+                alt={item.alt}
+                loading="lazy"
+                decoding="async"
+                class="w-full h-full object-cover group-hover:opacity-90 transition-opacity duration-300"
+              />
               <div class="absolute bottom-4 right-4 bg-bg-primary/90 backdrop-blur-sm px-4 py-2">
                 <span class="text-[0.6875rem] uppercase tracking-[0.12em] font-medium text-gold-on-light">{item.label}</span>
               </div>
@@ -215,7 +247,15 @@ const processSteps = [
                 </p>
               </div>
               <div>
-                <ImagePlaceholder aspect="4/3" alt="Zlatnická dílna — detail ruční práce" class="w-full" />
+                <img
+                  src="/images/homepage--o-dilne-preview--ruce-bruseni.webp"
+                  srcset="/images/homepage--o-dilne-preview--ruce-bruseni.webp 1x, /images/homepage--o-dilne-preview--ruce-bruseni@2x.webp 2x"
+                  width="800" height="600"
+                  alt="Detail broušení šperku v dílně"
+                  loading="lazy"
+                  decoding="async"
+                  class="w-full h-full object-cover"
+                />
               </div>
             </div>
           </div>
@@ -339,7 +379,15 @@ const processSteps = [
               </div>
             </div>
             <div>
-              <ImagePlaceholder aspect="4/3" alt="Zlatnická dílna Martina Ševra" class="w-full" />
+              <img
+                src="/images/homepage--o-dilne-preview--ruce-bruseni.webp"
+                srcset="/images/homepage--o-dilne-preview--ruce-bruseni.webp 1x, /images/homepage--o-dilne-preview--ruce-bruseni@2x.webp 2x"
+                width="800" height="600"
+                alt="Ruční práce v zlatnické dílně"
+                loading="lazy"
+                decoding="async"
+                class="w-full h-full object-cover"
+              />
             </div>
           </div>
         </div>

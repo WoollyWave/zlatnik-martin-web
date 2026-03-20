@@ -1,7 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import ContactForm from '../components/ContactForm.astro';
-import ImagePlaceholder from '../components/ImagePlaceholder.astro';
 
 const jsonLd = {
   "@context": "https://schema.org",
@@ -118,7 +117,15 @@ const contactMethods = [
             <ContactForm />
           </div>
           <div class="hidden lg:block">
-            <ImagePlaceholder aspect="3/4" alt="Zlatnická dílna — pracovní prostor" class="w-full sticky top-24" />
+            <img
+              src="/images/kontakt--formular-foto--naramek-na-zapesti.webp"
+              srcset="/images/kontakt--formular-foto--naramek-na-zapesti.webp 1x, /images/kontakt--formular-foto--naramek-na-zapesti@2x.webp 2x"
+              width="600" height="800"
+              alt="Zlatý náramek na zápěstí"
+              loading="lazy"
+              decoding="async"
+              class="w-full h-full object-cover sticky top-24"
+            />
           </div>
         </div>
 

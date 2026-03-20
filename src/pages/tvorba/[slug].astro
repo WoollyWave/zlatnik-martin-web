@@ -25,7 +25,29 @@ const { item } = Astro.props;
 >
   <!-- ====== HERO PHOTO ====== -->
   <section>
-    <ImagePlaceholder aspect="16/9" alt={item.title} class="w-full max-h-[70vh] object-cover" />
+    {item.heroImage ? (
+      <img
+        src={item.heroImage}
+        srcset={`${item.heroImage} 1x, ${item.heroImage2x} 2x`}
+        width="1920" height="1080"
+        alt={item.alt}
+        loading="eager"
+        decoding="async"
+        class="w-full max-h-[70vh] object-cover"
+      />
+    ) : item.image ? (
+      <img
+        src={item.image}
+        srcset={`${item.image} 1x, ${item.image2x} 2x`}
+        width="800" height="600"
+        alt={item.alt}
+        loading="eager"
+        decoding="async"
+        class="w-full max-h-[70vh] object-cover"
+      />
+    ) : (
+      <ImagePlaceholder aspect="16/9" alt={item.title} class="w-full max-h-[70vh] object-cover" />
+    )}
   </section>
 
   <!-- ====== INFO — Section Label ====== -->
@@ -78,18 +100,37 @@ const { item } = Astro.props;
 
         <!-- Gallery -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6" data-animate="up">
-          <div>
-            <ImagePlaceholder aspect="4/3" alt={`${item.title} — návrh`} class="w-full" />
-            <p class="mt-3 text-[0.8125rem] text-text-muted">Návrh</p>
-          </div>
-          <div>
-            <ImagePlaceholder aspect="4/3" alt={`${item.title} — výroba`} class="w-full" />
-            <p class="mt-3 text-[0.8125rem] text-text-muted">Výroba</p>
-          </div>
-          <div>
-            <ImagePlaceholder aspect="4/3" alt={`${item.title} — hotový kus`} class="w-full" />
-            <p class="mt-3 text-[0.8125rem] text-text-muted">Hotový kus</p>
-          </div>
+          {item.processImages && item.processImages.length > 0 ? (
+            item.processImages.map((img) => (
+              <div>
+                <img
+                  src={img.src}
+                  srcset={`${img.src} 1x, ${img.src2x} 2x`}
+                  width="800" height="600"
+                  alt={img.alt}
+                  loading="lazy"
+                  decoding="async"
+                  class="w-full h-full object-cover"
+                />
+                <p class="mt-3 text-[0.8125rem] text-text-muted">{img.alt}</p>
+              </div>
+            ))
+          ) : (
+            <>
+              <div>
+                <ImagePlaceholder aspect="4/3" alt={`${item.title} — návrh`} class="w-full" />
+                <p class="mt-3 text-[0.8125rem] text-text-muted">Návrh</p>
+              </div>
+              <div>
+                <ImagePlaceholder aspect="4/3" alt={`${item.title} — výroba`} class="w-full" />
+                <p class="mt-3 text-[0.8125rem] text-text-muted">Výroba</p>
+              </div>
+              <div>
+                <ImagePlaceholder aspect="4/3" alt={`${item.title} — hotový kus`} class="w-full" />
+                <p class="mt-3 text-[0.8125rem] text-text-muted">Hotový kus</p>
+              </div>
+            </>
+          )}
         </div>
 
       </div>

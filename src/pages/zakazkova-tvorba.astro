@@ -1,7 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Button from '../components/Button.astro';
-import ImagePlaceholder from '../components/ImagePlaceholder.astro';
 import FAQ from '../components/FAQ.astro';
 import CTA from '../components/CTA.astro';
 
@@ -10,21 +9,33 @@ const processSteps = [
     number: '01',
     title: 'Konzultace',
     description: 'Setkáme se v dílně nebo si zavoláme. Ukážete mi svou představu — skicu, fotografii, nebo jen slovy. Probereme materiál, časový rámec i rozpočet.',
+    image: '/images/zakazkova--proces-01--3d-cad-navrh.webp',
+    image2x: '/images/zakazkova--proces-01--3d-cad-navrh@2x.webp',
+    alt: '3D CAD návrh šperku',
   },
   {
     number: '02',
     title: 'Návrh',
     description: 'Připravím návrh vašeho šperku. U složitějších kusů vytvořím 3D model nebo voskový prototyp. Nic nevznikne, dokud nebudete souhlasit.',
+    image: '/images/zakazkova--proces-02--3d-cad-perspektiva.webp',
+    image2x: '/images/zakazkova--proces-02--3d-cad-perspektiva@2x.webp',
+    alt: '3D model prstenu — perspektiva',
   },
   {
     number: '03',
     title: 'Výroba',
     description: 'Každý šperk vyrábím ručně ve své dílně. Fotím každý krok — budete vědět, jak váš šperk vzniká. Žádná sériová výroba, žádné kompromisy.',
+    image: '/images/zakazkova--proces-03--snubaky-v-ruce-vyroba.webp',
+    image2x: '/images/zakazkova--proces-03--snubaky-v-ruce-vyroba@2x.webp',
+    alt: 'Ruční výroba snubních prstenů',
   },
   {
     number: '04',
     title: 'Předání',
     description: 'Šperk si můžete vyzvednout osobně v dílně nebo ho pošlu pojištěný zásilkou. Ke každému kusu dostanete certifikát pravosti.',
+    image: '/images/zakazkova--proces-04--privesek-J-na-krku-predani.webp',
+    image2x: '/images/zakazkova--proces-04--privesek-J-na-krku-predani@2x.webp',
+    alt: 'Hotový přívěsek na krku — předání klientce',
   },
 ];
 
@@ -90,7 +101,15 @@ const faqItems = [
 
   <!-- ====== HERO ====== -->
   <section class="relative bg-bg-primary">
-    <ImagePlaceholder aspect="16/9" alt="Zakázková výroba šperků" class="w-full max-h-[75vh] object-cover" />
+    <img
+      src="/images/zakazkova--hero--privesek-quartz-na-krku.webp"
+      srcset="/images/zakazkova--hero--privesek-quartz-na-krku.webp 1x, /images/zakazkova--hero--privesek-quartz-na-krku@2x.webp 2x"
+      width="1920" height="1080"
+      alt="Křišťálový přívěsek na krku — zakázková výroba"
+      loading="eager"
+      decoding="async"
+      class="w-full max-h-[75vh] object-cover"
+    />
     <div class="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-bg-primary/60 flex items-end">
       <div class="max-w-[1400px] mx-auto px-8 pb-12 md:pb-20 w-full">
         <h1 class="text-text-primary max-w-lg">Váš šperk na míru</h1>
@@ -125,7 +144,15 @@ const faqItems = [
               <h3 class="mt-3">{step.title}</h3>
               <p class="mt-3 text-text-secondary text-[1.0625rem] leading-relaxed">{step.description}</p>
               <div class="mt-6">
-                <ImagePlaceholder aspect="4/3" alt={`${step.title} — proces výroby šperku`} class="w-full" />
+                <img
+                  src={step.image}
+                  srcset={`${step.image} 1x, ${step.image2x} 2x`}
+                  width="800" height="600"
+                  alt={step.alt}
+                  loading="lazy"
+                  decoding="async"
+                  class="w-full h-full object-cover"
+                />
               </div>
             </div>
           ))}
@@ -154,7 +181,15 @@ const faqItems = [
         <!-- Content -->
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-start" data-animate="up">
           <div>
-            <ImagePlaceholder aspect="4/3" alt="Materiály — zlato, stříbro, kameny" class="w-full" />
+            <img
+              src="/images/zakazkova--materialy--opal-na-dreve.webp"
+              srcset="/images/zakazkova--materialy--opal-na-dreve.webp 1x, /images/zakazkova--materialy--opal-na-dreve@2x.webp 2x"
+              width="800" height="600"
+              alt="Opál na dřevěné podložce — syrový materiál"
+              loading="lazy"
+              decoding="async"
+              class="w-full h-full object-cover"
+            />
           </div>
           <div class="space-y-8">
             {materials.map((mat) => (
@@ -206,7 +241,16 @@ const faqItems = [
   <!-- ====== FULLWIDTH PARALLAX PHOTO ====== -->
   <section class="relative h-[70vh] overflow-hidden">
     <div class="absolute inset-0">
-      <ImagePlaceholder aspect="16/9" alt="Detailní záběr zlatnické práce" class="w-full h-full object-cover" style="position: fixed; top: 0; left: 0; width: 100%; height: 100vh; z-index: -1;" />
+      <img
+        src="/images/zakazkova--parallax--tricolor-prsten-na-kovadline.webp"
+        srcset="/images/zakazkova--parallax--tricolor-prsten-na-kovadline.webp 1x, /images/zakazkova--parallax--tricolor-prsten-na-kovadline@2x.webp 2x"
+        width="1920" height="1080"
+        alt="Tricolor prsten na kovadlině — detail výroby"
+        loading="lazy"
+        decoding="async"
+        class="w-full h-full object-cover"
+        style="position: fixed; top: 0; left: 0; width: 100%; height: 100vh; z-index: -1;"
+      />
     </div>
   </section>
 

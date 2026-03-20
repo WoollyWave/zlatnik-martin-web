@@ -1,6 +1,5 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import ImagePlaceholder from '../components/ImagePlaceholder.astro';
 import FilterPills from '../components/FilterPills.astro';
 import Button from '../components/Button.astro';
 import CTA from '../components/CTA.astro';
@@ -56,10 +55,14 @@ const filters = ['Vše', 'Zlato', 'Stříbro', 'Zakázky', 'Kameny'];
         {portfolioItems.map((item, i) => (
           <a href={`/tvorba/${item.slug}`} class="group grid grid-cols-1 md:grid-cols-5 gap-8 md:gap-12 items-center" data-animate="up">
             <div class={`md:col-span-3 overflow-hidden relative ${i % 2 === 1 ? 'md:order-2' : ''}`}>
-              <ImagePlaceholder
-                aspect="4/3"
-                alt={item.title}
-                class="w-full group-hover:opacity-90 transition-opacity duration-300"
+              <img
+                src={item.image}
+                srcset={`${item.image} 1x, ${item.image2x} 2x`}
+                width="800" height="600"
+                alt={item.alt}
+                loading="lazy"
+                decoding="async"
+                class="w-full h-full object-cover group-hover:opacity-90 transition-opacity duration-300"
               />
               <div class="absolute bottom-4 right-4 bg-bg-primary/90 backdrop-blur-sm px-4 py-2">
                 <span class="text-[0.6875rem] uppercase tracking-[0.12em] font-medium text-gold-on-light">Zakázka {String(i + 1).padStart(2, '0')}</span>

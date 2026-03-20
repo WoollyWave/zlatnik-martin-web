@@ -1,7 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Button from '../components/Button.astro';
-import ImagePlaceholder from '../components/ImagePlaceholder.astro';
 import CTA from '../components/CTA.astro';
 ---
 
@@ -63,7 +62,15 @@ import CTA from '../components/CTA.astro';
             </p>
           </div>
           <div>
-            <ImagePlaceholder aspect="3/4" alt="Martin Ševr v dílně" class="w-full" />
+            <img
+              src="/images/o-dilne--portret--martin-lvi-prsten-v-dilne.webp"
+              srcset="/images/o-dilne--portret--martin-lvi-prsten-v-dilne.webp 1x, /images/o-dilne--portret--martin-lvi-prsten-v-dilne@2x.webp 2x"
+              width="600" height="800"
+              alt="Martin Ševr v zlatnické dílně"
+              loading="lazy"
+              decoding="async"
+              class="w-full h-full object-cover"
+            />
           </div>
         </div>
 
@@ -87,10 +94,34 @@ import CTA from '../components/CTA.astro';
         <!-- Asymmetric gallery -->
         <div data-animate="up">
           <div class="grid grid-cols-1 md:grid-cols-[1.15fr_0.85fr] gap-4 mb-4">
-            <ImagePlaceholder aspect="4/3" alt="Pohled do zlatnické dílny — nástroje" class="w-full" />
-            <ImagePlaceholder aspect="4/3" alt="Detail ruční práce se šperkem" class="w-full" />
+            <img
+              src="/images/o-dilne--galerie-1--ruka-retizek-stroj.webp"
+              srcset="/images/o-dilne--galerie-1--ruka-retizek-stroj.webp 1x, /images/o-dilne--galerie-1--ruka-retizek-stroj@2x.webp 2x"
+              width="800" height="600"
+              alt="Ruční výroba řetízku v dílně"
+              loading="lazy"
+              decoding="async"
+              class="w-full h-full object-cover"
+            />
+            <img
+              src="/images/o-dilne--galerie-2--erbovni-pecet-zlato.webp"
+              srcset="/images/o-dilne--galerie-2--erbovni-pecet-zlato.webp 1x, /images/o-dilne--galerie-2--erbovni-pecet-zlato@2x.webp 2x"
+              width="800" height="600"
+              alt="Zlatá erbovní pečeť — detail"
+              loading="lazy"
+              decoding="async"
+              class="w-full h-full object-cover"
+            />
           </div>
-          <ImagePlaceholder aspect="16/9" alt="Hotový šperk na pracovním stole" class="w-full" />
+          <img
+            src="/images/o-dilne--galerie-3--snubaky-na-dreve-stul.webp"
+            srcset="/images/o-dilne--galerie-3--snubaky-na-dreve-stul.webp 1x, /images/o-dilne--galerie-3--snubaky-na-dreve-stul@2x.webp 2x"
+            width="800" height="600"
+            alt="Snubní prsteny na dřevěném stole"
+            loading="lazy"
+            decoding="async"
+            class="w-full h-full object-cover"
+          />
         </div>
 
       </div>
@@ -122,7 +153,15 @@ import CTA from '../components/CTA.astro';
             </p>
           </div>
           <div>
-            <ImagePlaceholder aspect="4/3" alt="Certifikáty a puncovní značky" class="w-full" />
+            <img
+              src="/images/o-dilne--certifikaty--cad-detail-preciznost.webp"
+              srcset="/images/o-dilne--certifikaty--cad-detail-preciznost.webp 1x, /images/o-dilne--certifikaty--cad-detail-preciznost@2x.webp 2x"
+              width="800" height="600"
+              alt="CAD detail — preciznost zlatnické práce"
+              loading="lazy"
+              decoding="async"
+              class="w-full h-full object-cover"
+            />
           </div>
         </div>
 
