@@ -15,7 +15,7 @@ const filters = ['Vše', 'Prsteny', 'Náušnice', 'Přívěsky', 'Řetízky', 'S
 
   <!-- ====== HEADER — Section Label ====== -->
   <section class="bg-bg-primary pt-16 pb-8 md:pt-24 md:pb-12">
-    <div class="max-w-[1400px] mx-auto px-8">
+    <div class="max-w-[1400px] mx-auto px-5 md:px-8">
       <div class="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-12 lg:gap-20">
 
         <!-- Sidebar label -->
@@ -43,14 +43,14 @@ const filters = ['Vše', 'Prsteny', 'Náušnice', 'Přívěsky', 'Řetízky', 'S
 
   <!-- ====== FILTERS ====== -->
   <section class="bg-bg-primary pb-6">
-    <div class="max-w-[1400px] mx-auto px-8">
+    <div class="max-w-[1400px] mx-auto px-5 md:px-8">
       <FilterPills items={filters} activeIndex={0} />
     </div>
   </section>
 
   <!-- ====== PRODUCT GRID ====== -->
   <section class="bg-bg-primary pb-20 md:pb-28">
-    <div class="max-w-[1400px] mx-auto px-8">
+    <div class="max-w-[1400px] mx-auto px-5 md:px-8">
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
         {products.map((product) => (
           <ProductCard

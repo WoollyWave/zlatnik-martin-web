@@ -18,20 +18,21 @@ const {
 const base = 'inline-flex items-center justify-center font-sans font-medium transition-colors duration-300 cursor-pointer';
 
 const variants: Record<string, string> = {
-  primary: `${base} bg-text-primary text-white text-[0.9375rem] px-8 py-4 hover:bg-gold-deep`,
+  primary: `${base} bg-text-primary text-[0.9375rem] px-8 py-4 hover:bg-gold-deep`,
   secondary: `${base} border border-text-primary/25 text-text-primary bg-transparent text-[0.9375rem] px-8 py-4 hover:border-text-primary/50 hover:bg-hover-bg`,
   text: `${base} text-[0.8125rem] text-text-primary uppercase tracking-[0.1em] hover:text-gold-deep gap-1.5`,
 };
 
+const colorStyle = variant === 'primary' ? 'color: #FAFBF8;' : '';
 const classes = `${variants[variant]} ${className}`.trim();
 ---
 
 {href ? (
-  <a href={href} class={classes} aria-label={ariaLabel}>
+  <a href={href} class={classes} style={colorStyle} aria-label={ariaLabel}>
     <slot />{variant === 'text' && <span class="text-[0.7em]">↗</span>}
   </a>
 ) : (
-  <button type={type} class={classes} aria-label={ariaLabel}>
+  <button type={type} class={classes} style={colorStyle} aria-label={ariaLabel}>
     <slot />{variant === 'text' && <span class="text-[0.7em]">↗</span>}
   </button>
 )}

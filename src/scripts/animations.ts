@@ -102,18 +102,33 @@ function initParallax() {
   });
 }
 
-// --- Scattered hero images — subtle float on scroll ---
+// --- Scattered hero images — fade-in + float on scroll ---
 function initFloat() {
-  document.querySelectorAll('[data-float]').forEach((el) => {
+  document.querySelectorAll('[data-float]').forEach((el, i) => {
     const speed = parseFloat((el as HTMLElement).getAttribute('data-float') || '0.5');
-    gsap.to(el as HTMLElement, {
-      y: speed * -60,
+    const htmlEl = el as HTMLElement;
+
+    // Jemný fade-in při loadu (staggered)
+    gsap.fromTo(htmlEl,
+      { opacity: 0, y: 20 },
+      {
+        opacity: 1,
+        y: 0,
+        duration: 1.2,
+        delay: 0.3 + (i * 0.1),
+        ease: 'power2.out'
+      }
+    );
+
+    // Parallax float na scroll
+    gsap.to(htmlEl, {
+      y: speed * -80,
       ease: 'none',
       scrollTrigger: {
-        trigger: (el as HTMLElement).closest('section') as HTMLElement,
+        trigger: htmlEl.closest('section') as HTMLElement,
         start: 'top top',
         end: 'bottom top',
-        scrub: 1.5,
+        scrub: 1,
       },
     });
   });

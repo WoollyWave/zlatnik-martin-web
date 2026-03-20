@@ -15,7 +15,7 @@ const filters = ['Vše', 'Zlato', 'Stříbro', 'Zakázky', 'Kameny'];
 
   <!-- ====== HEADER — Section Label ====== -->
   <section class="bg-bg-primary pt-16 pb-8 md:pt-24 md:pb-12">
-    <div class="max-w-[1400px] mx-auto px-8">
+    <div class="max-w-[1400px] mx-auto px-5 md:px-8">
       <div class="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-12 lg:gap-20">
 
         <!-- Sidebar label -->
@@ -43,14 +43,14 @@ const filters = ['Vše', 'Zlato', 'Stříbro', 'Zakázky', 'Kameny'];
 
   <!-- ====== FILTERS ====== -->
   <section class="bg-bg-primary pb-6">
-    <div class="max-w-[1400px] mx-auto px-8">
+    <div class="max-w-[1400px] mx-auto px-5 md:px-8">
       <FilterPills items={filters} activeIndex={0} />
     </div>
   </section>
 
   <!-- ====== GALLERY — Alternating Cards ====== -->
   <section class="bg-bg-primary pb-20 md:pb-28">
-    <div class="max-w-[1400px] mx-auto px-8">
+    <div class="max-w-[1400px] mx-auto px-5 md:px-8">
       <div class="space-y-16 md:space-y-24">
         {portfolioItems.map((item, i) => (
           <a href={`/tvorba/${item.slug}`} class="group grid grid-cols-1 md:grid-cols-5 gap-8 md:gap-12 items-center" data-animate="up">
