@@ -1,17 +1,28 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import FilterPills from '../components/FilterPills.astro';
-import Button from '../components/Button.astro';
 import CTA from '../components/CTA.astro';
 import { portfolioItems } from '../data/portfolio';
-
-const filters = ['Vše', 'Zlato', 'Stříbro', 'Zakázky', 'Kameny'];
 ---
 
 <Layout
   title="Portfolio | Martin Ševr — Zlatnická dílna Praha"
   description="Každý kus vypráví příběh. Zlaté prsteny, stříbrné přívěsky, sady s kameny. Ruční práce Martina Ševra."
 >
+
+  <!-- ====== HERO — Parallax photo ====== -->
+  <section class="relative h-[50vh] md:h-[65vh] overflow-hidden">
+    <div class="absolute inset-0" data-parallax>
+      <img
+        src="/images/portfolio--1--prsten-opal-trojuhelnik.webp"
+        srcset="/images/portfolio--1--prsten-opal-trojuhelnik.webp 1x, /images/portfolio--1--prsten-opal-trojuhelnik@2x.webp 2x"
+        width="1920" height="1080"
+        alt="Zlatnická dílna — portfolio šperků"
+        loading="eager"
+        decoding="async"
+        class="w-full h-[120%] object-cover"
+      />
+    </div>
+  </section>
 
   <!-- ====== HEADER — Section Label ====== -->
   <section class="bg-bg-primary pt-16 pb-8 md:pt-24 md:pb-12">
@@ -38,13 +49,6 @@ const filters = ['Vše', 'Zlato', 'Stříbro', 'Zakázky', 'Kameny'];
         </div>
 
       </div>
-    </div>
-  </section>
-
-  <!-- ====== FILTERS ====== -->
-  <section class="bg-bg-primary pb-6">
-    <div class="max-w-[1400px] mx-auto px-5 md:px-8">
-      <FilterPills items={filters} activeIndex={0} />
     </div>
   </section>
 
