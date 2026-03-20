@@ -97,82 +97,63 @@ const processSteps = [
   jsonLd={jsonLd}
 >
 
-  <!-- ====== HERO — Split layout ====== -->
-  <section class="relative bg-bg-primary min-h-[100svh] border-b border-border overflow-hidden">
+  <!-- ====== HERO ====== -->
+  <section class="relative bg-bg-primary border-b border-border overflow-hidden">
     <div class="radial-overlay"></div>
 
-    <div class="max-w-[1400px] mx-auto grid lg:grid-cols-[1.05fr_0.95fr] min-h-[100svh] relative">
+    <div class="max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-14 relative">
+      <div class="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center min-h-[calc(100svh-96px)] py-16 lg:py-24">
 
-      <!-- Left: Text -->
-      <div class="relative flex flex-col justify-center px-6 sm:px-8 lg:px-14 py-20 lg:py-28">
+        <!-- Text -->
+        <div class="hero-label">
+          <span class="label-dot" data-anim="fade">Zlatnická dílna Praha</span>
 
-        <span class="label-dot hero-label" data-anim="fade">Zlatnick&aacute; d&iacute;lna Praha</span>
+          <h1 class="mt-6 hero-headline" data-anim="stagger">
+            <span class="block">Šperky tvarované</span>
+            <span class="block"><em>světlem</em> a krásou</span>
+            <span class="block">materiálu.</span>
+          </h1>
 
-        <h1 class="font-serif text-text-primary tracking-[-0.02em] leading-[1.05] text-[2.8rem] sm:text-[3.5rem] md:text-[4rem] lg:text-[4.6rem] xl:text-[5.2rem] mt-8 hero-headline" data-anim="stagger">
-          <span class="block">Šperky tvarované</span>
-          <span class="block italic text-gold-deep">světlem,</span>
-          <span class="block">zdrženlivostí a <span class="italic text-gold-deep">krásou</span></span>
-          <span class="block">materiálu.</span>
-        </h1>
-
-        <p class="subtitle mt-6 hero-copy" data-anim="up">
-          Ruční výroba šperků ze zlata, stříbra a přírodních kamenů — kde každá proporce, textura a přechod je promyšlen s tichou precizností.
-        </p>
-
-        <div class="mt-10 flex flex-col sm:flex-row gap-4 hero-btn-group" data-anim="up">
-          <Button href="/zakazkova-tvorba" variant="primary">Chci šperk na míru</Button>
-          <Button href="/skladem" variant="secondary">Hotové šperky</Button>
-        </div>
-
-        <!-- Meta row -->
-        <div class="grid grid-cols-3 gap-6 mt-14 pt-6 border-t border-border hero-meta" data-anim="up">
-          <div>
-            <span class="text-[0.6875rem] uppercase tracking-[0.15em] font-medium text-text-muted font-sans">Lokace</span>
-            <p class="text-[0.875rem] text-text-primary mt-1 font-sans">Praha — Osobní setkání</p>
-          </div>
-          <div>
-            <span class="text-[0.6875rem] uppercase tracking-[0.15em] font-medium text-text-muted font-sans">Zaměření</span>
-            <p class="text-[0.875rem] text-text-primary mt-1 font-sans">Ruční výroba / Zakázkové šperky</p>
-          </div>
-          <div>
-            <span class="text-[0.6875rem] uppercase tracking-[0.15em] font-medium text-text-muted font-sans">Založeno</span>
-            <p class="text-[0.875rem] text-text-primary mt-1 font-sans">2014</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Vertical divider -->
-      <div class="hidden lg:block absolute left-[52.5%] top-0 bottom-0 w-px bg-border"></div>
-
-      <!-- Right: Photo -->
-      <div class="relative overflow-hidden min-h-[50vh] lg:min-h-full">
-        <img
-          src="/images/homepage--portfolio-1--prsten-tahitska-perla.webp"
-          srcset="/images/homepage--portfolio-1--prsten-tahitska-perla.webp 1x, /images/homepage--portfolio-1--prsten-tahitska-perla@2x.webp 2x"
-          width="800" height="1000"
-          alt="Zlatý prsten s tahitskou perlou — zakázková tvorba"
-          loading="eager"
-          decoding="async"
-          class="absolute inset-0 w-full h-full object-cover grayscale-[15%] sepia-[10%]"
-          data-anim="scale"
-        />
-
-        <!-- Gradient overlay -->
-        <div class="absolute inset-0 bg-gradient-to-t from-[rgba(30,27,24,0.35)] via-transparent to-transparent pointer-events-none"></div>
-
-        <!-- Border inset -->
-        <div class="absolute inset-3 border border-white/15 pointer-events-none"></div>
-
-        <!-- Plaque card overlay -->
-        <div class="absolute bottom-8 left-6 right-6 sm:right-auto sm:max-w-xs bg-bg-primary/90 backdrop-blur-md p-5 shadow-medium" data-anim="up">
-          <span class="text-[0.6875rem] uppercase tracking-[0.15em] font-medium text-gold-on-light font-sans">Zakázka 01</span>
-          <h4 class="mt-1.5 text-[1.1rem]">Zlatý prsten s opálem</h4>
-          <p class="text-[0.8125rem] text-text-secondary mt-1.5 leading-relaxed font-sans">
-            Prsten s australským opálem zasazeným do ručně tepaného zlata.
+          <p class="subtitle mt-6 hero-copy" data-anim="up">
+            Ruční výroba šperků ze zlata, stříbra a přírodních kamenů. Každá proporce, textura a přechod promyšlen s tichou precizností.
           </p>
-        </div>
-      </div>
 
+          <div class="mt-10 flex flex-col sm:flex-row gap-4 hero-btn-group" data-anim="up">
+            <Button href="/zakazkova-tvorba" variant="primary">Chci šperk na míru</Button>
+            <Button href="/skladem" variant="secondary">Hotové šperky</Button>
+          </div>
+
+          <!-- Meta row -->
+          <div class="grid grid-cols-3 gap-6 mt-12 pt-6 border-t border-border hero-meta" data-anim="up">
+            <div>
+              <span class="text-[10px] uppercase tracking-[0.16em] font-medium text-text-muted font-sans">Lokace</span>
+              <p class="text-[13px] text-text-primary mt-1 font-sans">Praha — Osobní setkání</p>
+            </div>
+            <div>
+              <span class="text-[10px] uppercase tracking-[0.16em] font-medium text-text-muted font-sans">Zaměření</span>
+              <p class="text-[13px] text-text-primary mt-1 font-sans">Ruční výroba / Zakázky</p>
+            </div>
+            <div>
+              <span class="text-[10px] uppercase tracking-[0.16em] font-medium text-text-muted font-sans">Zkušenosti</span>
+              <p class="text-[13px] text-text-primary mt-1 font-sans">Více než 20 let</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Photo — clean, no overlays -->
+        <div class="relative hero-img-wrap" data-anim="scale">
+          <img
+            src="/images/homepage--portfolio-1--prsten-tahitska-perla.webp"
+            srcset="/images/homepage--portfolio-1--prsten-tahitska-perla.webp 1x, /images/homepage--portfolio-1--prsten-tahitska-perla@2x.webp 2x"
+            width="800" height="1000"
+            alt="Zlatý prsten s tahitskou perlou — zakázková tvorba"
+            loading="eager"
+            decoding="async"
+            class="w-full h-auto object-cover"
+          />
+        </div>
+
+      </div>
     </div>
   </section>
 
