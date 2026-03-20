@@ -90,10 +90,10 @@ const faqItems = [
 
   <!-- ====== HERO ====== -->
   <section class="relative bg-bg-primary">
-    <ImagePlaceholder aspect="16/9" alt="Zakázková výroba šperků" class="w-full max-h-[65vh] object-cover" />
-    <div class="absolute inset-0 bg-bg-primary/40 flex items-end">
+    <ImagePlaceholder aspect="16/9" alt="Zakázková výroba šperků" class="w-full max-h-[75vh] object-cover" />
+    <div class="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-bg-primary/60 flex items-end">
       <div class="max-w-[1280px] mx-auto px-6 pb-12 md:pb-20 w-full">
-        <h1 class="text-h1 italic text-text-primary max-w-lg">Váš šperk na míru</h1>
+        <h1 class="text-text-primary max-w-lg">Váš šperk na míru</h1>
         <div class="mt-6">
           <Button href="#process" variant="primary">Poptat šperk</Button>
         </div>
@@ -101,39 +101,47 @@ const faqItems = [
     </div>
   </section>
 
-  <!-- ====== PROCESS ====== -->
-  <section id="process" class="bg-bg-primary py-20 md:py-28">
+  <!-- ====== PROCESS — Sticky Scroll ====== -->
+  <section id="process" class="bg-bg-primary py-16 md:py-24">
     <div class="max-w-[1280px] mx-auto px-6">
-      <h2 class="text-h2 mb-12 md:mb-16">Jak probíhá zakázka</h2>
-      <div class="space-y-16 md:space-y-24">
-        {processSteps.map((step, i) => (
-          <div class={`grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 items-center ${i % 2 === 1 ? 'md:direction-rtl' : ''}`}>
-            <div class={i % 2 === 1 ? 'md:order-2' : ''}>
-              <ImagePlaceholder aspect="4/3" alt={`${step.title} — proces výroby šperku`} class="w-full" />
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24">
+        <!-- Sticky left column -->
+        <div class="lg:sticky lg:top-24 lg:self-start">
+          <h2>Jak probíhá zakázka</h2>
+          <p class="mt-4 text-text-secondary text-[1.0625rem] leading-relaxed max-w-md">
+            Od prvního nápadu po hotový šperk. Celý proces je transparentní — víte, co se děje v každém kroku.
+          </p>
+        </div>
+
+        <!-- Scrolling right column -->
+        <div class="space-y-16 md:space-y-20">
+          {processSteps.map((step) => (
+            <div data-animate="up">
+              <span class="font-serif text-[3rem] font-light text-gold-soft leading-none">{step.number}</span>
+              <h3 class="mt-3">{step.title}</h3>
+              <p class="mt-3 text-text-secondary text-[1.0625rem] leading-relaxed">{step.description}</p>
+              <div class="mt-6">
+                <ImagePlaceholder aspect="4/3" alt={`${step.title} — proces výroby šperku`} class="w-full" />
+              </div>
             </div>
-            <div class={i % 2 === 1 ? 'md:order-1' : ''}>
-              <span class="font-serif text-[3.5rem] font-light text-gold-soft leading-none">{step.number}</span>
-              <h3 class="text-h3 mt-4">{step.title}</h3>
-              <p class="mt-4 text-text-secondary text-[1.0625rem] leading-relaxed">{step.description}</p>
-            </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     </div>
   </section>
 
   <!-- ====== MATERIALS ====== -->
-  <section class="bg-bg-secondary py-20 md:py-28">
+  <section class="bg-bg-primary section-divider py-16 md:py-24">
     <div class="max-w-[1280px] mx-auto px-6">
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-start">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24 items-start">
         <div>
           <ImagePlaceholder aspect="4/3" alt="Materiály — zlato, stříbro, kameny" class="w-full" />
         </div>
         <div class="space-y-8">
-          <h2 class="text-h2">Materiály</h2>
+          <h2>Materiály</h2>
           {materials.map((mat) => (
             <div>
-              <h3 class="text-h4 font-serif">{mat.title}</h3>
+              <h4>{mat.title}</h4>
               <p class="mt-2 text-text-secondary text-[0.9375rem] leading-relaxed">{mat.description}</p>
             </div>
           ))}
@@ -142,73 +150,70 @@ const faqItems = [
     </div>
   </section>
 
-  <!-- ====== PRICING (side-by-side) ====== -->
-  <section id="cenik" class="bg-bg-primary py-20 md:py-28">
-    <div class="max-w-[1280px] mx-auto px-6">
-      <h2 class="text-h2 mb-4 text-center">Orientační ceník</h2>
-      <p class="text-text-secondary text-center max-w-xl mx-auto mb-12 md:mb-16">
+  <!-- ====== PRICING STŘÍBRO ====== -->
+  <section id="cenik" class="bg-bg-primary section-divider py-16 md:py-24">
+    <div class="max-w-3xl mx-auto px-6">
+      <h2 class="mb-4">Orientační ceník</h2>
+      <p class="text-text-secondary max-w-xl mb-12">
         Ceny jsou orientační a závisí na složitosti, materiálu a použitých kamenech. Přesnou kalkulaci udělám po konzultaci.
       </p>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
-        <!-- Stříbro -->
-        <div>
-          <h3 class="text-h3 mb-6">Stříbro 925</h3>
-          <div class="border-t border-border">
-            {pricingSilver.map((row) => (
-              <div class="flex items-center justify-between py-4 border-b border-divider">
-                <span class="text-text-primary">{row.item}</span>
-                <span class="text-text-secondary font-medium whitespace-nowrap ml-4">{row.price}</span>
-              </div>
-            ))}
+
+      <h3 class="mb-6">Stříbro 925</h3>
+      <div class="border-t border-border">
+        {pricingSilver.map((row) => (
+          <div class="flex items-center justify-between py-4 border-b border-divider">
+            <span class="text-text-primary">{row.item}</span>
+            <span class="text-text-secondary font-medium whitespace-nowrap ml-4">{row.price}</span>
           </div>
-        </div>
-        <!-- Zlato -->
-        <div>
-          <h3 class="text-h3 mb-6">Zlato 585</h3>
-          <div class="border-t border-border">
-            {pricingGold.map((row) => (
-              <div class="flex items-center justify-between py-4 border-b border-divider">
-                <span class="text-text-primary">{row.item}</span>
-                <span class="text-text-secondary font-medium whitespace-nowrap ml-4">{row.price}</span>
-              </div>
-            ))}
-          </div>
-          <p class="mt-4 text-[0.8125rem] text-text-muted">U zlata 750/1000 přičtěte cca 30 %.</p>
-        </div>
+        ))}
       </div>
     </div>
   </section>
 
   <!-- ====== FULLWIDTH PARALLAX PHOTO ====== -->
-  <section class="relative h-[60vh] overflow-hidden">
-    <div class="absolute inset-0 bg-bg-tertiary">
-      <ImagePlaceholder aspect="16/9" alt="Detailní záběr zlatnické práce" class="w-full h-full object-cover" style="position: sticky; top: 0;" />
+  <section class="relative h-[70vh] overflow-hidden">
+    <div class="absolute inset-0">
+      <ImagePlaceholder aspect="16/9" alt="Detailní záběr zlatnické práce" class="w-full h-full object-cover" style="position: fixed; top: 0; left: 0; width: 100%; height: 100vh; z-index: -1;" />
+    </div>
+  </section>
+
+  <!-- ====== PRICING ZLATO ====== -->
+  <section class="bg-bg-primary py-16 md:py-24">
+    <div class="max-w-3xl mx-auto px-6">
+      <h3 class="mb-6">Zlato 585</h3>
+      <div class="border-t border-border">
+        {pricingGold.map((row) => (
+          <div class="flex items-center justify-between py-4 border-b border-divider">
+            <span class="text-text-primary">{row.item}</span>
+            <span class="text-text-secondary font-medium whitespace-nowrap ml-4">{row.price}</span>
+          </div>
+        ))}
+      </div>
+      <p class="mt-4 text-[0.8125rem] text-text-muted">U zlata 750/1000 přičtěte cca 30 %.</p>
     </div>
   </section>
 
   <!-- ====== EXPRESS ====== -->
-  <section id="express" class="bg-bg-primary py-20 md:py-28">
-    <div class="max-w-[1280px] mx-auto px-6">
-      <div class="bg-bg-secondary rounded-[2px] p-8 md:p-12 border-l-2 border-gold-primary">
-        <span class="text-[0.75rem] font-medium uppercase tracking-wider text-gold-on-light">
-          Expresní výroba
-        </span>
-        <h2 class="text-h3 mt-4">Potřebujete šperk dřív</h2>
-        <p class="mt-4 text-text-secondary max-w-2xl">
-          Narozeniny, výročí, zásnuby — někdy se termín blíží rychleji, než čekáte. U jednodušších šperků zvládnu expresní výrobu do 5 pracovních dní. Zavolejte a domluvíme se.
-        </p>
-        <div class="mt-8 flex flex-col sm:flex-row gap-4">
-          <Button href="tel:+420774598181" variant="primary">Zavolat</Button>
-          <Button href="https://wa.me/420774598181" variant="secondary">Napsat na WhatsApp</Button>
-        </div>
+  <section id="express" class="bg-bg-primary section-divider py-16 md:py-24">
+    <div class="max-w-3xl mx-auto px-6" data-animate="up">
+      <span class="text-[0.75rem] font-medium uppercase tracking-wider text-gold-on-light">
+        Expresní výroba
+      </span>
+      <h2 class="mt-4">Potřebujete šperk dřív</h2>
+      <p class="mt-4 text-text-secondary max-w-2xl">
+        Narozeniny, výročí, zásnuby — někdy se termín blíží rychleji, než čekáte. U jednodušších šperků zvládnu expresní výrobu do 5 pracovních dní. Zavolejte a domluvíme se.
+      </p>
+      <div class="mt-8 flex flex-col sm:flex-row gap-4">
+        <Button href="tel:+420774598181" variant="primary">Zavolat</Button>
+        <Button href="https://wa.me/420774598181" variant="secondary">Napsat na WhatsApp</Button>
       </div>
     </div>
   </section>
 
   <!-- ====== FAQ ====== -->
-  <section class="bg-bg-secondary py-20 md:py-28">
+  <section class="bg-bg-secondary py-20 md:py-32">
     <div class="max-w-3xl mx-auto px-6">
-      <h2 class="text-h2 mb-12">Časté otázky</h2>
+      <h2 class="mb-12">Časté otázky</h2>
       <FAQ items={faqItems} />
     </div>
   </section>
@@ -217,8 +222,6 @@ const faqItems = [
   <CTA
     heading="Máte nápad na šperk?"
     subheading="Zavolejte nebo napište. Probereme vaši představu a řekneme si, co je možné. Bez závazku."
-    variant="split"
-    bgColor="primary"
   />
 
 </Layout>

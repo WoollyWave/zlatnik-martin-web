@@ -24,7 +24,7 @@ const { item } = Astro.props;
   description={item.description}
 >
   <!-- ====== HERO PHOTO ====== -->
-  <section class="bg-bg-tertiary">
+  <section>
     <ImagePlaceholder aspect="16/9" alt={item.title} class="w-full max-h-[70vh] object-cover" />
   </section>
 
@@ -34,11 +34,11 @@ const { item } = Astro.props;
       <a href="/portfolio" class="text-[0.8125rem] text-text-muted hover:text-text-secondary transition-colors duration-200 mb-8 inline-block hover:underline underline-offset-4">
         &larr; Zpět na Portfolio
       </a>
-      <h1 class="text-h1 italic">{item.title}</h1>
+      <h1>{item.title}</h1>
 
-      <div class="flex flex-wrap gap-2 justify-center mt-6">
+      <div class="flex flex-wrap gap-3 justify-center mt-6">
         {item.tags.map((tag) => (
-          <span class="text-[0.75rem] font-medium uppercase tracking-wider text-text-muted bg-bg-secondary px-3 py-1 rounded-[2px]">
+          <span class="text-[0.75rem] font-medium uppercase tracking-wider text-text-muted">
             {tag}
           </span>
         ))}
@@ -53,7 +53,7 @@ const { item } = Astro.props;
   </section>
 
   <!-- ====== PROCESS GALLERY ====== -->
-  <section class="bg-bg-secondary py-20 md:py-28">
+  <section class="bg-bg-primary section-divider py-16 md:py-24">
     <div class="max-w-[1280px] mx-auto px-6">
       <h2 class="text-h3 text-center mb-4">Proces vzniku</h2>
       <p class="text-text-secondary text-center max-w-lg mx-auto mb-12">
@@ -80,8 +80,6 @@ const { item } = Astro.props;
   <CTA
     heading="Chcete podobný šperk na míru"
     subheading="Každý šperk v portfoliu začal jednoduchým nápadem. Řekněte mi ten svůj."
-    variant="split"
-    bgColor="primary"
   />
 
 </Layout>
