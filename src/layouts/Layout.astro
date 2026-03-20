@@ -30,6 +30,8 @@ const canonicalUrl = canonical || new URL(Astro.url.pathname, siteUrl).toString(
 <!doctype html>
 <html lang="cs">
   <head>
+    <script>document.documentElement.classList.add('js');</script>
+    <noscript><style>body { opacity: 1 !important; }</style></noscript>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="generator" content={Astro.generator} />
@@ -78,5 +80,6 @@ const canonicalUrl = canonical || new URL(Astro.url.pathname, siteUrl).toString(
     <script>
       import '../scripts/animations.ts';
     </script>
+    <script>window.addEventListener('load', () => document.body.classList.add('is-loaded'));</script>
   </body>
 </html>

@@ -6,21 +6,14 @@ interface Props {
   type?: 'button' | 'submit';
   ariaLabel?: string;
 }
-
-const {
-  href,
-  variant = 'primary',
-  class: className = '',
-  type = 'button',
-  ariaLabel,
-} = Astro.props;
+const { href, variant = 'primary', class: className = '', type = 'button', ariaLabel } = Astro.props;
 
 const base = 'inline-flex items-center justify-center font-sans font-medium transition-colors duration-300 cursor-pointer';
 
 const variants: Record<string, string> = {
-  primary: `${base} bg-text-primary text-[0.9375rem] px-8 py-4 hover:bg-gold-deep`,
-  secondary: `${base} border border-text-primary/25 text-text-primary bg-transparent text-[0.9375rem] px-8 py-4 hover:border-text-primary/50 hover:bg-hover-bg`,
-  text: `${base} text-[0.8125rem] text-text-primary uppercase tracking-[0.1em] hover:text-gold-deep gap-1.5`,
+  primary: `${base} gap-3 h-12 px-8 bg-text-primary rounded-full text-[11px] uppercase tracking-[0.2em] shadow-md hover:bg-gold-deep`,
+  secondary: `${base} gap-2 h-12 px-6 border border-border bg-white/80 text-text-primary rounded-full text-[11px] uppercase tracking-[0.2em] shadow-sm hover:bg-white`,
+  text: `${base} text-[11px] text-text-secondary uppercase tracking-[0.2em] hover:text-gold-deep gap-2`,
 };
 
 const colorStyle = variant === 'primary' ? 'color: #FAFBF8;' : '';
@@ -29,10 +22,11 @@ const classes = `${variants[variant]} ${className}`.trim();
 
 {href ? (
   <a href={href} class={classes} style={colorStyle} aria-label={ariaLabel}>
-    <slot />{variant === 'text' && <span class="text-[0.7em]">↗</span>}
+    <slot />
+    {variant === 'text' && <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25" /></svg>}
   </a>
 ) : (
   <button type={type} class={classes} style={colorStyle} aria-label={ariaLabel}>
-    <slot />{variant === 'text' && <span class="text-[0.7em]">↗</span>}
+    <slot />
   </button>
 )}

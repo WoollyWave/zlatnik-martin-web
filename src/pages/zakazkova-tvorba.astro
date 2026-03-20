@@ -2,7 +2,6 @@
 import Layout from '../layouts/Layout.astro';
 import Button from '../components/Button.astro';
 import FAQ from '../components/FAQ.astro';
-import CTA from '../components/CTA.astro';
 
 const processSteps = [
   {
@@ -413,11 +412,5 @@ const faqItems = [
       <FAQ items={faqItems} />
     </div>
   </section>
-
-  <!-- ====== CTA ====== -->
-  <CTA
-    heading={"Máte nápad na <em class='italic text-gold-deep' style='font-weight: 400;'>šperk</em>?"}
-    subheading="Zavolejte nebo napište. Probereme vaši představu a řekneme si, co je možné. Bez závazku."
-  />
 
 </Layout>
