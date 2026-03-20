@@ -1,0 +1,47 @@
+---
+import Button from './Button.astro';
+
+interface Props {
+  heading?: string;
+  subheading?: string;
+  variant?: 'centered' | 'split';
+  bgColor?: 'primary' | 'secondary';
+}
+
+const {
+  heading = 'Máte zájem\no zakázkový šperk?',
+  subheading = 'Zavolejte mi nebo napište. Ozvu se do 24 hodin.',
+  variant = 'centered',
+  bgColor = 'secondary',
+} = Astro.props;
+
+const bgClass = bgColor === 'secondary' ? 'bg-bg-secondary' : 'bg-bg-primary';
+---
+
+<section class={`${bgClass} py-20 md:py-28`}>
+  <div class="max-w-[1280px] mx-auto px-6">
+    {variant === 'centered' ? (
+      <div class="text-center max-w-2xl mx-auto" data-animate="up">
+        <h2 class="text-h2 whitespace-pre-line">{heading}</h2>
+        <p class="mt-4 text-text-secondary">{subheading}</p>
+        <div class="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
+          <Button href="tel:+420774598181" variant="primary">Zavolat</Button>
+          <Button href="https://wa.me/420774598181" variant="secondary">Napsat na WhatsApp</Button>
+        </div>
+      </div>
+    ) : (
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-8" data-animate="up">
+        <div class="md:max-w-md">
+          <h2 class="text-h2 whitespace-pre-line">{heading}</h2>
+        </div>
+        <div class="md:max-w-md">
+          <p class="text-text-secondary mb-6">{subheading}</p>
+          <div class="flex flex-col sm:flex-row gap-4">
+            <Button href="tel:+420774598181" variant="primary">Zavolat</Button>
+            <Button href="https://wa.me/420774598181" variant="secondary">Napsat na WhatsApp</Button>
+          </div>
+        </div>
+      </div>
+    )}
+  </div>
+</section>

@@ -1,0 +1,87 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Button from '../../components/Button.astro';
+import ImagePlaceholder from '../../components/ImagePlaceholder.astro';
+import CTA from '../../components/CTA.astro';
+import { portfolioItems, type PortfolioItem } from '../../data/portfolio';
+
+export function getStaticPaths() {
+  return portfolioItems.map((item) => ({
+    params: { slug: item.slug },
+    props: { item },
+  }));
+}
+
+interface Props {
+  item: PortfolioItem;
+}
+
+const { item } = Astro.props;
+---
+
+<Layout
+  title={`${item.title} | Portfolio — Martin Ševr`}
+  description={item.description}
+>
+  <!-- ====== HERO PHOTO ====== -->
+  <section class="bg-bg-tertiary">
+    <ImagePlaceholder aspect="16/9" alt={item.title} class="w-full max-h-[70vh] object-cover" />
+  </section>
+
+  <!-- ====== INFO ====== -->
+  <section class="bg-bg-primary py-16 md:py-24">
+    <div class="max-w-3xl mx-auto px-6 text-center">
+      <a href="/portfolio" class="text-[0.8125rem] text-text-muted hover:text-text-secondary transition-colors duration-200 mb-8 inline-block hover:underline underline-offset-4">
+        &larr; Zpět na Portfolio
+      </a>
+      <h1 class="text-h1 italic">{item.title}</h1>
+
+      <div class="flex flex-wrap gap-2 justify-center mt-6">
+        {item.tags.map((tag) => (
+          <span class="text-[0.75rem] font-medium uppercase tracking-wider text-text-muted bg-bg-secondary px-3 py-1 rounded-[2px]">
+            {tag}
+          </span>
+        ))}
+      </div>
+
+      <div class="mt-4 text-[0.875rem] text-text-muted">{item.material}</div>
+
+      <p class="mt-8 text-text-secondary text-[1.0625rem] leading-relaxed max-w-2xl mx-auto">
+        {item.fullDescription}
+      </p>
+    </div>
+  </section>
+
+  <!-- ====== PROCESS GALLERY ====== -->
+  <section class="bg-bg-secondary py-20 md:py-28">
+    <div class="max-w-[1280px] mx-auto px-6">
+      <h2 class="text-h3 text-center mb-4">Proces vzniku</h2>
+      <p class="text-text-secondary text-center max-w-lg mx-auto mb-12">
+        Od prvního náčrtu po finální lesk — takhle tento šperk vznikal.
+      </p>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div>
+          <ImagePlaceholder aspect="4/3" alt={`${item.title} — návrh`} class="w-full" />
+          <p class="mt-3 text-[0.8125rem] text-text-muted text-center">Návrh</p>
+        </div>
+        <div>
+          <ImagePlaceholder aspect="4/3" alt={`${item.title} — výroba`} class="w-full" />
+          <p class="mt-3 text-[0.8125rem] text-text-muted text-center">Výroba</p>
+        </div>
+        <div>
+          <ImagePlaceholder aspect="4/3" alt={`${item.title} — hotový kus`} class="w-full" />
+          <p class="mt-3 text-[0.8125rem] text-text-muted text-center">Hotový kus</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== CTA ====== -->
+  <CTA
+    heading="Chcete podobný šperk na míru"
+    subheading="Každý šperk v portfoliu začal jednoduchým nápadem. Řekněte mi ten svůj."
+    variant="split"
+    bgColor="primary"
+  />
+
+</Layout>

@@ -1,0 +1,58 @@
+---
+import Layout from '../layouts/Layout.astro';
+import ProductCard from '../components/ProductCard.astro';
+import FilterPills from '../components/FilterPills.astro';
+import CTA from '../components/CTA.astro';
+import { products } from '../data/products';
+
+const filters = ['Vše', 'Prsteny', 'Náušnice', 'Přívěsky', 'Řetízky', 'Sady'];
+---
+
+<Layout
+  title="Skladem | Martin Ševr — Zlatnická dílna Praha"
+  description="Stříbrné šperky s přírodními kameny. Ihned k dispozici. Ruční výroba, certifikované materiály."
+>
+
+  <!-- ====== HEADER ====== -->
+  <section class="bg-bg-primary pt-16 pb-8 md:pt-24 md:pb-12">
+    <div class="max-w-[1280px] mx-auto px-6 text-center">
+      <h1 class="text-h1 italic">Hotové šperky</h1>
+      <p class="mt-4 text-text-secondary text-[1.125rem] max-w-xl mx-auto">
+        Ručně vyrobené šperky ihned k dispozici. Každý kus je originál — osobní vyzvednutí v dílně nebo zásilka po celé ČR.
+      </p>
+    </div>
+  </section>
+
+  <!-- ====== FILTERS ====== -->
+  <section class="bg-bg-primary pb-6">
+    <div class="max-w-[1280px] mx-auto px-6">
+      <FilterPills items={filters} activeIndex={0} />
+    </div>
+  </section>
+
+  <!-- ====== PRODUCT GRID ====== -->
+  <section class="bg-bg-primary pb-20 md:pb-28">
+    <div class="max-w-[1280px] mx-auto px-6">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+        {products.map((product) => (
+          <ProductCard
+            title={product.title}
+            material={product.material}
+            price={product.price}
+            href={`/sperky/${product.slug}`}
+            category={product.category}
+          />
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== CTA ====== -->
+  <CTA
+    heading="Nenašli jste ten pravý?"
+    subheading="Vyrobím šperk přesně podle vašich přání. Zavolejte a řekneme si, co je možné."
+    variant="split"
+    bgColor="secondary"
+  />
+
+</Layout>

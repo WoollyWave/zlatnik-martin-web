@@ -1,17 +1,269 @@
 ---
+import Layout from '../layouts/Layout.astro';
+import Button from '../components/Button.astro';
+import ImagePlaceholder from '../components/ImagePlaceholder.astro';
+import Testimonial from '../components/Testimonial.astro';
+import CTA from '../components/CTA.astro';
 
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "LocalBusiness",
+      "name": "Martin Ševr — Zlatnická dílna",
+      "description": "Ruční výroba šperků ze zlata, stříbra a přírodních kamenů. Každý kus originál.",
+      "url": "https://zlatnikmartin.cz",
+      "telephone": "+420774598181",
+      "email": "zlatnikmartin@email.cz",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Pod Kesnerkou 46",
+        "addressLocality": "Praha 5",
+        "postalCode": "150 00",
+        "addressCountry": "CZ"
+      },
+      "priceRange": "$$$$",
+      "image": "https://zlatnikmartin.cz/images/og-default.jpg"
+    },
+    {
+      "@type": "WebSite",
+      "name": "Martin Ševr — Zlatnická dílna Praha",
+      "url": "https://zlatnikmartin.cz"
+    }
+  ]
+};
+
+const portfolioItems = [
+  {
+    title: 'Zlatý prsten s opálem',
+    tags: ['Zlato 585', 'Opál', 'Zakázka'],
+    description: 'Prsten s australským opálem zasazeným do ručně tepaného zlata. Navržen podle příběhu klientky.',
+    href: '/tvorba/zlaty-prsten-s-opalem',
+  },
+  {
+    title: 'Stříbrná sada s granáty',
+    tags: ['Stříbro 925', 'České granáty'],
+    description: 'Náušnice a prsten s českými granáty v minimalistickém moderním designu.',
+    href: '/tvorba/stribrna-sada-s-granaty',
+  },
+  {
+    title: 'Snubní prsteny na míru',
+    tags: ['Zlato 750', 'Zakázka'],
+    description: 'Pár snubních prstenů s ručně rytým vzorem. Každý je originál.',
+    href: '/tvorba/snubni-prsteny-na-miru',
+  },
+];
+
+const processSteps = [
+  {
+    number: '01',
+    title: 'Konzultace s vámi',
+    description: 'Sejdeme se v dílně nebo po telefonu. Probereme váš nápad, materiály a rozpočet. Bez závazků.',
+  },
+  {
+    number: '02',
+    title: 'Ruční výroba v dílně',
+    description: 'Každý šperk vyrábím ručně — od prvního náčrtu po finální lesk. Průběh fotím, abyste viděli, jak vzniká.',
+  },
+  {
+    number: '03',
+    title: 'Předání s certifikátem',
+    description: 'Šperk předám osobně v dílně nebo zašlu pojištěnou zásilkou. Vždy s certifikátem pravosti.',
+  },
+];
+
+const uspItems = [
+  {
+    title: 'Váš šperk, váš příběh',
+    description: 'Fotím každý krok — od prvního náčrtu po hotový kus. Dostanete kompletní příběh vzniku vašeho šperku.',
+  },
+  {
+    title: 'Dílna bez tajemství',
+    description: 'Můžete být u toho, když váš šperk vzniká. Otvírám dveře dílny — ať vidíte, z čeho a jak se rodí.',
+  },
+  {
+    title: 'Mluvíte se mnou',
+    description: 'Žádný asistent, žádný formulář do prázdna. Voláte a píšete přímo zlatníkovi, který váš šperk vyrobí.',
+  },
+];
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<Layout
+  title="Martin Ševr — Zlatnická dílna Praha | Ruční výroba šperků"
+  description="Ruční výroba šperků ze zlata, stříbra a přírodních kamenů. Každý kus originál. Zakázková tvorba v Praze."
+  jsonLd={jsonLd}
+>
+
+  <!-- ====== HERO ====== -->
+  <section class="bg-bg-primary py-20 md:py-32">
+    <div class="max-w-[1280px] mx-auto px-6">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+        <div data-animate="up">
+          <span class="text-[0.75rem] font-medium uppercase tracking-wider text-gold-on-light mb-6 inline-block">
+            Zlatnická dílna v Praze
+          </span>
+          <h1 class="text-h1 italic">
+            Každý šperk<br />má svůj příběh
+          </h1>
+          <p class="mt-6 text-text-secondary text-[1.125rem] max-w-lg leading-relaxed">
+            Ručně vyráběné šperky ze zlata, stříbra a přírodních kamenů. Více než dvacet let zkušeností v každém kusu.
+          </p>
+          <div class="mt-10 flex flex-col sm:flex-row gap-4">
+            <Button href="/zakazkova-tvorba" variant="primary">Chci šperk na míru</Button>
+            <Button href="/skladem" variant="secondary">Hotové šperky</Button>
+          </div>
+        </div>
+        <div data-animate="fade" data-animate-delay="0.2">
+          <ImagePlaceholder aspect="4/3" alt="Šperk od Martina Ševra — ruční práce" class="w-full" />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== USP ====== -->
+  <section class="bg-bg-secondary py-20 md:py-28">
+    <div class="max-w-[1280px] mx-auto px-6">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-8" data-animate-stagger>
+        {uspItems.map((item, i) => (
+          <div class="text-center">
+            <div class="w-12 h-12 mx-auto mb-5 rounded-full bg-bg-tertiary flex items-center justify-center">
+              {i === 0 ? (
+                <!-- Camera icon — Váš šperk, váš příběh -->
+                <svg class="w-5 h-5 text-gold-on-light" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M6.827 6.175A2.31 2.31 0 0 1 5.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 0 0-1.134-.175 2.31 2.31 0 0 1-1.64-1.055l-.822-1.316a2.192 2.192 0 0 0-1.736-1.039 48.774 48.774 0 0 0-5.232 0 2.192 2.192 0 0 0-1.736 1.039l-.821 1.316Z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 12.75a4.5 4.5 0 1 1-9 0 4.5 4.5 0 0 1 9 0Z" />
+                </svg>
+              ) : i === 1 ? (
+                <!-- Hammer/wrench icon — Dílna bez tajemství -->
+                <svg class="w-5 h-5 text-gold-on-light" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M11.42 15.17 17.25 21A2.652 2.652 0 0 0 21 17.25l-5.877-5.877M11.42 15.17l2.496-3.03c.317-.384.74-.626 1.208-.766M11.42 15.17l-4.655 5.653a2.548 2.548 0 1 1-3.586-3.586l6.837-5.63m5.108-.233c.55-.164 1.163-.188 1.743-.14a4.5 4.5 0 0 0 4.486-6.336l-3.276 3.277a3.004 3.004 0 0 1-2.25-2.25l3.276-3.276a4.5 4.5 0 0 0-6.336 4.486c.049.58.025 1.193-.14 1.743" />
+                </svg>
+              ) : (
+                <!-- Chat bubble icon — Mluvíte se mnou -->
+                <svg class="w-5 h-5 text-gold-on-light" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M8.625 12a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H8.25m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H12m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 0 1-2.555-.337A5.972 5.972 0 0 1 5.41 20.97a5.969 5.969 0 0 1-.474-.065 4.48 4.48 0 0 0 .978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25Z" />
+                </svg>
+              )}
+            </div>
+            <h3 class="text-h4 font-serif">{item.title}</h3>
+            <p class="mt-3 text-text-secondary text-[0.9375rem] leading-relaxed max-w-xs mx-auto">
+              {item.description}
+            </p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== PORTFOLIO PREVIEW ====== -->
+  <section class="bg-bg-primary py-20 md:py-28">
+    <div class="max-w-[1280px] mx-auto px-6">
+      <h2 class="text-h2 mb-12 md:mb-16" data-animate="up">Vybrané práce</h2>
+      <div class="flex flex-col gap-12">
+        {portfolioItems.map((item) => (
+          <a href={item.href} class="group grid grid-cols-1 md:grid-cols-2 gap-8 items-center" data-animate="up">
+            <div class="overflow-hidden rounded-[2px]">
+              <ImagePlaceholder
+                aspect="4/3"
+                alt={item.title}
+                class="w-full transition-transform duration-500 group-hover:scale-[1.02]"
+              />
+            </div>
+            <div>
+              <div class="flex flex-wrap gap-2 mb-4">
+                {item.tags.map((tag: string) => (
+                  <span class="text-[0.75rem] font-medium uppercase tracking-wider text-text-muted bg-bg-secondary px-3 py-1 rounded-[2px]">
+                    {tag}
+                  </span>
+                ))}
+              </div>
+              <h3 class="text-h3">{item.title}</h3>
+              <p class="mt-3 text-text-secondary">{item.description}</p>
+              <span class="inline-block mt-4 text-[0.875rem] font-medium text-gold-on-light group-hover:text-hover-gold transition-colors duration-200">
+                Zobrazit detail &rarr;
+              </span>
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== PROCESS ====== -->
+  <section class="bg-bg-secondary py-20 md:py-28">
+    <div class="max-w-[1280px] mx-auto px-6">
+      <h2 class="text-h2 text-center mb-12 md:mb-16" data-animate="up">Jak se rodí váš šperk</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-8" data-animate-stagger>
+        {processSteps.map((step) => (
+          <div>
+            <span class="font-serif text-[2.5rem] font-light text-gold-soft leading-none">{step.number}</span>
+            <h3 class="text-h4 font-serif mt-4">{step.title}</h3>
+            <p class="mt-3 text-text-secondary text-[0.9375rem] leading-relaxed">
+              {step.description}
+            </p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== EXPRESS ====== -->
+  <section class="bg-bg-primary py-20 md:py-28">
+    <div class="max-w-[1280px] mx-auto px-6">
+      <div class="bg-bg-secondary rounded-[2px] p-8 md:p-12 border-l-2 border-gold-primary" data-animate="up">
+        <span class="text-[0.75rem] font-medium uppercase tracking-wider text-gold-on-light">
+          Expresní výroba
+        </span>
+        <h2 class="text-h3 mt-4">Šperk na poslední chvíli? Zvládnu to</h2>
+        <p class="mt-4 text-text-secondary max-w-2xl">
+          Termín se blíží a potřebujete šperk dřív. Zavolejte — domluvíme expresní výrobu a řekneme si, co je reálné stihnout.
+        </p>
+        <div class="mt-8 flex flex-col sm:flex-row gap-4">
+          <Button href="tel:+420774598181" variant="primary">Zavolat</Button>
+          <Button href="/zakazkova-tvorba#express" variant="secondary">Více o expresní výrobě</Button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== TESTIMONIAL ====== -->
+  <Testimonial
+    quote="Řekla jsem mu jen nápad a barvu kamene. Zbytek nechal na mě překvapit. Když jsem prsten poprvé viděla, věděla jsem, že přesně takhle jsem si ho představovala."
+    author="Helena Novotná"
+    role="Sběratelka šperků, Praha"
+  />
+
+  <!-- ====== O DÍLNĚ PREVIEW ====== -->
+  <section class="bg-bg-secondary py-20 md:py-28">
+    <div class="max-w-[1280px] mx-auto px-6">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+        <div>
+          <div class="w-12 h-12 mb-6 rounded-full bg-bg-tertiary flex items-center justify-center">
+            <svg class="w-5 h-5 text-gold-on-light" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M11.42 15.17 17.25 21A2.652 2.652 0 0 0 21 17.25l-5.877-5.877M11.42 15.17l2.496-3.03c.317-.384.74-.626 1.208-.766M11.42 15.17l-4.655 5.653a2.548 2.548 0 1 1-3.586-3.586l6.837-5.63m5.108-.233c.55-.164 1.163-.188 1.743-.14a4.5 4.5 0 0 0 4.486-6.336l-3.276 3.277a3.004 3.004 0 0 1-2.25-2.25l3.276-3.276a4.5 4.5 0 0 0-6.336 4.486c.049.58.025 1.193-.14 1.743" />
+            </svg>
+          </div>
+          <h2 class="text-h2" data-animate="up">O dílně</h2>
+          <p class="mt-4 text-text-secondary text-[1.0625rem] leading-relaxed">
+            Dílna Pod Kesnerkou je místo, kde se potkává tradice s moderním přístupem. Pracuji s certifikovanými kovy a ručně vybranými kameny. Žádná sériová výroba, žádné kompromisy.
+          </p>
+          <div class="mt-8">
+            <Button href="/o-dilne" variant="secondary">Poznejte dílnu</Button>
+          </div>
+        </div>
+        <div>
+          <ImagePlaceholder aspect="4/3" alt="Zlatnická dílna Martina Ševra" class="w-full" />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== CTA PRE-FOOTER ====== -->
+  <CTA
+    heading={"Máte zájem\no zakázkový šperk?"}
+    subheading="Zavolejte mi nebo napište na WhatsApp. Ozvu se do 24 hodin a domluvíme se na dalším kroku."
+    variant="split"
+    bgColor="primary"
+  />
+
+</Layout>

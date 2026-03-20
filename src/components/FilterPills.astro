@@ -1,0 +1,24 @@
+---
+interface Props {
+  items: string[];
+  activeIndex?: number;
+}
+
+const { items, activeIndex = 0 } = Astro.props;
+---
+
+<div class="flex flex-wrap gap-2 justify-center mb-12" role="group" aria-label="Filtrovat šperky">
+  {items.map((item, i) => (
+    <button
+      class={`text-[0.8125rem] font-medium px-5 py-2.5 rounded-[2px] transition-all duration-200 cursor-pointer ${
+        i === activeIndex
+          ? 'bg-text-primary text-bg-primary'
+          : 'bg-transparent border border-border text-text-secondary hover:bg-hover-bg hover:text-text-primary hover:border-text-muted'
+      }`}
+      data-filter={item.toLowerCase()}
+      aria-pressed={i === activeIndex ? 'true' : 'false'}
+    >
+      {item}
+    </button>
+  ))}
+</div>

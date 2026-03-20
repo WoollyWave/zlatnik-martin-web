@@ -1,0 +1,224 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Button from '../components/Button.astro';
+import ImagePlaceholder from '../components/ImagePlaceholder.astro';
+import FAQ from '../components/FAQ.astro';
+import CTA from '../components/CTA.astro';
+
+const processSteps = [
+  {
+    number: '01',
+    title: 'Konzultace',
+    description: 'Setkáme se v dílně nebo si zavoláme. Ukážete mi svou představu — skicu, fotografii, nebo jen slovy. Probereme materiál, časový rámec i rozpočet.',
+  },
+  {
+    number: '02',
+    title: 'Návrh',
+    description: 'Připravím návrh vašeho šperku. U složitějších kusů vytvořím 3D model nebo voskový prototyp. Nic nevznikne, dokud nebudete souhlasit.',
+  },
+  {
+    number: '03',
+    title: 'Výroba',
+    description: 'Každý šperk vyrábím ručně ve své dílně. Fotím každý krok — budete vědět, jak váš šperk vzniká. Žádná sériová výroba, žádné kompromisy.',
+  },
+  {
+    number: '04',
+    title: 'Předání',
+    description: 'Šperk si můžete vyzvednout osobně v dílně nebo ho pošlu pojištěný zásilkou. Ke každému kusu dostanete certifikát pravosti.',
+  },
+];
+
+const materials = [
+  {
+    title: 'Zlato a stříbro',
+    description: 'Pracuji se zlatem 585/1000 i 750/1000 a stříbrem 925/1000. Všechny kovy certifikované, puncované.',
+  },
+  {
+    title: 'Drahé kameny',
+    description: 'Diamanty, safíry, rubíny, smaragdy. Každý kámen ručně vybraný od ověřených dodavatelů s certifikátem.',
+  },
+  {
+    title: 'Přírodní kameny',
+    description: 'Opály, granáty, ametysty, měsíční kameny, turmalíny. Vyberu kámen, který odpovídá vašemu přání a rozpočtu.',
+  },
+];
+
+const pricingSilver = [
+  { item: 'Jednoduchý prsten', price: 'od 2 500 Kč' },
+  { item: 'Prsten s kamenem', price: 'od 3 500 Kč' },
+  { item: 'Náušnice (pár)', price: 'od 2 800 Kč' },
+  { item: 'Přívěsek', price: 'od 1 800 Kč' },
+  { item: 'Náhrdelník', price: 'od 4 500 Kč' },
+];
+
+const pricingGold = [
+  { item: 'Jednoduchý prsten (585)', price: 'od 8 000 Kč' },
+  { item: 'Prsten s kamenem (585)', price: 'od 12 000 Kč' },
+  { item: 'Snubní prsteny (pár, 585)', price: 'od 18 000 Kč' },
+  { item: 'Náušnice (pár, 585)', price: 'od 9 000 Kč' },
+  { item: 'Náhrdelník (585)', price: 'od 15 000 Kč' },
+];
+
+const faqItems = [
+  {
+    question: 'Jak dlouho trvá výroba zakázkového šperku?',
+    answer: 'Jednoduchý šperk (prsten, přívěsek) vyrobím během 2–3 týdnů. Složitější kusy s kameny nebo gravurami 4–6 týdnů. U expresních objednávek se domluvíme individuálně.',
+  },
+  {
+    question: 'Kolik stojí zakázkový šperk?',
+    answer: 'Cena záleží na materiálu, složitosti a použitých kamenech. Stříbrné šperky začínají od 2 500 Kč, zlaté od 8 000 Kč. Přesnou kalkulaci udělám až po konzultaci.',
+  },
+  {
+    question: 'Můžete opravit nebo upravit existující šperk?',
+    answer: 'Ano, opravuji a upravuji šperky — změna velikosti prstenu, výměna kamenu, oprava zapínání. Přineste šperk do dílny a řekneme si, co je možné.',
+  },
+  {
+    question: 'Jak probíhá konzultace?',
+    answer: 'Zavolejte nebo napište na WhatsApp. Můžeme se potkat v dílně v Praze 5, nebo vše probereme na dálku — telefonem, emailem či videohovorem.',
+  },
+  {
+    question: 'Poskytuji záruku na své šperky?',
+    answer: 'Každý šperk má doživotní záruku na vadu materiálu a zpracování. Běžné opotřebení (poškrábání, patina) není zárukou kryto, ale rád pomůžu s údržbou.',
+  },
+];
+---
+
+<Layout
+  title="Zakázková tvorba | Martin Ševr — Zlatnická dílna Praha"
+  description="Váš šperk na míru. Pracuji se zlatem, stříbrem a přírodními kameny. Konzultace, návrh, výroba, předání."
+>
+
+  <!-- ====== HERO ====== -->
+  <section class="relative bg-bg-primary">
+    <ImagePlaceholder aspect="16/9" alt="Zakázková výroba šperků" class="w-full max-h-[65vh] object-cover" />
+    <div class="absolute inset-0 bg-bg-primary/40 flex items-end">
+      <div class="max-w-[1280px] mx-auto px-6 pb-12 md:pb-20 w-full">
+        <h1 class="text-h1 italic text-text-primary max-w-lg">Váš šperk na míru</h1>
+        <div class="mt-6">
+          <Button href="#process" variant="primary">Poptat šperk</Button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== PROCESS ====== -->
+  <section id="process" class="bg-bg-primary py-20 md:py-28">
+    <div class="max-w-[1280px] mx-auto px-6">
+      <h2 class="text-h2 mb-12 md:mb-16">Jak probíhá zakázka</h2>
+      <div class="space-y-16 md:space-y-24">
+        {processSteps.map((step, i) => (
+          <div class={`grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 items-center ${i % 2 === 1 ? 'md:direction-rtl' : ''}`}>
+            <div class={i % 2 === 1 ? 'md:order-2' : ''}>
+              <ImagePlaceholder aspect="4/3" alt={`${step.title} — proces výroby šperku`} class="w-full" />
+            </div>
+            <div class={i % 2 === 1 ? 'md:order-1' : ''}>
+              <span class="font-serif text-[3.5rem] font-light text-gold-soft leading-none">{step.number}</span>
+              <h3 class="text-h3 mt-4">{step.title}</h3>
+              <p class="mt-4 text-text-secondary text-[1.0625rem] leading-relaxed">{step.description}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== MATERIALS ====== -->
+  <section class="bg-bg-secondary py-20 md:py-28">
+    <div class="max-w-[1280px] mx-auto px-6">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-start">
+        <div>
+          <ImagePlaceholder aspect="4/3" alt="Materiály — zlato, stříbro, kameny" class="w-full" />
+        </div>
+        <div class="space-y-8">
+          <h2 class="text-h2">Materiály</h2>
+          {materials.map((mat) => (
+            <div>
+              <h3 class="text-h4 font-serif">{mat.title}</h3>
+              <p class="mt-2 text-text-secondary text-[0.9375rem] leading-relaxed">{mat.description}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== PRICING (side-by-side) ====== -->
+  <section id="cenik" class="bg-bg-primary py-20 md:py-28">
+    <div class="max-w-[1280px] mx-auto px-6">
+      <h2 class="text-h2 mb-4 text-center">Orientační ceník</h2>
+      <p class="text-text-secondary text-center max-w-xl mx-auto mb-12 md:mb-16">
+        Ceny jsou orientační a závisí na složitosti, materiálu a použitých kamenech. Přesnou kalkulaci udělám po konzultaci.
+      </p>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
+        <!-- Stříbro -->
+        <div>
+          <h3 class="text-h3 mb-6">Stříbro 925</h3>
+          <div class="border-t border-border">
+            {pricingSilver.map((row) => (
+              <div class="flex items-center justify-between py-4 border-b border-divider">
+                <span class="text-text-primary">{row.item}</span>
+                <span class="text-text-secondary font-medium whitespace-nowrap ml-4">{row.price}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+        <!-- Zlato -->
+        <div>
+          <h3 class="text-h3 mb-6">Zlato 585</h3>
+          <div class="border-t border-border">
+            {pricingGold.map((row) => (
+              <div class="flex items-center justify-between py-4 border-b border-divider">
+                <span class="text-text-primary">{row.item}</span>
+                <span class="text-text-secondary font-medium whitespace-nowrap ml-4">{row.price}</span>
+              </div>
+            ))}
+          </div>
+          <p class="mt-4 text-[0.8125rem] text-text-muted">U zlata 750/1000 přičtěte cca 30 %.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== FULLWIDTH PARALLAX PHOTO ====== -->
+  <section class="relative h-[60vh] overflow-hidden">
+    <div class="absolute inset-0 bg-bg-tertiary">
+      <ImagePlaceholder aspect="16/9" alt="Detailní záběr zlatnické práce" class="w-full h-full object-cover" style="position: sticky; top: 0;" />
+    </div>
+  </section>
+
+  <!-- ====== EXPRESS ====== -->
+  <section id="express" class="bg-bg-primary py-20 md:py-28">
+    <div class="max-w-[1280px] mx-auto px-6">
+      <div class="bg-bg-secondary rounded-[2px] p-8 md:p-12 border-l-2 border-gold-primary">
+        <span class="text-[0.75rem] font-medium uppercase tracking-wider text-gold-on-light">
+          Expresní výroba
+        </span>
+        <h2 class="text-h3 mt-4">Potřebujete šperk dřív</h2>
+        <p class="mt-4 text-text-secondary max-w-2xl">
+          Narozeniny, výročí, zásnuby — někdy se termín blíží rychleji, než čekáte. U jednodušších šperků zvládnu expresní výrobu do 5 pracovních dní. Zavolejte a domluvíme se.
+        </p>
+        <div class="mt-8 flex flex-col sm:flex-row gap-4">
+          <Button href="tel:+420774598181" variant="primary">Zavolat</Button>
+          <Button href="https://wa.me/420774598181" variant="secondary">Napsat na WhatsApp</Button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== FAQ ====== -->
+  <section class="bg-bg-secondary py-20 md:py-28">
+    <div class="max-w-3xl mx-auto px-6">
+      <h2 class="text-h2 mb-12">Časté otázky</h2>
+      <FAQ items={faqItems} />
+    </div>
+  </section>
+
+  <!-- ====== CTA ====== -->
+  <CTA
+    heading="Máte nápad na šperk?"
+    subheading="Zavolejte nebo napište. Probereme vaši představu a řekneme si, co je možné. Bez závazku."
+    variant="split"
+    bgColor="primary"
+  />
+
+</Layout>

@@ -1,0 +1,74 @@
+---
+import Layout from '../layouts/Layout.astro';
+import ImagePlaceholder from '../components/ImagePlaceholder.astro';
+import FilterPills from '../components/FilterPills.astro';
+import CTA from '../components/CTA.astro';
+import { portfolioItems } from '../data/portfolio';
+
+const filters = ['Vše', 'Zlato', 'Stříbro', 'Zakázky', 'Kameny'];
+---
+
+<Layout
+  title="Portfolio | Martin Ševr — Zlatnická dílna Praha"
+  description="Každý kus vypráví příběh. Zlaté prsteny, stříbrné přívěsky, sady s kameny. Ruční práce Martina Ševra."
+>
+
+  <!-- ====== HEADER ====== -->
+  <section class="bg-bg-primary pt-16 pb-8 md:pt-24 md:pb-12">
+    <div class="max-w-[1280px] mx-auto px-6 text-center">
+      <h1 class="text-h1 italic">Šperky z duše</h1>
+      <p class="mt-4 text-text-secondary text-[1.125rem] max-w-xl mx-auto">
+        Výběr z toho, co jsem za roky vyrobil. Každý šperk má svůj příběh — a rád vám ho povídám.
+      </p>
+    </div>
+  </section>
+
+  <!-- ====== FILTERS ====== -->
+  <section class="bg-bg-primary pb-6">
+    <div class="max-w-[1280px] mx-auto px-6">
+      <FilterPills items={filters} activeIndex={0} />
+    </div>
+  </section>
+
+  <!-- ====== GALLERY ====== -->
+  <section class="bg-bg-primary pb-20 md:pb-28">
+    <div class="max-w-[1280px] mx-auto px-6">
+      <div class="space-y-16 md:space-y-24">
+        {portfolioItems.map((item, i) => (
+          <a href={`/tvorba/${item.slug}`} class="group grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center">
+            <div class={`overflow-hidden rounded-[2px] ${i % 2 === 1 ? 'md:order-2' : ''}`}>
+              <ImagePlaceholder
+                aspect="4/3"
+                alt={item.title}
+                class="w-full transition-transform duration-500 group-hover:scale-[1.02]"
+              />
+            </div>
+            <div class={i % 2 === 1 ? 'md:order-1' : ''}>
+              <div class="flex flex-wrap gap-2 mb-4">
+                {item.tags.map((tag: string) => (
+                  <span class="text-[0.75rem] font-medium uppercase tracking-wider text-text-muted bg-bg-secondary px-3 py-1 rounded-[2px]">
+                    {tag}
+                  </span>
+                ))}
+              </div>
+              <h3 class="text-h3">{item.title}</h3>
+              <p class="mt-3 text-text-secondary text-[1.0625rem] leading-relaxed">{item.description}</p>
+              <span class="inline-block mt-6 text-[0.875rem] font-medium text-gold-on-light group-hover:text-hover-gold transition-colors duration-200">
+                Zobrazit detail &rarr;
+              </span>
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== CTA ====== -->
+  <CTA
+    heading="Chcete podobný šperk na míru"
+    subheading="Každý šperk v portfoliu začal jednoduchým nápadem. Řekněte mi ten svůj."
+    variant="split"
+    bgColor="secondary"
+  />
+
+</Layout>
