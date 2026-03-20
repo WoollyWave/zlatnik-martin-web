@@ -212,85 +212,45 @@ const faqItems = [
           </p>
         </div>
 
-        <!-- Steps -->
-        <div class="space-y-20 md:space-y-28">
+        <!-- Steps — vertical timeline with left line -->
+        <div class="relative">
+          <!-- Vertical line -->
+          <div class="absolute left-4 md:left-5 top-0 bottom-0 w-px bg-divider hidden md:block"></div>
 
-          <!-- 01 Konzultace -->
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-start" data-animate="up">
-            <div>
-              <div class="border-t border-divider pt-6">
-                <span class="font-serif text-[2.5rem] md:text-[3rem] font-normal text-gold-soft leading-none">01</span>
+          <div class="space-y-16 md:space-y-20">
+
+            {processSteps.map((step, i) => (
+              <div class="relative md:pl-16" data-animate="up">
+                <!-- Dot on the line -->
+                <div class="hidden md:flex absolute left-0 top-0 w-9 md:w-10 h-9 md:h-10 items-center justify-center">
+                  <span class="w-2.5 h-2.5 rounded-full bg-gold-primary relative z-10"></span>
+                </div>
+
+                <!-- Number + title row -->
+                <div class="flex items-baseline gap-4 mb-4">
+                  <span class="font-serif text-[2rem] md:text-[2.5rem] font-normal text-gold-soft leading-none">{step.number}</span>
+                  <h3>{step.title}</h3>
+                </div>
+
+                <!-- Photo -->
+                <img
+                  src={step.image}
+                  srcset={`${step.image} 1x, ${step.image2x} 2x`}
+                  width="800" height="600"
+                  alt={step.alt}
+                  loading="lazy"
+                  decoding="async"
+                  class="w-full max-w-2xl h-auto object-cover"
+                />
+
+                <!-- Description -->
+                <p class="mt-5 text-text-secondary text-[1.0625rem] leading-relaxed max-w-xl">
+                  {step.description}
+                </p>
               </div>
-              <h3 class="mt-3">Konzultace</h3>
-              <p class="mt-3 text-text-secondary text-[1.0625rem] leading-relaxed">
-                Setkáme se v dílně nebo si zavoláme. Ukážete mi svou představu — skicu, fotografii, nebo jen slovy. Probereme materiál, časový rámec i rozpočet.
-              </p>
-            </div>
-            <div>
-              <img src="/images/zakazkova--proces-01--3d-cad-navrh.webp"
-                srcset="/images/zakazkova--proces-01--3d-cad-navrh.webp 1x, /images/zakazkova--proces-01--3d-cad-navrh@2x.webp 2x"
-                width="800" height="600" alt="Konzultace — první krok zakázky" loading="lazy" decoding="async"
-                class="w-full h-auto object-cover" />
-            </div>
-          </div>
+            ))}
 
-          <!-- 02 Návrh -->
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-start" data-animate="up">
-            <div class="md:order-2">
-              <div class="border-t border-divider pt-6">
-                <span class="font-serif text-[2.5rem] md:text-[3rem] font-normal text-gold-soft leading-none">02</span>
-              </div>
-              <h3 class="mt-3">Návrh</h3>
-              <p class="mt-3 text-text-secondary text-[1.0625rem] leading-relaxed">
-                Připravím návrh vašeho šperku. U složitějších kusů vytvořím 3D model nebo voskový prototyp. Nic nevznikne, dokud nebudete souhlasit.
-              </p>
-            </div>
-            <div class="md:order-1">
-              <img src="/images/zakazkova--proces-02--3d-cad-perspektiva.webp"
-                srcset="/images/zakazkova--proces-02--3d-cad-perspektiva.webp 1x, /images/zakazkova--proces-02--3d-cad-perspektiva@2x.webp 2x"
-                width="800" height="600" alt="3D model prstenu — perspektiva" loading="lazy" decoding="async"
-                class="w-full h-auto object-cover" />
-            </div>
           </div>
-
-          <!-- 03 Výroba -->
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-start" data-animate="up">
-            <div>
-              <div class="border-t border-divider pt-6">
-                <span class="font-serif text-[2.5rem] md:text-[3rem] font-normal text-gold-soft leading-none">03</span>
-              </div>
-              <h3 class="mt-3">Výroba</h3>
-              <p class="mt-3 text-text-secondary text-[1.0625rem] leading-relaxed">
-                Každý šperk vyrábím ručně ve své dílně. Fotím každý krok — budete vědět, jak váš šperk vzniká. Žádná sériová výroba, žádné kompromisy.
-              </p>
-            </div>
-            <div>
-              <img src="/images/zakazkova--proces-03--snubaky-v-ruce-vyroba.webp"
-                srcset="/images/zakazkova--proces-03--snubaky-v-ruce-vyroba.webp 1x, /images/zakazkova--proces-03--snubaky-v-ruce-vyroba@2x.webp 2x"
-                width="800" height="600" alt="Ruční výroba snubních prstenů" loading="lazy" decoding="async"
-                class="w-full h-auto object-cover" />
-            </div>
-          </div>
-
-          <!-- 04 Předání -->
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-start" data-animate="up">
-            <div class="md:order-2">
-              <div class="border-t border-divider pt-6">
-                <span class="font-serif text-[2.5rem] md:text-[3rem] font-normal text-gold-soft leading-none">04</span>
-              </div>
-              <h3 class="mt-3">Předání</h3>
-              <p class="mt-3 text-text-secondary text-[1.0625rem] leading-relaxed">
-                Šperk si můžete vyzvednout osobně v dílně nebo ho pošlu pojištěný zásilkou. Ke každému kusu dostanete certifikát pravosti.
-              </p>
-            </div>
-            <div class="md:order-1">
-              <img src="/images/zakazkova--proces-04--privesek-J-na-krku-predani.webp"
-                srcset="/images/zakazkova--proces-04--privesek-J-na-krku-predani.webp 1x, /images/zakazkova--proces-04--privesek-J-na-krku-predani@2x.webp 2x"
-                width="800" height="600" alt="Hotový přívěsek na krku — předání klientce" loading="lazy" decoding="async"
-                class="w-full h-auto object-cover" />
-            </div>
-          </div>
-
         </div>
       </div>
     </div>
