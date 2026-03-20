@@ -28,50 +28,70 @@ const { item } = Astro.props;
     <ImagePlaceholder aspect="16/9" alt={item.title} class="w-full max-h-[70vh] object-cover" />
   </section>
 
-  <!-- ====== INFO ====== -->
+  <!-- ====== INFO — Section Label ====== -->
   <section class="bg-bg-primary py-16 md:py-24">
-    <div class="max-w-3xl mx-auto px-6 text-center">
-      <a href="/portfolio" class="text-[0.8125rem] text-text-muted hover:text-text-secondary transition-colors duration-200 mb-8 inline-block hover:underline underline-offset-4">
-        &larr; Zpět na Portfolio
-      </a>
-      <h1>{item.title}</h1>
+    <div class="max-w-[1400px] mx-auto px-8">
+      <div class="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-12 lg:gap-20">
 
-      <div class="flex flex-wrap gap-3 justify-center mt-6">
-        {item.tags.map((tag) => (
-          <span class="text-[0.75rem] font-medium uppercase tracking-wider text-text-muted">
-            {tag}
-          </span>
-        ))}
+        <!-- Sidebar -->
+        <div>
+          <a href="/portfolio" class="inline-flex items-center text-[0.8125rem] text-text-muted hover:text-text-primary transition-colors duration-200 mb-6 uppercase tracking-[0.1em]">
+            &larr;&nbsp;Zpět na Portfolio
+          </a>
+          <div class="flex flex-wrap gap-3 mt-4">
+            {item.tags.map((tag) => (
+              <span class="text-[0.75rem] font-medium uppercase tracking-wider text-text-muted">
+                {tag}
+              </span>
+            ))}
+          </div>
+          <div class="mt-2 text-[0.875rem] text-text-muted">{item.material}</div>
+        </div>
+
+        <!-- Content -->
+        <div data-animate="up">
+          <h1>{item.title}</h1>
+          <p class="mt-6 text-text-secondary text-[1.0625rem] leading-relaxed max-w-2xl">
+            {item.fullDescription}
+          </p>
+        </div>
+
       </div>
-
-      <div class="mt-4 text-[0.875rem] text-text-muted">{item.material}</div>
-
-      <p class="mt-8 text-text-secondary text-[1.0625rem] leading-relaxed max-w-2xl mx-auto">
-        {item.fullDescription}
-      </p>
     </div>
   </section>
 
-  <!-- ====== PROCESS GALLERY ====== -->
-  <section class="bg-bg-primary section-divider py-16 md:py-24">
-    <div class="max-w-[1280px] mx-auto px-6">
-      <h2 class="text-h3 text-center mb-4">Proces vzniku</h2>
-      <p class="text-text-secondary text-center max-w-lg mx-auto mb-12">
-        Od prvního náčrtu po finální lesk — takhle tento šperk vznikal.
-      </p>
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+  <!-- ====== PROCESS GALLERY — Section Label ====== -->
+  <section class="bg-bg-primary border-t border-divider py-16 md:py-24">
+    <div class="max-w-[1400px] mx-auto px-8">
+      <div class="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-12 lg:gap-20">
+
+        <!-- Sidebar label -->
         <div>
-          <ImagePlaceholder aspect="4/3" alt={`${item.title} — návrh`} class="w-full" />
-          <p class="mt-3 text-[0.8125rem] text-text-muted text-center">Návrh</p>
+          <div class="flex items-center gap-2">
+            <span class="w-1.5 h-1.5 rounded-full bg-gold-primary"></span>
+            <span class="text-[0.6875rem] uppercase tracking-[0.15em] font-medium text-text-primary">Proces vzniku</span>
+          </div>
+          <p class="text-[0.875rem] text-text-muted leading-relaxed mt-4 max-w-[240px]">
+            Od prvního náčrtu po finální lesk.
+          </p>
         </div>
-        <div>
-          <ImagePlaceholder aspect="4/3" alt={`${item.title} — výroba`} class="w-full" />
-          <p class="mt-3 text-[0.8125rem] text-text-muted text-center">Výroba</p>
+
+        <!-- Gallery -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6" data-animate="up">
+          <div>
+            <ImagePlaceholder aspect="4/3" alt={`${item.title} — návrh`} class="w-full" />
+            <p class="mt-3 text-[0.8125rem] text-text-muted">Návrh</p>
+          </div>
+          <div>
+            <ImagePlaceholder aspect="4/3" alt={`${item.title} — výroba`} class="w-full" />
+            <p class="mt-3 text-[0.8125rem] text-text-muted">Výroba</p>
+          </div>
+          <div>
+            <ImagePlaceholder aspect="4/3" alt={`${item.title} — hotový kus`} class="w-full" />
+            <p class="mt-3 text-[0.8125rem] text-text-muted">Hotový kus</p>
+          </div>
         </div>
-        <div>
-          <ImagePlaceholder aspect="4/3" alt={`${item.title} — hotový kus`} class="w-full" />
-          <p class="mt-3 text-[0.8125rem] text-text-muted text-center">Hotový kus</p>
-        </div>
+
       </div>
     </div>
   </section>

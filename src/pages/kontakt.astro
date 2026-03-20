@@ -51,71 +51,108 @@ const contactMethods = [
   jsonLd={jsonLd}
 >
 
-  <!-- ====== HEADER ====== -->
+  <!-- ====== HEADER — Section Label ====== -->
   <section class="bg-bg-primary pt-16 pb-8 md:pt-24 md:pb-12">
-    <div class="max-w-[1280px] mx-auto px-6 text-center">
-      <h1>Pojďme si promluvit</h1>
-      <p class="mt-4 text-text-secondary text-[1.125rem] max-w-xl mx-auto">
-        Nechte mi zprávu nebo zavolejte. Ozvu se do 24 hodin.
-      </p>
+    <div class="max-w-[1400px] mx-auto px-8">
+      <div class="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-12 lg:gap-20">
+
+        <!-- Sidebar label -->
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="w-1.5 h-1.5 rounded-full bg-gold-primary"></span>
+            <span class="text-[0.6875rem] uppercase tracking-[0.15em] font-medium text-text-primary">Kontakt</span>
+          </div>
+          <p class="text-[0.875rem] text-text-muted leading-relaxed mt-4 max-w-[240px]">
+            Nechte mi zprávu nebo zavolejte. Ozvu se do 24 hodin.
+          </p>
+        </div>
+
+        <!-- Heading -->
+        <div>
+          <h1>Pojďme si promluvit</h1>
+        </div>
+
+      </div>
     </div>
   </section>
 
-  <!-- ====== CONTACT METHODS ====== -->
+  <!-- ====== CONTACT METHODS — bg-secondary cards ====== -->
   <section class="bg-bg-primary pb-16 md:pb-20">
-    <div class="max-w-[1280px] mx-auto px-6">
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
+    <div class="max-w-[1400px] mx-auto px-8">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
         {contactMethods.map((method) => (
           <a
             href={method.href}
             target={method.label === 'WhatsApp' ? '_blank' : undefined}
             rel={method.label === 'WhatsApp' ? 'noopener noreferrer' : undefined}
-            class="block py-6 border-t border-divider hover:border-gold-primary transition-colors duration-200"
+            class="block bg-bg-secondary rounded-[3px] px-8 py-8 hover:bg-hover-bg transition-colors duration-200"
           >
-            <h3 class="font-sans text-[0.75rem] font-medium uppercase tracking-wider text-text-muted mb-2">{method.label}</h3>
+            <h3 class="font-sans text-[0.6875rem] font-medium uppercase tracking-[0.15em] text-text-muted mb-3">{method.label}</h3>
             <p class="text-[1.0625rem] text-text-primary font-medium">{method.value}</p>
-            <p class="text-[0.8125rem] text-text-muted mt-1">{method.description}</p>
+            <p class="text-[0.8125rem] text-text-muted mt-2">{method.description}</p>
           </a>
         ))}
       </div>
     </div>
   </section>
 
-  <!-- ====== FORM + PHOTO ====== -->
-  <section class="bg-bg-secondary py-20 md:py-32">
-    <div class="max-w-[1280px] mx-auto px-6">
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16">
+  <!-- ====== FORM + PHOTO — Section Label ====== -->
+  <section class="bg-bg-primary border-t border-divider py-16 md:py-24">
+    <div class="max-w-[1400px] mx-auto px-8">
+      <div class="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-12 lg:gap-20">
+
+        <!-- Sidebar label -->
         <div>
-          <h2 class="mb-8">Napište mi</h2>
-          <ContactForm />
+          <div class="flex items-center gap-2">
+            <span class="w-1.5 h-1.5 rounded-full bg-gold-primary"></span>
+            <span class="text-[0.6875rem] uppercase tracking-[0.15em] font-medium text-text-primary">Napište mi</span>
+          </div>
+          <p class="text-[0.875rem] text-text-muted leading-relaxed mt-4 max-w-[240px]">
+            Pro zakázkové šperky, konzultace a vše kolem řemesla.
+          </p>
         </div>
-        <div class="hidden lg:block">
-          <ImagePlaceholder aspect="3/4" alt="Zlatnická dílna — pracovní prostor" class="w-full sticky top-24" />
+
+        <!-- Form + photo -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16">
+          <div>
+            <ContactForm />
+          </div>
+          <div class="hidden lg:block">
+            <ImagePlaceholder aspect="3/4" alt="Zlatnická dílna — pracovní prostor" class="w-full sticky top-24" />
+          </div>
         </div>
+
       </div>
     </div>
   </section>
 
   <!-- ====== MAP ====== -->
-  <section class="bg-bg-primary py-16 md:py-24">
-    <div class="max-w-[1280px] mx-auto px-6">
-      <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
+  <section class="bg-bg-primary border-t border-divider py-16 md:py-24">
+    <div class="max-w-[1400px] mx-auto px-8">
+      <div class="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-12 lg:gap-20">
+
+        <!-- Sidebar with address -->
         <div>
-          <h2 class="text-h3 mb-4">Kde mě najdete</h2>
-          <address class="not-italic text-text-secondary leading-relaxed">
+          <div class="flex items-center gap-2 mb-4">
+            <span class="w-1.5 h-1.5 rounded-full bg-gold-primary"></span>
+            <span class="text-[0.6875rem] uppercase tracking-[0.15em] font-medium text-text-primary">Kde mě najdete</span>
+          </div>
+          <address class="not-italic text-[0.875rem] text-text-secondary leading-relaxed">
             <p class="font-medium text-text-primary">Martin Ševr — Zlatnická dílna</p>
             <p class="mt-2">Pod Kesnerkou 46</p>
             <p>Praha 5, 150 00</p>
-            <p class="mt-4 text-[0.875rem]">
+            <p class="mt-4">
               <span class="font-medium text-text-primary">Po–Pá</span> 9:00–17:00
             </p>
-            <p class="text-[0.875rem]">
+            <p>
               <span class="font-medium text-text-primary">Víkendy</span> po domluvě
             </p>
             <p class="mt-4 text-[0.8125rem] text-text-muted">IČO: 87639114</p>
           </address>
         </div>
-        <div class="lg:col-span-2">
+
+        <!-- Map -->
+        <div>
           <div class="img-placeholder rounded-[2px] w-full" style="aspect-ratio: 16/9;" role="img" aria-label="Mapa — Pod Kesnerkou 46, Praha 5">
             <svg class="w-12 h-12 opacity-40" fill="none" viewBox="0 0 24 24" stroke-width="1" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
@@ -123,6 +160,7 @@ const contactMethods = [
             </svg>
           </div>
         </div>
+
       </div>
     </div>
   </section>

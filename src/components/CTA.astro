@@ -7,19 +7,37 @@ interface Props {
 }
 
 const {
-  heading = 'Máte zájem\no zakázkový šperk?',
-  subheading = 'Zavolejte mi nebo napište. Ozvu se do 24 hodin.',
+  heading = 'Pojďme vytvořit šperk,\nkterý krásně zestárne.',
+  subheading = 'Zavolejte mi nebo napište na WhatsApp. Ozvu se do 24 hodin a domluvíme se na dalším kroku.',
 } = Astro.props;
 ---
 
-<section class="bg-bg-primary section-divider py-24 md:py-40">
-  <div class="max-w-[1280px] mx-auto px-6">
-    <div class="text-center max-w-2xl mx-auto" data-animate="up">
-      <h2 class="text-h2 whitespace-pre-line">{heading}</h2>
-      <p class="mt-4 text-text-secondary text-[1.0625rem]">{subheading}</p>
-      <div class="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
-        <Button href="tel:+420774598181" variant="primary">Zavolat</Button>
-        <Button href="https://wa.me/420774598181" variant="secondary">Napsat na WhatsApp</Button>
+<section class="bg-bg-primary py-16 md:py-24">
+  <div class="max-w-[1400px] mx-auto px-8">
+    <div class="bg-bg-secondary rounded-[3px] px-8 py-16 md:px-16 md:py-24">
+      <div class="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-12 lg:gap-20">
+
+        <!-- Sidebar -->
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="w-1.5 h-1.5 rounded-full bg-gold-primary"></span>
+            <span class="text-[0.6875rem] uppercase tracking-[0.15em] font-medium text-text-primary">Nezávazná konzultace</span>
+          </div>
+          <p class="text-[0.875rem] text-text-muted leading-relaxed mt-4 max-w-[240px]">
+            Pro zakázkové šperky, konzultace a vše kolem řemesla.
+          </p>
+        </div>
+
+        <!-- Content -->
+        <div data-animate="up">
+          <h2 class="whitespace-pre-line">{heading}</h2>
+          <p class="mt-4 text-text-secondary text-[1.0625rem] leading-relaxed max-w-xl">{subheading}</p>
+          <div class="mt-10 flex flex-col sm:flex-row gap-4">
+            <Button href="tel:+420774598181" variant="primary">Zavolat</Button>
+            <Button href="https://wa.me/420774598181" variant="secondary">Napsat na WhatsApp</Button>
+          </div>
+        </div>
+
       </div>
     </div>
   </div>

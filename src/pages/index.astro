@@ -39,18 +39,21 @@ const portfolioItems = [
     tags: ['Zlato 585', 'Opál', 'Zakázka'],
     description: 'Prsten s australským opálem zasazeným do ručně tepaného zlata. Navržen podle příběhu klientky.',
     href: '/tvorba/zlaty-prsten-s-opalem',
+    label: 'Zakázka 01',
   },
   {
     title: 'Stříbrná sada s granáty',
     tags: ['Stříbro 925', 'České granáty'],
     description: 'Náušnice a prsten s českými granáty v minimalistickém moderním designu.',
     href: '/tvorba/stribrna-sada-s-granaty',
+    label: 'Zakázka 02',
   },
   {
     title: 'Snubní prsteny na míru',
     tags: ['Zlato 750', 'Zakázka'],
     description: 'Pár snubních prstenů s ručně rytým vzorem. Každý je originál.',
     href: '/tvorba/snubni-prsteny-na-miru',
+    label: 'Zakázka 03',
   },
 ];
 
@@ -71,21 +74,6 @@ const processSteps = [
     description: 'Šperk předám osobně v dílně nebo zašlu pojištěnou zásilkou. Vždy s certifikátem pravosti.',
   },
 ];
-
-const uspItems = [
-  {
-    title: 'Váš šperk, váš příběh',
-    description: 'Fotím každý krok — od prvního náčrtu po hotový kus. Dostanete kompletní příběh vzniku vašeho šperku.',
-  },
-  {
-    title: 'Dílna bez tajemství',
-    description: 'Můžete být u toho, když váš šperk vzniká. Otvírám dveře dílny — ať vidíte, z čeho a jak se rodí.',
-  },
-  {
-    title: 'Mluvíte se mnou',
-    description: 'Žádný asistent, žádný formulář do prázdna. Voláte a píšete přímo zlatníkovi, který váš šperk vyrobí.',
-  },
-];
 ---
 
 <Layout
@@ -96,70 +84,92 @@ const uspItems = [
 
   <!-- ====== HERO ====== -->
   <section class="bg-bg-primary pt-12 md:pt-20 pb-16 md:pb-28">
-    <div class="max-w-[1280px] mx-auto px-6">
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24 items-center">
-        <div data-animate="up">
-          <h1>
-            Každý šperk<br />má svůj příběh
-          </h1>
-          <p class="mt-6 text-text-secondary text-[1.125rem] max-w-lg leading-relaxed">
+    <div class="max-w-[1400px] mx-auto px-8">
+      <!-- Big heading -->
+      <h1 class="max-w-4xl" data-animate="up">
+        Každý šperk má svůj
+        <em class="italic text-gold-deep" style="font-variation-settings: 'WONK' 1, 'SOFT' 0, 'opsz' 144;">příběh</em>
+      </h1>
+
+      <!-- Sidebar label + link row -->
+      <div class="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-8 lg:gap-20 mt-8">
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="w-1.5 h-1.5 rounded-full bg-gold-primary"></span>
+            <span class="text-[0.6875rem] uppercase tracking-[0.15em] font-medium text-text-primary">Zlatnická dílna Praha</span>
+          </div>
+          <p class="text-[0.875rem] text-text-muted leading-relaxed mt-4 max-w-[240px]">
             Ručně vyráběné šperky ze zlata, stříbra a přírodních kamenů. Více než dvacet let zkušeností v každém kusu.
           </p>
-          <div class="mt-10 flex flex-col sm:flex-row gap-4">
-            <Button href="/zakazkova-tvorba" variant="primary">Chci šperk na míru</Button>
-            <Button href="/skladem" variant="secondary">Hotové šperky</Button>
-          </div>
         </div>
-        <div data-animate="fade" data-animate-delay="0.2">
-          <ImagePlaceholder aspect="4/3" alt="Šperk od Martina Ševra — ruční práce" class="w-full" />
+        <div class="flex items-end justify-start lg:justify-end">
+          <Button href="/portfolio" variant="text">Prohlédnout portfolio</Button>
         </div>
+      </div>
+
+      <!-- Buttons -->
+      <div class="mt-10 flex flex-col sm:flex-row gap-4">
+        <Button href="/zakazkova-tvorba" variant="primary">Chci šperk na míru</Button>
+        <Button href="/skladem" variant="secondary">Hotové šperky</Button>
+      </div>
+
+      <!-- Asymmetric photo grid -->
+      <div class="grid grid-cols-1 md:grid-cols-[1.15fr_0.85fr] gap-4 mt-12" data-animate="fade" data-animate-delay="0.2">
+        <ImagePlaceholder aspect="4/3" alt="Šperk od Martina Ševra — ruční práce" class="w-full" />
+        <ImagePlaceholder aspect="4/3" alt="Detail zlatnické práce v dílně" class="w-full" />
       </div>
     </div>
   </section>
 
-  <!-- ====== USP ====== -->
-  <section class="bg-bg-primary py-16 md:py-24">
-    <div class="max-w-[1280px] mx-auto px-6">
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-16" data-animate-stagger>
-        {uspItems.map((item) => (
-          <div>
-            <div class="w-8 h-[1px] bg-gold-primary mb-6"></div>
-            <h4>{item.title}</h4>
-            <p class="mt-3 text-text-secondary text-[0.9375rem] leading-relaxed">
-              {item.description}
-            </p>
-          </div>
-        ))}
-      </div>
-    </div>
-  </section>
+  <!-- ====== SELECTED WORKS ====== -->
+  <section class="bg-bg-primary border-t border-divider py-16 md:py-24">
+    <div class="max-w-[1400px] mx-auto px-8">
+      <div class="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-12 lg:gap-20">
 
-  <!-- ====== PORTFOLIO PREVIEW ====== -->
-  <section class="bg-bg-primary section-divider py-16 md:py-24">
-    <div class="max-w-[1280px] mx-auto px-6">
-      <h2 class="mb-12 md:mb-16" data-animate="up">Vybrané práce</h2>
-      <div class="flex flex-col gap-16 md:gap-24">
+        <!-- Sidebar -->
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="w-1.5 h-1.5 rounded-full bg-gold-primary"></span>
+            <span class="text-[0.6875rem] uppercase tracking-[0.15em] font-medium text-text-primary">Vybrané práce</span>
+          </div>
+          <p class="text-[0.875rem] text-text-muted leading-relaxed mt-4 max-w-[240px]">
+            Výběr z realizovaných zakázek a autorských šperků.
+          </p>
+        </div>
+
+        <!-- Content -->
+        <div>
+          <h2 data-animate="up">
+            Šperky vyrobené s
+            <em class="italic text-gold-deep" style="font-variation-settings: 'WONK' 1, 'SOFT' 0, 'opsz' 144;">láskou</em>
+            ke každému detailu.
+          </h2>
+          <div class="mt-4 flex justify-end">
+            <Button href="/portfolio" variant="text">Zobrazit portfolio</Button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Portfolio items -->
+      <div class="flex flex-col gap-16 md:gap-20 mt-12">
         {portfolioItems.map((item, i) => (
-          <a href={item.href} class="group grid grid-cols-1 md:grid-cols-5 gap-8 md:gap-12 items-center" data-animate="up">
-            <div class={`md:col-span-3 overflow-hidden ${i % 2 === 1 ? 'md:order-2' : ''}`}>
-              <ImagePlaceholder
-                aspect="4/3"
-                alt={item.title}
-                class="w-full"
-              />
+          <a href={item.href} class="group grid grid-cols-1 md:grid-cols-[1.15fr_0.85fr] gap-4 items-end" data-animate="up">
+            <div class={`relative overflow-hidden ${i % 2 === 1 ? 'md:order-2' : ''}`}>
+              <ImagePlaceholder aspect="4/3" alt={item.title} class="w-full" />
+              <div class="absolute bottom-4 right-4 bg-bg-primary/90 backdrop-blur-sm px-4 py-2">
+                <span class="text-[0.6875rem] uppercase tracking-[0.12em] font-medium text-gold-on-light">{item.label}</span>
+              </div>
             </div>
-            <div class={`md:col-span-2 ${i % 2 === 1 ? 'md:order-1' : ''}`}>
-              <div class="flex flex-wrap gap-2 mb-4">
+            <div class={`py-4 ${i % 2 === 1 ? 'md:order-1' : ''}`}>
+              <div class="flex flex-wrap gap-2 mb-3">
                 {item.tags.map((tag: string) => (
-                  <span class="text-[0.75rem] font-medium uppercase tracking-wider text-text-muted">
-                    {tag}
-                  </span>
+                  <span class="text-[0.75rem] uppercase tracking-wider text-text-muted">{tag}</span>
                 ))}
               </div>
               <h3>{item.title}</h3>
-              <p class="mt-3 text-text-secondary">{item.description}</p>
-              <span class="inline-block mt-4 text-[0.875rem] font-medium text-gold-on-light group-hover:opacity-60 transition-opacity duration-200">
-                Zobrazit detail &rarr;
+              <p class="mt-2 text-text-secondary text-[0.9375rem]">{item.description}</p>
+              <span class="inline-block mt-3 text-[0.8125rem] font-medium text-text-primary uppercase tracking-[0.1em] group-hover:text-gold-deep transition-colors duration-200">
+                Zobrazit detail &nearr;
               </span>
             </div>
           </a>
@@ -168,37 +178,130 @@ const uspItems = [
     </div>
   </section>
 
-  <!-- ====== PROCESS ====== -->
-  <section class="bg-bg-secondary py-20 md:py-32">
-    <div class="max-w-[1280px] mx-auto px-6">
-      <h2 class="text-center mb-12 md:mb-16" data-animate="up">Jak se rodí váš šperk</h2>
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-8" data-animate-stagger>
-        {processSteps.map((step) => (
-          <div>
-            <span class="font-serif text-[2.5rem] font-light text-gold-soft leading-none">{step.number}</span>
-            <h3 class="mt-4">{step.title}</h3>
-            <p class="mt-3 text-text-secondary text-[0.9375rem] leading-relaxed">
-              {step.description}
-            </p>
+  <!-- ====== PHILOSOPHY ====== -->
+  <section class="bg-bg-primary border-t border-divider py-16 md:py-24">
+    <div class="max-w-[1400px] mx-auto px-8">
+      <div class="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-12 lg:gap-20">
+
+        <!-- Sidebar -->
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="w-1.5 h-1.5 rounded-full bg-gold-primary"></span>
+            <span class="text-[0.6875rem] uppercase tracking-[0.15em] font-medium text-text-primary">Filozofie dílny</span>
           </div>
-        ))}
+          <p class="text-[0.875rem] text-text-muted leading-relaxed mt-4 max-w-[240px]">
+            Přístup ke šperku jako k architektuře v malém.
+          </p>
+        </div>
+
+        <!-- Content -->
+        <div data-animate="up">
+          <p class="font-serif italic text-[1.375rem] md:text-[1.625rem] leading-relaxed text-text-primary font-light max-w-2xl">
+            Věřím ve šperky, které
+            <em class="text-gold-deep" style="font-variation-settings: 'WONK' 1, 'SOFT' 0, 'opsz' 144;">dýchají</em>
+            — řemeslo, které odstraní zbytečné a odhalí
+            <em class="text-gold-deep" style="font-variation-settings: 'WONK' 1, 'SOFT' 0, 'opsz' 144;">krásu</em>
+            materiálu.
+          </p>
+
+          <div class="border-t border-divider mt-12 pt-12">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+              <div>
+                <p class="text-text-secondary text-[1.0625rem] leading-relaxed">
+                  Víc než dvacet let pracuji se zlatem a stříbrem. Každý šperk vyrábím ručně — od prvního náčrtu po finální lesk. Není to jen řemeslo, je to způsob, jakým vnímám svět.
+                </p>
+                <p class="text-text-secondary text-[1.0625rem] leading-relaxed mt-4">
+                  Každý kus, který opustí dílnu, nese kousek mého příběhu a hodně toho vašeho. Proto nespěchám a nedělám kompromisy.
+                </p>
+              </div>
+              <div>
+                <ImagePlaceholder aspect="4/3" alt="Zlatnická dílna — detail ruční práce" class="w-full" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Principles -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
+            <div>
+              <div class="border-t border-divider pt-4">
+                <span class="text-[0.75rem] text-text-muted">01</span>
+                <p class="mt-2 text-[0.9375rem] font-medium text-text-primary">Ruční práce bez kompromisů</p>
+              </div>
+            </div>
+            <div>
+              <div class="border-t border-divider pt-4">
+                <span class="text-[0.75rem] text-text-muted">02</span>
+                <p class="mt-2 text-[0.9375rem] font-medium text-text-primary">Materiály s příběhem</p>
+              </div>
+            </div>
+            <div>
+              <div class="border-t border-divider pt-4">
+                <span class="text-[0.75rem] text-text-muted">03</span>
+                <p class="mt-2 text-[0.9375rem] font-medium text-text-primary">Zdrženlivost místo přebytku</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== PROCESS ====== -->
+  <section class="bg-bg-primary border-t border-divider py-16 md:py-24">
+    <div class="max-w-[1400px] mx-auto px-8">
+      <div class="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-12 lg:gap-20">
+
+        <!-- Sidebar -->
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="w-1.5 h-1.5 rounded-full bg-gold-primary"></span>
+            <span class="text-[0.6875rem] uppercase tracking-[0.15em] font-medium text-text-primary">Jak pracuji</span>
+          </div>
+          <p class="text-[0.875rem] text-text-muted leading-relaxed mt-4 max-w-[240px]">
+            Od prvního nápadu po hotový šperk v jednoduchých krocích.
+          </p>
+        </div>
+
+        <!-- Content: 3 steps -->
+        <div class="space-y-12" data-animate-stagger>
+          {processSteps.map((step) => (
+            <div class="border-t border-divider pt-6">
+              <span class="text-[0.75rem] text-text-muted">{step.number}</span>
+              <h3 class="mt-2">{step.title}</h3>
+              <p class="mt-2 text-text-secondary text-[0.9375rem] leading-relaxed max-w-lg">
+                {step.description}
+              </p>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   </section>
 
   <!-- ====== EXPRESS ====== -->
-  <section class="bg-bg-primary section-divider py-16 md:py-24">
-    <div class="max-w-[1280px] mx-auto px-6 max-w-3xl" data-animate="up">
-      <span class="text-[0.75rem] font-medium uppercase tracking-wider text-gold-on-light">
-        Expresní výroba
-      </span>
-      <h2 class="mt-4">Šperk na poslední chvíli? Zvládnu to</h2>
-      <p class="mt-4 text-text-secondary max-w-2xl">
-        Termín se blíží a potřebujete šperk dřív. Zavolejte — domluvíme expresní výrobu a řekneme si, co je reálné stihnout.
-      </p>
-      <div class="mt-8 flex flex-col sm:flex-row gap-4">
-        <Button href="tel:+420774598181" variant="primary">Zavolat</Button>
-        <Button href="/zakazkova-tvorba#express" variant="secondary">Více o expresní výrobě</Button>
+  <section class="bg-bg-primary border-t border-divider py-16 md:py-24">
+    <div class="max-w-[1400px] mx-auto px-8">
+      <div class="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-12 lg:gap-20">
+
+        <!-- Sidebar -->
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="w-1.5 h-1.5 rounded-full bg-gold-primary"></span>
+            <span class="text-[0.6875rem] uppercase tracking-[0.15em] font-medium text-text-primary">Expresní výroba</span>
+          </div>
+        </div>
+
+        <!-- Content -->
+        <div data-animate="up">
+          <h2>Šperk na poslední chvíli? Zvládnu to</h2>
+          <p class="mt-4 text-text-secondary text-[1.0625rem] leading-relaxed max-w-2xl">
+            Termín se blíží a potřebujete šperk dřív. Zavolejte — domluvíme expresní výrobu a řekneme si, co je reálné stihnout.
+          </p>
+          <div class="mt-8 flex flex-col sm:flex-row items-start gap-4">
+            <Button href="tel:+420774598181" variant="primary">Zavolat</Button>
+            <Button href="/zakazkova-tvorba#express" variant="text">Více o expresní výrobě</Button>
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -211,20 +314,34 @@ const uspItems = [
   />
 
   <!-- ====== O DÍLNĚ PREVIEW ====== -->
-  <section class="bg-bg-primary section-divider py-16 md:py-24">
-    <div class="max-w-[1280px] mx-auto px-6">
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24 items-center">
-        <div data-animate="up">
-          <h2>O dílně</h2>
-          <p class="mt-4 text-text-secondary text-[1.0625rem] leading-relaxed">
-            Dílna Pod Kesnerkou je místo, kde se potkává tradice s moderním přístupem. Pracuji s certifikovanými kovy a ručně vybranými kameny. Žádná sériová výroba, žádné kompromisy.
-          </p>
-          <div class="mt-8">
-            <Button href="/o-dilne" variant="secondary">Poznejte dílnu</Button>
+  <section class="bg-bg-primary border-t border-divider py-16 md:py-24">
+    <div class="max-w-[1400px] mx-auto px-8">
+      <div class="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-12 lg:gap-20">
+
+        <!-- Sidebar -->
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="w-1.5 h-1.5 rounded-full bg-gold-primary"></span>
+            <span class="text-[0.6875rem] uppercase tracking-[0.15em] font-medium text-text-primary">O dílně</span>
           </div>
         </div>
+
+        <!-- Content -->
         <div>
-          <ImagePlaceholder aspect="4/3" alt="Zlatnická dílna Martina Ševra" class="w-full" />
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+            <div data-animate="up">
+              <h2>Dílna Pod Kesnerkou</h2>
+              <p class="mt-4 text-text-secondary text-[1.0625rem] leading-relaxed">
+                Dílna Pod Kesnerkou je místo, kde se potkává tradice s moderním přístupem. Pracuji s certifikovanými kovy a ručně vybranými kameny. Žádná sériová výroba, žádné kompromisy.
+              </p>
+              <div class="mt-8">
+                <Button href="/o-dilne" variant="text">Poznejte dílnu</Button>
+              </div>
+            </div>
+            <div>
+              <ImagePlaceholder aspect="4/3" alt="Zlatnická dílna Martina Ševra" class="w-full" />
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -232,7 +349,7 @@ const uspItems = [
 
   <!-- ====== CTA PRE-FOOTER ====== -->
   <CTA
-    heading={"Máte zájem\no zakázkový šperk?"}
+    heading={"Pojďme vytvořit šperk,\nkterý krásně zestárne."}
     subheading="Zavolejte mi nebo napište na WhatsApp. Ozvu se do 24 hodin a domluvíme se na dalším kroku."
   />
 

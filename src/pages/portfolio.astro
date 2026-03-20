@@ -2,6 +2,7 @@
 import Layout from '../layouts/Layout.astro';
 import ImagePlaceholder from '../components/ImagePlaceholder.astro';
 import FilterPills from '../components/FilterPills.astro';
+import Button from '../components/Button.astro';
 import CTA from '../components/CTA.astro';
 import { portfolioItems } from '../data/portfolio';
 
@@ -13,35 +14,56 @@ const filters = ['Vše', 'Zlato', 'Stříbro', 'Zakázky', 'Kameny'];
   description="Každý kus vypráví příběh. Zlaté prsteny, stříbrné přívěsky, sady s kameny. Ruční práce Martina Ševra."
 >
 
-  <!-- ====== HEADER ====== -->
+  <!-- ====== HEADER — Section Label ====== -->
   <section class="bg-bg-primary pt-16 pb-8 md:pt-24 md:pb-12">
-    <div class="max-w-[1280px] mx-auto px-6 text-center">
-      <h1>Šperky z duše</h1>
-      <p class="mt-4 text-text-secondary text-[1.125rem] max-w-xl mx-auto">
-        Výběr z toho, co jsem za roky vyrobil. Každý šperk má svůj příběh — a rád vám ho povídám.
-      </p>
+    <div class="max-w-[1400px] mx-auto px-8">
+      <div class="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-12 lg:gap-20">
+
+        <!-- Sidebar label -->
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="w-1.5 h-1.5 rounded-full bg-gold-primary"></span>
+            <span class="text-[0.6875rem] uppercase tracking-[0.15em] font-medium text-text-primary">Portfolio</span>
+          </div>
+          <p class="text-[0.875rem] text-text-muted leading-relaxed mt-4 max-w-[240px]">
+            Výběr z toho, co jsem za roky vyrobil. Každý šperk má svůj příběh.
+          </p>
+        </div>
+
+        <!-- Heading -->
+        <div>
+          <h1>Šperky z <em class="italic text-gold-deep" style="font-variation-settings: 'WONK' 1, 'SOFT' 0, 'opsz' 144;">duše</em></h1>
+          <p class="mt-4 text-text-secondary text-[1.0625rem] leading-relaxed max-w-xl">
+            Každý kus vypráví příběh — a rád vám ho povídám.
+          </p>
+        </div>
+
+      </div>
     </div>
   </section>
 
   <!-- ====== FILTERS ====== -->
   <section class="bg-bg-primary pb-6">
-    <div class="max-w-[1280px] mx-auto px-6">
+    <div class="max-w-[1400px] mx-auto px-8">
       <FilterPills items={filters} activeIndex={0} />
     </div>
   </section>
 
-  <!-- ====== GALLERY ====== -->
+  <!-- ====== GALLERY — Alternating Cards ====== -->
   <section class="bg-bg-primary pb-20 md:pb-28">
-    <div class="max-w-[1280px] mx-auto px-6">
+    <div class="max-w-[1400px] mx-auto px-8">
       <div class="space-y-16 md:space-y-24">
         {portfolioItems.map((item, i) => (
           <a href={`/tvorba/${item.slug}`} class="group grid grid-cols-1 md:grid-cols-5 gap-8 md:gap-12 items-center" data-animate="up">
-            <div class={`md:col-span-3 overflow-hidden ${i % 2 === 1 ? 'md:order-2' : ''}`}>
+            <div class={`md:col-span-3 overflow-hidden relative ${i % 2 === 1 ? 'md:order-2' : ''}`}>
               <ImagePlaceholder
                 aspect="4/3"
                 alt={item.title}
-                class="w-full"
+                class="w-full group-hover:opacity-90 transition-opacity duration-300"
               />
+              <div class="absolute bottom-4 right-4 bg-bg-primary/90 backdrop-blur-sm px-4 py-2">
+                <span class="text-[0.6875rem] uppercase tracking-[0.12em] font-medium text-gold-on-light">Zakázka {String(i + 1).padStart(2, '0')}</span>
+              </div>
             </div>
             <div class={`md:col-span-2 ${i % 2 === 1 ? 'md:order-1' : ''}`}>
               <div class="flex flex-wrap gap-2 mb-4">
@@ -53,8 +75,8 @@ const filters = ['Vše', 'Zlato', 'Stříbro', 'Zakázky', 'Kameny'];
               </div>
               <h3>{item.title}</h3>
               <p class="mt-3 text-text-secondary text-[1.0625rem] leading-relaxed">{item.description}</p>
-              <span class="inline-block mt-6 text-[0.875rem] font-medium text-gold-on-light group-hover:opacity-60 transition-opacity duration-200">
-                Zobrazit detail &rarr;
+              <span class="inline-block mt-6 text-[0.8125rem] text-text-primary uppercase tracking-[0.1em] group-hover:text-gold-deep transition-colors duration-200">
+                Zobrazit detail&nbsp;&nearr;
               </span>
             </div>
           </a>

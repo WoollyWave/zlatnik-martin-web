@@ -13,8 +13,8 @@ function initScrollAnimations() {
 
     const fromVars: gsap.TweenVars = {
       opacity: 0,
-      duration: 0.8,
-      ease: 'power2.out',
+      duration: 1.0,
+      ease: 'power3.out',
       delay,
     };
 
@@ -31,7 +31,7 @@ function initScrollAnimations() {
       ...fromVars,
       scrollTrigger: {
         trigger: el as HTMLElement,
-        start: 'top 85%',
+        start: 'top 90%',
         once: true,
       },
     });
@@ -47,12 +47,12 @@ function initScrollAnimations() {
     gsap.from(Array.from(children), {
       opacity: 0,
       y: 30,
-      duration: 0.6,
-      ease: 'power2.out',
+      duration: 0.8,
+      ease: 'power3.out',
       stagger: 0.15,
       scrollTrigger: {
         trigger: group as HTMLElement,
-        start: 'top 85%',
+        start: 'top 90%',
         once: true,
       },
     });

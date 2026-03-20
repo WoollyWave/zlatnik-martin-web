@@ -23,7 +23,7 @@ const { product } = Astro.props;
   description={product.description}
 >
   <section class="bg-bg-primary py-16 md:py-24">
-    <div class="max-w-[1280px] mx-auto px-6">
+    <div class="max-w-[1400px] mx-auto px-8">
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16">
         <!-- Photo gallery (sticky) -->
         <div class="lg:sticky lg:top-24 lg:self-start space-y-4">
@@ -37,10 +37,10 @@ const { product } = Astro.props;
 
         <!-- Info panel -->
         <div>
-          <a href="/skladem" class="text-[0.8125rem] text-text-muted hover:text-text-secondary transition-colors duration-200 mb-6 inline-block hover:underline underline-offset-4">
-            &larr; Zpět na Skladem
+          <a href="/skladem" class="inline-flex items-center text-[0.8125rem] text-text-muted hover:text-text-primary transition-colors duration-200 mb-8 uppercase tracking-[0.1em]">
+            &larr;&nbsp;Zpět na Skladem
           </a>
-          <h1 class="text-h2">{product.title}</h1>
+          <h1>{product.title}</h1>
           <p class="text-[1.5rem] font-serif font-light text-text-primary mt-4">{product.price}</p>
           <div class="mt-6 py-6 border-t border-b border-divider">
             <dl class="space-y-3">

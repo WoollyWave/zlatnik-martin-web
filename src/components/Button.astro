@@ -1,8 +1,7 @@
 ---
 interface Props {
   href?: string;
-  variant?: 'primary' | 'secondary';
-  size?: 'default' | 'small';
+  variant?: 'primary' | 'secondary' | 'text';
   class?: string;
   type?: 'button' | 'submit';
   ariaLabel?: string;
@@ -11,33 +10,28 @@ interface Props {
 const {
   href,
   variant = 'primary',
-  size = 'default',
   class: className = '',
   type = 'button',
   ariaLabel,
 } = Astro.props;
 
-const baseClasses = 'inline-flex items-center justify-center font-sans font-medium uppercase tracking-wider rounded-[2px] transition-all duration-200 cursor-pointer hover:translate-y-[-1px] active:translate-y-0';
+const base = 'inline-flex items-center justify-center font-sans font-medium transition-colors duration-300 cursor-pointer';
 
-const sizeClasses = size === 'small'
-  ? 'text-[0.75rem] px-5 py-2.5'
-  : 'text-[0.8125rem] px-7 py-3.5';
+const variants: Record<string, string> = {
+  primary: `${base} bg-text-primary text-bg-primary text-[0.9375rem] px-8 py-4 hover:bg-gold-deep`,
+  secondary: `${base} border border-text-primary/15 text-text-primary bg-transparent text-[0.9375rem] px-8 py-4 hover:border-text-primary/40 hover:bg-hover-bg`,
+  text: `${base} text-[0.8125rem] text-text-primary uppercase tracking-[0.1em] hover:text-gold-deep`,
+};
 
-const variantClasses = variant === 'primary'
-  ? 'bg-text-primary text-bg-primary hover:bg-gold-primary focus-visible:bg-gold-primary'
-  : 'bg-transparent border border-border text-text-primary hover:bg-hover-bg focus-visible:bg-hover-bg';
-
-const classes = `${baseClasses} ${sizeClasses} ${variantClasses} ${className}`.trim();
-
-const Tag = href ? 'a' : 'button';
+const classes = `${variants[variant]} ${className}`.trim();
 ---
 
 {href ? (
   <a href={href} class={classes} aria-label={ariaLabel}>
-    <slot />
+    <slot />{variant === 'text' && <span class="ml-2">&nearr;</span>}
   </a>
 ) : (
   <button type={type} class={classes} aria-label={ariaLabel}>
-    <slot />
+    <slot />{variant === 'text' && <span class="ml-2">&nearr;</span>}
   </button>
 )}

@@ -2,34 +2,37 @@
 const currentPath = Astro.url.pathname;
 
 const navLinks = [
-  { label: 'Zakazkov\u00E1 tvorba', href: '/zakazkova-tvorba' },
+  { label: 'Zakázková tvorba', href: '/zakazkova-tvorba' },
   { label: 'Skladem', href: '/skladem' },
   { label: 'Portfolio', href: '/portfolio' },
-  { label: 'O d\u00EDln\u011B', href: '/o-dilne' },
-  { label: 'Kontakt', href: '/kontakt' },
+  { label: 'O dílně', href: '/o-dilne' },
 ];
 ---
 
 <header
   id="navbar"
-  class="fixed top-0 left-0 right-0 z-50 bg-bg-primary/95 backdrop-blur-sm transition-shadow duration-300"
+  class="fixed top-0 left-0 right-0 z-50 bg-bg-primary/95 backdrop-blur-sm transition-all duration-300"
 >
-  <nav class="max-w-[1280px] mx-auto px-6 flex items-center justify-between h-[72px]" aria-label="Hlavní navigace">
-    <!-- Logo -->
-    <a href="/" class="font-serif italic text-[1.35rem] font-light text-text-primary tracking-tight" aria-label="Martin Ševr — Domů">
-      Martin Ševr
+  <nav class="max-w-[1400px] mx-auto px-8 flex items-center justify-between h-20" aria-label="Hlavní navigace">
+    <!-- Logo: monogram + text -->
+    <a href="/" class="flex items-center gap-3" aria-label="Martin Ševr — Domů">
+      <span class="w-10 h-10 rounded-full border border-text-primary/15 flex items-center justify-center text-[0.75rem] font-medium tracking-wider text-text-primary">MŠ</span>
+      <span class="hidden sm:block">
+        <span class="block text-[0.6rem] uppercase tracking-[0.2em] text-text-muted leading-none">Zlatnická dílna</span>
+        <span class="block font-serif italic text-[1rem] text-text-primary leading-tight mt-0.5">Martin Ševr</span>
+      </span>
     </a>
 
-    <!-- Desktop links -->
-    <ul class="hidden lg:flex items-center gap-8">
+    <!-- Center links -->
+    <ul class="hidden lg:flex items-center gap-10">
       {navLinks.map((link) => (
         <li>
           <a
             href={link.href}
-            class={`relative font-sans text-[0.875rem] transition-colors duration-200 after:absolute after:bottom-[-2px] after:left-0 after:h-[1px] after:bg-gold-primary after:transition-all after:duration-300 ${
+            class={`text-[0.8125rem] tracking-[0.04em] transition-colors duration-200 ${
               currentPath === link.href || currentPath === link.href + '/'
-                ? 'text-text-primary after:w-full'
-                : 'text-text-secondary hover:text-text-primary after:w-0 hover:after:w-full'
+                ? 'text-text-primary'
+                : 'text-text-secondary hover:text-text-primary'
             }`}
             aria-current={currentPath === link.href || currentPath === link.href + '/' ? 'page' : undefined}
           >
@@ -39,80 +42,53 @@ const navLinks = [
       ))}
     </ul>
 
-    <!-- CTA buttons -->
-    <div class="hidden lg:flex items-center gap-3">
+    <!-- Right: status indicator + CTA -->
+    <div class="hidden lg:flex items-center gap-8">
+      <span class="flex items-center gap-2 text-[0.75rem] tracking-[0.06em] text-text-secondary">
+        <span class="w-1.5 h-1.5 rounded-full bg-success"></span>
+        Přijímám zakázky
+      </span>
       <a
-        href="https://wa.me/420774598181"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="inline-flex items-center justify-center font-sans font-medium uppercase tracking-wider text-[0.75rem] px-5 py-2.5 rounded-[2px] border border-border text-text-primary hover:bg-hover-bg transition-all duration-200 hover:translate-y-[-1px] active:translate-y-0"
-        aria-label="Napsat na WhatsApp"
+        href="/kontakt"
+        class="bg-text-primary text-bg-primary text-[0.8125rem] font-medium px-6 py-3 hover:bg-gold-deep transition-colors duration-300"
       >
-        WhatsApp
-      </a>
-      <a
-        href="tel:+420774598181"
-        class="inline-flex items-center justify-center font-sans font-medium uppercase tracking-wider text-[0.75rem] px-5 py-2.5 rounded-[2px] bg-text-primary text-bg-primary hover:bg-gold-primary transition-all duration-200 hover:translate-y-[-1px] active:translate-y-0"
-        aria-label="Zavolat"
-      >
-        Volat
+        Nezávazná konzultace
       </a>
     </div>
 
-    <!-- Mobile menu button -->
+    <!-- Mobile: 2 lines hamburger -->
     <button
       id="mobile-menu-toggle"
-      class="lg:hidden flex flex-col justify-center items-center w-10 h-10 gap-1.5"
+      class="lg:hidden flex flex-col justify-center items-center w-10 h-10 gap-2"
       aria-label="Otevřít menu"
       aria-expanded="false"
     >
       <span class="menu-line w-6 h-[1.5px] bg-text-primary transition-all duration-300 origin-center"></span>
       <span class="menu-line w-6 h-[1.5px] bg-text-primary transition-all duration-300 origin-center"></span>
-      <span class="menu-line w-6 h-[1.5px] bg-text-primary transition-all duration-300 origin-center"></span>
     </button>
   </nav>
 
-  <!-- Mobile menu -->
+  <!-- Mobile menu: fullscreen, serif links -->
   <div
     id="mobile-menu"
     class="lg:hidden hidden bg-bg-primary border-t border-divider"
   >
-    <div class="px-6 py-8 flex flex-col gap-6">
-      {navLinks.map((link) => (
-        <a
-          href={link.href}
-          class={`font-sans text-[1.125rem] transition-colors duration-200 ${
-            currentPath === link.href || currentPath === link.href + '/'
-              ? 'text-gold-on-light font-medium'
-              : 'text-text-primary hover:text-gold-on-light'
-          }`}
-          aria-current={currentPath === link.href || currentPath === link.href + '/' ? 'page' : undefined}
-        >
-          {link.label}
-        </a>
-      ))}
-      <div class="flex flex-col gap-3 pt-4 border-t border-divider">
-        <a
-          href="https://wa.me/420774598181"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="inline-flex items-center justify-center font-sans font-medium uppercase tracking-wider text-[0.8125rem] px-7 py-3.5 rounded-[2px] border border-border text-text-primary hover:bg-hover-bg transition-colors duration-200"
-        >
-          WhatsApp
-        </a>
-        <a
-          href="tel:+420774598181"
-          class="inline-flex items-center justify-center font-sans font-medium uppercase tracking-wider text-[0.8125rem] px-7 py-3.5 rounded-[2px] bg-text-primary text-bg-primary hover:bg-gold-primary transition-colors duration-200"
-        >
-          Volat
-        </a>
+    <div class="px-8 py-10 flex flex-col gap-6">
+      <a href="/zakazkova-tvorba" class="font-serif text-[1.5rem] font-light text-text-primary">Zakázková tvorba</a>
+      <a href="/skladem" class="font-serif text-[1.5rem] font-light text-text-primary">Skladem</a>
+      <a href="/portfolio" class="font-serif text-[1.5rem] font-light text-text-primary">Portfolio</a>
+      <a href="/o-dilne" class="font-serif text-[1.5rem] font-light text-text-primary">O dílně</a>
+      <a href="/kontakt" class="font-serif text-[1.5rem] font-light text-text-primary">Kontakt</a>
+      <div class="pt-6 border-t border-divider flex flex-col gap-3">
+        <a href="tel:+420774598181" class="bg-text-primary text-bg-primary text-center text-[0.9375rem] font-medium px-7 py-4 hover:bg-gold-deep transition-colors duration-300">Zavolat</a>
+        <a href="https://wa.me/420774598181" target="_blank" rel="noopener noreferrer" class="border border-text-primary/15 text-text-primary text-center text-[0.9375rem] font-medium px-7 py-4 hover:bg-hover-bg transition-colors duration-300">WhatsApp</a>
       </div>
     </div>
   </div>
 </header>
 
 <!-- Spacer for fixed nav -->
-<div class="h-[72px]"></div>
+<div class="h-20"></div>
 
 <script>
   // Mobile menu toggle
@@ -127,13 +103,11 @@ const navLinks = [
 
     if (lines) {
       if (isOpen) {
-        lines[0].classList.add('rotate-45', 'translate-y-[4.5px]');
-        lines[1].classList.add('opacity-0');
-        lines[2].classList.add('-rotate-45', '-translate-y-[4.5px]');
+        lines[0].classList.add('rotate-45', 'translate-y-[5px]');
+        lines[1].classList.add('-rotate-45', '-translate-y-[5px]');
       } else {
-        lines[0].classList.remove('rotate-45', 'translate-y-[4.5px]');
-        lines[1].classList.remove('opacity-0');
-        lines[2].classList.remove('-rotate-45', '-translate-y-[4.5px]');
+        lines[0].classList.remove('rotate-45', 'translate-y-[5px]');
+        lines[1].classList.remove('-rotate-45', '-translate-y-[5px]');
       }
     }
   });

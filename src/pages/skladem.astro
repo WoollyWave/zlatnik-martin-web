@@ -13,26 +13,44 @@ const filters = ['Vše', 'Prsteny', 'Náušnice', 'Přívěsky', 'Řetízky', 'S
   description="Stříbrné šperky s přírodními kameny. Ihned k dispozici. Ruční výroba, certifikované materiály."
 >
 
-  <!-- ====== HEADER ====== -->
+  <!-- ====== HEADER — Section Label ====== -->
   <section class="bg-bg-primary pt-16 pb-8 md:pt-24 md:pb-12">
-    <div class="max-w-[1280px] mx-auto px-6 text-center">
-      <h1>Hotové šperky</h1>
-      <p class="mt-4 text-text-secondary text-[1.125rem] max-w-xl mx-auto">
-        Ručně vyrobené šperky ihned k dispozici. Každý kus je originál — osobní vyzvednutí v dílně nebo zásilka po celé ČR.
-      </p>
+    <div class="max-w-[1400px] mx-auto px-8">
+      <div class="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-12 lg:gap-20">
+
+        <!-- Sidebar label -->
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="w-1.5 h-1.5 rounded-full bg-gold-primary"></span>
+            <span class="text-[0.6875rem] uppercase tracking-[0.15em] font-medium text-text-primary">Hotové šperky</span>
+          </div>
+          <p class="text-[0.875rem] text-text-muted leading-relaxed mt-4 max-w-[240px]">
+            Ihned k dispozici. Osobní vyzvednutí v dílně nebo zásilka po celé ČR.
+          </p>
+        </div>
+
+        <!-- Heading -->
+        <div>
+          <h1>Hotové šperky</h1>
+          <p class="mt-4 text-text-secondary text-[1.0625rem] leading-relaxed max-w-xl">
+            Ručně vyrobené šperky ihned k dispozici. Každý kus je originál.
+          </p>
+        </div>
+
+      </div>
     </div>
   </section>
 
   <!-- ====== FILTERS ====== -->
   <section class="bg-bg-primary pb-6">
-    <div class="max-w-[1280px] mx-auto px-6">
+    <div class="max-w-[1400px] mx-auto px-8">
       <FilterPills items={filters} activeIndex={0} />
     </div>
   </section>
 
   <!-- ====== PRODUCT GRID ====== -->
   <section class="bg-bg-primary pb-20 md:pb-28">
-    <div class="max-w-[1280px] mx-auto px-6">
+    <div class="max-w-[1400px] mx-auto px-8">
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
         {products.map((product) => (
           <ProductCard
