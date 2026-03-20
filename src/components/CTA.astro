@@ -30,7 +30,7 @@ const {
 
         <!-- Content -->
         <div data-animate="up">
-          <h2 class="whitespace-pre-line">{heading}</h2>
+          <h2 class="whitespace-pre-line" set:html={heading} />
           <p class="mt-4 text-text-secondary text-[1.0625rem] leading-relaxed max-w-xl">{subheading}</p>
           <div class="mt-10 flex flex-col sm:flex-row gap-4">
             <Button href="tel:+420774598181" variant="primary">Zavolat</Button>

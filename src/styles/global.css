@@ -132,16 +132,21 @@ body {
 /* --- Headings --- */
 h1, h2, h3, h4 {
   font-family: var(--font-serif);
-  font-weight: 300;
+  font-weight: 400;
   font-variation-settings: "WONK" 0, "SOFT" 0, "opsz" 144;
   color: var(--color-text-primary);
   text-wrap: balance;
 }
 
+h1 em, h2 em {
+  font-weight: 300;
+  font-style: italic;
+}
+
 h1 {
-  font-size: clamp(2.25rem, 5vw + 0.5rem, 4rem);
-  line-height: 1.08;
-  letter-spacing: -0.02em;
+  font-size: clamp(2.5rem, 5.5vw + 0.5rem, 4.5rem);
+  line-height: 1.05;
+  letter-spacing: -0.025em;
 }
 
 h2 {
@@ -273,4 +278,13 @@ p a:hover {
 /* --- Section divider --- */
 .section-divider {
   border-top: 1px solid var(--color-divider);
+}
+
+/* --- Pulse dot (nav status) --- */
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+.pulse-dot {
+  animation: pulse-dot 2.5s ease-in-out infinite;
 }

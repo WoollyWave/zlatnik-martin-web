@@ -99,25 +99,101 @@ const faqItems = [
   description="Váš šperk na míru. Pracuji se zlatem, stříbrem a přírodními kameny. Konzultace, návrh, výroba, předání."
 >
 
-  <!-- ====== HERO ====== -->
-  <section class="relative bg-bg-primary">
-    <img
-      src="/images/zakazkova--hero--privesek-quartz-na-krku.webp"
-      srcset="/images/zakazkova--hero--privesek-quartz-na-krku.webp 1x, /images/zakazkova--hero--privesek-quartz-na-krku@2x.webp 2x"
-      width="1920" height="1080"
-      alt="Křišťálový přívěsek na krku — zakázková výroba"
-      loading="eager"
-      decoding="async"
-      class="w-full max-h-[75vh] object-cover"
-    />
-    <div class="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-bg-primary/60 flex items-end">
-      <div class="max-w-[1400px] mx-auto px-8 pb-12 md:pb-20 w-full">
-        <h1 class="text-text-primary max-w-lg">Váš šperk na míru</h1>
-        <div class="mt-6">
-          <Button href="#process" variant="primary">Poptat šperk</Button>
-        </div>
+  <!-- ====== HERO — Scattered Gallery (Relume Header 142) ====== -->
+  <section class="relative bg-bg-primary overflow-hidden" style="min-height: 100vh;">
+
+    <!-- Scattered images — desktop only -->
+    <div class="hidden md:block absolute inset-0 pointer-events-none" aria-hidden="true">
+
+      <!-- Top left — velká -->
+      <div class="absolute top-[5%] left-[-3%] w-[28%] max-w-[320px]" data-animate="fade" data-animate-delay="0.1" data-float="0.3">
+        <img src="/images/zakazkova--proces-03--snubaky-v-ruce-vyroba.webp"
+          srcset="/images/zakazkova--proces-03--snubaky-v-ruce-vyroba.webp 1x, /images/zakazkova--proces-03--snubaky-v-ruce-vyroba@2x.webp 2x"
+          alt="" width="800" height="600" loading="eager" decoding="async"
+          class="w-full h-auto object-cover shadow-[0_8px_30px_rgba(0,0,0,0.08)]" />
+      </div>
+
+      <!-- Top center — střední -->
+      <div class="absolute top-[3%] left-[35%] w-[18%] max-w-[220px]" data-animate="fade" data-animate-delay="0.2" data-float="0.4">
+        <img src="/images/zakazkova--proces-01--3d-cad-navrh.webp"
+          srcset="/images/zakazkova--proces-01--3d-cad-navrh.webp 1x, /images/zakazkova--proces-01--3d-cad-navrh@2x.webp 2x"
+          alt="" width="800" height="600" loading="eager" decoding="async"
+          class="w-full h-auto object-cover shadow-[0_8px_30px_rgba(0,0,0,0.08)]" />
+      </div>
+
+      <!-- Top right — velká -->
+      <div class="absolute top-[2%] right-[5%] w-[25%] max-w-[300px]" data-animate="fade" data-animate-delay="0.15" data-float="0.3">
+        <img src="/images/homepage--portfolio-3--snubni-prsteny-zlate.webp"
+          srcset="/images/homepage--portfolio-3--snubni-prsteny-zlate.webp 1x, /images/homepage--portfolio-3--snubni-prsteny-zlate@2x.webp 2x"
+          alt="" width="800" height="600" loading="eager" decoding="async"
+          class="w-full h-auto object-cover shadow-[0_8px_30px_rgba(0,0,0,0.08)]" />
+      </div>
+
+      <!-- Middle left — vysoká úzká -->
+      <div class="absolute top-[40%] left-[-5%] w-[14%] max-w-[160px]" data-animate="fade" data-animate-delay="0.3" data-float="0.6">
+        <img src="/images/zakazkova--materialy--opal-na-dreve.webp"
+          srcset="/images/zakazkova--materialy--opal-na-dreve.webp 1x, /images/zakazkova--materialy--opal-na-dreve@2x.webp 2x"
+          alt="" width="800" height="600" loading="eager" decoding="async"
+          class="w-full h-auto object-cover shadow-[0_8px_30px_rgba(0,0,0,0.08)]" />
+      </div>
+
+      <!-- Middle right — střední -->
+      <div class="absolute top-[35%] right-[-2%] w-[22%] max-w-[260px]" data-animate="fade" data-animate-delay="0.25" data-float="0.5">
+        <img src="/images/homepage--portfolio-2--privesek-citrin.webp"
+          srcset="/images/homepage--portfolio-2--privesek-citrin.webp 1x, /images/homepage--portfolio-2--privesek-citrin@2x.webp 2x"
+          alt="" width="800" height="600" loading="eager" decoding="async"
+          class="w-full h-auto object-cover shadow-[0_8px_30px_rgba(0,0,0,0.08)]" />
+      </div>
+
+      <!-- Bottom left — střední -->
+      <div class="absolute bottom-[8%] left-[8%] w-[22%] max-w-[270px]" data-animate="fade" data-animate-delay="0.35" data-float="0.7">
+        <img src="/images/zakazkova--proces-04--privesek-J-na-krku-predani.webp"
+          srcset="/images/zakazkova--proces-04--privesek-J-na-krku-predani.webp 1x, /images/zakazkova--proces-04--privesek-J-na-krku-predani@2x.webp 2x"
+          alt="" width="800" height="600" loading="eager" decoding="async"
+          class="w-full h-auto object-cover shadow-[0_8px_30px_rgba(0,0,0,0.08)]" />
+      </div>
+
+      <!-- Bottom center-right — velká -->
+      <div class="absolute bottom-[3%] right-[25%] w-[20%] max-w-[240px]" data-animate="fade" data-animate-delay="0.3" data-float="0.6">
+        <img src="/images/zakazkova--proces-02--3d-cad-perspektiva.webp"
+          srcset="/images/zakazkova--proces-02--3d-cad-perspektiva.webp 1x, /images/zakazkova--proces-02--3d-cad-perspektiva@2x.webp 2x"
+          alt="" width="800" height="600" loading="eager" decoding="async"
+          class="w-full h-auto object-cover shadow-[0_8px_30px_rgba(0,0,0,0.08)]" />
+      </div>
+
+      <!-- Bottom right — malá -->
+      <div class="absolute bottom-[5%] right-[2%] w-[18%] max-w-[200px]" data-animate="fade" data-animate-delay="0.4" data-float="0.8">
+        <img src="/images/zakazkova--parallax--tricolor-prsten-na-kovadline.webp"
+          srcset="/images/zakazkova--parallax--tricolor-prsten-na-kovadline.webp 1x, /images/zakazkova--parallax--tricolor-prsten-na-kovadline@2x.webp 2x"
+          alt="" width="1920" height="1080" loading="eager" decoding="async"
+          class="w-full h-auto object-cover shadow-[0_8px_30px_rgba(0,0,0,0.08)]" />
+      </div>
+
+    </div>
+
+    <!-- Centered content — above images -->
+    <div class="relative z-10 flex flex-col items-center justify-center text-center px-8 py-20 md:py-0" style="min-height: 100vh;">
+      <h1 class="max-w-3xl" data-animate="up">
+        Váš šperk
+        <em class="italic text-gold-deep" style="font-variation-settings: 'WONK' 1, 'SOFT' 0, 'opsz' 144; font-weight: 300;">na míru</em>
+      </h1>
+      <p class="mt-6 text-text-secondary text-[1.0625rem] leading-relaxed max-w-xl" data-animate="up">
+        Každý zakázkový šperk začíná rozhovorem. Řekněte mi svůj nápad a já ho proměním v realitu — ručně, v pražské dílně, s materiály, které si společně vybereme.
+      </p>
+      <div class="mt-10 flex flex-col sm:flex-row gap-4" data-animate="up">
+        <a href="#process" class="inline-flex items-center justify-center font-sans font-medium transition-colors duration-300 cursor-pointer bg-text-primary text-white text-[0.9375rem] px-8 py-4 hover:bg-gold-deep">Poptat šperk</a>
+        <a href="#cenik" class="inline-flex items-center justify-center font-sans font-medium transition-colors duration-300 cursor-pointer border border-text-primary/25 text-text-primary bg-transparent text-[0.9375rem] px-8 py-4 hover:border-text-primary/50 hover:bg-hover-bg">Orientační ceník</a>
+      </div>
+
+      <!-- Mobile only — single hero photo -->
+      <div class="md:hidden mt-12 w-full">
+        <img src="/images/zakazkova--hero--privesek-quartz-na-krku.webp"
+          srcset="/images/zakazkova--hero--privesek-quartz-na-krku.webp 1x, /images/zakazkova--hero--privesek-quartz-na-krku@2x.webp 2x"
+          width="1920" height="1080" alt="Zakázková výroba šperků" loading="eager" decoding="async"
+          class="w-full h-auto object-cover" />
       </div>
     </div>
+
   </section>
 
   <!-- ====== PROCESS — Sticky Scroll with Section Label ====== -->
@@ -239,19 +315,17 @@ const faqItems = [
   </section>
 
   <!-- ====== FULLWIDTH PARALLAX PHOTO ====== -->
-  <section class="relative h-[70vh] overflow-hidden">
-    <div class="absolute inset-0">
-      <img
-        src="/images/zakazkova--parallax--tricolor-prsten-na-kovadline.webp"
-        srcset="/images/zakazkova--parallax--tricolor-prsten-na-kovadline.webp 1x, /images/zakazkova--parallax--tricolor-prsten-na-kovadline@2x.webp 2x"
-        width="1920" height="1080"
-        alt="Tricolor prsten na kovadlině — detail výroby"
-        loading="lazy"
-        decoding="async"
-        class="w-full h-full object-cover"
-        style="position: fixed; top: 0; left: 0; width: 100%; height: 100vh; z-index: -1;"
-      />
-    </div>
+  <section class="relative h-[70vh] overflow-hidden" data-parallax>
+    <img
+      src="/images/zakazkova--parallax--tricolor-prsten-na-kovadline.webp"
+      srcset="/images/zakazkova--parallax--tricolor-prsten-na-kovadline.webp 1x, /images/zakazkova--parallax--tricolor-prsten-na-kovadline@2x.webp 2x"
+      width="1920" height="1080"
+      alt="Detailní záběr zlatnické práce"
+      loading="lazy"
+      decoding="async"
+      class="absolute inset-0 w-full h-[130%] object-cover -top-[15%]"
+      style="will-change: transform;"
+    />
   </section>
 
   <!-- ====== PRICING ZLATO ====== -->
@@ -319,7 +393,7 @@ const faqItems = [
 
   <!-- ====== CTA ====== -->
   <CTA
-    heading="Máte nápad na šperk?"
+    heading={"Máte nápad na <em class='italic text-gold-deep' style='font-variation-settings: \"WONK\" 1, \"SOFT\" 0, \"opsz\" 144; font-weight: 300;'>šperk</em>?"}
     subheading="Zavolejte nebo napište. Probereme vaši představu a řekneme si, co je možné. Bez závazku."
   />
 

@@ -12,7 +12,7 @@ const { items, activeIndex = 0 } = Astro.props;
     <button
       class={`text-[0.8125rem] font-medium px-5 py-2.5 rounded-[2px] transition-all duration-200 cursor-pointer ${
         i === activeIndex
-          ? 'bg-text-primary text-bg-primary'
+          ? 'bg-text-primary text-white'
           : 'bg-transparent border border-border text-text-secondary hover:bg-hover-bg hover:text-text-primary hover:border-text-muted'
       }`}
       data-filter={item.toLowerCase()}

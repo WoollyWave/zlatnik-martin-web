@@ -84,6 +84,41 @@ function initHoverScale() {
   });
 }
 
+// --- Parallax photo sections ---
+function initParallax() {
+  document.querySelectorAll('[data-parallax]').forEach((section) => {
+    const img = section.querySelector('img');
+    if (!img) return;
+    gsap.to(img, {
+      yPercent: 20,
+      ease: 'none',
+      scrollTrigger: {
+        trigger: section as HTMLElement,
+        start: 'top bottom',
+        end: 'bottom top',
+        scrub: 1.5,
+      },
+    });
+  });
+}
+
+// --- Scattered hero images — subtle float on scroll ---
+function initFloat() {
+  document.querySelectorAll('[data-float]').forEach((el) => {
+    const speed = parseFloat((el as HTMLElement).getAttribute('data-float') || '0.5');
+    gsap.to(el as HTMLElement, {
+      y: speed * -60,
+      ease: 'none',
+      scrollTrigger: {
+        trigger: (el as HTMLElement).closest('section') as HTMLElement,
+        start: 'top top',
+        end: 'bottom top',
+        scrub: 1.5,
+      },
+    });
+  });
+}
+
 // --- Initialize ---
 document.addEventListener('DOMContentLoaded', () => {
   // Respect prefers-reduced-motion
@@ -92,5 +127,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (!prefersReducedMotion) {
     initScrollAnimations();
     initHoverScale();
+    initParallax();
+    initFloat();
   }
 });
