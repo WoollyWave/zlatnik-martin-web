@@ -37,7 +37,7 @@
   --color-hover-gold: #B8963A;
 
   /* Typography — Font families */
-  --font-serif: "Fraunces", serif;
+  --font-serif: "Playfair Display", Georgia, serif;
   --font-sans: "General Sans", sans-serif;
 
   /* Typography — Font sizes */
@@ -133,13 +133,12 @@ body {
 h1, h2, h3, h4 {
   font-family: var(--font-serif);
   font-weight: 400;
-  font-variation-settings: "WONK" 0, "SOFT" 0, "opsz" 144;
   color: var(--color-text-primary);
   text-wrap: balance;
 }
 
 h1 em, h2 em {
-  font-weight: 300;
+  font-weight: 400;
   font-style: italic;
 }
 

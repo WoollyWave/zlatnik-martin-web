@@ -14,7 +14,7 @@ const { items } = Astro.props;
 <div class="space-y-0 border-t border-border">
   {items.map((item, i) => (
     <details class="group border-b border-border" data-faq>
-      <summary class="flex items-center justify-between py-5 cursor-pointer list-none font-serif text-[1.125rem] font-light text-text-primary hover:text-gold-on-light transition-colors duration-200 select-none">
+      <summary class="flex items-center justify-between py-5 cursor-pointer list-none font-serif text-[1.125rem] font-normal text-text-primary hover:text-gold-on-light transition-colors duration-200 select-none">
         <span>{item.question}</span>
         <svg class="w-5 h-5 text-text-muted flex-shrink-0 ml-4 transition-transform duration-300 group-open:rotate-45" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
