@@ -158,7 +158,7 @@ const processSteps = [
   </section>
 
 
-  <!-- ====== SELECTED WORKS — Asymmetric gallery ====== -->
+  <!-- ====== SELECTED WORKS — Vertical list ====== -->
   <section class="bg-bg-primary border-b border-border py-20 md:py-32">
     <div class="max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-14">
 
@@ -176,49 +176,13 @@ const processSteps = [
         </div>
       </div>
 
-      <!-- Asymmetric grid -->
-      <div class="grid lg:grid-cols-[1.08fr_0.92fr] gap-8 lg:gap-10">
+      <!-- Vertical list -->
+      <div class="flex flex-col">
+        {portfolioItems.map((item) => (
+          <a href={item.href} class="group block border-t border-border py-10 md:py-14" data-anim="up">
+            <div class="grid grid-cols-1 md:grid-cols-[0.45fr_1fr] gap-8 md:gap-12 lg:gap-16 items-center">
 
-        <!-- Featured project (left, tall) -->
-        <a href={portfolioItems[0].href} class="group relative block overflow-hidden" data-anim="up">
-          <div class="relative aspect-[3/4] overflow-hidden">
-            <img
-              src={portfolioItems[0].image}
-              srcset={`${portfolioItems[0].image} 1x, ${portfolioItems[0].image2x} 2x`}
-              width="800" height="1067"
-              alt={portfolioItems[0].alt}
-              loading="lazy"
-              decoding="async"
-              class="absolute inset-0 w-full h-full object-cover grayscale-[15%] sepia-[10%] group-hover:scale-[1.02] transition-transform duration-700"
-            />
-            <!-- Gradient -->
-            <div class="absolute inset-0 bg-gradient-to-t from-[rgba(30,27,24,0.4)] via-transparent to-transparent pointer-events-none"></div>
-            <!-- Border inset -->
-            <div class="absolute inset-3 border border-white/15 pointer-events-none"></div>
-            <!-- Plaque -->
-            <div class="absolute bottom-6 left-5 right-5 bg-bg-primary/90 backdrop-blur-md p-5 shadow-medium">
-              <div class="flex items-center justify-between">
-                <div>
-                  <span class="text-[0.6875rem] uppercase tracking-[0.15em] font-medium text-gold-on-light font-sans">{portfolioItems[0].label}</span>
-                  <h3 class="mt-1 text-[1.25rem]">{portfolioItems[0].title}</h3>
-                  <div class="flex flex-wrap gap-2 mt-2">
-                    {portfolioItems[0].tags.map((tag: string) => (
-                      <span class="text-[0.6875rem] uppercase tracking-wider text-text-muted font-sans">{tag}</span>
-                    ))}
-                  </div>
-                </div>
-                <div class="flex-shrink-0 ml-4 h-10 w-10 rounded-full border border-border flex items-center justify-center group-hover:bg-text-primary group-hover:border-text-primary transition-colors duration-300">
-                  <svg class="w-4 h-4 text-text-primary group-hover:text-bg-primary transition-colors duration-300" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25" /></svg>
-                </div>
-              </div>
-            </div>
-          </div>
-        </a>
-
-        <!-- Right: 2 stacked projects -->
-        <div class="flex flex-col gap-8 lg:gap-10">
-          {portfolioItems.slice(1).map((item) => (
-            <a href={item.href} class="group block" data-anim="up">
+              <!-- Photo -->
               <div class="relative aspect-[4/3] overflow-hidden">
                 <img
                   src={item.image}
@@ -227,27 +191,43 @@ const processSteps = [
                   alt={item.alt}
                   loading="lazy"
                   decoding="async"
-                  class="absolute inset-0 w-full h-full object-cover grayscale-[15%] sepia-[10%] group-hover:scale-[1.02] transition-transform duration-700"
+                  class="absolute inset-0 w-full h-full object-cover grayscale-[15%] sepia-[10%] group-hover:scale-[1.03] transition-transform duration-700"
                 />
-                <!-- Gradient -->
-                <div class="absolute inset-0 bg-gradient-to-t from-[rgba(30,27,24,0.3)] via-transparent to-transparent pointer-events-none"></div>
                 <!-- Border inset -->
-                <div class="absolute inset-3 border border-white/15 pointer-events-none"></div>
+                <div class="absolute inset-2 border border-white/10 pointer-events-none"></div>
+                <!-- Label plaque -->
+                <div class="absolute bottom-4 left-4 bg-bg-primary/90 backdrop-blur-md px-4 py-2.5 shadow-soft">
+                  <span class="text-[0.6875rem] uppercase tracking-[0.15em] font-medium text-gold-on-light font-sans">{item.label}</span>
+                </div>
               </div>
-              <!-- Info below -->
-              <div class="mt-4 flex items-start justify-between gap-4">
+
+              <!-- Info -->
+              <div class="flex items-start justify-between gap-6">
                 <div>
                   <span class="text-[0.6875rem] uppercase tracking-[0.15em] font-medium text-gold-on-light font-sans">{item.label}</span>
-                  <h3 class="mt-1 text-[1.15rem]">{item.title}</h3>
-                  <p class="text-[0.875rem] text-text-secondary mt-1 font-sans">{item.description}</p>
+                  <h3 class="mt-2 text-[1.5rem] md:text-[1.75rem] group-hover:text-gold-deep transition-colors duration-300">{item.title}</h3>
+                  <p class="text-[0.9375rem] text-text-secondary leading-relaxed mt-3 max-w-lg font-sans">{item.description}</p>
+                  <div class="flex flex-wrap gap-3 mt-5">
+                    {item.tags.map((tag: string) => (
+                      <span class="text-[0.6875rem] uppercase tracking-wider text-text-muted font-sans border border-border px-3 py-1.5">{tag}</span>
+                    ))}
+                  </div>
                 </div>
-                <div class="flex-shrink-0 mt-1 h-9 w-9 rounded-full border border-border flex items-center justify-center group-hover:bg-text-primary group-hover:border-text-primary transition-colors duration-300">
-                  <svg class="w-3.5 h-3.5 text-text-primary group-hover:text-bg-primary transition-colors duration-300" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25" /></svg>
+                <div class="flex-shrink-0 mt-2 h-10 w-10 rounded-full border border-border flex items-center justify-center group-hover:bg-text-primary group-hover:border-text-primary transition-colors duration-300">
+                  <svg class="w-4 h-4 text-text-primary group-hover:text-bg-primary transition-colors duration-300" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25" /></svg>
                 </div>
               </div>
-            </a>
-          ))}
-        </div>
+
+            </div>
+          </a>
+        ))}
+        <!-- Bottom border -->
+        <div class="border-t border-border"></div>
+      </div>
+
+      <!-- CTA button -->
+      <div class="mt-12 text-center" data-anim="up">
+        <Button href="/portfolio" variant="secondary">Celé portfolio</Button>
       </div>
 
     </div>

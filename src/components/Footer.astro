@@ -10,14 +10,7 @@ const currentYear = new Date().getFullYear();
   <div class="relative max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-14 pt-16 sm:pt-20 lg:pt-24 pb-8 sm:pb-10 lg:pb-12">
     <!-- CTA Panel -->
     <div data-anim="up" class="border border-border bg-[rgba(250,251,248,0.6)] backdrop-blur-sm px-6 sm:px-8 lg:px-12 py-10 sm:py-12 lg:py-16">
-      <div class="grid lg:grid-cols-[0.34fr_1fr] gap-10 lg:gap-16 items-end">
-        <div>
-          <span class="label-dot">Nezávazná konzultace</span>
-          <p class="mt-4 max-w-[16rem] text-[13px] leading-[1.8] text-text-secondary font-sans">
-            Zavolejte mi nebo napište na WhatsApp. Ozvu se do 24 hodin.
-          </p>
-        </div>
-
+      <div class="grid lg:grid-cols-[1fr_0.7fr] gap-10 lg:gap-12 items-center">
         <div>
           <h2 class="font-serif text-text-primary tracking-[-0.02em] leading-[1.1]">
             <span class="block">Pojďme vytvořit</span>
@@ -37,6 +30,18 @@ const currentYear = new Date().getFullYear();
               Napsat na WhatsApp
             </a>
           </div>
+        </div>
+
+        <div class="hidden lg:block">
+          <img
+            src="/images/footer--cta--prsten-detail.webp"
+            srcset="/images/footer--cta--prsten-detail.webp 1x, /images/footer--cta--prsten-detail@2x.webp 2x"
+            width="600" height="500"
+            alt="Detail ručně vyrobeného prstenu"
+            loading="lazy"
+            decoding="async"
+            class="w-full h-[340px] object-cover"
+          />
         </div>
       </div>
     </div>
