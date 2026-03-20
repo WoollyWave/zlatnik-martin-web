@@ -196,47 +196,210 @@ const faqItems = [
 
   </section>
 
-  <!-- ====== PROCESS — Sticky Scroll with Section Label ====== -->
-  <section id="process" class="bg-bg-primary py-16 md:py-24">
+  <!-- ====== PROCESS — Timeline 21 ====== -->
+  <section id="process" class="bg-bg-primary border-t border-divider py-16 md:py-24 overflow-hidden">
     <div class="max-w-[1400px] mx-auto px-8">
-      <div class="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-12 lg:gap-20">
 
-        <!-- Sticky sidebar label -->
-        <div class="lg:sticky lg:top-24 lg:self-start">
-          <div class="flex items-center gap-2">
+      <!-- Header -->
+      <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-16 md:mb-20">
+        <div>
+          <div class="flex items-center gap-2 mb-4">
             <span class="w-1.5 h-1.5 rounded-full bg-gold-primary"></span>
-            <span class="text-[0.6875rem] uppercase tracking-[0.15em] font-medium text-text-primary">Jak pracuji</span>
+            <span class="text-[0.6875rem] uppercase tracking-[0.15em] font-medium text-text-primary">Proces</span>
           </div>
-          <p class="text-[0.875rem] text-text-muted leading-relaxed mt-4 max-w-[240px]">
-            Od prvního nápadu po hotový šperk. Celý proces je transparentní.
+          <h2>Jak vzniká váš šperk</h2>
+          <p class="mt-3 text-text-secondary text-[1.0625rem] leading-relaxed max-w-lg">
+            Od prvního slova k hotovému kusu. Čtyři kroky, jeden cíl.
           </p>
         </div>
-
-        <!-- Scrolling steps -->
-        <div class="space-y-16 md:space-y-20">
-          {processSteps.map((step) => (
-            <div data-animate="up">
-              <span class="font-serif text-[3rem] font-light text-gold-soft leading-none">{step.number}</span>
-              <h3 class="mt-3">{step.title}</h3>
-              <p class="mt-3 text-text-secondary text-[1.0625rem] leading-relaxed">{step.description}</p>
-              <div class="mt-6">
-                <img
-                  src={step.image}
-                  srcset={`${step.image} 1x, ${step.image2x} 2x`}
-                  width="800" height="600"
-                  alt={step.alt}
-                  loading="lazy"
-                  decoding="async"
-                  class="w-full h-full object-cover"
-                />
-              </div>
-            </div>
-          ))}
+        <div class="flex items-center gap-3">
+          <button id="timeline-prev" class="w-10 h-10 border border-text-primary/20 flex items-center justify-center hover:bg-hover-bg transition-colors duration-200 cursor-pointer" aria-label="Předchozí krok">
+            <svg class="w-4 h-4 text-text-primary" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
+            </svg>
+          </button>
+          <button id="timeline-next" class="w-10 h-10 border border-text-primary/20 flex items-center justify-center hover:bg-hover-bg transition-colors duration-200 cursor-pointer" aria-label="Další krok">
+            <svg class="w-4 h-4 text-text-primary" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
+            </svg>
+          </button>
         </div>
-
       </div>
+
+      <!-- Timeline container — horizontálně scrollovatelný -->
+      <div id="timeline-track" class="relative">
+
+        <!-- Horizontální scrollovací wrapper -->
+        <div id="timeline-scroll" class="flex gap-0 overflow-x-auto scroll-smooth pb-4" style="scrollbar-width: none; -ms-overflow-style: none;">
+          <style>
+            #timeline-scroll::-webkit-scrollbar { display: none; }
+          </style>
+
+          <!-- KROK 01 — fotka nahoře, text dole -->
+          <div class="flex-shrink-0 w-[280px] md:w-[300px] flex flex-col">
+            <!-- Horní část: FOTKA -->
+            <div class="h-[200px] md:h-[240px] mb-6">
+              <img src="/images/zakazkova--proces-01--3d-cad-navrh.webp"
+                srcset="/images/zakazkova--proces-01--3d-cad-navrh.webp 1x, /images/zakazkova--proces-01--3d-cad-navrh@2x.webp 2x"
+                alt="Konzultace — první krok zakázky" width="800" height="600" loading="lazy" decoding="async"
+                class="w-full h-full object-cover" />
+            </div>
+            <!-- Dot + line -->
+            <div class="relative flex items-center">
+              <span class="w-3 h-3 rounded-full bg-text-primary flex-shrink-0 z-10"></span>
+              <span class="h-[2px] bg-text-primary flex-grow"></span>
+            </div>
+            <!-- Spodní část: TEXT -->
+            <div class="mt-6">
+              <span class="text-[1.5rem] md:text-[1.75rem] font-serif font-light text-text-primary">01</span>
+              <p class="mt-2 text-text-secondary text-[0.9375rem] leading-relaxed max-w-[250px]">
+                Řeknete mi, co si představujete. Já se ptám na detaily.
+              </p>
+            </div>
+          </div>
+
+          <!-- KROK 02 — text nahoře, fotka dole -->
+          <div class="flex-shrink-0 w-[280px] md:w-[300px] flex flex-col">
+            <!-- Horní část: TEXT -->
+            <div class="h-[200px] md:h-[240px] mb-6 flex flex-col justify-end">
+              <span class="text-[1.5rem] md:text-[1.75rem] font-serif font-light text-text-primary">02</span>
+              <p class="mt-2 text-text-secondary text-[0.9375rem] leading-relaxed max-w-[250px]">
+                Kreslím a modeluji, dokud to není přesně ono.
+              </p>
+            </div>
+            <!-- Dot + line -->
+            <div class="relative flex items-center">
+              <span class="w-3 h-3 rounded-full bg-text-primary flex-shrink-0 z-10"></span>
+              <span class="h-[2px] bg-text-primary flex-grow"></span>
+            </div>
+            <!-- Spodní část: FOTKA -->
+            <div class="mt-6 h-[200px] md:h-[280px]">
+              <img src="/images/zakazkova--proces-02--3d-cad-perspektiva.webp"
+                srcset="/images/zakazkova--proces-02--3d-cad-perspektiva.webp 1x, /images/zakazkova--proces-02--3d-cad-perspektiva@2x.webp 2x"
+                alt="Návrh — 3D model šperku" width="800" height="600" loading="lazy" decoding="async"
+                class="w-full h-full object-cover" />
+            </div>
+          </div>
+
+          <!-- KROK 03 — fotka nahoře, text dole -->
+          <div class="flex-shrink-0 w-[280px] md:w-[340px] flex flex-col">
+            <!-- Horní část: FOTKA (větší) -->
+            <div class="h-[220px] md:h-[280px] mb-6">
+              <img src="/images/zakazkova--proces-03--snubaky-v-ruce-vyroba.webp"
+                srcset="/images/zakazkova--proces-03--snubaky-v-ruce-vyroba.webp 1x, /images/zakazkova--proces-03--snubaky-v-ruce-vyroba@2x.webp 2x"
+                alt="Výroba — ruční práce v dílně" width="800" height="600" loading="lazy" decoding="async"
+                class="w-full h-full object-cover" />
+            </div>
+            <!-- Dot + line -->
+            <div class="relative flex items-center">
+              <span class="w-3 h-3 rounded-full bg-text-primary flex-shrink-0 z-10"></span>
+              <span class="h-[2px] bg-text-primary flex-grow"></span>
+            </div>
+            <!-- Spodní část: TEXT -->
+            <div class="mt-6">
+              <span class="text-[1.5rem] md:text-[1.75rem] font-serif font-light text-text-primary">03</span>
+              <p class="mt-2 text-text-secondary text-[0.9375rem] leading-relaxed max-w-[250px]">
+                Šperk vzniká v mých rukou. Každý krok fotím.
+              </p>
+            </div>
+          </div>
+
+          <!-- KROK 04 — text nahoře, fotka dole -->
+          <div class="flex-shrink-0 w-[280px] md:w-[300px] flex flex-col">
+            <!-- Horní část: TEXT -->
+            <div class="h-[220px] md:h-[280px] mb-6 flex flex-col justify-end">
+              <span class="text-[1.5rem] md:text-[1.75rem] font-serif font-light text-text-primary">04</span>
+              <p class="mt-2 text-text-secondary text-[0.9375rem] leading-relaxed max-w-[250px]">
+                Máte ho v rukou a víte, že je to přesně to, co jste chtěli.
+              </p>
+            </div>
+            <!-- Dot + line -->
+            <div class="relative flex items-center">
+              <span class="w-3 h-3 rounded-full bg-text-primary flex-shrink-0 z-10"></span>
+              <span class="h-[2px] bg-text-primary flex-grow"></span>
+            </div>
+            <!-- Spodní část: FOTKA -->
+            <div class="mt-6 h-[200px] md:h-[260px]">
+              <img src="/images/zakazkova--proces-04--privesek-J-na-krku-predani.webp"
+                srcset="/images/zakazkova--proces-04--privesek-J-na-krku-predani.webp 1x, /images/zakazkova--proces-04--privesek-J-na-krku-predani@2x.webp 2x"
+                alt="Předání — hotový šperk" width="800" height="600" loading="lazy" decoding="async"
+                class="w-full h-full object-cover" />
+            </div>
+          </div>
+
+          <!-- KROK LABELS — koncový sloupec s názvy -->
+          <div class="flex-shrink-0 w-[200px] md:w-[240px] flex flex-col">
+            <div class="h-[200px] md:h-[240px] mb-6"></div>
+            <!-- Dot (poslední) -->
+            <div class="relative flex items-center">
+              <span class="w-3 h-3 rounded-full bg-text-primary flex-shrink-0 z-10"></span>
+            </div>
+            <!-- Názvy kroků -->
+            <div class="mt-6 space-y-3">
+              <p class="text-[1.125rem] font-medium text-text-primary">Konzultace</p>
+              <p class="text-[0.9375rem] text-text-secondary">Návrh</p>
+              <p class="text-[0.9375rem] text-text-secondary">Výroba</p>
+              <p class="text-[0.9375rem] text-text-secondary">Předání</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
     </div>
   </section>
+
+  <!-- Timeline scroll script -->
+  <script>
+    const track = document.getElementById('timeline-scroll');
+    const prevBtn = document.getElementById('timeline-prev');
+    const nextBtn = document.getElementById('timeline-next');
+
+    if (track && prevBtn && nextBtn) {
+      const scrollAmount = 320;
+
+      nextBtn.addEventListener('click', () => {
+        track.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+      });
+
+      prevBtn.addEventListener('click', () => {
+        track.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+      });
+
+      // Drag to scroll (desktop)
+      let isDown = false;
+      let startX: number;
+      let scrollLeft: number;
+
+      track.addEventListener('mousedown', (e) => {
+        isDown = true;
+        track.style.cursor = 'grabbing';
+        startX = (e as MouseEvent).pageX - track.offsetLeft;
+        scrollLeft = track.scrollLeft;
+      });
+
+      track.addEventListener('mouseleave', () => {
+        isDown = false;
+        track.style.cursor = 'grab';
+      });
+
+      track.addEventListener('mouseup', () => {
+        isDown = false;
+        track.style.cursor = 'grab';
+      });
+
+      track.addEventListener('mousemove', (e) => {
+        if (!isDown) return;
+        e.preventDefault();
+        const x = (e as MouseEvent).pageX - track.offsetLeft;
+        const walk = (x - startX) * 1.5;
+        track.scrollLeft = scrollLeft - walk;
+      });
+
+      // Set initial cursor
+      track.style.cursor = 'grab';
+    }
+  </script>
 
   <!-- ====== MATERIALS — Section Label ====== -->
   <section class="bg-bg-primary border-t border-divider py-16 md:py-24">
