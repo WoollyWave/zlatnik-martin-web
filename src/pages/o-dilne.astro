@@ -1,7 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Button from '../components/Button.astro';
-import CTA from '../components/CTA.astro';
 ---
 
 <Layout
@@ -9,64 +8,95 @@ import CTA from '../components/CTA.astro';
   description="Víc než dvacet let ruční práce se zlatem a stříbrem. Poznejte příběh zlatnické dílny v Praze."
 >
 
-  <!-- ====== HEADER ====== -->
-  <section class="relative bg-bg-primary border-b border-border py-16 sm:py-20 lg:py-24 overflow-hidden">
+  <!-- ====== HERO ====== -->
+  <section class="relative bg-bg-primary border-b border-border py-20 sm:py-28 lg:py-36 overflow-hidden">
     <div class="radial-overlay"></div>
     <div class="relative max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-14">
-      <div class="text-center max-w-2xl mx-auto" data-anim="up">
-        <span class="label-dot justify-center">O dílně</span>
-        <h1 class="mt-5">Zlatnictví s tradicí a <em>srdcem</em></h1>
-        <p class="mt-4 text-text-secondary text-[1.0625rem] leading-relaxed">
-          Víc než dvacet let ruční práce se zlatem a stříbrem v pražské dílně.
+      <div class="max-w-3xl" data-anim="up">
+        <span class="label-dot">O dílně</span>
+        <h1 class="mt-6">
+          Zlatnictví s tradicí<br />a <em>srdcem</em>
+        </h1>
+        <p class="mt-6 text-text-secondary text-[1.0625rem] leading-relaxed max-w-xl">
+          Víc než dvacet let ruční práce se zlatem a stříbrem. Každý šperk je originál, vyrobený s úctou k materiálu a k člověku, který ho bude nosit.
         </p>
       </div>
     </div>
   </section>
 
-  <!-- ====== ABOUT — text + portrait ====== -->
+  <!-- ====== PORTRAIT + STORY — foto vlevo, text vpravo ====== -->
   <section class="relative bg-bg-primary border-b border-border py-16 sm:py-20 lg:py-24">
     <div class="max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-14">
-      <div class="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
-        <div data-anim="up">
-          <span class="label-dot">Příběh</span>
-          <h2 class="mt-5">Zlatnictví není jen práce</h2>
-          <p class="mt-4 text-text-secondary text-[1.0625rem] leading-relaxed">
-            Víc než dvacet let pracuji se zlatem a stříbrem. Každý šperk vyrábím ručně — od prvního náčrtu po finální lesk. Není to jen řemeslo, je to způsob, jakým vnímám svět.
-          </p>
-          <p class="mt-4 text-text-secondary text-[1.0625rem] leading-relaxed">
-            Každý kus, který opustí dílnu, nese kousek mého příběhu a hodně toho vašeho. Proto nespěchám a nedělám kompromisy.
-          </p>
-        </div>
+      <div class="grid lg:grid-cols-[0.95fr_1.05fr] gap-12 lg:gap-20 items-center">
+
         <div data-anim="scale" class="relative overflow-hidden">
           <img
             src="/images/o-dilne--portret--martin-lvi-prsten-v-dilne.webp"
             srcset="/images/o-dilne--portret--martin-lvi-prsten-v-dilne.webp 1x, /images/o-dilne--portret--martin-lvi-prsten-v-dilne@2x.webp 2x"
             width="600" height="800"
             alt="Martin Ševr v zlatnické dílně"
-            loading="lazy"
-            decoding="async"
-            class="w-full h-full object-cover grayscale-[15%] sepia-[10%]"
+            loading="lazy" decoding="async"
+            class="w-full h-auto object-cover grayscale-[15%] sepia-[10%]"
           />
-          <div class="absolute inset-2 border border-white/10 pointer-events-none"></div>
+          <div class="absolute inset-3 border border-white/10 pointer-events-none"></div>
         </div>
+
+        <div data-anim="up">
+          <span class="label-dot">Příběh</span>
+          <h2 class="mt-5">Zlatnictví není jen práce</h2>
+          <p class="mt-6 text-text-secondary text-[1.0625rem] leading-[1.8]">
+            Víc než dvacet let pracuji se zlatem a stříbrem. Každý šperk vyrábím ručně — od prvního náčrtu po finální lesk. Není to jen řemeslo, je to způsob, jakým vnímám svět.
+          </p>
+          <p class="mt-4 text-text-secondary text-[1.0625rem] leading-[1.8]">
+            Každý kus, který opustí dílnu, nese kousek mého příběhu a hodně toho vašeho. Proto nespěchám a nedělám kompromisy.
+          </p>
+        </div>
+
       </div>
     </div>
   </section>
 
-  <!-- ====== GALLERY — 3 photos ====== -->
+  <!-- ====== FILOZOFIE — velký italic heading + 3 principy ====== -->
   <section class="relative bg-bg-primary border-b border-border py-16 sm:py-20 lg:py-24 overflow-hidden">
     <div class="radial-overlay"></div>
     <div class="relative max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-14">
-      <span class="label-dot mb-8 block" data-anim="fade">Dílna Pod Kesnerkou</span>
-      <div class="grid md:grid-cols-3 gap-4" data-anim="stagger">
+
+      <h2 class="font-serif italic text-text-primary tracking-[-0.02em] leading-[1.12] text-[1.75rem] sm:text-[2.2rem] lg:text-[2.8rem] max-w-4xl" data-anim="up">
+        Věřím ve šperky, které <span class="not-italic text-gold-deep">dýchají</span> — řemeslo, které odstraní zbytečné a odhalí <span class="not-italic text-gold-deep">krásu</span> materiálu.
+      </h2>
+
+      <div class="grid md:grid-cols-3 gap-8 mt-16" data-anim="stagger">
+        <div data-anim-child class="pt-6 border-t border-border">
+          <span class="text-[0.75rem] text-text-muted font-sans">01</span>
+          <h4 class="mt-2">Ruční práce bez kompromisů</h4>
+          <p class="mt-2 text-text-secondary text-[0.9375rem] leading-relaxed">Každý šperk vyrábím od začátku do konce vlastníma rukama. Žádná sériová výroba, žádné polotovary.</p>
+        </div>
+        <div data-anim-child class="pt-6 border-t border-border">
+          <span class="text-[0.75rem] text-text-muted font-sans">02</span>
+          <h4 class="mt-2">Materiály s příběhem</h4>
+          <p class="mt-2 text-text-secondary text-[0.9375rem] leading-relaxed">Certifikované kovy, ručně vybrané kameny. Vím, odkud každý materiál přichází a proč ho používám.</p>
+        </div>
+        <div data-anim-child class="pt-6 border-t border-border">
+          <span class="text-[0.75rem] text-text-muted font-sans">03</span>
+          <h4 class="mt-2">Zdrženlivost místo přebytku</h4>
+          <p class="mt-2 text-text-secondary text-[0.9375rem] leading-relaxed">Méně je více. Věřím, že nejkrásnější šperky jsou ty, kde každý detail má svůj důvod.</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ====== GALERIE — 3 fotky, vyšší ====== -->
+  <section class="relative bg-bg-primary border-b border-border py-16 sm:py-20 lg:py-24 overflow-hidden">
+    <div class="max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-14">
+      <span class="label-dot mb-10 block" data-anim="fade">Dílna Pod Kesnerkou</span>
+      <div class="grid md:grid-cols-3 gap-4 lg:gap-6" data-anim="stagger">
         <div data-anim-child class="relative overflow-hidden">
           <img
             src="/images/o-dilne--galerie-1--ruka-retizek-stroj.webp"
             srcset="/images/o-dilne--galerie-1--ruka-retizek-stroj.webp 1x, /images/o-dilne--galerie-1--ruka-retizek-stroj@2x.webp 2x"
-            width="800" height="600"
-            alt="Ruční výroba řetízku v dílně"
-            loading="lazy" decoding="async"
-            class="w-full h-64 object-cover grayscale-[15%] sepia-[10%]"
+            width="800" height="600" alt="Ruční výroba řetízku v dílně" loading="lazy" decoding="async"
+            class="w-full aspect-[4/5] object-cover grayscale-[15%] sepia-[10%]"
           />
           <div class="absolute inset-2 border border-white/10 pointer-events-none"></div>
         </div>
@@ -74,10 +104,8 @@ import CTA from '../components/CTA.astro';
           <img
             src="/images/o-dilne--galerie-2--erbovni-pecet-zlato.webp"
             srcset="/images/o-dilne--galerie-2--erbovni-pecet-zlato.webp 1x, /images/o-dilne--galerie-2--erbovni-pecet-zlato@2x.webp 2x"
-            width="800" height="600"
-            alt="Zlatá erbovní pečeť — detail"
-            loading="lazy" decoding="async"
-            class="w-full h-64 object-cover grayscale-[15%] sepia-[10%]"
+            width="800" height="600" alt="Zlatá erbovní pečeť — detail" loading="lazy" decoding="async"
+            class="w-full aspect-[4/5] object-cover grayscale-[15%] sepia-[10%]"
           />
           <div class="absolute inset-2 border border-white/10 pointer-events-none"></div>
         </div>
@@ -85,10 +113,8 @@ import CTA from '../components/CTA.astro';
           <img
             src="/images/o-dilne--galerie-3--snubaky-na-dreve-stul.webp"
             srcset="/images/o-dilne--galerie-3--snubaky-na-dreve-stul.webp 1x, /images/o-dilne--galerie-3--snubaky-na-dreve-stul@2x.webp 2x"
-            width="800" height="600"
-            alt="Snubní prsteny na dřevěném stole"
-            loading="lazy" decoding="async"
-            class="w-full h-64 object-cover grayscale-[15%] sepia-[10%]"
+            width="800" height="600" alt="Snubní prsteny na dřevěném stole" loading="lazy" decoding="async"
+            class="w-full aspect-[4/5] object-cover grayscale-[15%] sepia-[10%]"
           />
           <div class="absolute inset-2 border border-white/10 pointer-events-none"></div>
         </div>
@@ -96,35 +122,31 @@ import CTA from '../components/CTA.astro';
     </div>
   </section>
 
-  <!-- ====== CERTIFIKÁTY ====== -->
-  <section class="relative bg-bg-primary border-b border-border py-16 sm:py-20 lg:py-24">
+  <!-- ====== CERTIFIKÁTY — foto vlevo, text vpravo ====== -->
+  <section class="relative bg-bg-primary py-16 sm:py-20 lg:py-24">
     <div class="max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-14">
       <div class="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
-        <div data-anim="up">
-          <span class="label-dot">Certifikáty</span>
-          <h2 class="mt-5">Certifikáty a puncování</h2>
-          <p class="mt-4 text-text-secondary text-[1.0625rem] leading-relaxed">
-            Všechny moje šperky jsou vyrobeny z certifikovaných materiálů a opatřeny státním puncem. Pracuji v souladu s českou legislativou.
-          </p>
-          <p class="mt-4 text-text-secondary text-[1.0625rem] leading-relaxed">
-            Každý kus doprovázím certifikátem pravosti. Kameny dodávám s gemologickým posudkem.
-          </p>
-        </div>
         <div data-anim="scale" class="relative overflow-hidden">
           <img
             src="/images/o-dilne--certifikaty--cad-detail-preciznost.webp"
             srcset="/images/o-dilne--certifikaty--cad-detail-preciznost.webp 1x, /images/o-dilne--certifikaty--cad-detail-preciznost@2x.webp 2x"
-            width="800" height="600"
-            alt="CAD detail — preciznost zlatnické práce"
-            loading="lazy"
-            decoding="async"
+            width="800" height="600" alt="CAD detail — preciznost zlatnické práce" loading="lazy" decoding="async"
             class="w-full h-full object-cover grayscale-[15%] sepia-[10%]"
           />
-          <div class="absolute inset-2 border border-white/10 pointer-events-none"></div>
+          <div class="absolute inset-3 border border-white/10 pointer-events-none"></div>
+        </div>
+        <div data-anim="up">
+          <span class="label-dot">Certifikáty</span>
+          <h2 class="mt-5">Puncované a certifikované</h2>
+          <p class="mt-4 text-text-secondary text-[1.0625rem] leading-[1.8]">
+            Všechny moje šperky jsou vyrobeny z certifikovaných materiálů a opatřeny státním puncem. Pracuji v souladu s českou legislativou.
+          </p>
+          <p class="mt-4 text-text-secondary text-[1.0625rem] leading-[1.8]">
+            Každý kus doprovázím certifikátem pravosti. Kameny dodávám s gemologickým posudkem.
+          </p>
         </div>
       </div>
     </div>
   </section>
-
 
 </Layout>
