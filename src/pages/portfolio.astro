@@ -1,6 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import CTA from '../components/CTA.astro';
+import Button from '../components/Button.astro';
 import { portfolioItems } from '../data/portfolio';
 ---
 
@@ -9,69 +9,81 @@ import { portfolioItems } from '../data/portfolio';
   description="Každý kus vypráví příběh. Zlaté prsteny, stříbrné přívěsky, sady s kameny. Ruční práce Martina Ševra."
 >
 
-  <!-- ====== HERO — Parallax photo ====== -->
-  <section class="relative h-[50vh] md:h-[65vh] overflow-hidden">
-    <div class="absolute inset-0" data-parallax>
-      <img
-        src="/images/portfolio--1--prsten-opal-trojuhelnik.webp"
-        srcset="/images/portfolio--1--prsten-opal-trojuhelnik.webp 1x, /images/portfolio--1--prsten-opal-trojuhelnik@2x.webp 2x"
-        width="1920" height="1080"
-        alt="Zlatnická dílna — portfolio šperků"
-        loading="eager"
-        decoding="async"
-        class="w-full h-[120%] object-cover"
-      />
+  <!-- ====== HERO — text left aligned, no parallax photo ====== -->
+  <section class="relative bg-bg-primary border-b border-border py-20 sm:py-28 lg:py-36 overflow-hidden">
+    <div class="radial-overlay"></div>
+    <div class="relative max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-14">
+      <div class="max-w-3xl" data-anim="up">
+        <span class="label-dot">Portfolio</span>
+        <h1 class="mt-6">
+          Šperky z <em>duše</em>
+        </h1>
+        <p class="mt-6 text-text-secondary text-[1.0625rem] leading-relaxed max-w-xl">
+          Ruční práce, která trvá. Zlaté prsteny, stříbrné přívěsky, sady s kameny. Každý kus vypráví příběh.
+        </p>
+      </div>
     </div>
   </section>
 
-  <!-- ====== PORTFOLIO GRID ====== -->
-  <section class="relative bg-bg-primary border-b border-border py-16 sm:py-20 lg:py-24 overflow-hidden">
+  <!-- ====== PORTFOLIO — Vertical list (jako Selected Works na homepage) ====== -->
+  <section class="relative bg-bg-primary py-16 sm:py-20 lg:py-24 overflow-hidden">
     <div class="radial-overlay"></div>
     <div class="relative max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-14">
 
-      <!-- Header -->
-      <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6 mb-14" data-anim="up">
-        <div>
-          <span class="label-dot">Portfolio</span>
-          <h1 class="mt-5">Šperky z <em>duše</em></h1>
-          <p class="mt-3 text-text-secondary max-w-lg">Každý šperk v tomto portfoliu vznikl jako originál.</p>
-        </div>
-      </div>
-
-      <!-- Cards: asymmetric like homepage Selected Works -->
-      <div class="flex flex-col gap-16 md:gap-20">
+      <!-- Vertical list -->
+      <div class="flex flex-col">
         {portfolioItems.map((item, i) => (
-          <a href={`/tvorba/${item.slug}`} class="group grid grid-cols-1 md:grid-cols-[1.08fr_0.92fr] gap-6 lg:gap-10 items-center" data-anim="up">
-            <div class={`relative overflow-hidden aspect-[4/5] ${i % 2 === 1 ? 'md:order-2' : ''}`}>
-              <img
-                src={item.image}
-                srcset={`${item.image} 1x, ${item.image2x} 2x`}
-                width="800" height="1000"
-                alt={item.alt}
-                loading={i < 2 ? 'eager' : 'lazy'}
-                decoding="async"
-                class="absolute inset-0 w-full h-full object-cover grayscale-[15%] sepia-[10%] transition-transform duration-700 group-hover:scale-[1.03]"
-              />
-              <div class="absolute inset-2 border border-white/10 pointer-events-none"></div>
-              <div class="absolute bottom-4 right-4 bg-bg-primary/90 backdrop-blur-md px-4 py-2">
-                <span class="text-[0.6875rem] uppercase tracking-[0.12em] font-medium text-gold-on-light font-sans">{`Zakázka 0${i + 1}`}</span>
+          <a href={`/tvorba/${item.slug}`} class="group block border-t border-border py-10 md:py-16" data-anim="up">
+            <div class="grid grid-cols-1 md:grid-cols-[0.5fr_1fr] gap-8 md:gap-12 lg:gap-20 items-center">
+
+              <!-- Photo -->
+              <div class="relative aspect-[4/3] overflow-hidden">
+                <img
+                  src={item.image}
+                  srcset={`${item.image} 1x, ${item.image2x} 2x`}
+                  width="800" height="600"
+                  alt={item.alt}
+                  loading={i < 2 ? 'eager' : 'lazy'}
+                  decoding="async"
+                  class="absolute inset-0 w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-700"
+                />
+                <div class="absolute inset-2 border border-white/10 pointer-events-none"></div>
+                <div class="absolute bottom-4 left-4 bg-bg-primary/90 backdrop-blur-md px-4 py-2.5 shadow-soft">
+                  <span class="text-[0.6875rem] uppercase tracking-[0.15em] font-medium text-gold-on-light font-sans">{`Zakázka 0${i + 1}`}</span>
+                </div>
               </div>
-            </div>
-            <div class={i % 2 === 1 ? 'md:order-1' : ''}>
-              <div class="flex gap-3 mb-3">
-                {item.tags.map((tag: string) => (
-                  <span class="text-[0.6875rem] uppercase tracking-wider text-text-muted font-sans border border-border px-3 py-1.5">{tag}</span>
-                ))}
+
+              <!-- Info -->
+              <div class="flex items-start justify-between gap-6">
+                <div>
+                  <span class="text-[0.6875rem] uppercase tracking-[0.15em] font-medium text-gold-on-light font-sans">{`Zakázka 0${i + 1}`}</span>
+                  <h3 class="mt-2 text-[1.5rem] md:text-[1.75rem] group-hover:text-gold-deep transition-colors duration-300">{item.title}</h3>
+                  <p class="text-[0.9375rem] text-text-secondary leading-relaxed mt-3 max-w-lg font-sans">{item.description}</p>
+                  <div class="flex flex-wrap gap-3 mt-5">
+                    {item.tags.map((tag: string) => (
+                      <span class="text-[0.6875rem] uppercase tracking-wider text-text-muted font-sans border border-border px-3 py-1.5">{tag}</span>
+                    ))}
+                  </div>
+                  <div class="mt-6">
+                    <span class="text-[11px] text-text-secondary uppercase tracking-[0.2em] font-sans font-medium group-hover:text-gold-deep transition-colors duration-300 inline-flex items-center gap-2">
+                      Podrobnosti
+                      <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25" /></svg>
+                    </span>
+                  </div>
+                </div>
+                <div class="hidden sm:flex flex-shrink-0 mt-2 h-10 w-10 rounded-full border border-border items-center justify-center group-hover:bg-text-primary group-hover:border-text-primary transition-colors duration-300">
+                  <svg class="w-4 h-4 text-text-primary group-hover:text-white transition-colors duration-300" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25" /></svg>
+                </div>
               </div>
-              <h3 class="group-hover:text-gold-deep transition-colors duration-300">{item.title}</h3>
-              <p class="mt-2 text-text-secondary text-[0.9375rem] leading-relaxed">{item.description}</p>
+
             </div>
           </a>
         ))}
+        <!-- Bottom border -->
+        <div class="border-t border-border"></div>
       </div>
 
     </div>
   </section>
-
 
 </Layout>

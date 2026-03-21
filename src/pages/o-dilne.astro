@@ -24,32 +24,63 @@ import Button from '../components/Button.astro';
     </div>
   </section>
 
-  <!-- ====== PORTRAIT + STORY — foto vlevo, text vpravo ====== -->
-  <section class="relative bg-bg-primary border-b border-border py-16 sm:py-20 lg:py-24">
+  <!-- ====== PORTRAIT + STORY — dramatic asymmetric ====== -->
+  <section class="relative bg-bg-primary border-b border-border py-16 sm:py-20 lg:py-28">
     <div class="max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-14">
-      <div class="grid lg:grid-cols-[0.95fr_1.05fr] gap-12 lg:gap-20 items-center">
+      <div class="grid lg:grid-cols-[1.15fr_0.85fr] gap-10 lg:gap-16 items-start">
 
+        <!-- Photo — tall, dramatic -->
         <div data-anim="scale" class="relative overflow-hidden">
-          <img
-            src="/images/o-dilne--portret--martin-lvi-prsten-v-dilne.webp"
-            srcset="/images/o-dilne--portret--martin-lvi-prsten-v-dilne.webp 1x, /images/o-dilne--portret--martin-lvi-prsten-v-dilne@2x.webp 2x"
-            width="600" height="800"
-            alt="Martin Ševr v zlatnické dílně"
-            loading="lazy" decoding="async"
-            class="w-full h-auto object-cover grayscale-[15%] sepia-[10%]"
-          />
-          <div class="absolute inset-3 border border-white/10 pointer-events-none"></div>
+          <div class="aspect-[3/4] relative overflow-hidden">
+            <img
+              src="/images/o-dilne--portret--martin-lvi-prsten-v-dilne.webp"
+              srcset="/images/o-dilne--portret--martin-lvi-prsten-v-dilne.webp 1x, /images/o-dilne--portret--martin-lvi-prsten-v-dilne@2x.webp 2x"
+              width="600" height="800"
+              alt="Martin Ševr v zlatnické dílně"
+              loading="lazy" decoding="async"
+              class="absolute inset-0 w-full h-full object-cover"
+            />
+            <div class="absolute inset-3 border border-white/15 pointer-events-none"></div>
+            <div class="absolute bottom-6 left-6 bg-bg-primary/90 backdrop-blur-md px-5 py-3 shadow-soft">
+              <span class="text-[0.6875rem] uppercase tracking-[0.15em] font-medium text-gold-on-light font-sans">Dílna Pod Kesnerkou</span>
+            </div>
+          </div>
         </div>
 
-        <div data-anim="up">
+        <!-- Text — sticky on scroll -->
+        <div class="lg:sticky lg:top-28 lg:self-start" data-anim="up">
           <span class="label-dot">Příběh</span>
-          <h2 class="mt-5">Zlatnictví není jen práce</h2>
-          <p class="mt-6 text-text-secondary text-[1.0625rem] leading-[1.8]">
-            Víc než dvacet let pracuji se zlatem a stříbrem. Každý šperk vyrábím ručně — od prvního náčrtu po finální lesk. Není to jen řemeslo, je to způsob, jakým vnímám svět.
-          </p>
-          <p class="mt-4 text-text-secondary text-[1.0625rem] leading-[1.8]">
-            Každý kus, který opustí dílnu, nese kousek mého příběhu a hodně toho vašeho. Proto nespěchám a nedělám kompromisy.
-          </p>
+          <h2 class="mt-5">Zlatnictví není<br />jen <em>práce</em></h2>
+
+          <blockquote class="mt-8 pt-8 border-t border-border">
+            <p class="font-serif italic text-[1.25rem] sm:text-[1.4rem] leading-[1.5] text-text-primary">
+              „Každý kus, který opustí dílnu, nese kousek mého příběhu a hodně toho vašeho."
+            </p>
+          </blockquote>
+
+          <div class="mt-8 space-y-4">
+            <p class="text-text-secondary text-[0.9375rem] leading-[1.8]">
+              Víc než dvacet let pracuji se zlatem a stříbrem. Každý šperk vyrábím ručně — od prvního náčrtu po finální lesk. Není to jen řemeslo, je to způsob, jakým vnímám svět.
+            </p>
+            <p class="text-text-secondary text-[0.9375rem] leading-[1.8]">
+              Proto nespěchám a nedělám kompromisy. Raději odmítnu zakázku, než abych odevzdal něco, za čím si nestojím.
+            </p>
+          </div>
+
+          <div class="grid grid-cols-3 gap-6 mt-10 pt-8 border-t border-border">
+            <div>
+              <span class="block font-serif text-[1.75rem] text-text-primary">20+</span>
+              <span class="text-[0.75rem] text-text-muted uppercase tracking-wider font-sans mt-1 block">Let zkušeností</span>
+            </div>
+            <div>
+              <span class="block font-serif text-[1.75rem] text-text-primary">500+</span>
+              <span class="text-[0.75rem] text-text-muted uppercase tracking-wider font-sans mt-1 block">Vyrobených šperků</span>
+            </div>
+            <div>
+              <span class="block font-serif text-[1.75rem] text-text-primary">100%</span>
+              <span class="text-[0.75rem] text-text-muted uppercase tracking-wider font-sans mt-1 block">Ruční práce</span>
+            </div>
+          </div>
         </div>
 
       </div>
