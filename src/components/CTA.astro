@@ -13,20 +13,12 @@ const {
 ---
 
 <div class="border border-border bg-[rgba(250,251,248,0.6)] backdrop-blur-sm px-6 sm:px-8 lg:px-12 py-10 sm:py-12 lg:py-16" data-anim="up">
-  <div class="grid lg:grid-cols-[0.34fr_1fr] gap-10 lg:gap-16 items-end">
-    <div>
-      <span class="label-dot">Nezávazná konzultace</span>
-      <p class="mt-4 max-w-[16rem] text-[13px] leading-[1.8] text-text-secondary font-sans">
-        Pro zakázkové šperky, konzultace a vše kolem řemesla.
-      </p>
-    </div>
-    <div>
-      <h2 set:html={heading} />
-      <p class="mt-4 text-text-secondary text-[1.0625rem] leading-relaxed max-w-xl">{subheading}</p>
-      <div class="mt-8 sm:mt-12 flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
-        <Button href="tel:+420774598181" variant="primary">Zavolat</Button>
-        <Button href="https://wa.me/420774598181" variant="secondary">Napsat na WhatsApp</Button>
-      </div>
+  <div>
+    <h2 set:html={heading} />
+    <p class="mt-4 text-text-secondary text-[1.0625rem] leading-relaxed max-w-xl">{subheading}</p>
+    <div class="mt-8 sm:mt-12 flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
+      <Button href="tel:+420774598181" variant="primary">Zavolat</Button>
+      <Button href="https://wa.me/420774598181" variant="secondary">Napsat na WhatsApp</Button>
     </div>
   </div>
 </div>
