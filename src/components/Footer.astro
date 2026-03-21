@@ -14,7 +14,7 @@ const currentYear = new Date().getFullYear();
       <!-- Subtle gold radial glow behind photo -->
       <div class="hidden lg:block absolute right-[8%] top-1/2 -translate-y-1/2 w-[450px] h-[450px] bg-[radial-gradient(circle,rgba(198,168,90,0.06)_0%,transparent_65%)] pointer-events-none"></div>
 
-      <div class="grid lg:grid-cols-[1fr_0.55fr] gap-10 lg:gap-12 items-center relative">
+      <div class="grid grid-cols-1 lg:grid-cols-[1fr_0.55fr] gap-8 lg:gap-12 items-center relative">
         <div>
           <h2 class="font-serif text-text-primary tracking-[-0.02em] leading-[1.1] text-[1.75rem] sm:text-[2.2rem] lg:text-[2.8rem]">
             <span class="block">Pojďme vytvořit</span>
@@ -24,20 +24,20 @@ const currentYear = new Date().getFullYear();
 
           <div class="mt-8 flex flex-col sm:flex-row items-stretch sm:items-center gap-4 relative z-20">
             <a href="tel:+420774598181"
-              class="inline-flex items-center justify-center gap-3 h-14 sm:h-12 px-8 rounded-full bg-text-primary border border-text-primary hover:bg-gold-deep hover:border-gold-deep transition-all duration-300 font-sans text-[11px] uppercase tracking-[0.2em] font-medium shadow-md"
+              class="inline-flex items-center justify-center gap-3 h-12 px-8 rounded-full bg-text-primary border border-text-primary hover:bg-gold-deep hover:border-gold-deep transition-all duration-300 font-sans text-[11px] uppercase tracking-[0.2em] font-medium shadow-md"
               style="color: #FAFBF8;">
               Zavolat
               <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z" /></svg>
             </a>
             <a href="https://wa.me/420774598181" target="_blank" rel="noopener noreferrer"
-              class="inline-flex items-center justify-center gap-2 h-14 sm:h-12 px-6 rounded-full border border-border bg-[rgba(250,251,248,0.8)] text-text-primary hover:bg-white transition-all duration-300 font-sans text-[11px] uppercase tracking-[0.2em] font-medium shadow-sm">
+              class="inline-flex items-center justify-center gap-2 h-12 px-6 rounded-full border border-border bg-[rgba(250,251,248,0.8)] text-text-primary hover:bg-white transition-all duration-300 font-sans text-[11px] uppercase tracking-[0.2em] font-medium shadow-sm">
               Napsat na WhatsApp
             </a>
           </div>
         </div>
 
         <!-- Photo — floating ring -->
-        <div class="hidden lg:flex items-center justify-center relative">
+        <div class="flex items-center justify-center relative">
           <img
             src="/images/footer--cta--prsten-detail.webp"
             srcset="/images/footer--cta--prsten-detail.webp 1x, /images/footer--cta--prsten-detail@2x.webp 2x"
@@ -45,7 +45,7 @@ const currentYear = new Date().getFullYear();
             alt="Detail ručně vyrobeného prstenu"
             loading="lazy"
             decoding="async"
-            class="cta-ring w-full max-w-[300px] h-auto object-cover relative z-10"
+            class="cta-ring w-full max-w-[180px] sm:max-w-[240px] lg:max-w-[300px] h-auto object-cover relative z-10"
           />
         </div>
       </div>
@@ -75,7 +75,6 @@ const currentYear = new Date().getFullYear();
         <div>
           <p class="text-[10px] uppercase tracking-[0.18em] text-text-muted font-sans mb-4 font-medium">Navigace</p>
           <div class="flex flex-col gap-3">
-            <a href="/" class="text-[13px] text-text-primary font-sans hover:text-gold-deep transition-colors">Domů</a>
             <a href="/zakazkova-tvorba" class="text-[13px] text-text-primary font-sans hover:text-gold-deep transition-colors">Zakázková tvorba</a>
             <a href="/skladem" class="text-[13px] text-text-primary font-sans hover:text-gold-deep transition-colors">Skladem</a>
             <a href="/portfolio" class="text-[13px] text-text-primary font-sans hover:text-gold-deep transition-colors">Portfolio</a>

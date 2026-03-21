@@ -11,8 +11,8 @@ const { href, variant = 'primary', class: className = '', type = 'button', ariaL
 const base = 'inline-flex items-center justify-center font-sans font-medium transition-colors duration-300 cursor-pointer';
 
 const variants: Record<string, string> = {
-  primary: `${base} gap-3 h-12 px-8 bg-text-primary rounded-full text-[11px] uppercase tracking-[0.2em] shadow-md hover:bg-gold-deep`,
-  secondary: `${base} gap-2 h-12 px-6 border border-border bg-white/80 text-text-primary rounded-full text-[11px] uppercase tracking-[0.2em] shadow-sm hover:bg-white`,
+  primary: `${base} gap-3 h-12 px-6 sm:px-8 bg-text-primary rounded-full text-[11px] uppercase tracking-[0.2em] shadow-md hover:bg-gold-deep`,
+  secondary: `${base} gap-2 h-12 px-5 sm:px-6 border border-border bg-white/80 text-text-primary rounded-full text-[11px] uppercase tracking-[0.2em] shadow-sm hover:bg-white`,
   text: `${base} text-[11px] text-text-secondary uppercase tracking-[0.2em] hover:text-gold-deep gap-2`,
 };
 
