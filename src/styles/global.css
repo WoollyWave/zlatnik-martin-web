@@ -6,7 +6,7 @@
   --color-bg-tertiary: #E7E1D6;
   --color-text-primary: #1E1B18;
   --color-text-secondary: #5F5A54;
-  --color-text-muted: #8E887F;
+  --color-text-muted: #7A756D;
   --color-gold-primary: #C6A85A;
   --color-gold-soft: #E8D7A8;
   --color-gold-deep: #8F7430;
@@ -34,6 +34,20 @@
   font-family: "General Sans";
   src: url("/fonts/GeneralSans-Medium.woff2") format("woff2");
   font-weight: 500; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: "Playfair Display";
+  src: url("/fonts/PlayfairDisplay-Regular.woff2") format("woff2");
+  font-weight: 400 900;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Playfair Display";
+  src: url("/fonts/PlayfairDisplay-Italic.woff2") format("woff2");
+  font-weight: 400 900;
+  font-style: italic;
+  font-display: swap;
 }
 
 *, *::before, *::after { box-sizing: border-box; }
