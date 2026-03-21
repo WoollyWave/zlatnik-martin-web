@@ -1,8 +1,6 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import Button from '../../components/Button.astro';
-import ImagePlaceholder from '../../components/ImagePlaceholder.astro';
-import CTA from '../../components/CTA.astro';
 import { portfolioItems, type PortfolioItem } from '../../data/portfolio';
 
 export function getStaticPaths() {
@@ -17,113 +15,178 @@ interface Props {
 }
 
 const { item } = Astro.props;
+
+// Other works — exclude current
+const otherWorks = portfolioItems.filter((p) => p.slug !== item.slug);
 ---
 
 <Layout
   title={`${item.title} | Portfolio — Martin Ševr`}
   description={item.description}
 >
-  <!-- ====== HERO PHOTO ====== -->
-  <section class="border-b border-border">
-    {item.heroImage ? (
-      <img
-        src={item.heroImage}
-        srcset={`${item.heroImage} 1x, ${item.heroImage2x} 2x`}
-        width="1920" height="1080"
-        alt={item.alt}
-        loading="eager"
-        decoding="async"
-        class="w-full max-h-[70vh] object-cover"
-      />
-    ) : item.image ? (
-      <img
-        src={item.image}
-        srcset={`${item.image} 1x, ${item.image2x} 2x`}
-        width="800" height="600"
-        alt={item.alt}
-        loading="eager"
-        decoding="async"
-        class="w-full max-h-[70vh] object-cover"
-      />
-    ) : (
-      <ImagePlaceholder aspect="16/9" alt={item.title} class="w-full max-h-[70vh] object-cover" />
-    )}
-  </section>
 
-  <!-- ====== INFO ====== -->
-  <section class="bg-bg-primary border-b border-border py-16 sm:py-20 lg:py-24">
-    <div class="max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-14">
-      <div class="grid lg:grid-cols-2 gap-12 lg:gap-20">
-        <!-- Left — meta -->
+  <!-- ====== HERO — Split: info left + main photo right ====== -->
+  <section class="relative bg-bg-primary border-b border-border overflow-hidden">
+    <div class="radial-overlay"></div>
+    <div class="relative max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-14">
+      <div class="grid lg:grid-cols-[0.85fr_1.15fr] gap-10 lg:gap-16 items-center min-h-[calc(100svh-96px)] py-16 lg:py-24">
+
+        <!-- Left — info -->
         <div data-anim="up">
-          <a href="/portfolio" class="inline-flex items-center text-[0.8125rem] text-text-muted hover:text-text-primary transition-colors duration-200 mb-6 uppercase tracking-[0.1em]">
-            &larr;&nbsp;Zpět na Portfolio
+          <a href="/portfolio" class="inline-flex items-center gap-2 text-[11px] text-text-muted hover:text-gold-deep transition-colors duration-200 uppercase tracking-[0.15em] font-sans font-medium">
+            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" /></svg>
+            Zpět na portfolio
           </a>
-          <div class="flex flex-wrap gap-3 mt-4">
-            {item.tags.map((tag) => (
-              <span class="text-[0.6875rem] uppercase tracking-wider text-text-muted font-sans border border-border px-3 py-1.5">
-                {tag}
-              </span>
-            ))}
-          </div>
-          <div class="mt-3 text-[0.875rem] text-text-muted">{item.material}</div>
-        </div>
 
-        <!-- Right — content -->
-        <div data-anim="up">
-          <h1>{item.title}</h1>
-          <p class="mt-6 text-text-secondary text-[1.0625rem] leading-relaxed max-w-2xl">
+          <h1 class="mt-8">{item.title}</h1>
+
+          <p class="mt-6 text-text-secondary text-[1.0625rem] leading-[1.8] max-w-lg">
             {item.fullDescription}
           </p>
+
+          <!-- Meta -->
+          <div class="mt-10 pt-8 border-t border-border grid grid-cols-2 gap-6">
+            <div>
+              <span class="text-[10px] uppercase tracking-[0.16em] font-medium text-text-muted font-sans">Materiál</span>
+              <p class="text-[13px] text-text-primary mt-1 font-sans">{item.material}</p>
+            </div>
+            <div>
+              <span class="text-[10px] uppercase tracking-[0.16em] font-medium text-text-muted font-sans">Typ</span>
+              <div class="flex flex-wrap gap-2 mt-1">
+                {item.tags.map((tag) => (
+                  <span class="text-[11px] uppercase tracking-wider text-text-secondary font-sans">{tag}</span>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <!-- CTA -->
+          <div class="mt-8">
+            <Button href="/kontakt" variant="primary">Chci podobný šperk</Button>
+          </div>
         </div>
+
+        <!-- Right — main photo -->
+        <div class="relative hero-photo-frame" data-anim="scale">
+          {item.heroImage ? (
+            <img
+              src={item.heroImage}
+              srcset={`${item.heroImage} 1x, ${item.heroImage2x} 2x`}
+              width="1200" height="900"
+              alt={item.alt}
+              loading="eager"
+              decoding="async"
+              class="w-full h-auto object-cover"
+            />
+          ) : (
+            <img
+              src={item.image}
+              srcset={`${item.image} 1x, ${item.image2x} 2x`}
+              width="800" height="600"
+              alt={item.alt}
+              loading="eager"
+              decoding="async"
+              class="w-full h-auto object-cover"
+            />
+          )}
+          <div class="absolute inset-3 border border-white/12 pointer-events-none"></div>
+        </div>
+
       </div>
     </div>
   </section>
 
   <!-- ====== PROCESS GALLERY ====== -->
-  <section class="bg-bg-primary border-b border-border py-16 sm:py-20 lg:py-24">
-    <div class="max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-14">
-      <span class="label-dot" data-anim="fade">Proces vzniku</span>
-      <p class="text-[0.875rem] text-text-muted leading-relaxed mt-4 max-w-[240px]">
-        Od prvního náčrtu po finální lesk.
-      </p>
+  {item.processImages && item.processImages.length > 0 && (
+    <section class="relative bg-bg-primary border-b border-border py-16 sm:py-20 lg:py-24">
+      <div class="max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-14">
+        <span class="label-dot" data-anim="fade">Proces vzniku</span>
+        <p class="text-[0.875rem] text-text-muted leading-relaxed mt-4 max-w-xs">
+          Od prvního náčrtu po finální lesk.
+        </p>
 
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-10" data-anim="stagger">
-        {item.processImages && item.processImages.length > 0 ? (
-          item.processImages.map((img) => (
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 mt-12" data-anim="stagger">
+          {item.processImages.map((img, i) => (
             <div data-anim-child class="relative overflow-hidden">
-              <img
-                src={img.src}
-                srcset={`${img.src} 1x, ${img.src2x} 2x`}
-                width="800" height="600"
-                alt={img.alt}
-                loading="lazy"
-                decoding="async"
-                class="w-full h-full object-cover grayscale-[15%] sepia-[10%]"
-              />
-              <div class="absolute inset-2 border border-white/10 pointer-events-none"></div>
-              <p class="mt-3 text-[0.8125rem] text-text-muted">{img.alt}</p>
+              <div class="aspect-[4/3] relative overflow-hidden">
+                <img
+                  src={img.src}
+                  srcset={`${img.src} 1x, ${img.src2x} 2x`}
+                  width="800" height="600"
+                  alt={img.alt}
+                  loading="lazy"
+                  decoding="async"
+                  class="absolute inset-0 w-full h-full object-cover"
+                />
+                <div class="absolute inset-2 border border-white/10 pointer-events-none"></div>
+                <!-- Step number -->
+                <div class="absolute top-4 left-4 bg-bg-primary/90 backdrop-blur-md px-3 py-1.5">
+                  <span class="text-[0.6875rem] font-medium text-gold-on-light font-sans">{`0${i + 1}`}</span>
+                </div>
+              </div>
+              <p class="mt-3 text-[0.8125rem] text-text-secondary font-sans">{img.alt}</p>
             </div>
-          ))
-        ) : (
-          <>
-            <div data-anim-child>
-              <ImagePlaceholder aspect="4/3" alt={`${item.title} — návrh`} class="w-full" />
-              <p class="mt-3 text-[0.8125rem] text-text-muted">Návrh</p>
-            </div>
-            <div data-anim-child>
-              <ImagePlaceholder aspect="4/3" alt={`${item.title} — výroba`} class="w-full" />
-              <p class="mt-3 text-[0.8125rem] text-text-muted">Výroba</p>
-            </div>
-            <div data-anim-child>
-              <ImagePlaceholder aspect="4/3" alt={`${item.title} — hotový kus`} class="w-full" />
-              <p class="mt-3 text-[0.8125rem] text-text-muted">Hotový kus</p>
-            </div>
-          </>
-        )}
+          ))}
+        </div>
       </div>
+    </section>
+  )}
+
+  <!-- ====== DALŠÍ UKÁZKY ====== -->
+  <section class="relative bg-bg-primary border-b border-border py-16 sm:py-20 lg:py-24 overflow-hidden">
+    <div class="radial-overlay"></div>
+    <div class="relative max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-14">
+
+      <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6 mb-14">
+        <div data-anim="up">
+          <span class="label-dot">Další ukázky</span>
+          <h2 class="mt-5">Další <em>šperky</em> z portfolia</h2>
+        </div>
+        <div data-anim="up">
+          <Button href="/portfolio" variant="text">Celé portfolio</Button>
+        </div>
+      </div>
+
+      <div class="flex flex-col">
+        {otherWorks.map((work, i) => (
+          <a href={`/tvorba/${work.slug}`} class="group block border-t border-border py-10 md:py-14" data-anim="up">
+            <div class="grid grid-cols-1 md:grid-cols-[0.4fr_1fr] gap-8 md:gap-12 lg:gap-16 items-center">
+              <!-- Photo -->
+              <div class="relative aspect-[4/3] overflow-hidden">
+                <img
+                  src={work.image}
+                  srcset={`${work.image} 1x, ${work.image2x} 2x`}
+                  width="800" height="600"
+                  alt={work.alt}
+                  loading="lazy"
+                  decoding="async"
+                  class="absolute inset-0 w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-700"
+                />
+                <div class="absolute inset-2 border border-white/10 pointer-events-none"></div>
+              </div>
+              <!-- Info -->
+              <div class="flex items-start justify-between gap-6">
+                <div>
+                  <span class="text-[0.6875rem] uppercase tracking-[0.15em] font-medium text-gold-on-light font-sans">{`Zakázka 0${i + 1}`}</span>
+                  <h3 class="mt-2 text-[1.25rem] md:text-[1.5rem] group-hover:text-gold-deep transition-colors duration-300">{work.title}</h3>
+                  <p class="text-[0.9375rem] text-text-secondary leading-relaxed mt-2 max-w-lg font-sans">{work.description}</p>
+                  <div class="flex flex-wrap gap-2 mt-4">
+                    {work.tags.map((tag: string) => (
+                      <span class="text-[0.6875rem] uppercase tracking-wider text-text-muted font-sans">{tag}</span>
+                    ))}
+                  </div>
+                </div>
+                <div class="hidden sm:flex flex-shrink-0 mt-2 h-10 w-10 rounded-full border border-border items-center justify-center group-hover:bg-text-primary group-hover:border-text-primary transition-colors duration-300">
+                  <svg class="w-4 h-4 text-text-primary group-hover:text-white transition-colors duration-300" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25" /></svg>
+                </div>
+              </div>
+            </div>
+          </a>
+        ))}
+        <div class="border-t border-border"></div>
+      </div>
+
     </div>
   </section>
-
 
 </Layout>
