@@ -100,7 +100,7 @@ const faqItems = [
 >
 
   <!-- ====== HERO — Scattered Gallery ====== -->
-  <section class="relative bg-bg-primary border-b border-border overflow-hidden" style="min-height: 100vh;">
+  <section class="relative bg-bg-primary border-b border-border overflow-hidden min-h-0 md:min-h-screen">
 
     <!-- Scattered images — desktop only -->
     <div class="hidden md:block absolute inset-0 pointer-events-none" aria-hidden="true">
@@ -155,7 +155,7 @@ const faqItems = [
     </div>
 
     <!-- Centered content -->
-    <div class="relative z-10 flex flex-col items-center justify-center text-center px-6 sm:px-8 lg:px-14 py-20 md:py-0" style="min-height: 100vh;">
+    <div class="relative z-10 flex flex-col items-center justify-center text-center px-6 sm:px-8 lg:px-14 py-16 md:py-0 md:min-h-screen">
       <span class="label-dot" data-anim="fade">Zakázková tvorba</span>
       <h1 class="mt-6 max-w-3xl" data-anim="up">
         Váš šperk
@@ -281,7 +281,7 @@ const faqItems = [
   </section>
 
   <!-- ====== FULLWIDTH PARALLAX PHOTO ====== -->
-  <section class="relative h-[70vh] overflow-hidden" data-parallax>
+  <section class="relative h-[40vh] sm:h-[50vh] lg:h-[70vh] overflow-hidden" data-parallax>
     <img
       src="/images/zakazkova--parallax--tricolor-prsten-na-kovadline.webp"
       srcset="/images/zakazkova--parallax--tricolor-prsten-na-kovadline.webp 1x, /images/zakazkova--parallax--tricolor-prsten-na-kovadline@2x.webp 2x"
@@ -289,7 +289,7 @@ const faqItems = [
       alt="Detailní záběr zlatnické práce"
       loading="lazy"
       decoding="async"
-      class="absolute inset-0 w-full h-[130%] object-cover -top-[15%] object-[center_80%]"
+      class="absolute inset-0 w-full h-[130%] object-cover -top-[15%] object-center sm:object-[center_80%]"
       style="will-change: transform;"
     />
   </section>
