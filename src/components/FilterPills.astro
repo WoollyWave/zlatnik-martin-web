@@ -7,18 +7,64 @@ interface Props {
 const { items, activeIndex = 0 } = Astro.props;
 ---
 
-<div class="flex flex-wrap gap-2 justify-center mb-12" role="group" aria-label="Filtrovat šperky">
+<div class="flex flex-wrap gap-3 mb-14" id="filter-pills" role="group" aria-label="Filtrovat šperky">
   {items.map((item, i) => (
     <button
-      class={`text-[0.8125rem] font-medium px-5 py-2.5 rounded-[2px] transition-all duration-200 cursor-pointer ${
+      class={`filter-pill text-[11px] font-sans font-medium uppercase tracking-[0.15em] px-5 py-2.5 transition-all duration-200 cursor-pointer ${
         i === activeIndex
-          ? 'bg-text-primary [color:#FAFBF8]'
-          : 'bg-transparent border border-border text-text-secondary hover:bg-hover-bg hover:text-text-primary hover:border-text-muted'
+          ? 'bg-text-primary active'
+          : 'bg-transparent border border-border text-text-secondary hover:border-text-muted hover:text-text-primary'
       }`}
-      data-filter={item.toLowerCase()}
+      style={i === activeIndex ? 'color: #FAFBF8;' : ''}
+      data-filter={item === 'Vše' ? 'all' : item.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')}
       aria-pressed={i === activeIndex ? 'true' : 'false'}
     >
       {item}
     </button>
   ))}
 </div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const pills = document.querySelectorAll('.filter-pill');
+    const cards = document.querySelectorAll('[data-category]');
+
+    pills.forEach((pill) => {
+      pill.addEventListener('click', () => {
+        const filter = pill.getAttribute('data-filter') || 'all';
+
+        // Update active pill
+        pills.forEach((p) => {
+          p.classList.remove('bg-text-primary', 'active');
+          p.classList.add('bg-transparent', 'border', 'border-border', 'text-text-secondary');
+          (p as HTMLElement).style.color = '';
+          p.setAttribute('aria-pressed', 'false');
+        });
+        pill.classList.add('bg-text-primary', 'active');
+        pill.classList.remove('bg-transparent', 'border', 'border-border', 'text-text-secondary');
+        (pill as HTMLElement).style.color = '#FAFBF8';
+        pill.setAttribute('aria-pressed', 'true');
+
+        // Filter cards
+        cards.forEach((card) => {
+          const category = card.getAttribute('data-category') || '';
+          const wrapper = card as HTMLElement;
+
+          if (filter === 'all' || category === filter) {
+            wrapper.style.display = '';
+            // Fade in
+            wrapper.style.opacity = '0';
+            wrapper.style.transform = 'translateY(10px)';
+            requestAnimationFrame(() => {
+              wrapper.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+              wrapper.style.opacity = '1';
+              wrapper.style.transform = 'translateY(0)';
+            });
+          } else {
+            wrapper.style.display = 'none';
+          }
+        });
+      });
+    });
+  });
+</script>

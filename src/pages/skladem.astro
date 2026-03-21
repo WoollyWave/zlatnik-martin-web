@@ -2,10 +2,20 @@
 import Layout from '../layouts/Layout.astro';
 import ProductCard from '../components/ProductCard.astro';
 import FilterPills from '../components/FilterPills.astro';
-import CTA from '../components/CTA.astro';
 import { products } from '../data/products';
 
-const filters = ['Vše', 'Prsteny', 'Náušnice', 'Přívěsky', 'Řetízky', 'Sady'];
+// Only categories that have products
+const categories = [...new Set(products.map(p => p.category))];
+const filterLabels = ['Vše', ...categories.map(c => {
+  const map: Record<string, string> = {
+    'prsteny': 'Prsteny',
+    'nausnice': 'Náušnice',
+    'privesky': 'Přívěsky',
+    'retizky': 'Řetízky',
+    'sady': 'Sady',
+  };
+  return map[c] || c;
+})];
 ---
 
 <Layout
@@ -13,38 +23,45 @@ const filters = ['Vše', 'Prsteny', 'Náušnice', 'Přívěsky', 'Řetízky', 'S
   description="Stříbrné šperky s přírodními kameny. Ihned k dispozici. Ruční výroba, certifikované materiály."
 >
 
-  <!-- ====== HEADER + GRID ====== -->
+  <!-- ====== HERO ====== -->
+  <section class="relative bg-bg-primary border-b border-border py-20 sm:py-28 lg:py-36 overflow-hidden">
+    <div class="radial-overlay"></div>
+    <div class="relative max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-14">
+      <div class="max-w-3xl" data-anim="up">
+        <span class="label-dot">Skladem</span>
+        <h1 class="mt-6">
+          Hotové <em>šperky</em>
+        </h1>
+        <p class="mt-6 text-text-secondary text-[1.0625rem] leading-relaxed max-w-xl">
+          Ručně vyrobené šperky ihned k dispozici. Každý kus je originál — stříbro, přírodní kameny, certifikované materiály.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== PRODUCTS ====== -->
   <section class="relative bg-bg-primary border-b border-border py-16 sm:py-20 lg:py-24 overflow-hidden">
     <div class="radial-overlay"></div>
     <div class="relative max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-14">
 
-      <div class="text-center max-w-2xl mx-auto mb-14" data-anim="up">
-        <span class="label-dot justify-center">Skladem</span>
-        <h1 class="mt-5">Hotové šperky</h1>
-        <p class="mt-4 text-text-secondary">Ručně vyrobené šperky ihned k dispozici. Každý kus je originál.</p>
-      </div>
+      <FilterPills items={filterLabels} activeIndex={0} />
 
-      <FilterPills items={filters} activeIndex={0} />
-
-      <div class="mt-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8" data-anim="stagger">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-12 lg:gap-x-8 lg:gap-y-16" id="products-grid">
         {products.map((product) => (
-          <div data-anim-child>
-            <ProductCard
-              title={product.title}
-              material={product.material}
-              price={product.price}
-              href={`/sperky/${product.slug}`}
-              category={product.category}
-              image={product.image}
-              image2x={product.image2x}
-              alt={product.alt}
-            />
-          </div>
+          <ProductCard
+            title={product.title}
+            material={product.material}
+            price={product.price}
+            href={`/sperky/${product.slug}`}
+            category={product.category}
+            image={product.image}
+            image2x={product.image2x}
+            alt={product.alt}
+          />
         ))}
       </div>
 
     </div>
   </section>
-
 
 </Layout>
