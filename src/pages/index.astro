@@ -140,17 +140,20 @@ const processSteps = [
           </div>
         </div>
 
-        <!-- Photo — clean, no overlays -->
+        <!-- Photo — floating with depth -->
         <div class="relative hero-img-wrap order-first lg:order-none">
-          <img
-            src="/images/homepage--hero--vltavin-privesek.webp"
-            srcset="/images/homepage--hero--vltavin-privesek.webp 1x, /images/homepage--hero--vltavin-privesek@2x.webp 2x"
-            width="800" height="600"
-            alt="Přívěsek s vltavínem a růženínem — zakázková tvorba"
-            loading="eager"
-            decoding="async"
-            class="w-full h-auto object-cover max-h-[70vh] lg:max-h-none"
-          />
+          <div class="hero-photo-frame relative">
+            <img
+              src="/images/homepage--hero--vltavin-privesek.webp"
+              srcset="/images/homepage--hero--vltavin-privesek.webp 1x, /images/homepage--hero--vltavin-privesek@2x.webp 2x"
+              width="800" height="600"
+              alt="Přívěsek s vltavínem a růženínem — zakázková tvorba"
+              loading="eager"
+              decoding="async"
+              class="w-full h-auto object-cover max-h-[70vh] lg:max-h-none relative z-10"
+            />
+            <div class="absolute inset-3 border border-white/12 pointer-events-none z-20"></div>
+          </div>
         </div>
 
       </div>
