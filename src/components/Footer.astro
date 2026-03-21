@@ -8,13 +8,13 @@ const currentYear = new Date().getFullYear();
   </div>
 
   <div class="relative max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-14 pt-16 sm:pt-20 lg:pt-24 pb-8 sm:pb-10 lg:pb-12">
-    <!-- CTA Panel — gold accent -->
-    <div data-anim="up" class="relative border border-border border-t-2 border-t-gold-primary bg-[rgba(250,251,248,0.6)] backdrop-blur-sm px-6 sm:px-8 lg:px-12 py-12 sm:py-14 lg:py-20 overflow-hidden">
+    <!-- CTA Panel -->
+    <div data-anim="up" class="relative border border-border bg-[rgba(250,251,248,0.6)] backdrop-blur-sm px-6 sm:px-8 lg:px-12 py-12 sm:py-14 lg:py-20 overflow-hidden">
 
       <!-- Subtle gold radial glow behind photo -->
-      <div class="hidden lg:block absolute right-[10%] top-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-[radial-gradient(circle,rgba(198,168,90,0.08)_0%,transparent_70%)] pointer-events-none"></div>
+      <div class="hidden lg:block absolute right-[8%] top-1/2 -translate-y-1/2 w-[450px] h-[450px] bg-[radial-gradient(circle,rgba(198,168,90,0.06)_0%,transparent_65%)] pointer-events-none"></div>
 
-      <div class="grid lg:grid-cols-[1fr_0.6fr] gap-10 lg:gap-12 items-center relative">
+      <div class="grid lg:grid-cols-[1fr_0.55fr] gap-10 lg:gap-12 items-center relative">
         <div>
           <h2 class="font-serif text-text-primary tracking-[-0.02em] leading-[1.1] text-[1.75rem] sm:text-[2.2rem] lg:text-[2.8rem]">
             <span class="block">Pojďme vytvořit</span>
@@ -22,21 +22,9 @@ const currentYear = new Date().getFullYear();
             <span class="block italic text-gold-deep">zestárne.</span>
           </h2>
 
-          <!-- Client quote -->
-          <blockquote class="mt-8 pt-6 border-t border-border max-w-lg">
-            <p class="font-serif italic text-[1rem] leading-[1.6] text-text-secondary">
-              „Martin mi vyrobil prsten přesně podle mé představy. Nosím ho každý den a pokaždé se na něj ráda podívám."
-            </p>
-            <footer class="mt-3 flex items-center gap-3">
-              <div class="w-8 h-8 rounded-full bg-gold-soft/40 flex items-center justify-center">
-                <span class="text-[0.6875rem] font-medium text-gold-deep font-sans">LK</span>
-              </div>
-              <div>
-                <span class="text-[0.8125rem] font-medium text-text-primary font-sans">Lucie K.</span>
-                <span class="text-[0.75rem] text-text-muted font-sans ml-2">Praha</span>
-              </div>
-            </footer>
-          </blockquote>
+          <p class="mt-6 text-text-secondary text-[0.9375rem] leading-relaxed max-w-md font-sans">
+            Zavolejte mi nebo napište na WhatsApp. Ozvu se do 24 hodin a domluvíme se na dalším kroku.
+          </p>
 
           <div class="mt-8 flex flex-col sm:flex-row items-stretch sm:items-center gap-4 relative z-20">
             <a href="tel:+420774598181"
@@ -52,7 +40,7 @@ const currentYear = new Date().getFullYear();
           </div>
         </div>
 
-        <!-- Photo with glow -->
+        <!-- Photo — floating ring -->
         <div class="hidden lg:flex items-center justify-center relative">
           <img
             src="/images/footer--cta--prsten-detail.webp"
@@ -61,7 +49,7 @@ const currentYear = new Date().getFullYear();
             alt="Detail ručně vyrobeného prstenu"
             loading="lazy"
             decoding="async"
-            class="w-full max-w-[340px] h-auto object-cover relative z-10"
+            class="cta-ring w-full max-w-[300px] h-auto object-cover relative z-10"
           />
         </div>
       </div>

@@ -180,6 +180,31 @@ a { color: inherit; text-decoration: none; }
     0 40px 80px -8px rgba(30, 27, 24, 0.10);
 }
 
+/* CTA ring — gentle floating */
+.cta-ring {
+  animation: ring-float 6s ease-in-out infinite;
+  filter: drop-shadow(0 20px 40px rgba(30, 27, 24, 0.12));
+}
+
+@keyframes ring-float {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  33% {
+    transform: translateY(-8px) rotate(1deg);
+  }
+  66% {
+    transform: translateY(-4px) rotate(-0.5deg);
+  }
+}
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .cta-ring {
+    animation: none;
+  }
+}
+
 /* FOUC prevention */
 .js body { opacity: 0; transition: opacity 0.8s cubic-bezier(0.23, 1, 0.32, 1); }
 .js body.is-loaded { opacity: 1; }
