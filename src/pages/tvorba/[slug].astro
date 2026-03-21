@@ -15,8 +15,6 @@ interface Props {
 }
 
 const { item } = Astro.props;
-
-// Other works — exclude current
 const otherWorks = portfolioItems.filter((p) => p.slug !== item.slug);
 ---
 
@@ -25,14 +23,14 @@ const otherWorks = portfolioItems.filter((p) => p.slug !== item.slug);
   description={item.description}
 >
 
-  <!-- ====== HERO — Split: info left + main photo right ====== -->
+  <!-- ====== HERO — Split: info left + photo right ====== -->
   <section class="relative bg-bg-primary border-b border-border overflow-hidden">
     <div class="radial-overlay"></div>
     <div class="relative max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-14">
       <div class="grid lg:grid-cols-[0.85fr_1.15fr] gap-10 lg:gap-16 items-center min-h-[calc(100svh-96px)] py-16 lg:py-24">
 
         <!-- Left — info -->
-        <div data-anim="up">
+        <div>
           <a href="/portfolio" class="inline-flex items-center gap-2 text-[11px] text-text-muted hover:text-gold-deep transition-colors duration-200 uppercase tracking-[0.15em] font-sans font-medium">
             <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" /></svg>
             Zpět na portfolio
@@ -60,36 +58,35 @@ const otherWorks = portfolioItems.filter((p) => p.slug !== item.slug);
             </div>
           </div>
 
-          <!-- CTA -->
           <div class="mt-8">
             <Button href="/kontakt" variant="primary">Chci podobný šperk</Button>
           </div>
         </div>
 
-        <!-- Right — main photo -->
-        <div class="relative hero-photo-frame" data-anim="scale">
-          {item.heroImage ? (
-            <img
-              src={item.heroImage}
-              srcset={`${item.heroImage} 1x, ${item.heroImage2x} 2x`}
-              width="1200" height="900"
-              alt={item.alt}
-              loading="eager"
-              decoding="async"
-              class="w-full h-auto object-cover"
-            />
-          ) : (
-            <img
-              src={item.image}
-              srcset={`${item.image} 1x, ${item.image2x} 2x`}
-              width="800" height="600"
-              alt={item.alt}
-              loading="eager"
-              decoding="async"
-              class="w-full h-auto object-cover"
-            />
-          )}
-          <div class="absolute inset-3 border border-white/12 pointer-events-none"></div>
+        <!-- Right — photo -->
+        <div class="relative order-first lg:order-none">
+          <div class="hero-photo-frame relative">
+            {item.heroImage ? (
+              <img
+                src={item.heroImage}
+                srcset={`${item.heroImage} 1x, ${item.heroImage2x} 2x`}
+                width="1200" height="900"
+                alt={item.alt}
+                loading="eager" decoding="async"
+                class="w-full h-auto object-cover relative z-10"
+              />
+            ) : (
+              <img
+                src={item.image}
+                srcset={`${item.image} 1x, ${item.image2x} 2x`}
+                width="800" height="600"
+                alt={item.alt}
+                loading="eager" decoding="async"
+                class="w-full h-auto object-cover relative z-10"
+              />
+            )}
+            <div class="absolute inset-3 border border-white/12 pointer-events-none z-20"></div>
+          </div>
         </div>
 
       </div>
@@ -100,7 +97,7 @@ const otherWorks = portfolioItems.filter((p) => p.slug !== item.slug);
   {item.processImages && item.processImages.length > 0 && (
     <section class="relative bg-bg-primary border-b border-border py-16 sm:py-20 lg:py-24">
       <div class="max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-14">
-        <span class="label-dot" data-anim="fade">Proces vzniku</span>
+        <span class="label-dot">Proces vzniku</span>
         <p class="text-[0.875rem] text-text-muted leading-relaxed mt-4 max-w-xs">
           Od prvního náčrtu po finální lesk.
         </p>
@@ -114,12 +111,10 @@ const otherWorks = portfolioItems.filter((p) => p.slug !== item.slug);
                   srcset={`${img.src} 1x, ${img.src2x} 2x`}
                   width="800" height="600"
                   alt={img.alt}
-                  loading="lazy"
-                  decoding="async"
+                  loading="lazy" decoding="async"
                   class="absolute inset-0 w-full h-full object-cover"
                 />
                 <div class="absolute inset-2 border border-white/10 pointer-events-none"></div>
-                <!-- Step number -->
                 <div class="absolute top-4 left-4 bg-bg-primary/90 backdrop-blur-md px-3 py-1.5">
                   <span class="text-[0.6875rem] font-medium text-gold-on-light font-sans">{`0${i + 1}`}</span>
                 </div>
@@ -138,11 +133,11 @@ const otherWorks = portfolioItems.filter((p) => p.slug !== item.slug);
     <div class="relative max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-14">
 
       <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6 mb-14">
-        <div data-anim="up">
+        <div>
           <span class="label-dot">Další ukázky</span>
           <h2 class="mt-5">Další <em>šperky</em> z portfolia</h2>
         </div>
-        <div data-anim="up">
+        <div>
           <Button href="/portfolio" variant="text">Celé portfolio</Button>
         </div>
       </div>
@@ -151,20 +146,17 @@ const otherWorks = portfolioItems.filter((p) => p.slug !== item.slug);
         {otherWorks.map((work, i) => (
           <a href={`/tvorba/${work.slug}`} class="group block border-t border-border py-10 md:py-14" data-anim="up">
             <div class="grid grid-cols-1 md:grid-cols-[0.4fr_1fr] gap-8 md:gap-12 lg:gap-16 items-center">
-              <!-- Photo -->
               <div class="relative aspect-[4/3] overflow-hidden">
                 <img
                   src={work.image}
                   srcset={`${work.image} 1x, ${work.image2x} 2x`}
                   width="800" height="600"
                   alt={work.alt}
-                  loading="lazy"
-                  decoding="async"
+                  loading="lazy" decoding="async"
                   class="absolute inset-0 w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-700"
                 />
                 <div class="absolute inset-2 border border-white/10 pointer-events-none"></div>
               </div>
-              <!-- Info -->
               <div class="flex items-start justify-between gap-6">
                 <div>
                   <span class="text-[0.6875rem] uppercase tracking-[0.15em] font-medium text-gold-on-light font-sans">{`Zakázka 0${i + 1}`}</span>
