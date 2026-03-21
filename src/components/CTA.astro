@@ -7,38 +7,26 @@ interface Props {
 }
 
 const {
-  heading = 'Pojďme vytvořit šperk,\nkterý krásně zestárne.',
-  subheading = 'Zavolejte mi nebo napište na WhatsApp. Ozvu se do 24 hodin a domluvíme se na dalším kroku.',
+  heading = 'Pojďme vytvořit šperk,<br />který krásně <em>zestárne</em>.',
+  subheading = 'Zavolejte mi nebo napište na WhatsApp. Ozvu se do 24 hodin.',
 } = Astro.props;
 ---
 
-<section class="bg-bg-primary py-16 md:py-24">
-  <div class="max-w-[1400px] mx-auto px-5 md:px-8">
-    <div class="bg-bg-secondary rounded-[3px] px-8 py-16 md:px-16 md:py-24">
-      <div class="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-12 lg:gap-20">
-
-        <!-- Sidebar -->
-        <div>
-          <div class="flex items-center gap-2">
-            <span class="w-1.5 h-1.5 rounded-full bg-gold-primary"></span>
-            <span class="text-[0.6875rem] uppercase tracking-[0.15em] font-medium text-text-primary">Nezávazná konzultace</span>
-          </div>
-          <p class="text-[0.875rem] text-text-muted leading-relaxed mt-4 max-w-[240px]">
-            Pro zakázkové šperky, konzultace a vše kolem řemesla.
-          </p>
-        </div>
-
-        <!-- Content -->
-        <div data-animate="up">
-          <h2 class="whitespace-pre-line" set:html={heading} />
-          <p class="mt-4 text-text-secondary text-[1.0625rem] leading-relaxed max-w-xl">{subheading}</p>
-          <div class="mt-10 flex flex-col sm:flex-row gap-4">
-            <Button href="tel:+420774598181" variant="primary">Zavolat</Button>
-            <Button href="https://wa.me/420774598181" variant="secondary">Napsat na WhatsApp</Button>
-          </div>
-        </div>
-
+<div class="border border-border bg-[rgba(250,251,248,0.6)] backdrop-blur-sm px-6 sm:px-8 lg:px-12 py-10 sm:py-12 lg:py-16" data-anim="up">
+  <div class="grid lg:grid-cols-[0.34fr_1fr] gap-10 lg:gap-16 items-end">
+    <div>
+      <span class="label-dot">Nezávazná konzultace</span>
+      <p class="mt-4 max-w-[16rem] text-[13px] leading-[1.8] text-text-secondary font-sans">
+        Pro zakázkové šperky, konzultace a vše kolem řemesla.
+      </p>
+    </div>
+    <div>
+      <h2 set:html={heading} />
+      <p class="mt-4 text-text-secondary text-[1.0625rem] leading-relaxed max-w-xl">{subheading}</p>
+      <div class="mt-8 sm:mt-12 flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
+        <Button href="tel:+420774598181" variant="primary">Zavolat</Button>
+        <Button href="https://wa.me/420774598181" variant="secondary">Napsat na WhatsApp</Button>
       </div>
     </div>
   </div>
-</section>
+</div>

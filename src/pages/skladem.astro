@@ -2,6 +2,7 @@
 import Layout from '../layouts/Layout.astro';
 import ProductCard from '../components/ProductCard.astro';
 import FilterPills from '../components/FilterPills.astro';
+import CTA from '../components/CTA.astro';
 import { products } from '../data/products';
 
 const filters = ['Vše', 'Prsteny', 'Náušnice', 'Přívěsky', 'Řetízky', 'Sady'];
@@ -12,58 +13,44 @@ const filters = ['Vše', 'Prsteny', 'Náušnice', 'Přívěsky', 'Řetízky', 'S
   description="Stříbrné šperky s přírodními kameny. Ihned k dispozici. Ruční výroba, certifikované materiály."
 >
 
-  <!-- ====== HEADER — Section Label ====== -->
-  <section class="bg-bg-primary pt-16 pb-8 md:pt-24 md:pb-12">
-    <div class="max-w-[1400px] mx-auto px-5 md:px-8">
-      <div class="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-12 lg:gap-20">
+  <!-- ====== HEADER + GRID ====== -->
+  <section class="relative bg-bg-primary border-b border-border py-16 sm:py-20 lg:py-24 overflow-hidden">
+    <div class="radial-overlay"></div>
+    <div class="relative max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-14">
 
-        <!-- Sidebar label -->
-        <div>
-          <div class="flex items-center gap-2">
-            <span class="w-1.5 h-1.5 rounded-full bg-gold-primary"></span>
-            <span class="text-[0.6875rem] uppercase tracking-[0.15em] font-medium text-text-primary">Hotové šperky</span>
-          </div>
-          <p class="text-[0.875rem] text-text-muted leading-relaxed mt-4 max-w-[240px]">
-            Ihned k dispozici. Osobní vyzvednutí v dílně nebo zásilka po celé ČR.
-          </p>
-        </div>
-
-        <!-- Heading -->
-        <div>
-          <h1>Hotové šperky</h1>
-          <p class="mt-4 text-text-secondary text-[1.0625rem] leading-relaxed max-w-xl">
-            Ručně vyrobené šperky ihned k dispozici. Každý kus je originál.
-          </p>
-        </div>
-
+      <div class="text-center max-w-2xl mx-auto mb-14" data-anim="up">
+        <span class="label-dot justify-center">Skladem</span>
+        <h1 class="mt-5">Hotové šperky</h1>
+        <p class="mt-4 text-text-secondary">Ručně vyrobené šperky ihned k dispozici. Každý kus je originál.</p>
       </div>
-    </div>
-  </section>
 
-  <!-- ====== FILTERS ====== -->
-  <section class="bg-bg-primary pb-6">
-    <div class="max-w-[1400px] mx-auto px-5 md:px-8">
       <FilterPills items={filters} activeIndex={0} />
-    </div>
-  </section>
 
-  <!-- ====== PRODUCT GRID ====== -->
-  <section class="bg-bg-primary pb-20 md:pb-28">
-    <div class="max-w-[1400px] mx-auto px-5 md:px-8">
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+      <div class="mt-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8" data-anim="stagger">
         {products.map((product) => (
-          <ProductCard
-            title={product.title}
-            material={product.material}
-            price={product.price}
-            href={`/sperky/${product.slug}`}
-            category={product.category}
-            image={product.image}
-            image2x={product.image2x}
-            alt={product.alt}
-          />
+          <div data-anim-child>
+            <ProductCard
+              title={product.title}
+              material={product.material}
+              price={product.price}
+              href={`/sperky/${product.slug}`}
+              category={product.category}
+              image={product.image}
+              image2x={product.image2x}
+              alt={product.alt}
+            />
+          </div>
         ))}
       </div>
+
+    </div>
+  </section>
+
+  <!-- ====== CTA ====== -->
+  <section class="bg-bg-secondary relative overflow-hidden py-16 sm:py-20 lg:py-24">
+    <div class="radial-overlay"></div>
+    <div class="relative max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-14">
+      <CTA heading="Nenašli jste, co<br /><em>hledáte</em>?" subheading="Vyrobím šperk přesně podle vaší představy." />
     </div>
   </section>
 

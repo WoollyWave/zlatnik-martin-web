@@ -1,6 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Button from '../components/Button.astro';
+import CTA from '../components/CTA.astro';
 ---
 
 <Layout
@@ -8,163 +9,128 @@ import Button from '../components/Button.astro';
   description="Víc než dvacet let ruční práce se zlatem a stříbrem. Poznejte příběh zlatnické dílny v Praze."
 >
 
-  <!-- ====== HEADER — Section Label ====== -->
-  <section class="bg-bg-primary pt-16 pb-8 md:pt-24 md:pb-12">
-    <div class="max-w-[1400px] mx-auto px-5 md:px-8">
-      <div class="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-12 lg:gap-20">
-
-        <!-- Sidebar label -->
-        <div>
-          <div class="flex items-center gap-2">
-            <span class="w-1.5 h-1.5 rounded-full bg-gold-primary"></span>
-            <span class="text-[0.6875rem] uppercase tracking-[0.15em] font-medium text-text-primary">O dílně</span>
-          </div>
-          <p class="text-[0.875rem] text-text-muted leading-relaxed mt-4 max-w-[240px]">
-            Víc než dvacet let ruční práce se zlatem a stříbrem.
-          </p>
-        </div>
-
-        <!-- Heading -->
-        <div>
-          <h1>Zlatnictví s <em class="italic text-gold-deep" style="font-weight: 400;">tradicí</em> a srdcem</h1>
-          <p class="mt-4 text-text-secondary text-[1.0625rem] leading-relaxed max-w-xl">
-            Víc než dvacet let ruční práce se zlatem a stříbrem v pražské dílně.
-          </p>
-        </div>
-
+  <!-- ====== HEADER ====== -->
+  <section class="relative bg-bg-primary border-b border-border py-16 sm:py-20 lg:py-24 overflow-hidden">
+    <div class="radial-overlay"></div>
+    <div class="relative max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-14">
+      <div class="text-center max-w-2xl mx-auto" data-anim="up">
+        <span class="label-dot justify-center">O dílně</span>
+        <h1 class="mt-5">Zlatnictví s tradicí a <em>srdcem</em></h1>
+        <p class="mt-4 text-text-secondary text-[1.0625rem] leading-relaxed">
+          Víc než dvacet let ruční práce se zlatem a stříbrem v pražské dílně.
+        </p>
       </div>
     </div>
   </section>
 
-  <!-- ====== ABOUT — Section Label ====== -->
-  <section class="bg-bg-primary border-t border-divider py-16 md:py-24">
-    <div class="max-w-[1400px] mx-auto px-5 md:px-8">
-      <div class="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-12 lg:gap-20">
-
-        <!-- Sidebar label -->
-        <div>
-          <div class="flex items-center gap-2">
-            <span class="w-1.5 h-1.5 rounded-full bg-gold-primary"></span>
-            <span class="text-[0.6875rem] uppercase tracking-[0.15em] font-medium text-text-primary">Příběh</span>
-          </div>
+  <!-- ====== ABOUT — text + portrait ====== -->
+  <section class="relative bg-bg-primary border-b border-border py-16 sm:py-20 lg:py-24">
+    <div class="max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-14">
+      <div class="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+        <div data-anim="up">
+          <span class="label-dot">Příběh</span>
+          <h2 class="mt-5">Zlatnictví není jen práce</h2>
+          <p class="mt-4 text-text-secondary text-[1.0625rem] leading-relaxed">
+            Víc než dvacet let pracuji se zlatem a stříbrem. Každý šperk vyrábím ručně — od prvního náčrtu po finální lesk. Není to jen řemeslo, je to způsob, jakým vnímám svět.
+          </p>
+          <p class="mt-4 text-text-secondary text-[1.0625rem] leading-relaxed">
+            Každý kus, který opustí dílnu, nese kousek mého příběhu a hodně toho vašeho. Proto nespěchám a nedělám kompromisy.
+          </p>
         </div>
-
-        <!-- Content -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-start" data-animate="up">
-          <div>
-            <h2 class="mb-6">Zlatnictví není jen práce</h2>
-            <p class="text-text-secondary text-[1.0625rem] leading-relaxed mb-4">
-              Víc než dvacet let pracuji se zlatem a stříbrem. Každý šperk vyrábím ručně — od prvního náčrtu po finální lesk. Není to jen řemeslo, je to způsob, jakým vnímám svět.
-            </p>
-            <p class="text-text-secondary text-[1.0625rem] leading-relaxed">
-              Každý kus, který opustí dílnu, nese kousek mého příběhu a hodně toho vašeho. Proto nespěchám a nedělám kompromisy.
-            </p>
-          </div>
-          <div>
-            <img
-              src="/images/o-dilne--portret--martin-lvi-prsten-v-dilne.webp"
-              srcset="/images/o-dilne--portret--martin-lvi-prsten-v-dilne.webp 1x, /images/o-dilne--portret--martin-lvi-prsten-v-dilne@2x.webp 2x"
-              width="600" height="800"
-              alt="Martin Ševr v zlatnické dílně"
-              loading="lazy"
-              decoding="async"
-              class="w-full h-full object-cover"
-            />
-          </div>
+        <div data-anim="scale" class="relative overflow-hidden">
+          <img
+            src="/images/o-dilne--portret--martin-lvi-prsten-v-dilne.webp"
+            srcset="/images/o-dilne--portret--martin-lvi-prsten-v-dilne.webp 1x, /images/o-dilne--portret--martin-lvi-prsten-v-dilne@2x.webp 2x"
+            width="600" height="800"
+            alt="Martin Ševr v zlatnické dílně"
+            loading="lazy"
+            decoding="async"
+            class="w-full h-full object-cover grayscale-[15%] sepia-[10%]"
+          />
+          <div class="absolute inset-2 border border-white/10 pointer-events-none"></div>
         </div>
-
       </div>
     </div>
   </section>
 
-  <!-- ====== GALLERY — Asymmetric on bg-primary ====== -->
-  <section class="bg-bg-primary border-t border-divider py-16 md:py-24">
-    <div class="max-w-[1400px] mx-auto px-5 md:px-8">
-      <div class="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-12 lg:gap-20">
-
-        <!-- Sidebar label -->
-        <div>
-          <div class="flex items-center gap-2">
-            <span class="w-1.5 h-1.5 rounded-full bg-gold-primary"></span>
-            <span class="text-[0.6875rem] uppercase tracking-[0.15em] font-medium text-text-primary">Dílna Pod Kesnerkou</span>
-          </div>
+  <!-- ====== GALLERY — 3 photos ====== -->
+  <section class="relative bg-bg-secondary border-b border-border py-16 sm:py-20 lg:py-24 overflow-hidden">
+    <div class="radial-overlay"></div>
+    <div class="relative max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-14">
+      <span class="label-dot mb-8 block" data-anim="fade">Dílna Pod Kesnerkou</span>
+      <div class="grid md:grid-cols-3 gap-4" data-anim="stagger">
+        <div data-anim-child class="relative overflow-hidden">
+          <img
+            src="/images/o-dilne--galerie-1--ruka-retizek-stroj.webp"
+            srcset="/images/o-dilne--galerie-1--ruka-retizek-stroj.webp 1x, /images/o-dilne--galerie-1--ruka-retizek-stroj@2x.webp 2x"
+            width="800" height="600"
+            alt="Ruční výroba řetízku v dílně"
+            loading="lazy" decoding="async"
+            class="w-full h-64 object-cover grayscale-[15%] sepia-[10%]"
+          />
+          <div class="absolute inset-2 border border-white/10 pointer-events-none"></div>
         </div>
-
-        <!-- Asymmetric gallery -->
-        <div data-animate="up">
-          <div class="grid grid-cols-1 md:grid-cols-[1.15fr_0.85fr] gap-4 mb-4">
-            <img
-              src="/images/o-dilne--galerie-1--ruka-retizek-stroj.webp"
-              srcset="/images/o-dilne--galerie-1--ruka-retizek-stroj.webp 1x, /images/o-dilne--galerie-1--ruka-retizek-stroj@2x.webp 2x"
-              width="800" height="600"
-              alt="Ruční výroba řetízku v dílně"
-              loading="lazy"
-              decoding="async"
-              class="w-full h-full object-cover"
-            />
-            <img
-              src="/images/o-dilne--galerie-2--erbovni-pecet-zlato.webp"
-              srcset="/images/o-dilne--galerie-2--erbovni-pecet-zlato.webp 1x, /images/o-dilne--galerie-2--erbovni-pecet-zlato@2x.webp 2x"
-              width="800" height="600"
-              alt="Zlatá erbovní pečeť — detail"
-              loading="lazy"
-              decoding="async"
-              class="w-full h-full object-cover"
-            />
-          </div>
+        <div data-anim-child class="relative overflow-hidden">
+          <img
+            src="/images/o-dilne--galerie-2--erbovni-pecet-zlato.webp"
+            srcset="/images/o-dilne--galerie-2--erbovni-pecet-zlato.webp 1x, /images/o-dilne--galerie-2--erbovni-pecet-zlato@2x.webp 2x"
+            width="800" height="600"
+            alt="Zlatá erbovní pečeť — detail"
+            loading="lazy" decoding="async"
+            class="w-full h-64 object-cover grayscale-[15%] sepia-[10%]"
+          />
+          <div class="absolute inset-2 border border-white/10 pointer-events-none"></div>
+        </div>
+        <div data-anim-child class="relative overflow-hidden">
           <img
             src="/images/o-dilne--galerie-3--snubaky-na-dreve-stul.webp"
             srcset="/images/o-dilne--galerie-3--snubaky-na-dreve-stul.webp 1x, /images/o-dilne--galerie-3--snubaky-na-dreve-stul@2x.webp 2x"
             width="800" height="600"
             alt="Snubní prsteny na dřevěném stole"
-            loading="lazy"
-            decoding="async"
-            class="w-full h-full object-cover"
+            loading="lazy" decoding="async"
+            class="w-full h-64 object-cover grayscale-[15%] sepia-[10%]"
           />
+          <div class="absolute inset-2 border border-white/10 pointer-events-none"></div>
         </div>
-
       </div>
     </div>
   </section>
 
-  <!-- ====== CERTIFIKÁTY — Section Label ====== -->
-  <section id="certifikaty" class="bg-bg-primary border-t border-divider py-16 md:py-24">
-    <div class="max-w-[1400px] mx-auto px-5 md:px-8">
-      <div class="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-12 lg:gap-20">
-
-        <!-- Sidebar label -->
-        <div>
-          <div class="flex items-center gap-2">
-            <span class="w-1.5 h-1.5 rounded-full bg-gold-primary"></span>
-            <span class="text-[0.6875rem] uppercase tracking-[0.15em] font-medium text-text-primary">Kvalita a důvěra</span>
-          </div>
+  <!-- ====== CERTIFIKÁTY ====== -->
+  <section class="relative bg-bg-primary border-b border-border py-16 sm:py-20 lg:py-24">
+    <div class="max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-14">
+      <div class="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+        <div data-anim="up">
+          <span class="label-dot">Certifikáty</span>
+          <h2 class="mt-5">Certifikáty a puncování</h2>
+          <p class="mt-4 text-text-secondary text-[1.0625rem] leading-relaxed">
+            Všechny moje šperky jsou vyrobeny z certifikovaných materiálů a opatřeny státním puncem. Pracuji v souladu s českou legislativou.
+          </p>
+          <p class="mt-4 text-text-secondary text-[1.0625rem] leading-relaxed">
+            Každý kus doprovázím certifikátem pravosti. Kameny dodávám s gemologickým posudkem.
+          </p>
         </div>
-
-        <!-- Content -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-start" data-animate="up">
-          <div>
-            <h2 class="mb-6">Certifikáty a puncování</h2>
-            <p class="text-text-secondary text-[1.0625rem] leading-relaxed mb-4">
-              Všechny moje šperky jsou vyrobeny z certifikovaných materiálů a opatřeny státním puncem. Pracuji v souladu s českou legislativou.
-            </p>
-            <p class="text-text-secondary text-[1.0625rem] leading-relaxed">
-              Každý kus doprovázím certifikátem pravosti. Kameny dodávám s gemologickým posudkem.
-            </p>
-          </div>
-          <div>
-            <img
-              src="/images/o-dilne--certifikaty--cad-detail-preciznost.webp"
-              srcset="/images/o-dilne--certifikaty--cad-detail-preciznost.webp 1x, /images/o-dilne--certifikaty--cad-detail-preciznost@2x.webp 2x"
-              width="800" height="600"
-              alt="CAD detail — preciznost zlatnické práce"
-              loading="lazy"
-              decoding="async"
-              class="w-full h-full object-cover"
-            />
-          </div>
+        <div data-anim="scale" class="relative overflow-hidden">
+          <img
+            src="/images/o-dilne--certifikaty--cad-detail-preciznost.webp"
+            srcset="/images/o-dilne--certifikaty--cad-detail-preciznost.webp 1x, /images/o-dilne--certifikaty--cad-detail-preciznost@2x.webp 2x"
+            width="800" height="600"
+            alt="CAD detail — preciznost zlatnické práce"
+            loading="lazy"
+            decoding="async"
+            class="w-full h-full object-cover grayscale-[15%] sepia-[10%]"
+          />
+          <div class="absolute inset-2 border border-white/10 pointer-events-none"></div>
         </div>
-
       </div>
+    </div>
+  </section>
+
+  <!-- ====== CTA ====== -->
+  <section class="bg-bg-secondary relative overflow-hidden py-16 sm:py-20 lg:py-24">
+    <div class="radial-overlay"></div>
+    <div class="relative max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-14">
+      <CTA />
     </div>
   </section>
 

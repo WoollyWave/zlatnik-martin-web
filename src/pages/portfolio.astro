@@ -1,5 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import CTA from '../components/CTA.astro';
 import { portfolioItems } from '../data/portfolio';
 ---
 
@@ -23,42 +24,25 @@ import { portfolioItems } from '../data/portfolio';
     </div>
   </section>
 
-  <!-- ====== HEADER — Section Label ====== -->
-  <section class="bg-bg-primary pt-16 pb-8 md:pt-24 md:pb-12">
-    <div class="max-w-[1400px] mx-auto px-5 md:px-8">
-      <div class="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-12 lg:gap-20">
+  <!-- ====== PORTFOLIO GRID ====== -->
+  <section class="relative bg-bg-primary border-b border-border py-16 sm:py-20 lg:py-24 overflow-hidden">
+    <div class="radial-overlay"></div>
+    <div class="relative max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-14">
 
-        <!-- Sidebar label -->
+      <!-- Header -->
+      <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6 mb-14" data-anim="up">
         <div>
-          <div class="flex items-center gap-2">
-            <span class="w-1.5 h-1.5 rounded-full bg-gold-primary"></span>
-            <span class="text-[0.6875rem] uppercase tracking-[0.15em] font-medium text-text-primary">Portfolio</span>
-          </div>
-          <p class="text-[0.875rem] text-text-muted leading-relaxed mt-4 max-w-[240px]">
-            Výběr z toho, co jsem za roky vyrobil. Každý šperk má svůj příběh.
-          </p>
+          <span class="label-dot">Portfolio</span>
+          <h1 class="mt-5">Šperky z <em>duše</em></h1>
+          <p class="mt-3 text-text-secondary max-w-lg">Každý šperk v tomto portfoliu vznikl jako originál.</p>
         </div>
-
-        <!-- Heading -->
-        <div>
-          <h1>Šperky z <em class="italic text-gold-deep" style="font-weight: 400;">duše</em></h1>
-          <p class="mt-4 text-text-secondary text-[1.0625rem] leading-relaxed max-w-xl">
-            Každý kus vypráví příběh — a rád vám ho povídám.
-          </p>
-        </div>
-
       </div>
-    </div>
-  </section>
 
-  <!-- ====== GALLERY — 2-col grid ====== -->
-  <section class="bg-bg-primary pb-20 md:pb-28">
-    <div class="max-w-[1400px] mx-auto px-5 md:px-8">
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-16 md:gap-x-10 md:gap-y-20">
+      <!-- Cards: asymmetric like homepage Selected Works -->
+      <div class="flex flex-col gap-16 md:gap-20">
         {portfolioItems.map((item, i) => (
-          <a href={`/tvorba/${item.slug}`} class="group block" data-animate="up">
-            <!-- Photo -->
-            <div class="overflow-hidden aspect-[4/5]">
+          <a href={`/tvorba/${item.slug}`} class="group grid grid-cols-1 md:grid-cols-[1.08fr_0.92fr] gap-6 lg:gap-10 items-center" data-anim="up">
+            <div class={`relative overflow-hidden aspect-[4/5] ${i % 2 === 1 ? 'md:order-2' : ''}`}>
               <img
                 src={item.image}
                 srcset={`${item.image} 1x, ${item.image2x} 2x`}
@@ -66,17 +50,17 @@ import { portfolioItems } from '../data/portfolio';
                 alt={item.alt}
                 loading={i < 2 ? 'eager' : 'lazy'}
                 decoding="async"
-                class="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"
+                class="absolute inset-0 w-full h-full object-cover grayscale-[15%] sepia-[10%] transition-transform duration-700 group-hover:scale-[1.03]"
               />
+              <div class="absolute inset-2 border border-white/10 pointer-events-none"></div>
+              <div class="absolute bottom-4 right-4 bg-bg-primary/90 backdrop-blur-md px-4 py-2">
+                <span class="text-[0.6875rem] uppercase tracking-[0.12em] font-medium text-gold-on-light font-sans">{`Zakázka 0${i + 1}`}</span>
+              </div>
             </div>
-            <!-- Info -->
-            <div class="mt-5">
-              <div class="flex items-center gap-3 mb-3">
-                {item.tags.map((tag: string, ti: number) => (
-                  <>
-                    <span class="text-[0.6875rem] font-medium uppercase tracking-[0.1em] text-text-muted">{tag}</span>
-                    {ti < item.tags.length - 1 && <span class="w-px h-3 bg-divider"></span>}
-                  </>
+            <div class={i % 2 === 1 ? 'md:order-1' : ''}>
+              <div class="flex gap-3 mb-3">
+                {item.tags.map((tag: string) => (
+                  <span class="text-[0.6875rem] uppercase tracking-wider text-text-muted font-sans border border-border px-3 py-1.5">{tag}</span>
                 ))}
               </div>
               <h3 class="group-hover:text-gold-deep transition-colors duration-300">{item.title}</h3>
@@ -85,6 +69,15 @@ import { portfolioItems } from '../data/portfolio';
           </a>
         ))}
       </div>
+
+    </div>
+  </section>
+
+  <!-- ====== CTA ====== -->
+  <section class="bg-bg-secondary relative overflow-hidden py-16 sm:py-20 lg:py-24">
+    <div class="radial-overlay"></div>
+    <div class="relative max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-14">
+      <CTA heading="Chcete podobný šperk<br />na <em>míru</em>?" subheading="Zavolejte a probereme vaši představu." />
     </div>
   </section>
 

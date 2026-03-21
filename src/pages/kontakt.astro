@@ -1,6 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import ContactForm from '../components/ContactForm.astro';
+import CTA from '../components/CTA.astro';
 
 const jsonLd = {
   "@context": "https://schema.org",
@@ -50,41 +51,27 @@ const contactMethods = [
   jsonLd={jsonLd}
 >
 
-  <!-- ====== HEADER — Section Label ====== -->
-  <section class="bg-bg-primary pt-16 pb-8 md:pt-24 md:pb-12">
-    <div class="max-w-[1400px] mx-auto px-5 md:px-8">
-      <div class="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-12 lg:gap-20">
-
-        <!-- Sidebar label -->
-        <div>
-          <div class="flex items-center gap-2">
-            <span class="w-1.5 h-1.5 rounded-full bg-gold-primary"></span>
-            <span class="text-[0.6875rem] uppercase tracking-[0.15em] font-medium text-text-primary">Kontakt</span>
-          </div>
-          <p class="text-[0.875rem] text-text-muted leading-relaxed mt-4 max-w-[240px]">
-            Nechte mi zprávu nebo zavolejte. Ozvu se do 24 hodin.
-          </p>
-        </div>
-
-        <!-- Heading -->
-        <div>
-          <h1>Pojďme si promluvit</h1>
-        </div>
-
+  <!-- ====== HEADER ====== -->
+  <section class="relative bg-bg-primary border-b border-border py-16 sm:py-20 lg:py-24">
+    <div class="max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-14">
+      <div class="text-center max-w-2xl mx-auto" data-anim="up">
+        <span class="label-dot justify-center">Kontakt</span>
+        <h1 class="mt-5">Pojďme si <em>promluvit</em></h1>
       </div>
     </div>
   </section>
 
-  <!-- ====== CONTACT METHODS — bg-secondary cards ====== -->
-  <section class="bg-bg-primary pb-16 md:pb-20">
-    <div class="max-w-[1400px] mx-auto px-5 md:px-8">
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+  <!-- ====== CONTACT METHODS — 3 cards ====== -->
+  <section class="relative bg-bg-primary border-b border-border py-12 sm:py-16">
+    <div class="max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-14">
+      <div class="grid md:grid-cols-3 gap-6" data-anim="stagger">
         {contactMethods.map((method) => (
           <a
+            data-anim-child
             href={method.href}
             target={method.label === 'WhatsApp' ? '_blank' : undefined}
             rel={method.label === 'WhatsApp' ? 'noopener noreferrer' : undefined}
-            class="block bg-bg-secondary rounded-[3px] px-8 py-8 hover:bg-hover-bg transition-colors duration-200"
+            class="block border border-border p-6 text-center hover:bg-hover-bg transition-colors duration-200"
           >
             <h3 class="font-sans text-[0.6875rem] font-medium uppercase tracking-[0.15em] text-text-muted mb-3">{method.label}</h3>
             <p class="text-[1.0625rem] text-text-primary font-medium">{method.value}</p>
@@ -95,56 +82,40 @@ const contactMethods = [
     </div>
   </section>
 
-  <!-- ====== FORM + PHOTO — Section Label ====== -->
-  <section class="bg-bg-primary border-t border-divider py-16 md:py-24">
-    <div class="max-w-[1400px] mx-auto px-5 md:px-8">
-      <div class="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-12 lg:gap-20">
-
-        <!-- Sidebar label -->
-        <div>
-          <div class="flex items-center gap-2">
-            <span class="w-1.5 h-1.5 rounded-full bg-gold-primary"></span>
-            <span class="text-[0.6875rem] uppercase tracking-[0.15em] font-medium text-text-primary">Napište mi</span>
-          </div>
-          <p class="text-[0.875rem] text-text-muted leading-relaxed mt-4 max-w-[240px]">
-            Pro zakázkové šperky, konzultace a vše kolem řemesla.
-          </p>
+  <!-- ====== FORM + PHOTO ====== -->
+  <section class="relative bg-bg-secondary py-16 sm:py-20 lg:py-24 overflow-hidden">
+    <div class="radial-overlay"></div>
+    <div class="relative max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-14">
+      <div class="grid lg:grid-cols-2 gap-12 lg:gap-20">
+        <div data-anim="up">
+          <span class="label-dot">Napište mi</span>
+          <h2 class="mt-5 mb-8">Napište mi</h2>
+          <ContactForm />
         </div>
-
-        <!-- Form + photo -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16">
-          <div>
-            <ContactForm />
-          </div>
-          <div class="hidden lg:block">
-            <img
-              src="/images/kontakt--formular-foto--naramek-na-zapesti.webp"
-              srcset="/images/kontakt--formular-foto--naramek-na-zapesti.webp 1x, /images/kontakt--formular-foto--naramek-na-zapesti@2x.webp 2x"
-              width="600" height="800"
-              alt="Zlatý náramek na zápěstí"
-              loading="lazy"
-              decoding="async"
-              class="w-full h-full object-cover sticky top-24"
-            />
-          </div>
+        <div data-anim="scale" class="hidden lg:block relative overflow-hidden">
+          <img
+            src="/images/kontakt--formular-foto--naramek-na-zapesti.webp"
+            srcset="/images/kontakt--formular-foto--naramek-na-zapesti.webp 1x, /images/kontakt--formular-foto--naramek-na-zapesti@2x.webp 2x"
+            width="600" height="800"
+            alt="Zlatý náramek na zápěstí"
+            loading="lazy"
+            decoding="async"
+            class="w-full h-full object-cover sticky top-24 grayscale-[15%] sepia-[10%]"
+          />
+          <div class="absolute inset-2 border border-white/10 pointer-events-none"></div>
         </div>
-
       </div>
     </div>
   </section>
 
   <!-- ====== MAP ====== -->
-  <section class="bg-bg-primary border-t border-divider py-16 md:py-24">
-    <div class="max-w-[1400px] mx-auto px-5 md:px-8">
-      <div class="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-12 lg:gap-20">
-
-        <!-- Sidebar with address -->
+  <section class="bg-bg-primary border-b border-border py-12 sm:py-16">
+    <div class="max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-14" data-anim="up">
+      <div class="grid lg:grid-cols-[0.34fr_1fr] gap-10 lg:gap-16">
+        <!-- Address -->
         <div>
-          <div class="flex items-center gap-2 mb-4">
-            <span class="w-1.5 h-1.5 rounded-full bg-gold-primary"></span>
-            <span class="text-[0.6875rem] uppercase tracking-[0.15em] font-medium text-text-primary">Kde mě najdete</span>
-          </div>
-          <address class="not-italic text-[0.875rem] text-text-secondary leading-relaxed">
+          <span class="label-dot">Kde mě najdete</span>
+          <address class="not-italic text-[0.875rem] text-text-secondary leading-relaxed mt-5">
             <p class="font-medium text-text-primary">Martin Ševr — Zlatnická dílna</p>
             <p class="mt-2">Pod Kesnerkou 46</p>
             <p>Praha 5, 150 00</p>
@@ -157,17 +128,15 @@ const contactMethods = [
             <p class="mt-4 text-[0.8125rem] text-text-muted">IČO: 87639114</p>
           </address>
         </div>
-
-        <!-- Map -->
+        <!-- Map placeholder -->
         <div>
-          <div class="img-placeholder rounded-[2px] w-full" style="aspect-ratio: 16/9;" role="img" aria-label="Mapa — Pod Kesnerkou 46, Praha 5">
+          <div class="img-placeholder w-full" style="aspect-ratio: 16/9;" role="img" aria-label="Mapa — Pod Kesnerkou 46, Praha 5">
             <svg class="w-12 h-12 opacity-40" fill="none" viewBox="0 0 24 24" stroke-width="1" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
               <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z" />
             </svg>
           </div>
         </div>
-
       </div>
     </div>
   </section>
