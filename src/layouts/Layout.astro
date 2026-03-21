@@ -80,6 +80,13 @@ const canonicalUrl = canonical || new URL(Astro.url.pathname, siteUrl).toString(
     <script>
       import '../scripts/animations.ts';
     </script>
-    <script>window.addEventListener('load', () => document.body.classList.add('is-loaded'));</script>
+    <script>
+      // Show page as soon as DOM is ready — don't wait for images
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', () => document.body.classList.add('is-loaded'));
+      } else {
+        document.body.classList.add('is-loaded');
+      }
+    </script>
   </body>
 </html>

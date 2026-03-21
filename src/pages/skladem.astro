@@ -4,7 +4,6 @@ import ProductCard from '../components/ProductCard.astro';
 import FilterPills from '../components/FilterPills.astro';
 import { products } from '../data/products';
 
-// Only categories that have products
 const categories = [...new Set(products.map(p => p.category))];
 const filterLabels = ['Vše', ...categories.map(c => {
   const map: Record<string, string> = {
@@ -40,13 +39,13 @@ const filterLabels = ['Vše', ...categories.map(c => {
   </section>
 
   <!-- ====== PRODUCTS ====== -->
-  <section class="relative bg-bg-primary border-b border-border py-16 sm:py-20 lg:py-24 overflow-hidden">
+  <section class="relative bg-bg-primary py-16 sm:py-20 lg:py-24 overflow-hidden">
     <div class="radial-overlay"></div>
     <div class="relative max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-14">
 
       <FilterPills items={filterLabels} activeIndex={0} />
 
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-12 lg:gap-x-8 lg:gap-y-16" id="products-grid">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-10" id="products-grid">
         {products.map((product) => (
           <ProductCard
             title={product.title}
@@ -57,6 +56,7 @@ const filterLabels = ['Vše', ...categories.map(c => {
             image={product.image}
             image2x={product.image2x}
             alt={product.alt}
+            description={product.description}
           />
         ))}
       </div>
