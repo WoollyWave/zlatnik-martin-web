@@ -242,16 +242,16 @@ const faqItems = [
     </div>
   </section>
 
-  <!-- ====== PRICING ====== -->
+  <!-- ====== PRICING — Stříbro + Zlato side by side ====== -->
   <section id="cenik" class="relative bg-bg-primary border-b border-border py-16 sm:py-20 lg:py-24">
     <div class="max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-14">
-      <div class="max-w-3xl">
-        <span class="label-dot" data-anim="fade">Ceník</span>
-        <h2 class="mt-5" data-anim="up">Orientační ceník</h2>
-        <p class="mt-4 text-text-secondary" data-anim="up">Ceny závisí na složitosti, materiálu a kamenech. Přesnou kalkulaci udělám po konzultaci.</p>
+      <span class="label-dot" data-anim="fade">Ceník</span>
+      <h2 class="mt-5" data-anim="up">Orientační ceník</h2>
+      <p class="mt-4 text-text-secondary max-w-xl" data-anim="up">Ceny závisí na složitosti, materiálu a kamenech. Přesnou kalkulaci udělám po konzultaci.</p>
 
+      <div class="grid lg:grid-cols-2 gap-12 lg:gap-16 mt-14" data-anim="up">
         <!-- Stříbro -->
-        <div class="mt-14" data-anim="up">
+        <div>
           <h3 class="mb-6">Stříbro 925</h3>
           <div class="border-t border-border">
             {pricingSilver.map((row) => (
@@ -261,6 +261,20 @@ const faqItems = [
               </div>
             ))}
           </div>
+        </div>
+
+        <!-- Zlato -->
+        <div>
+          <h3 class="mb-6">Zlato 585</h3>
+          <div class="border-t border-border">
+            {pricingGold.map((row) => (
+              <div class="flex items-center justify-between py-4 border-b border-border">
+                <span class="text-text-primary">{row.item}</span>
+                <span class="text-text-secondary font-medium whitespace-nowrap ml-4">{row.price}</span>
+              </div>
+            ))}
+          </div>
+          <p class="mt-4 text-[0.8125rem] text-text-muted">U zlata 750/1000 přičtěte cca 30 %.</p>
         </div>
       </div>
     </div>
@@ -275,41 +289,36 @@ const faqItems = [
       alt="Detailní záběr zlatnické práce"
       loading="lazy"
       decoding="async"
-      class="absolute inset-0 w-full h-[130%] object-cover -top-[15%]"
+      class="absolute inset-0 w-full h-[130%] object-cover -top-[15%] object-[center_80%]"
       style="will-change: transform;"
     />
-  </section>
-
-  <!-- ====== PRICING ZLATO ====== -->
-  <section class="relative bg-bg-primary border-b border-border py-16 sm:py-20 lg:py-24">
-    <div class="max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-14">
-      <div class="max-w-3xl" data-anim="up">
-        <h3 class="mb-6">Zlato 585</h3>
-        <div class="border-t border-border">
-          {pricingGold.map((row) => (
-            <div class="flex items-center justify-between py-4 border-b border-border">
-              <span class="text-text-primary">{row.item}</span>
-              <span class="text-text-secondary font-medium whitespace-nowrap ml-4">{row.price}</span>
-            </div>
-          ))}
-        </div>
-        <p class="mt-4 text-[0.8125rem] text-text-muted">U zlata 750/1000 přičtěte cca 30 %.</p>
-      </div>
-    </div>
   </section>
 
   <!-- ====== EXPRESS ====== -->
   <section id="express" class="relative bg-bg-primary border-b border-border py-16 sm:py-20 lg:py-24">
     <div class="max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-14">
-      <div class="max-w-3xl" data-anim="up">
-        <span class="label-dot">Expresní výroba</span>
-        <h2 class="mt-5">Potřebujete šperk dřív?</h2>
-        <p class="mt-4 text-text-secondary text-[1.0625rem] leading-relaxed max-w-xl">
-          Narozeniny, výročí, zásnuby — někdy se termín blíží rychleji, než čekáte. U jednodušších šperků zvládnu expresní výrobu do 5 pracovních dní. Zavolejte a domluvíme se.
-        </p>
-        <div class="mt-8 flex flex-col sm:flex-row gap-4">
-          <Button href="tel:+420774598181" variant="primary">Zavolat</Button>
-          <Button href="https://wa.me/420774598181" variant="secondary">Napsat na WhatsApp</Button>
+      <div class="grid lg:grid-cols-[1fr_0.5fr] gap-12 lg:gap-16 items-center" data-anim="up">
+        <div>
+          <span class="label-dot">Expresní výroba</span>
+          <h2 class="mt-5">Potřebujete šperk dřív?</h2>
+          <p class="mt-4 text-text-secondary text-[1.0625rem] leading-relaxed max-w-xl">
+            Narozeniny, výročí, zásnuby — někdy se termín blíží rychleji, než čekáte. U jednodušších šperků zvládnu expresní výrobu do 5 pracovních dní. Zavolejte a domluvíme se.
+          </p>
+          <div class="mt-8 flex flex-col sm:flex-row gap-4">
+            <Button href="tel:+420774598181" variant="primary">Zavolat</Button>
+            <Button href="https://wa.me/420774598181" variant="secondary">Napsat na WhatsApp</Button>
+          </div>
+        </div>
+        <div class="hidden lg:block" data-anim="scale">
+          <img
+            src="/images/zakazkova--express--prsten-safir.webp"
+            srcset="/images/zakazkova--express--prsten-safir.webp 1x, /images/zakazkova--express--prsten-safir@2x.webp 2x"
+            width="600" height="600"
+            alt="Prsten s růžovým safírem — expresní výroba"
+            loading="lazy"
+            decoding="async"
+            class="w-full h-auto object-cover"
+          />
         </div>
       </div>
     </div>
@@ -319,20 +328,11 @@ const faqItems = [
   <section class="relative bg-bg-primary py-16 sm:py-20 lg:py-24 overflow-hidden">
     <div class="radial-overlay"></div>
     <div class="relative max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-14">
-      <div class="max-w-3xl">
-        <span class="label-dot" data-anim="fade">Časté otázky</span>
-        <h2 class="mt-5 mb-12" data-anim="up">Časté otázky</h2>
-        <FAQ items={faqItems} />
-      </div>
+      <span class="label-dot" data-anim="fade">Časté otázky</span>
+      <h2 class="mt-5 mb-12" data-anim="up">Časté otázky</h2>
+      <FAQ items={faqItems} />
     </div>
   </section>
 
-  <!-- ====== CTA ====== -->
-  <section class="bg-bg-primary relative overflow-hidden py-16 sm:py-20 lg:py-24">
-    <div class="radial-overlay"></div>
-    <div class="relative max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-14">
-      <CTA />
-    </div>
-  </section>
 
 </Layout>
