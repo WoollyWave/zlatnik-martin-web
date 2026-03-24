@@ -1,12 +1,16 @@
 ---
 const currentPath = Astro.url.pathname;
 const navLinks = [
-  { label: 'Zakázková tvorba', href: '/zakazkova-tvorba' },
-  { label: 'Skladem', href: '/skladem' },
-  { label: 'Portfolio', href: '/portfolio' },
-  { label: 'O dílně', href: '/o-dilne' },
-  { label: 'Kontakt', href: '/kontakt' },
+  { label: 'Zakázková tvorba', href: '/zakazkova-tvorba', match: ['/zakazkova-tvorba'] },
+  { label: 'Skladem', href: '/skladem', match: ['/skladem', '/sperky/'] },
+  { label: 'Portfolio', href: '/portfolio', match: ['/portfolio', '/tvorba/'] },
+  { label: 'O dílně', href: '/o-dilne', match: ['/o-dilne'] },
+  { label: 'Kontakt', href: '/kontakt', match: ['/kontakt'] },
 ];
+
+function isActive(match: string[]) {
+  return match.some(m => currentPath === m || currentPath === m + '/' || currentPath.startsWith(m));
+}
 ---
 
 <header class="fixed top-4 inset-x-0 z-50 px-4 sm:px-5">
@@ -33,7 +37,7 @@ const navLinks = [
           <li>
             <a href={link.href}
               class={`text-[11px] uppercase tracking-[0.2em] font-sans font-medium transition-colors whitespace-nowrap ${
-                currentPath === link.href || currentPath === link.href + '/'
+                isActive(link.match)
                   ? 'text-gold-deep' : 'text-text-secondary hover:text-gold-deep'
               }`}>
               {link.label}
@@ -90,18 +94,51 @@ const navLinks = [
   const toggle = document.getElementById('mobile-menu-toggle');
   const menu = document.getElementById('mobile-menu');
   const lines = toggle?.querySelectorAll('.menu-line');
-  toggle?.addEventListener('click', () => {
-    const isOpen = menu?.classList.contains('hidden');
-    menu?.classList.toggle('hidden');
-    toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+
+  function openMenu() {
+    menu?.classList.remove('hidden');
+    toggle?.setAttribute('aria-expanded', 'true');
+    document.body.style.overflow = 'hidden';
     if (lines) {
-      if (isOpen) {
-        lines[0].classList.add('rotate-45', 'translate-y-[5px]');
-        lines[1].classList.add('-rotate-45', '-translate-y-[5px]');
-      } else {
-        lines[0].classList.remove('rotate-45', 'translate-y-[5px]');
-        lines[1].classList.remove('-rotate-45', '-translate-y-[5px]');
-      }
+      lines[0].classList.add('rotate-45', 'translate-y-[5px]');
+      lines[1].classList.add('-rotate-45', '-translate-y-[5px]');
     }
+  }
+
+  function closeMenu() {
+    menu?.classList.add('hidden');
+    toggle?.setAttribute('aria-expanded', 'false');
+    document.body.style.overflow = '';
+    if (lines) {
+      lines[0].classList.remove('rotate-45', 'translate-y-[5px]');
+      lines[1].classList.remove('-rotate-45', '-translate-y-[5px]');
+    }
+  }
+
+  toggle?.addEventListener('click', () => {
+    const isClosed = menu?.classList.contains('hidden');
+    isClosed ? openMenu() : closeMenu();
+  });
+
+  // Close on Escape
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && !menu?.classList.contains('hidden')) {
+      closeMenu();
+      toggle?.focus();
+    }
+  });
+
+  // Close on outside click
+  document.addEventListener('click', (e) => {
+    if (!menu?.classList.contains('hidden') &&
+        !menu?.contains(e.target as Node) &&
+        !toggle?.contains(e.target as Node)) {
+      closeMenu();
+    }
+  });
+
+  // Close on link click
+  menu?.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', closeMenu);
   });
 </script>

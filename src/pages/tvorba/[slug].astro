@@ -16,11 +16,27 @@ interface Props {
 
 const { item } = Astro.props;
 const otherWorks = portfolioItems.filter((p) => p.slug !== item.slug);
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "CreativeWork",
+  "name": item.title,
+  "description": item.description,
+  "image": `https://zlatnikmartin.cz${item.heroImage || item.image}`,
+  "material": item.material,
+  "creator": {
+    "@type": "Person",
+    "name": "Martin Ševr",
+    "jobTitle": "Zlatník",
+    "url": "https://zlatnikmartin.cz"
+  }
+};
 ---
 
 <Layout
   title={`${item.title} | Portfolio — Martin Ševr`}
   description={item.description}
+  jsonLd={jsonLd}
 >
 
   <!-- ====== HERO — Split: info left + photo right ====== -->

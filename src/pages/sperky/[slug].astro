@@ -17,11 +17,35 @@ interface Props {
 
 const { product } = Astro.props;
 const otherProducts = products.filter((p) => p.slug !== product.slug).slice(0, 2);
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Product",
+  "name": product.title,
+  "description": product.description,
+  "image": `https://zlatnikmartin.cz${product.image}`,
+  "offers": {
+    "@type": "Offer",
+    "price": product.price.replace(/[^\d]/g, ''),
+    "priceCurrency": "CZK",
+    "availability": "https://schema.org/InStock",
+    "seller": {
+      "@type": "LocalBusiness",
+      "name": "Martin Ševr — Zlatnická dílna"
+    }
+  },
+  "material": product.material,
+  "brand": {
+    "@type": "Brand",
+    "name": "Martin Ševr"
+  }
+};
 ---
 
 <Layout
   title={`${product.title} | Martin Ševr — Zlatnická dílna`}
   description={product.description}
+  jsonLd={jsonLd}
 >
 
   <!-- ====== HERO — Split: info left + photo right ====== -->

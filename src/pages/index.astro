@@ -1,6 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Button from '../components/Button.astro';
+import { portfolioItems as allPortfolio } from '../data/portfolio';
 
 const jsonLd = {
   "@context": "https://schema.org",
@@ -30,38 +31,16 @@ const jsonLd = {
   ]
 };
 
-const portfolioItems = [
-  {
-    title: 'Zlatý prsten s opálem',
-    tags: ['Zlato 585', 'Opál', 'Zakázka'],
-    description: 'Prsten s australským opálem zasazeným do ručně tepaného zlata. Navržen podle příběhu klientky.',
-    href: '/tvorba/zlaty-prsten-s-opalem',
-    label: 'Zakázka 01',
-    image: '/images/homepage--portfolio-1--prsten-tahitska-perla.webp',
-    image2x: '/images/homepage--portfolio-1--prsten-tahitska-perla@2x.webp',
-    alt: 'Zlatý prsten s tahitskou perlou',
-  },
-  {
-    title: 'Stříbrná sada s granáty',
-    tags: ['Stříbro 925', 'České granáty'],
-    description: 'Náušnice a prsten s českými granáty v minimalistickém moderním designu.',
-    href: '/tvorba/stribrna-sada-s-granaty',
-    label: 'Zakázka 02',
-    image: '/images/homepage--portfolio-2--privesek-citrin.webp',
-    image2x: '/images/homepage--portfolio-2--privesek-citrin@2x.webp',
-    alt: 'Stříbrný přívěsek s citrínem',
-  },
-  {
-    title: 'Snubní prsteny na míru',
-    tags: ['Zlato 750', 'Zakázka'],
-    description: 'Pár snubních prstenů s ručně rytým vzorem. Každý je originál.',
-    href: '/tvorba/snubni-prsteny-na-miru',
-    label: 'Zakázka 03',
-    image: '/images/homepage--portfolio-3--snubni-prsteny-zlate.webp',
-    image2x: '/images/homepage--portfolio-3--snubni-prsteny-zlate@2x.webp',
-    alt: 'Zlaté snubní prsteny na míru',
-  },
-];
+const portfolioItems = allPortfolio.slice(0, 3).map((item, i) => ({
+  title: item.title,
+  tags: item.tags,
+  description: item.description,
+  href: `/tvorba/${item.slug}`,
+  label: `Zakázka 0${i + 1}`,
+  image: item.image,
+  image2x: item.image2x,
+  alt: item.alt,
+}));
 
 const processSteps = [
   {
