@@ -220,6 +220,19 @@ a { color: inherit; text-decoration: none; }
   }
 }
 
+/* Screen reader only */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
 /* FOUC prevention with 3s safety fallback */
 .js body { opacity: 0; transition: opacity 0.8s cubic-bezier(0.23, 1, 0.32, 1); }
 .js body.is-loaded { opacity: 1; }

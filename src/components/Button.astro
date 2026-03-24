@@ -16,6 +16,8 @@ const variants: Record<string, string> = {
   text: `${base} text-[11px] text-text-secondary uppercase tracking-[0.2em] hover:text-gold-deep gap-2`,
 };
 
+// Tailwind v4 workaround: text-white conflicts with text-[size] on same element.
+// Inline style ensures primary button text color is always visible.
 const colorStyle = variant === 'primary' ? 'color: #FAFBF8;' : '';
 const classes = `${variants[variant]} ${className}`.trim();
 ---
