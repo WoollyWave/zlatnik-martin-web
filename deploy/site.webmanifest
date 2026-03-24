@@ -1,0 +1,21 @@
+{
+  "name": "Martin Ševr — Zlatnická dílna Praha",
+  "short_name": "Martin Ševr",
+  "description": "Ruční výroba šperků ze zlata, stříbra a přírodních kamenů.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#F1EEE5",
+  "theme_color": "#F1EEE5",
+  "icons": [
+    {
+      "src": "/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    },
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}

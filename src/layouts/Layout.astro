@@ -58,8 +58,10 @@ const canonicalUrl = canonical || new URL(Astro.url.pathname, siteUrl).toString(
     <meta name="twitter:description" content={ogDescription || description} />
     <meta name="twitter:image" content={`${siteUrl}${ogImage}`} />
 
-    <!-- Favicon -->
+    <!-- Favicon + Touch Icons -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
 
     <!-- Fonts (all self-hosted) -->
     <link rel="preload" href="/fonts/GeneralSans-Regular.woff2" as="font" type="font/woff2" crossorigin />
