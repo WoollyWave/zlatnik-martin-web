@@ -12,7 +12,7 @@ const { items } = Astro.props;
 ---
 
 <div class="space-y-0 border-t border-border">
-  {items.map((item, i) => (
+  {items.map((item) => (
     <details class="group border-b border-border" data-faq>
       <summary class="flex items-center justify-between py-5 cursor-pointer list-none font-serif text-[1.125rem] font-normal text-text-primary hover:text-gold-on-light transition-colors duration-200 select-none">
         <span>{item.question}</span>
