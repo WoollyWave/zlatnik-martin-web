@@ -1,6 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import ContactForm from '../components/ContactForm.astro';
+import PhotoFrame from '../components/PhotoFrame.astro';
 
 const jsonLd = {
   "@context": "https://schema.org",
@@ -107,7 +108,7 @@ const contactMethods = [
             decoding="async"
             class="w-full h-full object-cover sticky top-24 grayscale-[15%] sepia-[10%]"
           />
-          <div class="absolute inset-2 border border-white/10 pointer-events-none"></div>
+          <PhotoFrame />
         </div>
       </div>
     </div>

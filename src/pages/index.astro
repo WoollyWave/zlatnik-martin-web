@@ -1,6 +1,8 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Button from '../components/Button.astro';
+import PhotoFrame from '../components/PhotoFrame.astro';
+import ResponsivePicture from '../components/ResponsivePicture.astro';
 import { portfolioItems as allPortfolio } from '../data/portfolio';
 
 const jsonLd = {
@@ -172,8 +174,7 @@ const processSteps = [
                   decoding="async"
                   class="absolute inset-0 w-full h-full object-cover grayscale-[15%] sepia-[10%] group-hover:scale-[1.03] transition-transform duration-700"
                 />
-                <!-- Border inset -->
-                <div class="absolute inset-2 border border-white/10 pointer-events-none"></div>
+                <PhotoFrame />
                 <!-- Label plaque -->
                 <div class="absolute bottom-4 left-4 bg-bg-primary/90 backdrop-blur-md px-4 py-2.5 shadow-soft">
                   <span class="text-[0.6875rem] uppercase tracking-[0.15em] font-medium text-gold-on-light font-sans">{item.label}</span>
@@ -261,8 +262,7 @@ const processSteps = [
                 decoding="async"
                 class="w-full h-full object-cover grayscale-[15%] sepia-[10%]"
               />
-              <!-- Border inset -->
-              <div class="absolute inset-2 border border-white/10 pointer-events-none"></div>
+              <PhotoFrame />
               <!-- Plaque -->
               <div class="absolute bottom-4 left-4 bg-bg-primary/90 backdrop-blur-md px-4 py-2.5 shadow-soft">
                 <span class="text-[0.6875rem] uppercase tracking-[0.15em] font-medium text-gold-on-light font-sans">Dílna Pod Kesnerkou</span>
@@ -368,13 +368,11 @@ const processSteps = [
 
         <!-- Image side -->
         <div class="relative overflow-hidden aspect-[3/4]" data-anim="up">
-          <img
-            src="/images/homepage--hero--ametystovy-cluster-na-ruce.webp"
-            srcset="/images/homepage--hero--ametystovy-cluster-na-ruce.webp 1x, /images/homepage--hero--ametystovy-cluster-na-ruce@2x.webp 2x"
+          <ResponsivePicture
+            base="homepage--hero--ametystovy-cluster-na-ruce"
             width="800" height="1067"
             alt="Prsten s diamantem na ruce — zakázková tvorba"
             loading="lazy"
-            decoding="async"
             class="absolute inset-0 w-full h-full object-cover"
           />
         </div>

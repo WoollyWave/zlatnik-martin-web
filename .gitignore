@@ -1,7 +1,12 @@
 # build output
 dist/
+# archivované produkční snapshoty (cp -R dist deploy-N)
+deploy/
+deploy-*/
 # generated types
 .astro/
+# graphify
+graphify-out/
 
 # dependencies
 node_modules/

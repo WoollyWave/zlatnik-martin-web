@@ -1,6 +1,7 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import Button from '../../components/Button.astro';
+import PhotoFrame from '../../components/PhotoFrame.astro';
 import { portfolioItems, type PortfolioItem } from '../../data/portfolio';
 
 export function getStaticPaths() {
@@ -130,7 +131,7 @@ const jsonLd = {
                   loading="lazy" decoding="async"
                   class="absolute inset-0 w-full h-full object-cover"
                 />
-                <div class="absolute inset-2 border border-white/10 pointer-events-none"></div>
+                <PhotoFrame />
                 <div class="absolute top-4 left-4 bg-bg-primary/90 backdrop-blur-md px-3 py-1.5">
                   <span class="text-[0.6875rem] font-medium text-gold-on-light font-sans">{`0${i + 1}`}</span>
                 </div>
@@ -171,7 +172,7 @@ const jsonLd = {
                   loading="lazy" decoding="async"
                   class="absolute inset-0 w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-700"
                 />
-                <div class="absolute inset-2 border border-white/10 pointer-events-none"></div>
+                <PhotoFrame />
               </div>
               <div class="flex items-start justify-between gap-6">
                 <div>

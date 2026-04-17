@@ -2,6 +2,8 @@
 import Layout from '../layouts/Layout.astro';
 import Button from '../components/Button.astro';
 import FAQ from '../components/FAQ.astro';
+import PhotoFrame from '../components/PhotoFrame.astro';
+import ResponsivePicture from '../components/ResponsivePicture.astro';
 
 const processSteps = [
   {
@@ -170,9 +172,12 @@ const faqItems = [
 
       <!-- Mobile only -->
       <div class="md:hidden mt-12 w-full">
-        <img src="/images/zakazkova--hero--privesek-quartz-na-krku.webp"
-          srcset="/images/zakazkova--hero--privesek-quartz-na-krku.webp 1x, /images/zakazkova--hero--privesek-quartz-na-krku@2x.webp 2x"
-          width="1920" height="1080" alt="Zakázková výroba šperků" loading="eager" decoding="async"
+        <ResponsivePicture
+          base="zakazkova--hero--privesek-quartz-na-krku"
+          width="1920" height="1080"
+          alt="Zakázková výroba šperků"
+          loading="eager"
+          fetchpriority="high"
           class="w-full h-auto object-cover" />
       </div>
     </div>
@@ -227,7 +232,7 @@ const faqItems = [
             decoding="async"
             class="w-full h-full object-cover grayscale-[15%] sepia-[10%]"
           />
-          <div class="absolute inset-2 border border-white/10 pointer-events-none"></div>
+          <PhotoFrame />
         </div>
         <div class="space-y-8">
           {materials.map((mat) => (
@@ -281,13 +286,11 @@ const faqItems = [
 
   <!-- ====== FULLWIDTH PARALLAX PHOTO ====== -->
   <section class="relative h-[40vh] sm:h-[50vh] lg:h-[70vh] overflow-hidden" data-parallax>
-    <img
-      src="/images/zakazkova--parallax--tricolor-prsten-na-kovadline.webp"
-      srcset="/images/zakazkova--parallax--tricolor-prsten-na-kovadline.webp 1x, /images/zakazkova--parallax--tricolor-prsten-na-kovadline@2x.webp 2x"
+    <ResponsivePicture
+      base="zakazkova--parallax--tricolor-prsten-na-kovadline"
       width="1920" height="1080"
       alt="Detailní záběr zlatnické práce"
       loading="lazy"
-      decoding="async"
       class="absolute inset-0 w-full h-[130%] object-cover -top-[15%] object-center sm:object-[center_80%]"
     />
   </section>

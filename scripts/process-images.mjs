@@ -52,6 +52,10 @@ function getSizeForFile(filename) {
   return bestMatch || { w: 800, h: 600, q: 85 };
 }
 
+// Pro velké obrázky (hero/parallax ≥1200w) generuj i mobilní variantu 800w.
+const MOBILE_WIDTH = 800;
+const LARGE_THRESHOLD = 1200;
+
 const files = readdirSync(INPUT_DIR).filter(f => /\.(jpg|jpeg|png|webp)$/i.test(f));
 
 console.log(`Zpracovávám ${files.length} fotek...`);
@@ -74,7 +78,23 @@ for (const file of files) {
       .webp({ quality: size.q })
       .toFile(join(OUTPUT_DIR, `${name}@2x.webp`));
 
-    console.log(`✓ ${name} → ${size.w}×${size.h} + @2x`);
+    let mobileSuffix = '';
+    if (size.w >= LARGE_THRESHOLD) {
+      const mobileH = Math.round((size.h / size.w) * MOBILE_WIDTH);
+      // Mobile @1x
+      await sharp(inputPath)
+        .resize(MOBILE_WIDTH, mobileH, { fit: 'cover', position: 'center' })
+        .webp({ quality: size.q })
+        .toFile(join(OUTPUT_DIR, `${name}-mobile.webp`));
+      // Mobile @2x
+      await sharp(inputPath)
+        .resize(MOBILE_WIDTH * 2, mobileH * 2, { fit: 'cover', position: 'center' })
+        .webp({ quality: size.q })
+        .toFile(join(OUTPUT_DIR, `${name}-mobile@2x.webp`));
+      mobileSuffix = ` + mobile ${MOBILE_WIDTH}×${mobileH} (@1x/@2x)`;
+    }
+
+    console.log(`✓ ${name} → ${size.w}×${size.h} + @2x${mobileSuffix}`);
   } catch (err) {
     console.error(`✗ ${name}: ${err.message}`);
   }
