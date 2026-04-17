@@ -15,7 +15,7 @@ const { items, activeIndex = 0 } = Astro.props;
           ? 'bg-text-primary active'
           : 'bg-transparent border border-border text-text-secondary hover:border-text-muted hover:text-text-primary'
       }`}
-      style={i === activeIndex ? 'color: #FAFBF8;' : ''}
+      style={i === activeIndex ? 'color: var(--color-button-text);' : ''}
       data-filter={item === 'Vše' ? 'all' : item.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')}
       aria-pressed={i === activeIndex ? 'true' : 'false'}
     >
@@ -25,46 +25,5 @@ const { items, activeIndex = 0 } = Astro.props;
 </div>
 
 <script>
-  document.addEventListener('DOMContentLoaded', () => {
-    const pills = document.querySelectorAll('.filter-pill');
-    const cards = document.querySelectorAll('[data-category]');
-
-    pills.forEach((pill) => {
-      pill.addEventListener('click', () => {
-        const filter = pill.getAttribute('data-filter') || 'all';
-
-        // Update active pill
-        pills.forEach((p) => {
-          p.classList.remove('bg-text-primary', 'active');
-          p.classList.add('bg-transparent', 'border', 'border-border', 'text-text-secondary');
-          (p as HTMLElement).style.color = '';
-          p.setAttribute('aria-pressed', 'false');
-        });
-        pill.classList.add('bg-text-primary', 'active');
-        pill.classList.remove('bg-transparent', 'border', 'border-border', 'text-text-secondary');
-        (pill as HTMLElement).style.color = '#FAFBF8';
-        pill.setAttribute('aria-pressed', 'true');
-
-        // Filter cards
-        cards.forEach((card) => {
-          const category = card.getAttribute('data-category') || '';
-          const wrapper = card as HTMLElement;
-
-          if (filter === 'all' || category === filter) {
-            wrapper.style.display = '';
-            // Fade in
-            wrapper.style.opacity = '0';
-            wrapper.style.transform = 'translateY(10px)';
-            requestAnimationFrame(() => {
-              wrapper.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
-              wrapper.style.opacity = '1';
-              wrapper.style.transform = 'translateY(0)';
-            });
-          } else {
-            wrapper.style.display = 'none';
-          }
-        });
-      });
-    });
-  });
+  import '../scripts/filter-pills';
 </script>

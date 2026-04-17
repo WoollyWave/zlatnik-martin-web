@@ -18,7 +18,7 @@ const variants: Record<string, string> = {
 
 // Tailwind v4 workaround: text-white conflicts with text-[size] on same element.
 // Inline style ensures primary button text color is always visible.
-const colorStyle = variant === 'primary' ? 'color: #FAFBF8;' : '';
+const colorStyle = variant === 'primary' ? 'color: var(--color-button-text);' : '';
 const classes = `${variants[variant]} ${className}`.trim();
 ---
 

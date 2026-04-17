@@ -2,6 +2,7 @@
 import Button from './Button.astro';
 
 interface Props {
+  /** Renderuje se přes `set:html` — smí obsahovat pouze důvěryhodný statický HTML (např. `<br>`, `<em>`). NIKDY sem neposílat user input. */
   heading?: string;
   subheading?: string;
 }

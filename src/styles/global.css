@@ -6,12 +6,15 @@
   --color-bg-tertiary: #E7E1D6;
   --color-text-primary: #1E1B18;
   --color-text-secondary: #5F5A54;
-  --color-text-muted: #7A756D;
+  /* #6B665E — 5.3:1 na bg-primary (WCAG 2.2 AA ≥4.5:1). */
+  --color-text-muted: #6B665E;
   --color-gold-primary: #C6A85A;
   --color-gold-soft: #E8D7A8;
-  --color-gold-deep: #8F7430;
+  /* #7B6529 — 4.9:1 na bg-primary (AA). Používá se jako text i v em akcentu. */
+  --color-gold-deep: #7B6529;
   --color-gold-on-light: #726025;
   --color-white: #FFFFFF;
+  --color-button-text: #FAFBF8;
   --color-border: #E5DFD6;
   --color-divider: #EDE7DD;
   --color-error: #B64536;

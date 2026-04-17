@@ -58,46 +58,48 @@ const LARGE_THRESHOLD = 1200;
 
 const files = readdirSync(INPUT_DIR).filter(f => /\.(jpg|jpeg|png|webp)$/i.test(f));
 
-console.log(`Zpracovávám ${files.length} fotek...`);
+console.log(`Zpracovávám ${files.length} fotek paralelně...`);
 
-for (const file of files) {
+async function processFile(file) {
   const { name } = parse(file);
   const size = getSizeForFile(name);
   const inputPath = join(INPUT_DIR, file);
 
-  try {
-    // @1x verze
-    await sharp(inputPath)
+  const tasks = [
+    sharp(inputPath)
       .resize(size.w, size.h, { fit: 'cover', position: 'center' })
       .webp({ quality: size.q })
-      .toFile(join(OUTPUT_DIR, `${name}.webp`));
-
-    // @2x verze
-    await sharp(inputPath)
+      .toFile(join(OUTPUT_DIR, `${name}.webp`)),
+    sharp(inputPath)
       .resize(size.w * 2, size.h * 2, { fit: 'cover', position: 'center' })
       .webp({ quality: size.q })
-      .toFile(join(OUTPUT_DIR, `${name}@2x.webp`));
+      .toFile(join(OUTPUT_DIR, `${name}@2x.webp`)),
+  ];
 
-    let mobileSuffix = '';
-    if (size.w >= LARGE_THRESHOLD) {
-      const mobileH = Math.round((size.h / size.w) * MOBILE_WIDTH);
-      // Mobile @1x
-      await sharp(inputPath)
+  let mobileSuffix = '';
+  if (size.w >= LARGE_THRESHOLD) {
+    const mobileH = Math.round((size.h / size.w) * MOBILE_WIDTH);
+    tasks.push(
+      sharp(inputPath)
         .resize(MOBILE_WIDTH, mobileH, { fit: 'cover', position: 'center' })
         .webp({ quality: size.q })
-        .toFile(join(OUTPUT_DIR, `${name}-mobile.webp`));
-      // Mobile @2x
-      await sharp(inputPath)
+        .toFile(join(OUTPUT_DIR, `${name}-mobile.webp`)),
+      sharp(inputPath)
         .resize(MOBILE_WIDTH * 2, mobileH * 2, { fit: 'cover', position: 'center' })
         .webp({ quality: size.q })
-        .toFile(join(OUTPUT_DIR, `${name}-mobile@2x.webp`));
-      mobileSuffix = ` + mobile ${MOBILE_WIDTH}×${mobileH} (@1x/@2x)`;
-    }
+        .toFile(join(OUTPUT_DIR, `${name}-mobile@2x.webp`)),
+    );
+    mobileSuffix = ` + mobile ${MOBILE_WIDTH}×${mobileH} (@1x/@2x)`;
+  }
 
+  try {
+    await Promise.all(tasks);
     console.log(`✓ ${name} → ${size.w}×${size.h} + @2x${mobileSuffix}`);
   } catch (err) {
     console.error(`✗ ${name}: ${err.message}`);
   }
 }
+
+await Promise.all(files.map(processFile));
 
 console.log('Hotovo!');

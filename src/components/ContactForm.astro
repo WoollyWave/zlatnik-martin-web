@@ -1,15 +1,35 @@
 ---
 import Button from './Button.astro';
+// Statický web bez backendu — při odeslání složíme `mailto:` link a otevřeme
+// uživatelův e-mailový klient. Až klient přepne na Formspree/Web3Forms,
+// stačí nahradit `action` a odstranit JS handler.
+const CONTACT_EMAIL = 'zlatnikmartin@email.cz';
 ---
 
-<form class="space-y-6" action="#" method="POST">
+<form
+  class="space-y-6"
+  data-contact-form
+  action={`mailto:${CONTACT_EMAIL}`}
+  method="POST"
+  enctype="text/plain"
+  novalidate
+>
+  <!-- Honeypot — skrytý před lidmi i AT, boti vyplní -->
+  <div class="absolute left-[-9999px]" aria-hidden="true">
+    <label>Website (nechte prázdné)
+      <input type="text" name="website" tabindex="-1" autocomplete="off" />
+    </label>
+  </div>
+
   <div>
     <label for="name" class="block text-[0.875rem] font-medium text-text-primary mb-2">Jméno</label>
     <input
       type="text"
       id="name"
       name="name"
+      autocomplete="name"
       required
+      aria-required="true"
       class="w-full px-4 py-3 bg-white border border-border rounded-[2px] text-text-primary text-[0.9375rem] focus:outline-none focus:ring-2 focus:ring-gold-primary/35 focus:border-gold-primary transition-colors duration-200"
       placeholder="Vaše jméno"
     />
@@ -21,7 +41,9 @@ import Button from './Button.astro';
       type="email"
       id="email"
       name="email"
+      autocomplete="email"
       required
+      aria-required="true"
       class="w-full px-4 py-3 bg-white border border-border rounded-[2px] text-text-primary text-[0.9375rem] focus:outline-none focus:ring-2 focus:ring-gold-primary/35 focus:border-gold-primary transition-colors duration-200"
       placeholder="vas@email.cz"
     />
@@ -33,6 +55,7 @@ import Button from './Button.astro';
       type="tel"
       id="phone"
       name="phone"
+      autocomplete="tel"
       class="w-full px-4 py-3 bg-white border border-border rounded-[2px] text-text-primary text-[0.9375rem] focus:outline-none focus:ring-2 focus:ring-gold-primary/35 focus:border-gold-primary transition-colors duration-200"
       placeholder="+420 ..."
     />
@@ -71,12 +94,56 @@ import Button from './Button.astro';
       id="gdpr"
       name="gdpr"
       required
+      aria-required="true"
       class="mt-1 w-4 h-4 border-border rounded-[2px] text-gold-primary focus:ring-gold-primary/35"
     />
     <label for="gdpr" class="text-[0.8125rem] text-text-secondary leading-relaxed">
-      Souhlasím se zpracováním osobních údajů za účelem odpovědi na můj dotaz. Více informací v <a href="/ochrana-osobnich-udaju" class="underline hover:text-gold-deep transition-colors">zásadách ochrany osobních údajů</a>.
+      Souhlasím se zpracováním osobních údajů za účelem odpovědi na můj dotaz. Více informací v <a href="/ochrana-osobnich-udaju" class="underline hover:text-gold-on-light transition-colors">zásadách ochrany osobních údajů</a>.
     </label>
   </div>
 
+  <p data-form-status role="status" aria-live="polite" class="hidden text-[0.8125rem] text-success"></p>
+
   <Button type="submit" variant="primary">Odeslat zprávu</Button>
 </form>
+
+<script>
+  const form = document.querySelector<HTMLFormElement>('[data-contact-form]');
+  if (form) {
+    const status = form.querySelector<HTMLParagraphElement>('[data-form-status]');
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      if (!form.reportValidity()) return;
+
+      const honeypot = form.elements.namedItem('website') as HTMLInputElement | null;
+      if (honeypot?.value) return;
+
+      const data = new FormData(form);
+      const name = String(data.get('name') ?? '');
+      const email = String(data.get('email') ?? '');
+      const phone = String(data.get('phone') ?? '');
+      const interest = String(data.get('interest') ?? '');
+      const message = String(data.get('message') ?? '');
+
+      const body = [
+        `Jméno: ${name}`,
+        `E-mail: ${email}`,
+        phone && `Telefon: ${phone}`,
+        interest && `Zájem o: ${interest}`,
+        '',
+        message,
+      ].filter(Boolean).join('\n');
+
+      const to = form.getAttribute('action')!.replace('mailto:', '');
+      const subject = `Poptávka z webu — ${name || email}`;
+      const href = `mailto:${to}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+
+      window.location.href = href;
+
+      if (status) {
+        status.textContent = 'Otevřel jsem váš e-mailový klient s předvyplněnou zprávou. Pokud se nic nestalo, napište prosím přímo na ' + to + '.';
+        status.classList.remove('hidden');
+      }
+    });
+  }
+</script>

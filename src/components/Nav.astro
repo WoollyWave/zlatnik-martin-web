@@ -33,17 +33,20 @@ function isActive(match: string[]) {
 
       <!-- Center links — desktop -->
       <ul class="hidden lg:flex items-center gap-8 absolute left-1/2 -translate-x-1/2">
-        {navLinks.map((link) => (
-          <li>
-            <a href={link.href}
-              class={`text-[11px] uppercase tracking-[0.2em] font-sans font-medium transition-colors whitespace-nowrap ${
-                isActive(link.match)
-                  ? 'text-gold-deep' : 'text-text-secondary hover:text-gold-deep'
-              }`}>
-              {link.label}
-            </a>
-          </li>
-        ))}
+        {navLinks.map((link) => {
+          const active = isActive(link.match);
+          return (
+            <li>
+              <a href={link.href}
+                aria-current={active ? 'page' : undefined}
+                class={`text-[11px] uppercase tracking-[0.2em] font-sans font-medium transition-colors whitespace-nowrap ${
+                  active ? 'text-gold-deep' : 'text-text-secondary hover:text-gold-deep'
+                }`}>
+                {link.label}
+              </a>
+            </li>
+          );
+        })}
       </ul>
 
       <!-- Right: status + CTA -->
@@ -54,7 +57,7 @@ function isActive(match: string[]) {
         </span>
         <a href="/kontakt"
           class="inline-flex items-center gap-2 h-11 px-6 bg-text-primary rounded-full font-sans text-[11px] uppercase tracking-[0.2em] font-medium shadow-md hover:bg-gold-deep transition-colors duration-300"
-          style="color: #FAFBF8;">
+          style="color: var(--color-button-text);">
           Konzultace
           <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25" /></svg>
         </a>
@@ -72,15 +75,22 @@ function isActive(match: string[]) {
   <div id="mobile-menu" class="lg:hidden hidden mt-2 mx-auto max-w-[1400px]">
     <div class="rounded-3xl border border-border/80 bg-[rgba(241,238,229,0.96)] backdrop-blur-xl shadow-[0_20px_50px_rgba(30,27,24,0.10)] p-6">
       <div class="flex flex-col gap-4">
-        <a href="/" class="text-[13px] text-text-primary font-sans hover:text-gold-deep transition-colors py-2">Domů</a>
-        {navLinks.map((link) => (
-          <a href={link.href} class="text-[13px] text-text-primary font-sans hover:text-gold-deep transition-colors py-2">
-            {link.label}
-          </a>
-        ))}
+        <a href="/"
+          aria-current={currentPath === '/' ? 'page' : undefined}
+          class={`text-[13px] font-sans hover:text-gold-deep transition-colors py-2 ${currentPath === '/' ? 'text-gold-deep' : 'text-text-primary'}`}>Domů</a>
+        {navLinks.map((link) => {
+          const active = isActive(link.match);
+          return (
+            <a href={link.href}
+              aria-current={active ? 'page' : undefined}
+              class={`text-[13px] font-sans hover:text-gold-deep transition-colors py-2 ${active ? 'text-gold-deep' : 'text-text-primary'}`}>
+              {link.label}
+            </a>
+          );
+        })}
       </div>
       <div class="mt-4 pt-4 border-t border-divider flex flex-col gap-3">
-        <a href="tel:+420774598181" class="inline-flex items-center justify-center h-12 bg-text-primary rounded-full font-sans text-[11px] uppercase tracking-[0.2em] font-medium shadow-md hover:bg-gold-deep transition-colors duration-300" style="color: #FAFBF8;">Zavolat</a>
+        <a href="tel:+420774598181" class="inline-flex items-center justify-center h-12 bg-text-primary rounded-full font-sans text-[11px] uppercase tracking-[0.2em] font-medium shadow-md hover:bg-gold-deep transition-colors duration-300" style="color: var(--color-button-text);">Zavolat</a>
         <a href="https://wa.me/420774598181" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center h-12 border border-border bg-white/80 text-text-primary rounded-full font-sans text-[11px] uppercase tracking-[0.2em] font-medium hover:bg-white transition-colors duration-300">WhatsApp</a>
       </div>
     </div>
@@ -91,54 +101,5 @@ function isActive(match: string[]) {
 <div class="h-24"></div>
 
 <script>
-  const toggle = document.getElementById('mobile-menu-toggle');
-  const menu = document.getElementById('mobile-menu');
-  const lines = toggle?.querySelectorAll('.menu-line');
-
-  function openMenu() {
-    menu?.classList.remove('hidden');
-    toggle?.setAttribute('aria-expanded', 'true');
-    document.body.style.overflow = 'hidden';
-    if (lines) {
-      lines[0].classList.add('rotate-45', 'translate-y-[5px]');
-      lines[1].classList.add('-rotate-45', '-translate-y-[5px]');
-    }
-  }
-
-  function closeMenu() {
-    menu?.classList.add('hidden');
-    toggle?.setAttribute('aria-expanded', 'false');
-    document.body.style.overflow = '';
-    if (lines) {
-      lines[0].classList.remove('rotate-45', 'translate-y-[5px]');
-      lines[1].classList.remove('-rotate-45', '-translate-y-[5px]');
-    }
-  }
-
-  toggle?.addEventListener('click', () => {
-    const isClosed = menu?.classList.contains('hidden');
-    isClosed ? openMenu() : closeMenu();
-  });
-
-  // Close on Escape
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && !menu?.classList.contains('hidden')) {
-      closeMenu();
-      toggle?.focus();
-    }
-  });
-
-  // Close on outside click
-  document.addEventListener('click', (e) => {
-    if (!menu?.classList.contains('hidden') &&
-        !menu?.contains(e.target as Node) &&
-        !toggle?.contains(e.target as Node)) {
-      closeMenu();
-    }
-  });
-
-  // Close on link click
-  menu?.querySelectorAll('a').forEach(link => {
-    link.addEventListener('click', closeMenu);
-  });
+  import '../scripts/nav';
 </script>
