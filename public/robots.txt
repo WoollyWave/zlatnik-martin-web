@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://zlatnikmartin.cz/sitemap-index.xml
+Sitemap: https://zlatnik-martin.cz/sitemap-index.xml

@@ -24,7 +24,7 @@ const jsonLd = {
   "@type": "Product",
   "name": product.title,
   "description": product.description,
-  "image": `https://zlatnikmartin.cz${product.image}`,
+  "image": `https://zlatnik-martin.cz${product.image}`,
   "offers": {
     "@type": "Offer",
     "price": product.price.replace(/[^\d]/g, ''),
@@ -54,11 +54,11 @@ const jsonLd = {
   <section class="relative bg-bg-primary border-b border-border overflow-hidden">
     <div class="radial-overlay"></div>
     <div class="relative max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-14">
-      <div class="grid lg:grid-cols-[0.85fr_1.15fr] gap-10 lg:gap-16 items-center py-16 lg:py-24">
+      <div class="grid lg:grid-cols-[0.85fr_1.15fr] gap-10 lg:gap-16 items-center section-hero">
 
         <!-- Left — info -->
         <div data-anim="up">
-          <a href="/skladem" class="inline-flex items-center gap-2 text-[11px] text-text-muted hover:text-gold-deep transition-colors duration-200 uppercase tracking-[0.15em] font-sans font-medium">
+          <a href="/skladem" class="inline-flex items-center gap-2 text-[11px] text-text-muted hover:text-gold-deep transition-colors duration-200 uppercase tracking-[0.2em] font-sans font-medium">
             <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" /></svg>
             Zpět na Skladem
           </a>
@@ -68,19 +68,19 @@ const jsonLd = {
           <!-- Price -->
           <p class="mt-4 font-serif text-[1.5rem] text-gold-deep">{product.price}</p>
 
-          <p class="mt-6 text-text-secondary text-[1.0625rem] leading-[1.8] max-w-lg">
+          <p class="mt-6 text-text-secondary body-lg max-w-lg">
             {product.description}
           </p>
 
           <!-- Meta -->
           <div class="mt-10 pt-8 border-t border-border grid grid-cols-2 gap-6">
             <div>
-              <span class="text-[10px] uppercase tracking-[0.16em] font-medium text-text-muted font-sans">Materiál</span>
-              <p class="text-[13px] text-text-primary mt-1 font-sans">{product.material}</p>
+              <span class="text-[11px] uppercase tracking-[0.15em] font-medium text-text-muted font-sans">Materiál</span>
+              <p class="text-[13px] sm:text-[14px] text-text-primary mt-1 font-sans leading-snug">{product.material}</p>
             </div>
             <div>
-              <span class="text-[10px] uppercase tracking-[0.16em] font-medium text-text-muted font-sans">Dostupnost</span>
-              <p class="text-[13px] text-text-primary mt-1 font-sans flex items-center gap-2">
+              <span class="text-[11px] uppercase tracking-[0.15em] font-medium text-text-muted font-sans">Dostupnost</span>
+              <p class="text-[13px] sm:text-[14px] text-text-primary mt-1 font-sans leading-snug flex items-center gap-2">
                 <span class="w-1.5 h-1.5 rounded-full bg-success"></span>
                 Skladem — ihned k odběru
               </p>
@@ -93,7 +93,7 @@ const jsonLd = {
             <Button href="https://wa.me/420774598181" variant="secondary">Napsat na WhatsApp</Button>
           </div>
 
-          <p class="mt-4 text-[0.8125rem] text-text-muted">
+          <p class="mt-4 body-md text-text-muted">
             Osobní vyzvednutí v dílně nebo pojištěná zásilka po celé ČR.
           </p>
         </div>
@@ -104,10 +104,12 @@ const jsonLd = {
             <div class="relative overflow-hidden aspect-[1/1]">
               <img
                 src={product.image}
-                srcset={`${product.image} 1x, ${product.image2x} 2x`}
+                srcset={`${product.image} 800w, ${product.image2x} 1600w`}
+                sizes="(min-width: 1024px) 60vw, 100vw"
                 width="800" height="800"
                 alt={product.alt}
                 loading="eager"
+                fetchpriority="high"
                 decoding="async"
                 class="absolute inset-0 w-full h-full object-cover"
               />
@@ -122,10 +124,10 @@ const jsonLd = {
 
   <!-- ====== DETAIL GALLERY ====== -->
   {product.detailImages && product.detailImages.length > 0 && (
-    <section class="relative bg-bg-primary border-b border-border py-16 sm:py-20 lg:py-24">
+    <section class="relative bg-bg-primary border-b border-border section-md">
       <div class="max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-14">
         <span class="label-dot" data-anim="fade">Detaily</span>
-        <p class="text-[0.875rem] text-text-muted leading-relaxed mt-4 max-w-xs">
+        <p class="body-md text-text-muted leading-relaxed mt-4 max-w-xs">
           Každý úhel vypráví příběh.
         </p>
 
@@ -143,10 +145,10 @@ const jsonLd = {
                 />
                 <PhotoFrame />
                 <div class="absolute top-4 left-4 bg-bg-primary/90 backdrop-blur-md px-3 py-1.5">
-                  <span class="text-[0.6875rem] font-medium text-gold-on-light font-sans">{`0${i + 1}`}</span>
+                  <span class="text-[11px] font-medium text-gold-on-light font-sans">{`0${i + 1}`}</span>
                 </div>
               </div>
-              <p class="mt-3 text-[0.8125rem] text-text-secondary font-sans">{img.alt}</p>
+              <p class="mt-3 body-md text-text-secondary font-sans">{img.alt}</p>
             </div>
           ))}
         </div>
@@ -155,7 +157,7 @@ const jsonLd = {
   )}
 
   <!-- ====== DALŠÍ ŠPERKY ====== -->
-  <section class="relative bg-bg-primary border-b border-border py-16 sm:py-20 lg:py-24 overflow-hidden">
+  <section class="relative bg-bg-primary border-b border-border section-md overflow-hidden">
     <div class="radial-overlay"></div>
     <div class="relative max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-14">
 

@@ -7,7 +7,10 @@ import sitemap from '@astrojs/sitemap';
 export default defineConfig({
   integrations: [sitemap()],
   output: 'static',
-  site: 'https://zlatnikmartin.cz',
+  site: 'https://zlatnik-martin.cz',
+  build: {
+    inlineStylesheets: 'always',
+  },
   vite: {
     plugins: [tailwindcss()],
   },

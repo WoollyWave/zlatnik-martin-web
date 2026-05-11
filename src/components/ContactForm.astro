@@ -22,7 +22,7 @@ const CONTACT_EMAIL = 'zlatnikmartin@email.cz';
   </div>
 
   <div>
-    <label for="name" class="block text-[0.875rem] font-medium text-text-primary mb-2">Jméno</label>
+    <label for="name" class="block body-md font-medium text-text-primary mb-2">Jméno</label>
     <input
       type="text"
       id="name"
@@ -30,13 +30,13 @@ const CONTACT_EMAIL = 'zlatnikmartin@email.cz';
       autocomplete="name"
       required
       aria-required="true"
-      class="w-full px-4 py-3 bg-white border border-border rounded-[2px] text-text-primary text-[0.9375rem] focus:outline-none focus:ring-2 focus:ring-gold-primary/35 focus:border-gold-primary transition-colors duration-200"
+      class="w-full px-4 py-3 bg-white border border-border rounded-[2px] text-text-primary body-md focus:outline-none focus:ring-2 focus:ring-gold-primary/35 focus:border-gold-primary transition-colors duration-200"
       placeholder="Vaše jméno"
     />
   </div>
 
   <div>
-    <label for="email" class="block text-[0.875rem] font-medium text-text-primary mb-2">E-mail</label>
+    <label for="email" class="block body-md font-medium text-text-primary mb-2">E-mail</label>
     <input
       type="email"
       id="email"
@@ -44,29 +44,29 @@ const CONTACT_EMAIL = 'zlatnikmartin@email.cz';
       autocomplete="email"
       required
       aria-required="true"
-      class="w-full px-4 py-3 bg-white border border-border rounded-[2px] text-text-primary text-[0.9375rem] focus:outline-none focus:ring-2 focus:ring-gold-primary/35 focus:border-gold-primary transition-colors duration-200"
+      class="w-full px-4 py-3 bg-white border border-border rounded-[2px] text-text-primary body-md focus:outline-none focus:ring-2 focus:ring-gold-primary/35 focus:border-gold-primary transition-colors duration-200"
       placeholder="vas@email.cz"
     />
   </div>
 
   <div>
-    <label for="phone" class="block text-[0.875rem] font-medium text-text-primary mb-2">Telefon</label>
+    <label for="phone" class="block body-md font-medium text-text-primary mb-2">Telefon</label>
     <input
       type="tel"
       id="phone"
       name="phone"
       autocomplete="tel"
-      class="w-full px-4 py-3 bg-white border border-border rounded-[2px] text-text-primary text-[0.9375rem] focus:outline-none focus:ring-2 focus:ring-gold-primary/35 focus:border-gold-primary transition-colors duration-200"
+      class="w-full px-4 py-3 bg-white border border-border rounded-[2px] text-text-primary body-md focus:outline-none focus:ring-2 focus:ring-gold-primary/35 focus:border-gold-primary transition-colors duration-200"
       placeholder="+420 ..."
     />
   </div>
 
   <div>
-    <label for="interest" class="block text-[0.875rem] font-medium text-text-primary mb-2">Zájem o</label>
+    <label for="interest" class="block body-md font-medium text-text-primary mb-2">Zájem o</label>
     <select
       id="interest"
       name="interest"
-      class="w-full px-4 py-3 bg-white border border-border rounded-[2px] text-text-primary text-[0.9375rem] focus:outline-none focus:ring-2 focus:ring-gold-primary/35 focus:border-gold-primary transition-colors duration-200"
+      class="w-full px-4 py-3 bg-white border border-border rounded-[2px] text-text-primary body-md focus:outline-none focus:ring-2 focus:ring-gold-primary/35 focus:border-gold-primary transition-colors duration-200"
     >
       <option value="">Vyberte...</option>
       <option value="zakazka">Zakázkový šperk</option>
@@ -78,12 +78,12 @@ const CONTACT_EMAIL = 'zlatnikmartin@email.cz';
   </div>
 
   <div>
-    <label for="message" class="block text-[0.875rem] font-medium text-text-primary mb-2">Zpráva</label>
+    <label for="message" class="block body-md font-medium text-text-primary mb-2">Zpráva</label>
     <textarea
       id="message"
       name="message"
       rows="5"
-      class="w-full px-4 py-3 bg-white border border-border rounded-[2px] text-text-primary text-[0.9375rem] focus:outline-none focus:ring-2 focus:ring-gold-primary/35 focus:border-gold-primary transition-colors duration-200 resize-vertical"
+      class="w-full px-4 py-3 bg-white border border-border rounded-[2px] text-text-primary body-md focus:outline-none focus:ring-2 focus:ring-gold-primary/35 focus:border-gold-primary transition-colors duration-200 resize-vertical"
       placeholder="Popište svou představu..."
     ></textarea>
   </div>
@@ -97,12 +97,12 @@ const CONTACT_EMAIL = 'zlatnikmartin@email.cz';
       aria-required="true"
       class="mt-1 w-4 h-4 border-border rounded-[2px] text-gold-primary focus:ring-gold-primary/35"
     />
-    <label for="gdpr" class="text-[0.8125rem] text-text-secondary leading-relaxed">
+    <label for="gdpr" class="body-md text-text-secondary leading-relaxed">
       Souhlasím se zpracováním osobních údajů za účelem odpovědi na můj dotaz. Více informací v <a href="/ochrana-osobnich-udaju" class="underline hover:text-gold-on-light transition-colors">zásadách ochrany osobních údajů</a>.
     </label>
   </div>
 
-  <p data-form-status role="status" aria-live="polite" class="hidden text-[0.8125rem] text-success"></p>
+  <p data-form-status role="status" aria-live="polite" class="hidden body-md text-success"></p>
 
   <Button type="submit" variant="primary">Odeslat zprávu</Button>
 </form>

@@ -11,6 +11,8 @@ interface Props {
   ogImage?: string;
   canonical?: string;
   jsonLd?: object;
+  /** `true` = nav pluje nad první sekcí (bez 96px spaceru). První sekce si musí zajistit vlastní padding-top. */
+  navOverlay?: boolean;
 }
 
 const {
@@ -21,9 +23,10 @@ const {
   ogImage = '/images/og-default.jpg',
   canonical,
   jsonLd,
+  navOverlay = false,
 } = Astro.props;
 
-const siteUrl = Astro.site?.toString().replace(/\/$/, '') || 'https://zlatnikmartin.cz';
+const siteUrl = Astro.site?.toString().replace(/\/$/, '') || 'https://zlatnik-martin.cz';
 const canonicalUrl = canonical || new URL(Astro.url.pathname, siteUrl).toString();
 ---
 
@@ -76,13 +79,18 @@ const canonicalUrl = canonical || new URL(Astro.url.pathname, siteUrl).toString(
   </head>
   <body class="bg-bg-primary text-text-primary font-sans">
     <a href="#main" class="skip-to-content">Přeskočit na obsah</a>
-    <Nav />
+    <Nav overlay={navOverlay} />
     <main id="main">
       <slot />
     </main>
     <Footer />
     <script>
-      import '../scripts/animations.ts';
+      const loadAnimations = () => import('../scripts/animations.ts');
+      if ('requestIdleCallback' in window) {
+        requestIdleCallback(loadAnimations, { timeout: 1500 });
+      } else {
+        setTimeout(loadAnimations, 200);
+      }
     </script>
     <script>
       // Show page as soon as DOM is ready — don't wait for images

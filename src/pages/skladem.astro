@@ -20,10 +20,11 @@ const filterLabels = ['Vše', ...categories.map(c => {
 <Layout
   title="Skladem | Martin Ševr — Zlatnická dílna Praha"
   description="Stříbrné šperky s přírodními kameny. Ihned k dispozici. Ruční výroba, certifikované materiály."
+  navOverlay
 >
 
   <!-- ====== HERO ====== -->
-  <section class="relative bg-bg-primary border-b border-border py-20 sm:py-28 lg:py-36 overflow-hidden">
+  <section class="relative bg-bg-primary border-b border-border section-hero overflow-hidden">
     <div class="radial-overlay"></div>
     <div class="relative max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-14">
       <div class="max-w-3xl" data-anim="up">
@@ -31,7 +32,7 @@ const filterLabels = ['Vše', ...categories.map(c => {
         <h1 class="mt-6">
           Hotové <em>šperky</em>
         </h1>
-        <p class="mt-6 text-text-secondary text-[1.0625rem] leading-relaxed max-w-xl">
+        <p class="mt-6 text-text-secondary body-lg max-w-xl">
           Ručně vyrobené šperky ihned k dispozici. Každý kus je originál — stříbro, přírodní kameny, certifikované materiály.
         </p>
       </div>
@@ -39,7 +40,7 @@ const filterLabels = ['Vše', ...categories.map(c => {
   </section>
 
   <!-- ====== PRODUCTS ====== -->
-  <section class="relative bg-bg-primary py-16 sm:py-20 lg:py-24 overflow-hidden">
+  <section class="relative bg-bg-primary section-md overflow-hidden">
     <div class="radial-overlay"></div>
     <div class="relative max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-14">
 
@@ -57,6 +58,7 @@ const filterLabels = ['Vše', ...categories.map(c => {
             image2x={product.image2x}
             alt={product.alt}
             description={product.description}
+            headingLevel="h2"
           />
         ))}
       </div>

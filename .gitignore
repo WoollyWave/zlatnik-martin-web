@@ -3,6 +3,9 @@ dist/
 # archivované produkční snapshoty (cp -R dist deploy-N)
 deploy/
 deploy-*/
+deploy\ */
+# zdrojové fotky před zpracováním (lokální, mimo deploy)
+images-selekce/
 # generated types
 .astro/
 # graphify

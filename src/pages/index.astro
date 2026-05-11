@@ -2,6 +2,7 @@
 import Layout from '../layouts/Layout.astro';
 import Button from '../components/Button.astro';
 import PhotoFrame from '../components/PhotoFrame.astro';
+import PortfolioListCard from '../components/PortfolioListCard.astro';
 import ResponsivePicture from '../components/ResponsivePicture.astro';
 import { portfolioItems as allPortfolio } from '../data/portfolio';
 
@@ -12,7 +13,7 @@ const jsonLd = {
       "@type": "LocalBusiness",
       "name": "Martin Ševr — Zlatnická dílna",
       "description": "Ruční výroba šperků ze zlata, stříbra a přírodních kamenů. Každý kus originál.",
-      "url": "https://zlatnikmartin.cz",
+      "url": "https://zlatnik-martin.cz",
       "telephone": "+420774598181",
       "email": "zlatnikmartin@email.cz",
       "address": {
@@ -23,12 +24,12 @@ const jsonLd = {
         "addressCountry": "CZ"
       },
       "priceRange": "$$$$",
-      "image": "https://zlatnikmartin.cz/images/og-default.jpg"
+      "image": "https://zlatnik-martin.cz/images/og-default.jpg"
     },
     {
       "@type": "WebSite",
       "name": "Martin Ševr — Zlatnická dílna Praha",
-      "url": "https://zlatnikmartin.cz"
+      "url": "https://zlatnik-martin.cz"
     }
   ]
 };
@@ -76,6 +77,7 @@ const processSteps = [
   title="Martin Ševr — Zlatnická dílna Praha | Ruční výroba šperků"
   description="Ruční výroba šperků ze zlata, stříbra a přírodních kamenů. Každý kus originál. Zakázková tvorba v Praze."
   jsonLd={jsonLd}
+  navOverlay
 >
 
   <!-- ====== HERO ====== -->
@@ -83,16 +85,14 @@ const processSteps = [
     <div class="radial-overlay"></div>
 
     <div class="max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-14 relative">
-      <div class="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center min-h-[calc(100svh-96px)] py-16 lg:py-24">
+      <div class="grid lg:grid-cols-2 gap-10 sm:gap-12 lg:gap-20 items-start lg:items-center min-h-[80vh] lg:min-h-screen section-hero">
 
         <!-- Text -->
         <div class="hero-label">
           <span class="label-dot">Zlatnická dílna Praha</span>
 
           <h1 class="mt-6 hero-headline">
-            <span class="block">Šperky tvarované</span>
-            <span class="block"><em>světlem</em> a krásou</span>
-            <span class="block">materiálu.</span>
+            Šperky tvarované <em>světlem</em> a krásou materiálu.
           </h1>
 
           <p class="subtitle mt-6 hero-copy">
@@ -105,32 +105,34 @@ const processSteps = [
           </div>
 
           <!-- Meta row -->
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 mt-12 pt-6 border-t border-border hero-meta">
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 mt-10 pt-6 border-t border-border hero-meta">
             <div>
-              <span class="text-[10px] uppercase tracking-[0.16em] font-medium text-text-muted font-sans">Lokace</span>
-              <p class="text-[13px] text-text-primary mt-1 font-sans">Praha — Osobní setkání</p>
+              <span class="text-[11px] uppercase tracking-[0.15em] font-medium text-text-muted font-sans">Lokace</span>
+              <p class="text-[13px] sm:text-[14px] text-text-primary mt-1 font-sans leading-snug">Praha — Osobní setkání</p>
             </div>
             <div>
-              <span class="text-[10px] uppercase tracking-[0.16em] font-medium text-text-muted font-sans">Zaměření</span>
-              <p class="text-[13px] text-text-primary mt-1 font-sans">Ruční výroba / Zakázky</p>
+              <span class="text-[11px] uppercase tracking-[0.15em] font-medium text-text-muted font-sans">Zaměření</span>
+              <p class="text-[13px] sm:text-[14px] text-text-primary mt-1 font-sans leading-snug">Ruční výroba / Zakázky</p>
             </div>
             <div>
-              <span class="text-[10px] uppercase tracking-[0.16em] font-medium text-text-muted font-sans">Zkušenosti</span>
-              <p class="text-[13px] text-text-primary mt-1 font-sans">Více než 20 let</p>
+              <span class="text-[11px] uppercase tracking-[0.15em] font-medium text-text-muted font-sans">Zkušenosti</span>
+              <p class="text-[13px] sm:text-[14px] text-text-primary mt-1 font-sans leading-snug">Více než 20 let</p>
             </div>
           </div>
         </div>
 
-        <!-- Photo — clean on background -->
-        <div class="relative hero-img-wrap lg:order-none">
+        <!-- Photo — source 1600×1600, aspect-square na mobile/tablet, natural na desktopu -->
+        <div class="relative hero-img-wrap lg:order-none aspect-square lg:aspect-auto overflow-hidden">
           <img
             src="/images/homepage--hero--vltavin-privesek.webp"
-            srcset="/images/homepage--hero--vltavin-privesek.webp 1x, /images/homepage--hero--vltavin-privesek@2x.webp 2x"
-            width="800" height="600"
+            srcset="/images/homepage--hero--vltavin-privesek.webp 800w, /images/homepage--hero--vltavin-privesek@2x.webp 1600w"
+            sizes="(min-width: 1024px) 50vw, 100vw"
+            width="1600" height="1600"
             alt="Přívěsek s vltavínem a růženínem — zakázková tvorba"
             loading="eager"
+            fetchpriority="high"
             decoding="async"
-            class="w-full h-auto object-cover max-h-[70vh] lg:max-h-none"
+            class="absolute inset-0 w-full h-full object-cover lg:relative lg:inset-auto lg:h-auto"
           />
         </div>
 
@@ -138,9 +140,8 @@ const processSteps = [
     </div>
   </section>
 
-
   <!-- ====== SELECTED WORKS — Vertical list ====== -->
-  <section class="bg-bg-primary border-b border-border py-20 md:py-32">
+  <section class="bg-bg-primary border-b border-border section-lg">
     <div class="max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-14">
 
       <!-- Header -->
@@ -148,8 +149,7 @@ const processSteps = [
         <div>
           <span class="label-dot" data-anim="fade">Vybran&eacute; pr&aacute;ce</span>
           <h2 class="mt-5" data-anim="stagger">
-            <span class="block">Šperky vyrobené</span>
-            <span class="block">s <em>láskou</em> ke každému detailu.</span>
+            Šperky vyrobené s <em>láskou</em> ke každému detailu.
           </h2>
         </div>
         <div data-anim="up">
@@ -160,48 +160,17 @@ const processSteps = [
       <!-- Vertical list -->
       <div class="flex flex-col">
         {portfolioItems.map((item) => (
-          <a href={item.href} class="group block border-t border-border py-10 md:py-14" data-anim="up">
-            <div class="grid grid-cols-1 md:grid-cols-[0.45fr_1fr] gap-8 md:gap-12 lg:gap-16 items-center">
-
-              <!-- Photo -->
-              <div class="relative aspect-[4/3] overflow-hidden">
-                <img
-                  src={item.image}
-                  srcset={`${item.image} 1x, ${item.image2x} 2x`}
-                  width="800" height="600"
-                  alt={item.alt}
-                  loading="lazy"
-                  decoding="async"
-                  class="absolute inset-0 w-full h-full object-cover grayscale-[15%] sepia-[10%] group-hover:scale-[1.03] transition-transform duration-700"
-                />
-                <PhotoFrame />
-                <!-- Label plaque -->
-                <div class="absolute bottom-4 left-4 bg-bg-primary/90 backdrop-blur-md px-4 py-2.5 shadow-soft">
-                  <span class="text-[0.6875rem] uppercase tracking-[0.15em] font-medium text-gold-on-light font-sans">{item.label}</span>
-                </div>
-              </div>
-
-              <!-- Info -->
-              <div class="flex items-start justify-between gap-6">
-                <div>
-                  <span class="text-[0.6875rem] uppercase tracking-[0.15em] font-medium text-gold-on-light font-sans">{item.label}</span>
-                  <h3 class="mt-2 text-[1.5rem] md:text-[1.75rem] group-hover:text-gold-deep transition-colors duration-300">{item.title}</h3>
-                  <p class="text-[0.9375rem] text-text-secondary leading-relaxed mt-3 max-w-lg font-sans">{item.description}</p>
-                  <div class="flex flex-wrap gap-3 mt-5">
-                    {item.tags.map((tag: string) => (
-                      <span class="text-[0.6875rem] uppercase tracking-wider text-text-muted font-sans border border-border px-3 py-1.5">{tag}</span>
-                    ))}
-                  </div>
-                </div>
-                <div class="flex-shrink-0 mt-2 h-10 w-10 rounded-full border border-border flex items-center justify-center group-hover:bg-text-primary group-hover:border-text-primary transition-colors duration-300">
-                  <svg class="w-4 h-4 text-text-primary group-hover:text-white transition-colors duration-300" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25" /></svg>
-                </div>
-              </div>
-
-            </div>
-          </a>
+          <PortfolioListCard
+            href={item.href}
+            image={item.image}
+            image2x={item.image2x}
+            alt={item.alt}
+            label={item.label}
+            title={item.title}
+            description={item.description}
+            tags={item.tags}
+          />
         ))}
-        <!-- Bottom border -->
         <div class="border-t border-border"></div>
       </div>
 
@@ -215,7 +184,7 @@ const processSteps = [
 
 
   <!-- ====== PHILOSOPHY — bg-secondary with left rail ====== -->
-  <section class="relative bg-bg-primary border-b border-border py-20 md:py-32 overflow-hidden">
+  <section class="relative bg-bg-primary border-b border-border section-lg overflow-hidden">
     <div class="radial-overlay"></div>
 
     <div class="max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-14 relative">
@@ -225,7 +194,7 @@ const processSteps = [
         <div class="lg:border-r lg:border-border lg:pr-10">
           <div class="lg:sticky lg:top-32">
             <span class="label-dot" data-anim="fade">Filozofie d&iacute;lny</span>
-            <p class="text-[0.875rem] text-text-secondary leading-relaxed mt-5 max-w-[260px] font-sans">
+            <p class="body-md text-text-secondary leading-relaxed mt-5 max-w-[260px] font-sans">
               Přístup ke šperku jako k architektuře v malém. Méně je vždy více.
             </p>
           </div>
@@ -234,21 +203,21 @@ const processSteps = [
         <!-- Right content -->
         <div>
           <!-- Large italic heading -->
-          <p class="font-serif italic text-[1.5rem] md:text-[1.875rem] lg:text-[2.25rem] leading-[1.35] text-text-primary font-normal max-w-3xl" data-anim="up">
+          <p class="font-serif italic display-quote-lg text-text-primary font-normal max-w-3xl" data-anim="up">
             Věřím ve šperky, které
-            <em class="text-gold-deep not-italic" style="font-weight: 400; font-style: italic;">dýchají</em>
+            <em class="text-gold-deep">dýchají</em>
             — řemeslo, které odstraní zbytečné a odhalí
-            <em class="text-gold-deep not-italic" style="font-weight: 400; font-style: italic;">krásu</em>
+            <em class="text-gold-deep">krásu</em>
             materiálu.
           </p>
 
           <!-- Split: copy + image -->
           <div class="grid md:grid-cols-2 gap-10 mt-14">
             <div data-anim="up">
-              <p class="text-text-secondary text-[1.0625rem] leading-relaxed font-sans">
+              <p class="text-text-secondary body-lg font-sans">
                 Víc než dvacet let pracuji se zlatem a stříbrem. Každý šperk vyrábím ručně — od prvního náčrtu po finální lesk. Není to jen řemeslo, je to způsob, jakým vnímám svět.
               </p>
-              <p class="text-text-secondary text-[1.0625rem] leading-relaxed mt-4 font-sans">
+              <p class="text-text-secondary body-lg mt-4 font-sans">
                 Každý kus, který opustí dílnu, nese kousek mého příběhu a hodně toho vašeho. Proto nespěchám a nedělám kompromisy.
               </p>
             </div>
@@ -265,7 +234,7 @@ const processSteps = [
               <PhotoFrame />
               <!-- Plaque -->
               <div class="absolute bottom-4 left-4 bg-bg-primary/90 backdrop-blur-md px-4 py-2.5 shadow-soft">
-                <span class="text-[0.6875rem] uppercase tracking-[0.15em] font-medium text-gold-on-light font-sans">Dílna Pod Kesnerkou</span>
+                <span class="text-[11px] uppercase tracking-[0.15em] font-medium text-gold-on-light font-sans">Dílna Pod Kesnerkou</span>
               </div>
             </div>
           </div>
@@ -274,15 +243,15 @@ const processSteps = [
           <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-14" data-anim="stagger">
             <div class="border-t border-border pt-5">
               <span class="text-[0.75rem] text-text-muted font-sans">01</span>
-              <p class="mt-2 text-[0.9375rem] font-medium text-text-primary font-sans">Ruční práce bez kompromisů</p>
+              <p class="mt-2 body-md font-medium text-text-primary font-sans">Ruční práce bez kompromisů</p>
             </div>
             <div class="border-t border-border pt-5">
               <span class="text-[0.75rem] text-text-muted font-sans">02</span>
-              <p class="mt-2 text-[0.9375rem] font-medium text-text-primary font-sans">Materiály s příběhem</p>
+              <p class="mt-2 body-md font-medium text-text-primary font-sans">Materiály s příběhem</p>
             </div>
             <div class="border-t border-border pt-5">
               <span class="text-[0.75rem] text-text-muted font-sans">03</span>
-              <p class="mt-2 text-[0.9375rem] font-medium text-text-primary font-sans">Zdrženlivost místo přebytku</p>
+              <p class="mt-2 body-md font-medium text-text-primary font-sans">Zdrženlivost místo přebytku</p>
             </div>
           </div>
         </div>
@@ -293,7 +262,7 @@ const processSteps = [
 
 
   <!-- ====== METHODOLOGY — 3 cards ====== -->
-  <section class="bg-bg-primary border-b border-border py-20 md:py-32">
+  <section class="bg-bg-primary border-b border-border section-lg">
     <div class="max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-14">
 
       <!-- Header -->
@@ -301,8 +270,7 @@ const processSteps = [
         <div>
           <span class="label-dot" data-anim="fade">Jak pracuji</span>
           <h2 class="mt-5" data-anim="stagger">
-            <span class="block">Od nápadu ke šperku</span>
-            <span class="block">v <em>třech</em> krocích.</span>
+            Od nápadu ke šperku v <em>třech</em> krocích.
           </h2>
         </div>
       </div>
@@ -331,8 +299,8 @@ const processSteps = [
             </div>
             <!-- Info below -->
             <div class="pt-5 pb-5 border-b border-border">
-              <h3 class="text-[1.15rem]">{step.title}</h3>
-              <p class="text-[0.875rem] text-text-secondary leading-relaxed mt-2 font-sans">
+              <h3>{step.title}</h3>
+              <p class="body-md text-text-secondary leading-relaxed mt-2 font-sans">
                 {step.description}
               </p>
             </div>
@@ -345,7 +313,7 @@ const processSteps = [
 
 
   <!-- ====== TESTIMONIAL — Quote + image ====== -->
-  <section class="bg-bg-primary border-b border-border py-20 md:py-32">
+  <section class="bg-bg-primary border-b border-border section-lg">
     <div class="max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-14">
 
       <div class="grid lg:grid-cols-[1fr_0.6fr] gap-12 lg:gap-16 items-center">
@@ -354,13 +322,13 @@ const processSteps = [
         <div data-anim="up">
           <span class="label-dot mb-8 block">Reference</span>
           <blockquote>
-            <p class="font-serif italic text-[1.5rem] md:text-[1.875rem] leading-relaxed text-text-primary font-normal">
+            <p class="font-serif italic display-quote text-text-primary font-normal">
               &bdquo;Řekla jsem mu jen nápad a barvu kamene. Zbytek nechal na mě překvapit. Když jsem prsten poprvé viděla, věděla jsem, že přesně takhle jsem si ho představovala.&ldquo;
             </p>
             <footer class="mt-8 pt-6 border-t border-border">
               <cite class="not-italic">
                 <span class="font-sans font-medium text-text-primary block">Helena Novotná</span>
-                <span class="text-[0.875rem] text-text-muted mt-1 font-sans block">Sběratelka šperků, Praha</span>
+                <span class="body-md text-text-muted mt-1 font-sans block">Sběratelka šperků, Praha</span>
               </cite>
             </footer>
           </blockquote>

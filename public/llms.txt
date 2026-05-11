@@ -1,0 +1,30 @@
+# Martin Ševr — Zlatnická dílna Praha
+# https://zlatnik-martin.cz
+
+> Zlatník. Ruční výroba šperků ze zlata, stříbra a přírodních kamenů v centru Prahy.
+
+## Kdo jsem
+Martin Ševr, zlatník s 20+ lety praxe. IČO 87639114.
+Adresa: Pod Kesnerkou 46, Praha 5, 150 00.
+Telefon/WhatsApp: +420 774 598 181, e-mail: zlatnikmartin@email.cz.
+
+## Co dělám
+- Zakázková tvorba šperků (zlato 585/750, stříbro 925, přírodní kameny)
+- Hotové šperky skladem (stříbro + kameny)
+- Opravy a úpravy stávajících šperků
+- Konzultace v dílně nebo na dálku
+
+## Stránky
+- /                       — Domů
+- /zakazkova-tvorba       — Proces, materiály, ceník, FAQ
+- /skladem                — Hotové šperky
+- /portfolio              — Realizace s popisem
+- /o-dilne                — Příběh, certifikáty, dílna
+- /kontakt                — Kontaktní údaje, formulář, mapa
+- /sperky/[slug]          — Detaily produktů skladem
+- /tvorba/[slug]          — Detaily realizací
+
+## Hodnoty
+- Ruční výroba bez kompromisů, žádná sériová výroba.
+- Materiály s certifikátem (puncované kovy, gemologický posudek u kamenů).
+- První osoba — Martin pracuje sám, klient mluví přímo s ním.

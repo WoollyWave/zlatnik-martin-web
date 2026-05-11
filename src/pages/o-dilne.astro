@@ -6,10 +6,11 @@ import PhotoFrame from '../components/PhotoFrame.astro';
 <Layout
   title="O dílně | Martin Ševr — Zlatnická dílna Praha"
   description="Víc než dvacet let ruční práce se zlatem a stříbrem. Poznejte příběh zlatnické dílny v Praze."
+  navOverlay
 >
 
   <!-- ====== HERO ====== -->
-  <section class="relative bg-bg-primary border-b border-border py-20 sm:py-28 lg:py-36 overflow-hidden">
+  <section class="relative bg-bg-primary border-b border-border section-hero overflow-hidden">
     <div class="radial-overlay"></div>
     <div class="relative max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-14">
       <div class="max-w-3xl" data-anim="up">
@@ -17,7 +18,7 @@ import PhotoFrame from '../components/PhotoFrame.astro';
         <h1 class="mt-6">
           Zlatnictví s tradicí<br />a <em>srdcem</em>
         </h1>
-        <p class="mt-6 text-text-secondary text-[1.0625rem] leading-relaxed max-w-xl">
+        <p class="mt-6 text-text-secondary body-lg max-w-xl">
           Víc než dvacet let ruční práce se zlatem a stříbrem. Každý šperk je originál, vyrobený s úctou k materiálu a k člověku, který ho bude nosit.
         </p>
       </div>
@@ -25,7 +26,7 @@ import PhotoFrame from '../components/PhotoFrame.astro';
   </section>
 
   <!-- ====== PORTRAIT + STORY — dramatic asymmetric ====== -->
-  <section class="relative bg-bg-primary border-b border-border py-16 sm:py-20 lg:py-28">
+  <section class="relative bg-bg-primary border-b border-border section-md">
     <div class="max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-14">
       <div class="grid lg:grid-cols-[1.15fr_0.85fr] gap-10 lg:gap-16 items-start">
 
@@ -42,7 +43,7 @@ import PhotoFrame from '../components/PhotoFrame.astro';
             />
             <div class="absolute inset-3 border border-white/15 pointer-events-none"></div>
             <div class="absolute bottom-6 left-6 bg-bg-primary/90 backdrop-blur-md px-5 py-3 shadow-soft">
-              <span class="text-[0.6875rem] uppercase tracking-[0.15em] font-medium text-gold-on-light font-sans">Dílna Pod Kesnerkou</span>
+              <span class="text-[11px] uppercase tracking-[0.15em] font-medium text-gold-on-light font-sans">Dílna Pod Kesnerkou</span>
             </div>
           </div>
         </div>
@@ -53,31 +54,31 @@ import PhotoFrame from '../components/PhotoFrame.astro';
           <h2 class="mt-5">Zlatnictví není<br />jen <em>práce</em></h2>
 
           <blockquote class="mt-8 pt-8 border-t border-border">
-            <p class="font-serif italic text-[1.25rem] sm:text-[1.4rem] leading-[1.5] text-text-primary">
+            <p class="font-serif italic display-quote text-text-primary">
               „Každý kus, který opustí dílnu, nese kousek mého příběhu a hodně toho vašeho."
             </p>
           </blockquote>
 
           <div class="mt-8 space-y-4">
-            <p class="text-text-secondary text-[0.9375rem] leading-[1.8]">
+            <p class="text-text-secondary body-md leading-[1.8]">
               Víc než dvacet let pracuji se zlatem a stříbrem. Každý šperk vyrábím ručně — od prvního náčrtu po finální lesk. Není to jen řemeslo, je to způsob, jakým vnímám svět.
             </p>
-            <p class="text-text-secondary text-[0.9375rem] leading-[1.8]">
+            <p class="text-text-secondary body-md leading-[1.8]">
               Proto nespěchám a nedělám kompromisy. Raději odmítnu zakázku, než abych odevzdal něco, za čím si nestojím.
             </p>
           </div>
 
           <div class="grid grid-cols-3 gap-6 mt-10 pt-8 border-t border-border">
             <div>
-              <span class="block font-serif text-[1.75rem] text-text-primary">20+</span>
+              <span class="block font-serif stat-number text-text-primary">20+</span>
               <span class="text-[0.75rem] text-text-muted uppercase tracking-wider font-sans mt-1 block">Let zkušeností</span>
             </div>
             <div>
-              <span class="block font-serif text-[1.75rem] text-text-primary">1000+</span>
+              <span class="block font-serif stat-number text-text-primary">1000+</span>
               <span class="text-[0.75rem] text-text-muted uppercase tracking-wider font-sans mt-1 block">Výrobků</span>
             </div>
             <div>
-              <span class="block font-serif text-[1.75rem] text-text-primary">100%</span>
+              <span class="block font-serif stat-number text-text-primary">100%</span>
               <span class="text-[0.75rem] text-text-muted uppercase tracking-wider font-sans mt-1 block">Ruční práce</span>
             </div>
           </div>
@@ -88,11 +89,11 @@ import PhotoFrame from '../components/PhotoFrame.astro';
   </section>
 
   <!-- ====== FILOZOFIE — velký italic heading + 3 principy ====== -->
-  <section class="relative bg-bg-primary border-b border-border py-16 sm:py-20 lg:py-24 overflow-hidden">
+  <section class="relative bg-bg-primary border-b border-border section-md overflow-hidden">
     <div class="radial-overlay"></div>
     <div class="relative max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-14">
 
-      <h2 class="font-serif italic text-text-primary tracking-[-0.02em] leading-[1.12] text-[1.75rem] sm:text-[2.2rem] lg:text-[2.8rem] max-w-4xl" data-anim="up">
+      <h2 class="italic max-w-4xl" data-anim="up">
         Věřím ve šperky, které <span class="not-italic text-gold-deep">dýchají</span> — řemeslo, které odstraní zbytečné a odhalí <span class="not-italic text-gold-deep">krásu</span> materiálu.
       </h2>
 
@@ -100,17 +101,17 @@ import PhotoFrame from '../components/PhotoFrame.astro';
         <div data-anim-child class="pt-6 border-t border-border">
           <span class="text-[0.75rem] text-text-muted font-sans">01</span>
           <h3 class="mt-2">Ruční práce bez kompromisů</h3>
-          <p class="mt-2 text-text-secondary text-[0.9375rem] leading-relaxed">Každý šperk vyrábím od začátku do konce vlastníma rukama. Žádná sériová výroba, žádné polotovary.</p>
+          <p class="mt-2 text-text-secondary body-md leading-relaxed">Každý šperk vyrábím od začátku do konce vlastníma rukama. Žádná sériová výroba, žádné polotovary.</p>
         </div>
         <div data-anim-child class="pt-6 border-t border-border">
           <span class="text-[0.75rem] text-text-muted font-sans">02</span>
           <h3 class="mt-2">Materiály s příběhem</h3>
-          <p class="mt-2 text-text-secondary text-[0.9375rem] leading-relaxed">Certifikované kovy, ručně vybrané kameny. Vím, odkud každý materiál přichází a proč ho používám.</p>
+          <p class="mt-2 text-text-secondary body-md leading-relaxed">Certifikované kovy, ručně vybrané kameny. Vím, odkud každý materiál přichází a proč ho používám.</p>
         </div>
         <div data-anim-child class="pt-6 border-t border-border">
           <span class="text-[0.75rem] text-text-muted font-sans">03</span>
           <h3 class="mt-2">Zdrženlivost místo přebytku</h3>
-          <p class="mt-2 text-text-secondary text-[0.9375rem] leading-relaxed">Méně je více. Věřím, že nejkrásnější šperky jsou ty, kde každý detail má svůj důvod.</p>
+          <p class="mt-2 text-text-secondary body-md leading-relaxed">Méně je více. Věřím, že nejkrásnější šperky jsou ty, kde každý detail má svůj důvod.</p>
         </div>
       </div>
 
@@ -118,7 +119,7 @@ import PhotoFrame from '../components/PhotoFrame.astro';
   </section>
 
   <!-- ====== GALERIE — 3 fotky, vyšší ====== -->
-  <section class="relative bg-bg-primary border-b border-border py-16 sm:py-20 lg:py-24 overflow-hidden">
+  <section class="relative bg-bg-primary border-b border-border section-md overflow-hidden">
     <div class="max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-14">
       <span class="label-dot mb-10 block" data-anim="fade">Dílna Pod Kesnerkou</span>
       <div class="grid md:grid-cols-3 gap-4 lg:gap-6" data-anim="stagger">
@@ -154,7 +155,7 @@ import PhotoFrame from '../components/PhotoFrame.astro';
   </section>
 
   <!-- ====== CERTIFIKÁTY — foto vlevo, text vpravo ====== -->
-  <section class="relative bg-bg-primary py-16 sm:py-20 lg:py-24">
+  <section class="relative bg-bg-primary section-md">
     <div class="max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-14">
       <div class="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
         <div data-anim="scale" class="relative overflow-hidden">
@@ -169,10 +170,10 @@ import PhotoFrame from '../components/PhotoFrame.astro';
         <div data-anim="up">
           <span class="label-dot">Certifikáty</span>
           <h2 class="mt-5">Puncované a certifikované</h2>
-          <p class="mt-4 text-text-secondary text-[1.0625rem] leading-[1.8]">
+          <p class="mt-4 text-text-secondary body-lg">
             Všechny moje šperky jsou vyrobeny z certifikovaných materiálů a opatřeny státním puncem. Pracuji v souladu s českou legislativou.
           </p>
-          <p class="mt-4 text-text-secondary text-[1.0625rem] leading-[1.8]">
+          <p class="mt-4 text-text-secondary body-lg">
             Každý kus doprovázím certifikátem pravosti. Kameny dodávám s gemologickým posudkem.
           </p>
         </div>

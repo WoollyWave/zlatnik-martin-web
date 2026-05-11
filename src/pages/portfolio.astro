@@ -1,16 +1,17 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import PhotoFrame from '../components/PhotoFrame.astro';
+import PortfolioListCard from '../components/PortfolioListCard.astro';
 import { portfolioItems } from '../data/portfolio';
 ---
 
 <Layout
   title="Portfolio | Martin Ševr — Zlatnická dílna Praha"
   description="Každý kus vypráví příběh. Zlaté prsteny, stříbrné přívěsky, sady s kameny. Ruční práce Martina Ševra."
+  navOverlay
 >
 
   <!-- ====== HERO — text left aligned, no parallax photo ====== -->
-  <section class="relative bg-bg-primary border-b border-border py-20 sm:py-28 lg:py-36 overflow-hidden">
+  <section class="relative bg-bg-primary border-b border-border section-hero overflow-hidden">
     <div class="radial-overlay"></div>
     <div class="relative max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-14">
       <div class="max-w-3xl" data-anim="up">
@@ -18,7 +19,7 @@ import { portfolioItems } from '../data/portfolio';
         <h1 class="mt-6">
           Šperky z <em>duše</em>
         </h1>
-        <p class="mt-6 text-text-secondary text-[1.0625rem] leading-relaxed max-w-xl">
+        <p class="mt-6 text-text-secondary body-lg max-w-xl">
           Ruční práce, která trvá. Zlaté prsteny, stříbrné přívěsky, sady s kameny. Každý kus vypráví příběh.
         </p>
       </div>
@@ -26,60 +27,28 @@ import { portfolioItems } from '../data/portfolio';
   </section>
 
   <!-- ====== PORTFOLIO — Vertical list (jako Selected Works na homepage) ====== -->
-  <section class="relative bg-bg-primary py-16 sm:py-20 lg:py-24 overflow-hidden">
+  <section class="relative bg-bg-primary section-md overflow-hidden">
     <div class="radial-overlay"></div>
     <div class="relative max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-14">
 
       <!-- Vertical list -->
       <div class="flex flex-col">
         {portfolioItems.map((item, i) => (
-          <a href={`/tvorba/${item.slug}`} class="group block border-t border-border py-10 md:py-16" data-anim="up">
-            <div class="grid grid-cols-1 md:grid-cols-[0.5fr_1fr] gap-8 md:gap-12 lg:gap-20 items-center">
-
-              <!-- Photo -->
-              <div class="relative aspect-[4/3] overflow-hidden">
-                <img
-                  src={item.image}
-                  srcset={`${item.image} 1x, ${item.image2x} 2x`}
-                  width="800" height="600"
-                  alt={item.alt}
-                  loading={i < 2 ? 'eager' : 'lazy'}
-                  decoding="async"
-                  class="absolute inset-0 w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-700"
-                />
-                <PhotoFrame />
-                <div class="absolute bottom-4 left-4 bg-bg-primary/90 backdrop-blur-md px-4 py-2.5 shadow-soft">
-                  <span class="text-[0.6875rem] uppercase tracking-[0.15em] font-medium text-gold-on-light font-sans">{`Zakázka 0${i + 1}`}</span>
-                </div>
-              </div>
-
-              <!-- Info -->
-              <div class="flex items-start justify-between gap-6">
-                <div>
-                  <span class="text-[0.6875rem] uppercase tracking-[0.15em] font-medium text-gold-on-light font-sans">{`Zakázka 0${i + 1}`}</span>
-                  <h2 class="mt-2 text-[1.5rem] md:text-[1.75rem] group-hover:text-gold-deep transition-colors duration-300">{item.title}</h2>
-                  <p class="text-[0.9375rem] text-text-secondary leading-relaxed mt-3 max-w-lg font-sans">{item.description}</p>
-                  <div class="flex flex-wrap gap-3 mt-5">
-                    {item.tags.map((tag: string) => (
-                      <span class="text-[0.6875rem] uppercase tracking-wider text-text-muted font-sans border border-border px-3 py-1.5">{tag}</span>
-                    ))}
-                  </div>
-                  <div class="mt-6">
-                    <span class="text-[11px] text-text-secondary uppercase tracking-[0.2em] font-sans font-medium group-hover:text-gold-deep transition-colors duration-300 inline-flex items-center gap-2">
-                      Podrobnosti
-                      <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25" /></svg>
-                    </span>
-                  </div>
-                </div>
-                <div class="hidden sm:flex flex-shrink-0 mt-2 h-10 w-10 rounded-full border border-border items-center justify-center group-hover:bg-text-primary group-hover:border-text-primary transition-colors duration-300">
-                  <svg class="w-4 h-4 text-text-primary group-hover:text-white transition-colors duration-300" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25" /></svg>
-                </div>
-              </div>
-
-            </div>
-          </a>
+          <PortfolioListCard
+            href={`/tvorba/${item.slug}`}
+            image={item.image}
+            image2x={item.image2x}
+            alt={item.alt}
+            label={`Zakázka 0${i + 1}`}
+            title={item.title}
+            description={item.description}
+            tags={item.tags}
+            loading={i < 2 ? 'eager' : 'lazy'}
+            headingLevel="h2"
+            imageRatio="wide"
+            showCta
+          />
         ))}
-        <!-- Bottom border -->
         <div class="border-t border-border"></div>
       </div>
 

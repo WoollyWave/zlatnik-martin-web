@@ -2,20 +2,21 @@
 
 ## Quick Start
 ```bash
-npm create astro@latest . -- --template minimal
-npx astro add tailwind
-npm install gsap @splinetool/runtime
+npm install
+npm run dev      # http://localhost:4321
+npm run build    # → dist/
+npm run images   # batch-process raw photos in images-selekce/
 ```
 
 ## Project Goal
 Build a luxury jewelry workshop presentation website. Static, no CMS, no e-commerce. Czech language first, EN later via duplicate pages. Deploy via FTP to Hostinger.
 
 ## Stack
-- **Astro** (static output, zero JS by default)
-- **Tailwind CSS** (with custom config matching design system)
-- **GSAP + ScrollTrigger** (scroll animations)
-- **Spline** (3D ring in hero — Phase 2)
-- **Google Fonts** (Fraunces) + **Fontshare** (General Sans — self-hosted WOFF2)
+- **Astro 6** (static output, zero JS by default)
+- **Tailwind CSS v4** (CSS-first config in `src/styles/global.css` via `@theme {}` — žádný `tailwind.config.mjs`)
+- **GSAP + ScrollTrigger** (scroll animations, lazy-loaded přes `requestIdleCallback`)
+- **Sharp** (image pipeline ve `scripts/process-images.mjs`)
+- **Self-hosted WOFF2 fonty** — Playfair Display (variable) + General Sans (Fontshare)
 
 ## Build Order (do in this sequence)
 1. **Design system** — tailwind.config.mjs with colors, fonts, spacing
@@ -38,7 +39,7 @@ Build a luxury jewelry workshop presentation website. Static, no CMS, no e-comme
 - **Phone**: +420 774 598 181 (WhatsApp)
 - **Email**: zlatnikmartin@email.cz
 - **Designer**: Daniel Vilím / Vilim.One
-- **Photographer**: Betty (Raketta)
+- **Photographer**: Betty
 
 ## Information Architecture
 ```
@@ -52,88 +53,71 @@ Build a luxury jewelry workshop presentation website. Static, no CMS, no e-comme
 /tvorba/[slug] — Detail portfolia
 ```
 
-## Color Palette (LOCKED — use in tailwind.config.mjs)
-```js
-colors: {
-  bg: {
-    primary: '#FAFBF8',
-    secondary: '#F1EEE5',
-    tertiary: '#E7E1D6',
-  },
-  text: {
-    primary: '#1E1B18',
-    secondary: '#5F5A54',
-    muted: '#8E887F',
-  },
-  gold: {
-    primary: '#C6A85A',
-    soft: '#E8D7A8',
-    deep: '#8F7430',
-    'on-light': '#726025',
-  },
-  border: '#E5DFD6',
-  divider: '#EDE7DD',
-  white: '#FFFFFF',
-  error: '#B64536',
-  success: '#4F6F5E',
-  hover: {
-    bg: '#EAE4DA',
-    gold: '#B8963A',
-  },
-  'accent-cool': '#8FA3A6',
+## Color Palette (LOCKED — defined in `src/styles/global.css` `@theme {}`)
+```css
+/* src/styles/global.css */
+@theme {
+  --color-bg-primary: #F1EEE5;        /* warm cream — base background */
+  --color-bg-secondary: #E7E1D6;      /* one stop deeper */
+  --color-bg-tertiary: #E7E1D6;
+  --color-text-primary: #1E1B18;
+  --color-text-secondary: #5F5A54;    /* 7.5:1 na bg-primary, AAA */
+  --color-text-muted: #6B665E;        /* 5.3:1 na bg-primary, AA */
+  --color-gold-primary: #C6A85A;      /* dekorativní — pozadí, dot, gradient. NIKDY jako text na světlém pozadí. */
+  --color-gold-soft: #E8D7A8;
+  --color-gold-deep: #7B6529;         /* 4.9:1 na bg-primary — text + italic accent + focus ring */
+  --color-gold-on-light: #726025;     /* 5.1:1 na bg-primary — links, labels */
+  --color-button-text: #FAFBF8;       /* světlá výplň pro tmavé buttony */
+  --color-border: #E5DFD6;
+  --color-divider: #EDE7DD;
+  --color-error: #B64536;
+  --color-success: #4F6F5E;
+  --color-hover-bg: #EAE4DA;
+  --color-hover-gold: #B8963A;
+  --color-accent-cool: #8FA3A6;
 }
 ```
 
 ### Palette Rules
-- text-muted ONLY on bg-primary, ONLY 14px+ bold. Never on bg-tertiary.
-- gold-primary NEVER as text on light bg → use gold-on-light #726025 (5.1:1 AA).
-- Footer: light (bg-secondary + border-top). NO dark footer.
-- Ratio: 55% bg-primary, 30% bg-secondary, 5% dark text, 5% gold, 5% muted.
-- NO dark sections, NO dark hero. Everything light and warm.
+- **text-muted (`#6B665E`, kontrast 5.3:1)** — povoleno pro labels/meta 10–13 px ZA PODMÍNKY `letter-spacing ≥ 0.1em` a `font-medium`/uppercase. Pro běžný odstavec použij `text-text-secondary`. Nikdy text-muted na bg-tertiary.
+- **gold-primary** NIKDY jako text na světlém pozadí → text gold použij `gold-deep` (4.9:1) nebo `gold-on-light` (5.1:1).
+- **gold-primary** OK jako pozadí dekorativních prvků (label-dot, gradient overlay, hover bg na buttonu).
+- **Footer** — light (bg-primary + border-top), žádný dark footer.
+- **Ratio** — 70 % bg-primary, 5 % gold accent, 5 % text-muted/labels, 20 % text + photos.
+- **NO dark sections, NO dark hero.** Vše světlé a teplé.
 
-## Typography (LOCKED)
-- **Headings**: Fraunces Sharp (Google Fonts, variable, weight 300, WONK 0, SOFT 0, opsz 144)
-- **Body/UI**: General Sans (Fontshare, self-hosted WOFF2, weight 400 body, 500 buttons/labels)
+## Typography (LOCKED — definované v `src/styles/global.css`)
+- **Headings**: **Playfair Display** (self-hosted variable WOFF2, weight 400 + 400 italic, w-range 400–900). Italic varianta je separátní WOFF2 pro lepší rendering.
+- **Body/UI**: **General Sans** (Fontshare, self-hosted WOFF2, weight 400 body, 500 buttons/labels).
 
-```js
-// tailwind.config.mjs
-fontFamily: {
-  serif: ['"Fraunces"', 'serif'],
-  sans: ['"General Sans"', 'sans-serif'],
-}
-fontSize: {
-  h1: ['3.5rem', { lineHeight: '1.1', letterSpacing: '-0.02em' }],
-  h2: ['2.5rem', { lineHeight: '1.15' }],
-  h3: ['1.75rem', { lineHeight: '1.2' }],
-  h4: ['1.25rem', { lineHeight: '1.3' }],
-  body: ['1rem', { lineHeight: '1.6' }],
-  small: ['0.875rem', { lineHeight: '1.5' }],
-  caption: ['0.75rem', { lineHeight: '1.4' }],
-  button: ['0.8125rem', { lineHeight: '1', letterSpacing: '0.05em' }],
-}
-```
-
-### Heading Style
 ```css
-h1, h2, h3, h4 {
-  font-family: 'Fraunces', serif;
-  font-weight: 300;
-  font-variation-settings: 'WONK' 0, 'SOFT' 0, 'opsz' 144;
+@theme {
+  --font-serif: "Playfair Display", Georgia, serif;
+  --font-sans: "General Sans", system-ui, -apple-system, sans-serif;
 }
+
+/* Heading sizes — fluid clamp() v global.css */
+h1 { font-size: clamp(2.5rem, 5.5vw + 0.5rem, 5.2rem); line-height: 1.05; letter-spacing: -0.02em; }
+h2 { font-size: clamp(1.75rem, 3.5vw + 0.25rem, 3.8rem); line-height: 1.1; letter-spacing: -0.02em; }
+h3 { font-size: clamp(1.35rem, 2vw + 0.25rem, 1.75rem); line-height: 1.2; }
+h4 { font-size: clamp(1.1rem, 1.2vw + 0.25rem, 1.3rem); line-height: 1.3; }
+
+h1, h2, h3, h4 { font-family: var(--font-serif); font-weight: 400; text-wrap: balance; }
+h1 em, h2 em, h3 em { font-style: italic; color: var(--color-gold-deep); }
 ```
 
 ## Buttons
-- Primary: bg-text-primary text-bg-primary, border-radius 2px, uppercase, tracking-wider, text-button, font-medium, px-7 py-3.5
-- Secondary: bg-transparent border border-border text-text-primary, same sizing
-- Hover primary: bg-gold-primary
-- Hover secondary: bg-hover-bg
-- Sharp corners (2px max). NO rounded. NO pill shapes.
+- **Primary**: `bg-text-primary`, color via `--color-button-text`, **pill-shaped** (`rounded-full`), uppercase, `tracking-[0.2em]`, `text-[11px]`, `font-medium`, `h-12 px-6 sm:px-8`. Hover → `bg-gold-deep`.
+- **Secondary**: `border border-border`, `bg-white/80`, `text-text-primary`, pill-shaped, same sizing. Hover → `bg-white`.
+- **Text variant**: text-only, malá šipka SVG, `hover:text-gold-deep`.
+- **Pill-shaped UI** (rounded-full) napříč nav, buttony, kontaktními kartami. **Sharp corners** (`rounded-[2px]`) jen u form fields a fotorámů.
+- Komponenta: `src/components/Button.astro` (variants: `primary | secondary | text`).
 
 ## Voice & Tone
-- First person singular ALWAYS (já, mé, pracuji, vyrobím). NEVER "we" or "our team".
-- Calm confidence. Craftsman who lets work speak.
-- Fraunces italic for emotion, General Sans for facts.
-- No exclamation marks. No generic marketing phrases.
+- První osoba jednotného čísla VŽDY (já, mé, pracuji, vyrobím). NIKDY "my" nebo "náš tým".
+- Klidná jistota. Řemeslník, který nechává práci mluvit.
+- Italic Playfair pro emoce, General Sans pro fakta.
+- Žádné vykřičníky. Žádné generické marketingové fráze.
 
 ## Page Structures
 
@@ -235,75 +219,98 @@ Include these stabilizers:
 - overflow-wrap: anywhere on prose
 - object-fit: cover on card images
 
-## Accessibility
-- All images need alt text (Czech)
-- Form labels linked to inputs
-- Focus states visible (gold focus ring)
-- Skip to content link
-- Semantic HTML (header, main, nav, section, footer)
-- ARIA labels on icon-only buttons
+## Accessibility (WCAG 2.2 AA, kontrolováno auditem)
+- Všechny `<img>` mají český alt text (čistě dekorativní obrázky `alt=""` + `aria-hidden`).
+- Form labels linkované přes `for=`/`id=`.
+- Focus indikátor: `outline: 2px solid var(--color-gold-deep)` (kontrast 4.9:1, splňuje SC 1.4.11).
+- Skip-to-content link na začátku body.
+- Semantic HTML: `<header>`, `<nav>`, `<main id="main">`, `<section>`, `<footer role="contentinfo">`.
+- ARIA labels na icon-only buttonech (`aria-label="Otevřít menu"`, `aria-label="Instagram"`).
+- Touch targets ≥ 44 px (h-11/h-12 napříč navigací, buttony).
+- `prefers-reduced-motion` respektováno globálně + GSAP přes `matchMedia`.
+- `lang="cs"` na `<html>`.
 
-## File Structure
+## File Structure (aktuální)
 ```
 /
 ├── CLAUDE.md
+├── AUDIT-REPORT.md          # technický audit, viz tam
 ├── astro.config.mjs
-├── tailwind.config.mjs
-├── package.json
+├── package.json             # Astro 6 + Tailwind v4 + GSAP + Sharp
+├── tsconfig.json            # extends astro/tsconfigs/strict
 ├── public/
-│   ├── fonts/
-│   │   ├── GeneralSans-Regular.woff2
-│   │   └── GeneralSans-Medium.woff2
-│   ├── images/ (placeholders for now)
-│   ├── favicon.svg
+│   ├── .htaccess            # security headers, cache, redirect, dotfile block
+│   ├── fonts/               # 4× WOFF2 (Playfair Reg+Italic, GeneralSans Reg+Medium)
+│   ├── images/              # ~140 fotek 1x/@2x/-mobile/-mobile@2x WebP
+│   ├── favicon.svg, apple-touch-icon.png, site.webmanifest
+│   ├── llms.txt             # AEO entry point
 │   └── robots.txt
+├── scripts/
+│   └── process-images.mjs   # Sharp pipeline: src → 1x/@2x/-mobile/-mobile@2x WebP
 ├── src/
 │   ├── layouts/
-│   │   └── Layout.astro (base HTML, head, fonts, meta)
+│   │   └── Layout.astro     # head, fonty preload, JSON-LD, Nav, Footer, lazy GSAP
 │   ├── components/
-│   │   ├── Nav.astro
-│   │   ├── Footer.astro
-│   │   ├── Button.astro
-│   │   ├── CTA.astro (pre-footer CTA block)
-│   │   ├── SectionHeader.astro (reusable page header)
-│   │   ├── PortfolioCard.astro
+│   │   ├── Nav.astro                # sticky pill-shaped header
+│   │   ├── Footer.astro             # CTA panel + sitemap + social
+│   │   ├── Button.astro             # variants: primary | secondary | text
+│   │   ├── CTA.astro                # pre-footer CTA block
+│   │   ├── ContactForm.astro        # mailto fallback (TODO migrace na Web3Forms)
 │   │   ├── ProductCard.astro
+│   │   ├── PortfolioListCard.astro  # vertical list card pro homepage/portfolio/tvorba
+│   │   ├── PhotoFrame.astro         # dekorativní vnitřní lemování
+│   │   ├── ResponsivePicture.astro  # <picture> wrapper s mobilní variantou
 │   │   ├── FilterPills.astro
-│   │   ├── FAQ.astro (accordion)
-│   │   ├── Testimonial.astro
-│   │   └── ContactForm.astro
+│   │   └── FAQ.astro                # native <details>/<summary>
 │   ├── pages/
-│   │   ├── index.astro (Homepage)
+│   │   ├── index.astro
 │   │   ├── zakazkova-tvorba.astro
 │   │   ├── skladem.astro
 │   │   ├── portfolio.astro
 │   │   ├── o-dilne.astro
 │   │   ├── kontakt.astro
-│   │   ├── sperky/
-│   │   │   └── [slug].astro (or individual .astro files)
-│   │   └── tvorba/
-│   │       └── [slug].astro
+│   │   ├── ochrana-osobnich-udaju.astro
+│   │   ├── 404.astro
+│   │   ├── sperky/[slug].astro      # detail produktu skladem
+│   │   └── tvorba/[slug].astro      # detail portfolia
 │   ├── data/
-│   │   ├── products.ts (skladem items data)
-│   │   └── portfolio.ts (portfolio items data)
+│   │   ├── products.ts              # skladem items
+│   │   └── portfolio.ts             # portfolio items
+│   ├── scripts/
+│   │   ├── animations.ts            # GSAP scroll triggers (lazy-loaded)
+│   │   ├── nav.ts                   # mobile menu toggle
+│   │   └── filter-pills.ts          # filter behavior
 │   └── styles/
-│       └── global.css (font-face, base resets, GSAP classes)
+│       └── global.css               # @import tailwindcss + @theme + base resets
 ```
 
 ## Deploy
 ```bash
-npm run build    # outputs to dist/
-# Upload dist/ contents via FTP to Hostinger public_html/
+npm run build               # → dist/
+# FTP upload dist/* → Hostinger public_html/
 ```
 
-astro.config.mjs:
+## astro.config.mjs (aktuální)
 ```js
 import { defineConfig } from 'astro/config';
-import tailwind from '@astrojs/tailwind';
+import tailwindcss from '@tailwindcss/vite';
+import sitemap from '@astrojs/sitemap';
 
 export default defineConfig({
-  integrations: [tailwind()],
+  integrations: [sitemap()],
   output: 'static',
-  site: 'https://zlatnikmartin.cz', // update when domain ready
+  site: 'https://zlatnik-martin.cz',
+  build: {
+    inlineStylesheets: 'always',   // CSS inlined do HTML — žádný render-blocking <link>
+  },
+  vite: {
+    plugins: [tailwindcss()],
+  },
 });
 ```
+
+## Hosting (Hostinger)
+- **Server**: LiteSpeed (HTTP/2 + HTTP/3 přes alt-svc)
+- **Domain**: `zlatnik-martin.cz` (produkce), `vilim.sbs` (staging)
+- Headers servíruje `public/.htaccess` — CSP, X-Frame-Options, Permissions-Policy, immutable cache pro `*.css|js|woff2|webp|svg`, `must-revalidate` pro HTML.
+- Hostinger CDN (hcdn) **vypnut** (degradoval HTTP/3 negociaci) — ověřit po každé migraci.
