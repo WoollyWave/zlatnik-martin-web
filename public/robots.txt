@@ -83,3 +83,5 @@ Crawl-delay: 10
 
 # --- Sitemap ----------------------------------------------------------------
 Sitemap: https://www.zlatnik-martin.cz/sitemap.xml
+# EN podmnožina — samostatný monitoring indexace anglické mutace v GSC
+Sitemap: https://www.zlatnik-martin.cz/sitemap-en.xml

@@ -199,6 +199,9 @@ FileETag None
 <Files "sitemap.xml">
   Require all granted
 </Files>
+<Files "sitemap-en.xml">
+  Require all granted
+</Files>
 <Files "sitemap-index.xml">
   Require all granted
 </Files>
