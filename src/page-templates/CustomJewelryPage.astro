@@ -339,18 +339,29 @@ const faqItems = t.faqItems;
  * zmenšují místo přibližování k textu. Střední/dolní pásmo až od xl,
  * středové akcenty jen při ≥1280 px šířky A ≥780 px výšky okna.
  */
+/**
+ * Kompozice podle zlatého řezu (φ = 1.618):
+ * — velikostní žebřík φ: 360 → 222 → 137 px (dominanta / sekundární / akcenty),
+ * — klíčové fotky na zlatých liniích: opál top-38.2 %, citrín ~61.8 %,
+ *   středové akcenty na vertikále 38.2 %,
+ * — dvě protilehlé diagonály: vpravo velká↘střední↘malá dovnitř, vlevo
+ *   střední→malá (zanořená)→velká kotva dole = dynamická rovnováha,
+ *   ne zrcadlová symetrie.
+ * Zanořené pozice (opál, citrín, tricolor) až od 1600 px plátna — pod ním
+ * se vrací k okraji / schovávají, ať drží kolizní matematika.
+ */
 const scatteredGallery = [
-  // Levá strana plátna
-  { pos: 'top-[6%] left-[-2%] w-[min(26%,320px,calc(52vw-400px))]',                      float: 0.3, base: 'zakazkova--proces-03--snubaky-v-ruce-vyroba',      w: 800,  h: 600 },
-  { pos: 'hidden xl:block top-[42%] left-[4%] w-[min(13%,160px,calc(46vw-400px))]',      float: 0.6, base: 'zakazkova--materialy--opal-na-dreve',              w: 800,  h: 600 },
-  { pos: 'hidden xl:block bottom-[7%] left-[7%] w-[min(20%,270px,calc(43vw-400px))]',    float: 0.7, base: 'zakazkova--proces-04--privesek-J-na-krku-predani', w: 800,  h: 600 },
-  // Pravá strana plátna
-  { pos: 'top-[4%] right-[2%] w-[min(23%,300px,calc(48vw-400px))]',                      float: 0.3, base: 'homepage--portfolio-3--snubni-prsteny-zlate',      w: 800,  h: 600 },
-  { pos: 'hidden xl:block top-[40%] right-[1%] w-[min(17%,260px,calc(49vw-400px))]',     float: 0.5, base: 'homepage--portfolio-2--privesek-citrin',           w: 800,  h: 600 },
-  { pos: 'hidden xl:block bottom-[5%] right-[3%] w-[min(15%,210px,calc(47vw-400px))]',   float: 0.8, base: 'zakazkova--parallax--tricolor-prsten-na-kovadline', w: 1920, h: 1080 },
-  // Středové akcenty — jen na velkých oknech (šířka × výška)
-  { pos: 'hidden [@media(min-width:1280px)_and_(min-height:780px)]:block top-[3%] left-[37%] w-[clamp(140px,12vw,200px)]',     float: 0.4, base: 'zakazkova--proces-01--3d-cad-navrh',       w: 800, h: 600 },
-  { pos: 'hidden [@media(min-width:1280px)_and_(min-height:780px)]:block bottom-[3%] right-[28%] w-[clamp(150px,14vw,230px)]', float: 0.6, base: 'zakazkova--proces-02--3d-cad-perspektiva', w: 800, h: 600 },
+  // Levá diagonála: střední nahoře → malý zanořený střed → velká kotva dole
+  { pos: 'top-[8%] left-[0%] min-[1600px]:left-[6%] w-[min(14%,222px,calc(50vw-400px))]',        float: 0.3, base: 'zakazkova--proces-03--snubaky-v-ruce-vyroba',      w: 800,  h: 600 },
+  { pos: 'hidden xl:block top-[38.2%] left-[4%] min-[1600px]:left-[15%] w-[min(8.5%,137px,calc(46vw-400px))]', float: 0.6, base: 'zakazkova--materialy--opal-na-dreve',  w: 800,  h: 600 },
+  { pos: 'hidden xl:block bottom-[6%] left-[3%] w-[min(17.5%,280px,calc(47vw-400px))]',          float: 0.7, base: 'zakazkova--proces-04--privesek-J-na-krku-predani', w: 800,  h: 600 },
+  // Pravá diagonála: dominanta nahoře → střední na zlaté linii → malý akcent dovnitř
+  { pos: 'top-[5%] right-[0%] min-[1600px]:right-[4%] w-[min(22.5%,360px,calc(50vw-400px))]',    float: 0.3, base: 'homepage--portfolio-3--snubni-prsteny-zlate',      w: 800,  h: 600 },
+  { pos: 'hidden xl:block top-[56%] right-[2%] min-[1600px]:right-[13%] w-[min(14%,222px,calc(48vw-400px))]', float: 0.5, base: 'homepage--portfolio-2--privesek-citrin', w: 800, h: 600 },
+  { pos: 'hidden [@media(min-width:1600px)_and_(min-height:780px)]:block bottom-[8%] right-[26%] w-[min(8.5%,137px)]', float: 0.8, base: 'zakazkova--parallax--tricolor-prsten-na-kovadline', w: 1920, h: 1080 },
+  // Středové akcenty na vertikále zlatého řezu — jen na velkých oknech (šířka × výška)
+  { pos: 'hidden [@media(min-width:1280px)_and_(min-height:780px)]:block top-[3%] left-[38.2%] w-[min(9%,145px)]',    float: 0.4, base: 'zakazkova--proces-01--3d-cad-navrh',       w: 800, h: 600 },
+  { pos: 'hidden [@media(min-width:1280px)_and_(min-height:780px)]:block bottom-[4%] right-[36%] w-[min(11%,175px)]', float: 0.6, base: 'zakazkova--proces-02--3d-cad-perspektiva', w: 800, h: 600 },
 ];
 
 const jsonLd = graph(
