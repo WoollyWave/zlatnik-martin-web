@@ -47,7 +47,7 @@ const enUrl = currentLocale === 'en'
   : getAlternateUrl(Astro.url.pathname, 'cs', productSlugMap, portfolioSlugMap);
 ---
 
-<div class={`inline-flex items-center gap-1 text-[11px] tracking-[0.15em] font-sans font-medium uppercase ${className}`} role="group" aria-label="Language selector">
+<div class={`inline-flex items-center gap-1 text-[11px] tracking-[0.15em] font-sans font-medium uppercase ${className}`} role="group" aria-label={currentLocale === 'cs' ? 'Přepínač jazyka' : 'Language selector'}>
   <a
     href={csUrl}
     hreflang="cs"

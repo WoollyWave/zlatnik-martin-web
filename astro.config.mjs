@@ -25,6 +25,11 @@ export default defineConfig({
   build: {
     inlineStylesheets: 'always',
   },
+  // Web nemá markdown obsah — vypnutí Shiki umlčí CSP warning při buildu
+  // (Shiki generuje inline styly nekompatibilní s hash-based CSP).
+  markdown: {
+    syntaxHighlight: false,
+  },
   // Native CSP (Astro 6) — auto-hash všech inline <script>/<style> → žádný
   // 'unsafe-inline'. Emituje se jako <meta http-equiv>. frame-ancestors meta
   // neumí přenést → zůstává v .htaccess (spolu s X-Frame-Options).

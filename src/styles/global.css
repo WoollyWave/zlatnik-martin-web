@@ -46,7 +46,10 @@
 *, *::before, *::after { box-sizing: border-box; }
 img, video, svg { max-width: 100%; height: auto; }
 
-html { scroll-behavior: smooth; scroll-padding-top: 96px; }
+html { scroll-padding-top: 96px; } /* = výška fixed Nav (88px) + 8px vůle */
+@media (prefers-reduced-motion: no-preference) {
+  html { scroll-behavior: smooth; }
+}
 
 body {
   font-family: var(--font-sans);

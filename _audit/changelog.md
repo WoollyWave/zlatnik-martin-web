@@ -61,3 +61,18 @@ Tailwind v4 přes `@tailwindcss/vite` + CSS-first `@theme {}` už projekt měl (
 - **`nav.ts`, `filter-pills.ts`, `web-vitals.ts`** — prověřeny, čisté (focus trap, INP-friendly filter přes CSS třídu, vitals s consent guardem). Bez zásahu.
 - **CS/EN duplicita stránek** — strukturální nález do reportu (řešení = sloučení do `[locale]` dynamických rout, větší zásah vyžadující schválení).
 - **Ověření:** `pnpm typecheck` ✓ 0/0/0, `pnpm build` ✓, vizuální kontrola v prohlížeči ✓.
+
+---
+
+## Krok 4 — Přístupnost (WCAG 2.2 AA)
+
+- **Nav dropdown nedostupný z klávesnice — KRITICKÉ, opraveno** (`Nav.astro`):
+  - Podpoložky „Snubní prsteny na míru" a „Opravy šperků" měly `tabindex="-1"` + wrapper trvalé `aria-hidden="true"` → uživatel klávesnice ani odečítačky se k nim z desktop navigace vůbec nedostal (selhání WCAG 2.1.1).
+  - Oprava: `invisible` + `group-focus-within:visible` pattern (visibility řídí viditelnost pro AT i tab order zároveň), odstraněn tabindex i aria-hidden. Odstraněn `aria-haspopup` — sliboval ARIA menu widget chování, které disclosure pattern nemá.
+  - **Ověřeno v prohlížeči**: focus na rodičovský odkaz → dropdown visible; Tab → podpoložka fokusovatelná; dropdown zůstává otevřený.
+- **`scroll-behavior: smooth` podmíněn `prefers-reduced-motion: no-preference`** (global.css) — smooth scroll je animace, vestibulárně citliví uživatelé dostanou okamžitý skok.
+- **FAQ accordion** — dekorativní plus ikona dostala `aria-hidden="true"`; native `<details>/<summary>` keyboard ovládání prověřeno (funguje out-of-box).
+- **LangSwitcher** — `aria-label` lokalizován („Přepínač jazyka" na CS stránkách, anglicky byl natvrdo).
+- **Prověřeno bez nálezu:** heading hierarchie (unikátní h1, logické h2→h3), alt texty (dekorativní `alt=""` + `aria-hidden` správně), focus indikátory (gold-deep 4.9:1, na tmavé gold-soft), touch targets ≥44px, focus trap mobilního menu (inert pozadí), kontrast palety (řešeno předchozím auditem, tokeny dodržené), formulářové labely (for/id), lightbox (native `<dialog>` = focus trap + Esc zdarma).
+- **Navíc:** vypnut Shiki highlighter (`markdown.syntaxHighlight: false`) — web nemá markdown obsah a Shiki inline styly kolidovaly s hash-based CSP (build warning).
+- **Ověření:** `pnpm build` ✓ bez warningů.
