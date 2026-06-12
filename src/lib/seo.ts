@@ -363,6 +363,33 @@ export function productSchema(product: Product, locale: ProductLocale = 'cs') {
     };
   }
 
+  // Recenze — POUZE reálná zákaznická hodnocení (viz ProductReview v products.ts).
+  // Stejná data se renderují viditelně na stránce — Google vyžaduje parity
+  // markup ↔ obsah. S vyplněnými recenzemi zmizí GSC doporučení
+  // „Missing field review / aggregateRating".
+  if (product.reviews && product.reviews.length > 0) {
+    const ratings = product.reviews.map((r) => r.rating);
+    schema.review = product.reviews.map((r) => ({
+      '@type': 'Review',
+      author: { '@type': 'Person', name: r.author },
+      datePublished: r.date,
+      reviewBody: isEn ? r.textEn || r.text : r.text,
+      reviewRating: {
+        '@type': 'Rating',
+        ratingValue: r.rating,
+        bestRating: 5,
+        worstRating: 1,
+      },
+    }));
+    schema.aggregateRating = {
+      '@type': 'AggregateRating',
+      ratingValue: Number((ratings.reduce((a, b) => a + b, 0) / ratings.length).toFixed(1)),
+      reviewCount: ratings.length,
+      bestRating: 5,
+      worstRating: 1,
+    };
+  }
+
   if (additionalProperty.length > 0) {
     schema.additionalProperty = additionalProperty;
   }

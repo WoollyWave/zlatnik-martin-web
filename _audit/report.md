@@ -68,6 +68,17 @@ Ověřeno proti ostrému provozu: schránka existuje (SMTP RCPT `250 Ok`, přič
 
 ---
 
+## 2b. GSC nálezy (12. 6. 2026) — recenze produktů a indexace EN
+
+**„Chybí pole review / aggregateRating" (nekritické, u všech produktů):**
+- Jediná legitimní cesta, jak doporučení odstranit, jsou **skutečné zákaznické recenze** — smyšlená hodnocení porušují pravidla Google pro strukturovaná data (spammy markup → riziko ruční penalizace, která by sebrala všechny rich results webu). Proto jsem žádná data nevymýšlel.
+- **Infrastruktura je hotová a otestovaná** (commit níže): pole `reviews` v `products.ts` (author, rating 1–5, text, textEn?, date) → viditelná sekce „Hodnocení zákazníků" na detailu produktu (CS i EN) → `review[]` + `aggregateRating` v Product JSON-LD. Parita markup ↔ viditelný obsah dle pravidel Google. Validováno testovacími daty (pak odstraněna).
+- **Co dodat od Martina:** ke každému prodanému kusu reálné hodnocení zákazníka — jméno (stačí „Jana K."), počet hvězd, 1–2 věty, měsíc/rok. Vyplněním v `products.ts` warning pro daný produkt zmizí. Pozn.: dokud recenze nejsou, web je z pohledu GSC stále „platná položka vhodná pro rozšířené výsledky" — žluté položky jsou doporučení, ne chyby.
+
+**„Objeveno – momentálně neindexováno" (29 EN stránek):**
+- Diagnóza produkce: technicky čisté (canonical self ✓, hreflang ✓, sitemap s alternates ✓, žádný noindex). Jde o klasické odložení crawlu u ~3 týdny staré jazykové sekce malého webu. Přispěvatelé, které větev už opravuje: skoro-duplicitní brand-first EN titles (všechny „… | Martin Ševr — Goldsmith workshop in Prague" → nově unikátní keyword-first), hreflang chyba CS-only stránek (EN alternate ukazoval na homepage), slabé interní prolinkování EN (nově EN nav dropdown + /en/wedding-rings/).
+- **Postup po deployi (ručně v GSC):** ① Sitemaps → znovu odeslat sitemap.xml; ② URL Inspection na /en/, /en/in-stock/, /en/custom-jewelry/, /en/wedding-rings/ a 2–3 produkty → „Požádat o indexaci" (limit ~10/den, klíčové stránky stačí); ③ nechat běžící validaci doběhnout. Očekávání: dny až ~3 týdny. Pokud do měsíce nic, dalším krokem je obsahové odlišení EN produktových popisů (nyní krátké překlady).
+
 ## 3. Finální build
 
 ```

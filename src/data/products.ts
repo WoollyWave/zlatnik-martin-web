@@ -1,3 +1,22 @@
+/**
+ * Zákaznická recenze produktu. POUZE skutečná hodnocení od reálných zákazníků —
+ * smyšlené recenze porušují pravidla Google pro strukturovaná data (riziko ruční
+ * penalizace celého webu). Recenze se zobrazuje viditelně na stránce produktu
+ * A zároveň jde do Product JSON-LD (review + aggregateRating).
+ */
+export interface ProductReview {
+  /** Jméno zákazníka (může být jen křestní + iniciála). */
+  author: string;
+  /** Hodnocení 1–5. */
+  rating: 1 | 2 | 3 | 4 | 5;
+  /** Text recenze česky. */
+  text: string;
+  /** Volitelný anglický překlad pro EN stránku (fallback na CS). */
+  textEn?: string;
+  /** Datum ve formátu YYYY-MM-DD. */
+  date: string;
+}
+
 export interface Product {
   slug: string;
   title: string;
@@ -17,6 +36,9 @@ export interface Product {
   stockBadge?: 'jediny-originalni-kus' | null;
   /** true = vyprodáno → Product schema availability SoldOut (stránka zůstává kvůli SEO). */
   sold?: boolean;
+  /** Skutečné zákaznické recenze — viz ProductReview. Vyplněním zmizí GSC
+   *  doporučení „Chybí pole review / aggregateRating" pro daný produkt. */
+  reviews?: ProductReview[];
   notes?: string[];
 
   // --- English variants (used by /en/jewelry/[slug] pages) ---

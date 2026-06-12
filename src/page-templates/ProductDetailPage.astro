@@ -78,6 +78,8 @@ const t = isEn
       goldLead: 'Made to order — within 3 weeks',
       weightLabel: 'Weight:',
       goldPriceNote: 'The gold price is indicative, valid as of 12 May 2026. I confirm the final price on the day of the order.',
+      reviewsLabel: 'Customer reviews',
+      reviewsOutOf: 'out of 5',
       ctaHref: '/en/contact/',
       ctaPrimary: 'I want this piece',
       ctaWhatsapp: 'Message on WhatsApp',
@@ -107,6 +109,8 @@ const t = isEn
       goldLead: 'Na zakázku — do 3 týdnů',
       weightLabel: 'Váha:',
       goldPriceNote: 'Cena zlaté varianty je orientační, platná k 12. 5. 2026. Finální cenu stanovuji v den objednávky.',
+      reviewsLabel: 'Hodnocení zákazníků',
+      reviewsOutOf: 'z 5',
       ctaHref: '/kontakt',
       ctaPrimary: 'Chci tento šperk',
       ctaWhatsapp: 'Napsat na WhatsApp',
@@ -121,6 +125,13 @@ const t = isEn
     };
 
 const availabilityLabel = isOriginal ? t.availabilityOriginal : t.availabilityStock;
+
+// Recenze — zobrazují se viditelně A jdou do JSON-LD (parity vyžadovaná Googlem).
+const reviews = product.reviews ?? [];
+const avgRating = reviews.length
+  ? Number((reviews.reduce((a, r) => a + r.rating, 0) / reviews.length).toFixed(1))
+  : null;
+const reviewDateFmt = new Intl.DateTimeFormat(isEn ? 'en-GB' : 'cs-CZ', { year: 'numeric', month: 'long' });
 ---
 
 <Layout
@@ -217,6 +228,33 @@ const availabilityLabel = isOriginal ? t.availabilityOriginal : t.availabilitySt
                 <li class="body-md text-text-secondary flex gap-2"><span class="text-gold-deep">•</span><span>{note}</span></li>
               ))}
             </ul>
+          )}
+
+          <!-- Recenze — render jen s reálnými daty; stejná data jdou do JSON-LD -->
+          {reviews.length > 0 && (
+            <div class="mt-6 border-t border-border pt-6">
+              <div class="flex items-center justify-between gap-4">
+                <span class="text-[11px] uppercase tracking-[0.15em] font-medium text-text-muted font-sans">{t.reviewsLabel}</span>
+                <span class="inline-flex items-center gap-2 font-sans text-[13px] text-text-primary">
+                  <span class="text-gold-deep" aria-hidden="true">★</span>
+                  <strong class="font-medium">{avgRating}</strong>
+                  <span class="text-text-muted">{t.reviewsOutOf} · {reviews.length}×</span>
+                </span>
+              </div>
+              <ul class="mt-4 space-y-4">
+                {reviews.map((r) => (
+                  <li class="border border-border bg-bg-primary/60 p-4">
+                    <div class="flex items-center justify-between gap-3">
+                      <span class="font-sans text-[13px] font-medium text-text-primary">{r.author}</span>
+                      <span class="font-sans text-[12px] text-gold-deep" aria-hidden="true">{'★'.repeat(r.rating)}<span class="text-border">{'★'.repeat(5 - r.rating)}</span></span>
+                      <span class="sr-only">{r.rating} {t.reviewsOutOf}</span>
+                    </div>
+                    <p class="mt-2 body-md text-text-secondary leading-relaxed">{isEn ? r.textEn || r.text : r.text}</p>
+                    <p class="mt-2 text-[11px] text-text-muted font-sans">{reviewDateFmt.format(new Date(r.date))}</p>
+                  </li>
+                ))}
+              </ul>
+            </div>
           )}
 
           <!-- CTA -->
