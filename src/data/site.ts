@@ -5,7 +5,7 @@
 export const SITE = {
   name: 'Martin Ševr — Zlatnická dílna',
   shortName: 'Martin Ševr',
-  description: 'Ruční výroba šperků ze zlata, stříbra a přírodních kamenů. Každý kus originál.',
+  description: 'Zlatnictví a zlatnická dílna v Praze 5 na Smíchově. Ruční výroba šperků ze zlata, stříbra a přírodních kamenů na zakázku. Každý kus originál.',
   url: 'https://www.zlatnik-martin.cz',
 
   phone: '+420774598181',

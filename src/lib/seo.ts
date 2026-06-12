@@ -84,7 +84,14 @@ export function jewelryStoreSchema() {
     foundingDate: '2004',
     taxID: SITE.ico,
     vatID: 'CZ' + SITE.ico,
-    areaServed: { '@type': 'Country', name: 'Česká republika' },
+    // GEO: město + čtvrť explicitně — dílna sídlí na Smíchově (Praha 5),
+    // lokální dotazy „zlatnictví praha 5 / smíchov" jsou primární akviziční kanál.
+    areaServed: [
+      { '@type': 'City', name: 'Praha' },
+      { '@type': 'Place', name: 'Smíchov, Praha 5' },
+      { '@type': 'Country', name: 'Česká republika' },
+    ],
+    keywords: 'zlatnictví Praha 5, zlatník Smíchov, šperky na zakázku Praha, snubní prsteny na míru, opravy šperků Praha, prsten s vltavínem',
     // sameAs propojuje s autoritativními profily — Knowledge Graph entity confidence boost.
     sameAs: [
       SITE.social.instagram,
