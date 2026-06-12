@@ -22,8 +22,10 @@
   --color-accent-cool: #8FA3A6;
   --color-hover-bg: #EAE4DA;
   --color-hover-gold: #B8963A;
-  --font-serif: "Playfair Display", Georgia, serif;
-  --font-sans: "General Sans", system-ui, -apple-system, sans-serif;
+  /* Font stacky definuje Astro Fonts API (astro.config.mjs) vč. metric-compatible
+     fallbacků — sem jen mapujeme jeho proměnné na Tailwind tokeny. */
+  --font-serif: var(--font-playfair);
+  --font-sans: var(--font-general-sans);
   --shadow-soft: 0 2px 8px rgba(0, 0, 0, 0.06);
   --shadow-medium: 0 8px 24px rgba(0, 0, 0, 0.08);
   --shadow-float: 0 10px 30px rgba(30, 27, 24, 0.06);    /* Nav floating bar, panely */
@@ -39,31 +41,6 @@
      Visible top = (this) - 88px ≈ hero-bot → symetrické */
   --space-hero-top:   clamp(9.5rem, 8rem + 4vw, 11.5rem);  /* 152 → 184px (visible 64 → 96px) */
   --space-hero-bot:   clamp(4rem, 8vw, 6rem);              /* 64 → 96px */
-}
-
-@font-face {
-  font-family: "General Sans";
-  src: url("/fonts/GeneralSans-Regular.woff2") format("woff2");
-  font-weight: 400; font-style: normal; font-display: swap;
-}
-@font-face {
-  font-family: "General Sans";
-  src: url("/fonts/GeneralSans-Medium.woff2") format("woff2");
-  font-weight: 500; font-style: normal; font-display: swap;
-}
-@font-face {
-  font-family: "Playfair Display";
-  src: url("/fonts/PlayfairDisplay-Regular.woff2") format("woff2");
-  font-weight: 400 900;
-  font-style: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: "Playfair Display";
-  src: url("/fonts/PlayfairDisplay-Italic.woff2") format("woff2");
-  font-weight: 400 900;
-  font-style: italic;
-  font-display: swap;
 }
 
 *, *::before, *::after { box-sizing: border-box; }

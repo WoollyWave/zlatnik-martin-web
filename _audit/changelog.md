@@ -16,3 +16,19 @@ Průběžný záznam změn. Každý krok = samostatný commit. Formát: co / kde
 - **Ověření:** `pnpm build` ✓ — 57 stránek bez chyb.
 
 Tailwind v4 přes `@tailwindcss/vite` + CSS-first `@theme {}` už projekt měl (žádný `tailwind.config.js`, žádný `@astrojs/tailwind`) — migrace nebyla potřeba.
+
+---
+
+## Krok 1 — Syntaxe a sémantika
+
+- **Migrace na Astro 6 Fonts API** (`astro.config.mjs`, `src/layouts/Layout.astro`, `src/styles/global.css`):
+  - Fonty přesunuty `public/fonts/` → `src/assets/fonts/` (Astro je teď hashuje a self-hostuje do `_astro/fonts/`).
+  - 4 ruční `@font-face` bloky v global.css smazány; 4 ruční `<link rel="preload">` v Layoutu nahrazeny `<Font cssVariable preload />`.
+  - Astro generuje metric-compatible fallback fonty automaticky (méně CLS při swapu než ruční `Georgia`/`system-ui` fallback).
+  - Tailwind tokeny `--font-serif`/`--font-sans` v `@theme` teď mapují na proměnné z Fonts API.
+  - `.htaccess` cache pravidla fungují dál (matchují příponu `.woff2`, ne cestu).
+- **Smazán `<meta name="generator">`** (Layout.astro) — prozrazoval verzi Astra (security through obscurity, ale zbytečný signál pro automatizované skenery).
+- **Přidán `@types/node`** (dev) — `astro check` padal na `process.env` v astro.config.mjs. Typecheck teď 0 errors / 0 warnings.
+- **Raw `<img>` → Astro `<Image>` NEPROVEDENO — záměrně.** Všechny obrázky žijí v `public/` a prochází vlastní Sharp pipeline (`scripts/process-images.mjs`: 1x/@2x + mobile varianty WebP). Astro `<Image>` optimalizuje jen importy ze `src/` — u `public/` cest by nepřinesl nic a migrace ~300 souborů by jen riskovala regrese. Všechny `<img>` mají width/height/loading/decoding/srcset. Detail v reportu.
+- **Lightbox `alt=""`** (tvorba/[slug], en/work/[slug]) — prověřeno, NENÍ chyba: JS nastavuje `alt` z `data-alt` při každém renderu, prázdná hodnota je jen initial state zavřeného dialogu.
+- **Ověření:** `pnpm build` ✓ 57 stránek, `pnpm typecheck` ✓ 0/0/0.

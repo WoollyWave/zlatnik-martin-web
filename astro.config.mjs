@@ -1,5 +1,5 @@
 // @ts-check
-import { defineConfig } from 'astro/config';
+import { defineConfig, fontProviders } from 'astro/config';
 import tailwindcss from '@tailwindcss/vite';
 
 // Sitemap je řešen vlastním endpointem src/pages/sitemap.xml.ts
@@ -25,6 +25,35 @@ export default defineConfig({
   build: {
     inlineStylesheets: 'always',
   },
+  // Astro 6 Fonts API — self-hosting, automatické metric-compatible fallbacky,
+  // preload přes <Font /> v Layoutu. Nahrazuje ruční @font-face + <link rel="preload">.
+  fonts: [
+    {
+      provider: fontProviders.local(),
+      name: 'General Sans',
+      cssVariable: '--font-general-sans',
+      fallbacks: ['system-ui', 'sans-serif'],
+      options: {
+        variants: [
+          { src: ['./src/assets/fonts/GeneralSans-Regular.woff2'], weight: 400, style: 'normal' },
+          { src: ['./src/assets/fonts/GeneralSans-Medium.woff2'], weight: 500, style: 'normal' },
+        ],
+      },
+    },
+    {
+      provider: fontProviders.local(),
+      name: 'Playfair Display',
+      cssVariable: '--font-playfair',
+      fallbacks: ['Georgia', 'serif'],
+      options: {
+        variants: [
+          // Variable font — range 400–900 v jednom souboru, italic jako separátní soubor.
+          { src: ['./src/assets/fonts/PlayfairDisplay-Regular.woff2'], weight: '400 900', style: 'normal' },
+          { src: ['./src/assets/fonts/PlayfairDisplay-Italic.woff2'], weight: '400 900', style: 'italic' },
+        ],
+      },
+    },
+  ],
   vite: {
     plugins: [tailwindcss()],
   },
