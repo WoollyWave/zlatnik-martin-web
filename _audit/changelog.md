@@ -76,3 +76,18 @@ Tailwind v4 přes `@tailwindcss/vite` + CSS-first `@theme {}` už projekt měl (
 - **Prověřeno bez nálezu:** heading hierarchie (unikátní h1, logické h2→h3), alt texty (dekorativní `alt=""` + `aria-hidden` správně), focus indikátory (gold-deep 4.9:1, na tmavé gold-soft), touch targets ≥44px, focus trap mobilního menu (inert pozadí), kontrast palety (řešeno předchozím auditem, tokeny dodržené), formulářové labely (for/id), lightbox (native `<dialog>` = focus trap + Esc zdarma).
 - **Navíc:** vypnut Shiki highlighter (`markdown.syntaxHighlight: false`) — web nemá markdown obsah a Shiki inline styly kolidovaly s hash-based CSP (build warning).
 - **Ověření:** `pnpm build` ✓ bez warningů.
+
+---
+
+## Krok 5 — Výkon a stabilita layoutu (CWV)
+
+- **`min-h-screen` → `min-h-dvh`** — 8 výskytů v 6 souborech (hero sekce: index, zakazkova-tvorba, snubni-prsteny, opravy, en/index, en/custom-jewelry). `100vh` na mobilech ignoruje dynamický browser chrome → přetečení/CLS; `dvh` sleduje reálnou výšku viewportu.
+- **Odstraněn globální body fade-in** (global.css `.js body{opacity:0}` + 2 skripty v Layout.astro):
+  - Stránka se vykreslovala s `opacity: 0` až do DOMContentLoaded + 0.8s transition — **přímá penalizace LCP** (browser nemůže zaznamenat paint neviditelného obsahu) a závislost viditelnosti obsahu na JS.
+  - FOUC, proti kterému to mělo chránit, nehrozí — CSS je inlinované (`inlineStylesheets: 'always'`), render-blocking stylesheet neexistuje.
+  - Vstupní dojem nadále obstarávají GSAP entrance animace per-element (zachovány beze změny).
+- **Smazán `hero-martin3.webp` (403 kB)** — nikde nereferencovaný mrtvý asset.
+- **Hero váhy prověřeny:** všechny 1x heroes 45–92 kB ✓ (limit 200 kB). `@2x` retina varianty 110–276 kB ponechány — rekomprese q70 ušetřila jen ~4 % za cenu dvojité ztrátové komprese (nevyplatí se); efektivní LCP payload pro běžné displeje je 1x.
+- **Layout stabilizéry doplněny** (global.css): `.flex-child{min-width:0}`, `.card img{object-fit:cover}`. Už existovalo: box-sizing, img max-width/height auto, overflow-wrap na body.
+- **Prověřeno bez nálezu:** width/height na všech obrázcích, `loading="eager" fetchpriority="high"` na hero / `lazy` mimo viewport, LCP preload s imagesrcset, font-weight všude číslem, žádné scroll-driven CSS animace (GSAP za matchMedia), GSAP+web-vitals lazy po idle, GA preconnect.
+- **Ověření:** `pnpm build` ✓, vizuální kontrola homepage v prohlížeči ✓.

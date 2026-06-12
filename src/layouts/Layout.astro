@@ -92,8 +92,6 @@ const ogLocale = t('locale.ogLocale');
 <!doctype html>
 <html lang={htmlLang}>
   <head>
-    <script>document.documentElement.classList.add('js');</script>
-    <noscript><style>body { opacity: 1 !important; }</style></noscript>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
@@ -248,14 +246,6 @@ const ogLocale = t('locale.ogLocale');
         requestIdleCallback(loadVitals, { timeout: 4000 });
       } else {
         setTimeout(loadVitals, 1500);
-      }
-    </script>
-    <script>
-      // Show page as soon as DOM is ready — don't wait for images
-      if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', () => document.body.classList.add('is-loaded'));
-      } else {
-        document.body.classList.add('is-loaded');
       }
     </script>
   </body>
