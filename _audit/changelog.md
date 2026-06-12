@@ -150,3 +150,13 @@ Tailwind v4 přes `@tailwindcss/vite` + CSS-first `@theme {}` už projekt měl (
 - **Nová stránka `/en/wedding-rings/`** — překlad schválené CS copy (voice & tone: 1. osoba, bez vykřičníků). Zapojeno: `PATH_MAP.weddingRings`, hreflang pár, sitemap alternates, EN nav dropdown („Wedding rings"), `weddingRingsServiceSchema(locale)`, OG obrázek sdílený. Build: 58 stránek.
 - **Oprava pre-existující hreflang chyby:** CS-only stránky (opravy) deklarovaly `hreflang="en"` na homepage — mismatched hreflang. Nově `getAlternatePathStrict()`: hreflang se emituje jen při reálném ekvivalentu; opravy teď hreflang nemají vůbec (správně).
 - **FAQ opravy (R2)**: zjištěno, že stránka už kompletní FAQ s cenami + FAQPage schema má (návrh v reportu vycházel z nepřesného průzkumu). Ceny (400–900 Kč zmenšení atd.) jdou na web prvním deployem — potvrdit s Martinem.
+
+---
+
+## Krok 11 — Responzivní oprava hero „Zakázková tvorba" (CS i EN)
+
+- **Problém:** scattered fotky byly pozicované procenty viewportu nezávisle na textu → ve středních šířkách (~900–1300 px) a na nižších oknech kolidovaly s nadpisem, podtitulem i tlačítky.
+- **Řešení — bezpečné koridory od středu:** text má `max-w-3xl` (768 px) centrovaný; boční fotky se nově pozicují `calc(50% ± ≥390px)` → matematicky nemohou kolidovat na žádné šířce. Šířky fotek přes `clamp()` (plynulé škálování místo skoků).
+- **Breakpoint scattered vrstvy md→lg** — pod 1024 px koridory nemají prostor; tablet (768–1023) nově dostává mobilní layout s hero fotkou (vizuálně čistší než ořezané proužky).
+- **Adaptivní hustota:** lg = 2 rohové fotky; xl = +4 boční; středové akcenty (nad/pod textem) jen při `min-width:1280px AND min-height:780px` (arbitrary media variant) — na nízkých oknech by narazily do obsahu vertikálně.
+- **Ověřeno měřením kolizí v DOM + screenshoty:** 375×812, 768×1024, 1024×768, 1280×700, 1440×900, 1920×1080 — 0 kolizí, 0 horizontal overflow. Sdílená šablona = oprava platí i pro /en/custom-jewelry/.
