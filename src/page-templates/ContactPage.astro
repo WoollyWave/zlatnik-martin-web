@@ -1,0 +1,220 @@
+---
+/**
+ * Sdílená šablona stránky Kontakt (CS /kontakt/ + EN /en/contact/).
+ * Route soubory v src/pages/ jsou tenké wrappery — veškerá struktura žije tady,
+ * texty v lokálním slovníku `t`. Vzor pro ostatní page-templates.
+ */
+import Layout from '../layouts/Layout.astro';
+import ContactForm from '../components/ContactForm.astro';
+import { SITE } from '../data/site';
+import { graph, contactPageSchema, breadcrumbSchema } from '../lib/seo';
+import type { Locale } from '../i18n';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const isEn = locale === 'en';
+
+const t = isEn
+  ? {
+      title: 'Contact | Martin Ševr — Goldsmith workshop in Prague',
+      description: "Get in touch directly. Phone, WhatsApp, email. I'll reply within 24 hours. Pod Kesnerkou 46, Prague 5.",
+      breadcrumb: [
+        { name: 'Home', url: '/en/' },
+        { name: 'Contact', url: '/en/contact/' },
+      ],
+      phoneLabel: 'Phone',
+      phoneDesc: `Mon–Fri ${SITE.hours.weekdays}`,
+      whatsappValue: 'Send a message',
+      whatsappDesc: "I'll reply within 24 hours",
+      emailLabel: 'Email',
+      emailDesc: 'For longer enquiries',
+      heroLabel: 'Contact',
+      heroHeading: "Write, call, drop by. I'll get back",
+      heroHeadingEm: 'within 24 hours',
+      formLabel: 'Write to me',
+      formHeading: 'Write to me',
+      ringAlt: 'Handmade ring — Martin Ševr goldsmith workshop',
+      mapLabel: 'Where to find me',
+      addressName: 'Martin Ševr — Goldsmith workshop',
+      addressCity: 'Prague 5, 150 00',
+      hoursWeekdaysLabel: 'Mon–Fri',
+      hoursWeekendsLabel: 'Weekends',
+      hoursWeekendsValue: 'by appointment',
+      icoLabel: 'Reg. no.:',
+      mapTitle: 'Map — Pod Kesnerkou 46, Prague 5',
+      mapAria: 'Map of the workshop location — Pod Kesnerkou 46, Prague 5',
+      navigate: 'Navigate',
+    }
+  : {
+      title: 'Kontakt na zlatnickou dílnu | Pod Kesnerkou 46, Praha 5',
+      description: 'Zlatnická dílna Pod Kesnerkou 46, Praha 5. Telefon +420 774 598 181, WhatsApp, e-mail. Po–Pá 9:00–17:00. Odpovím do 24 hodin.',
+      breadcrumb: [
+        { name: 'Domů', url: '/' },
+        { name: 'Kontakt', url: '/kontakt/' },
+      ],
+      phoneLabel: 'Telefon',
+      phoneDesc: `Po–Pá ${SITE.hours.weekdays}`,
+      whatsappValue: 'Napsat zprávu',
+      whatsappDesc: 'Odpovím do 24 hodin',
+      emailLabel: 'E-mail',
+      emailDesc: 'Pro obsáhlejší dotazy',
+      heroLabel: 'Kontakt',
+      heroHeading: 'Napište, zavolejte, stavte se. Ozvu se',
+      heroHeadingEm: 'do 24 hodin',
+      formLabel: 'Napište mi',
+      formHeading: 'Napište mi',
+      ringAlt: 'Ručně vyrobený prsten — zlatnická dílna Martin Ševr',
+      mapLabel: 'Kde mě najdete',
+      addressName: 'Martin Ševr — Zlatnická dílna',
+      addressCity: 'Praha 5, 150 00',
+      hoursWeekdaysLabel: 'Po–Pá',
+      hoursWeekendsLabel: 'Víkendy',
+      hoursWeekendsValue: 'po domluvě',
+      icoLabel: 'IČO:',
+      mapTitle: 'Mapa — Pod Kesnerkou 46, Praha 5',
+      mapAria: 'Mapa polohy dílny — Pod Kesnerkou 46, Praha 5',
+      navigate: 'Navigovat',
+    };
+
+const jsonLd = graph(contactPageSchema(), breadcrumbSchema(t.breadcrumb));
+
+const contactMethods = [
+  {
+    label: t.phoneLabel,
+    value: SITE.phoneDisplay,
+    href: SITE.phoneHref,
+    description: t.phoneDesc,
+  },
+  {
+    label: 'WhatsApp',
+    value: t.whatsappValue,
+    href: SITE.whatsapp,
+    description: t.whatsappDesc,
+  },
+  {
+    label: t.emailLabel,
+    value: SITE.email,
+    href: SITE.emailHref,
+    description: t.emailDesc,
+  },
+];
+---
+
+<Layout
+  locale={locale}
+  title={t.title}
+  ogImage="/images/og/og-kontakt.jpg"
+  description={t.description}
+  jsonLd={jsonLd}
+  navOverlay
+>
+
+  <!-- ====== HERO ====== -->
+  <section class="relative bg-bg-primary border-b border-border section-hero overflow-hidden">
+    <div class="radial-overlay"></div>
+    <div class="relative max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-14">
+      <div class="max-w-3xl" data-anim="up">
+        <span class="label-dot">{t.heroLabel}</span>
+        <h1 class="mt-6">
+          {t.heroHeading} <em>{t.heroHeadingEm}</em>.
+        </h1>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== CONTACT METHODS — 3 cards ====== -->
+  <section class="relative bg-bg-primary border-b border-border section-sm">
+    <div class="max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-14">
+      <div class="grid md:grid-cols-3 gap-6" data-anim="stagger">
+        {contactMethods.map((method) => (
+          <a
+            data-anim-child
+            href={method.href}
+            target={method.label === 'WhatsApp' ? '_blank' : undefined}
+            rel={method.label === 'WhatsApp' ? 'noopener noreferrer' : undefined}
+            class="block border border-border p-6 text-center hover:bg-hover-bg transition-colors duration-200"
+          >
+            <p class="font-sans text-[11px] font-medium uppercase tracking-[0.15em] text-text-muted mb-3">{method.label}</p>
+            <p class="body-lg text-text-primary font-medium">{method.value}</p>
+            <p class="body-md text-text-muted mt-2">{method.description}</p>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== FORM + PHOTO ====== -->
+  <section class="relative bg-bg-primary section-md overflow-hidden">
+    <div class="radial-overlay"></div>
+    <div class="relative max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-14">
+      <div class="grid lg:grid-cols-2 gap-12 lg:gap-20">
+        <div data-anim="up">
+          <span class="label-dot">{t.formLabel}</span>
+          <h2 class="mt-5 mb-8">{t.formHeading}</h2>
+          <ContactForm locale={locale} />
+        </div>
+        <div class="flex items-center justify-center order-first lg:order-none">
+          <img
+            src="/images/kontakt--formular-foto--prsten.webp"
+            width="800" height="1067"
+            alt={t.ringAlt}
+            loading="lazy"
+            decoding="async"
+            data-anim="ring-reveal"
+            class="w-full max-w-[220px] sm:max-w-xs lg:max-w-md h-auto object-contain will-change-transform"
+          />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== MAP ====== -->
+  <section class="bg-bg-primary border-b border-border section-sm">
+    <div class="max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-14" data-anim="up">
+      <div class="grid lg:grid-cols-[0.34fr_1fr] gap-10 lg:gap-16">
+        <!-- Address -->
+        <div>
+          <span class="label-dot">{t.mapLabel}</span>
+          <address class="not-italic body-md text-text-secondary leading-relaxed mt-5">
+            <p class="font-medium text-text-primary">{t.addressName}</p>
+            <p class="mt-2">{SITE.address.street}</p>
+            <p>{t.addressCity}</p>
+            <p class="mt-4">
+              <span class="font-medium text-text-primary">{t.hoursWeekdaysLabel}</span> {SITE.hours.weekdays}
+            </p>
+            <p>
+              <span class="font-medium text-text-primary">{t.hoursWeekendsLabel}</span> {t.hoursWeekendsValue}
+            </p>
+            <p class="mt-4 body-md text-text-muted">{t.icoLabel} {SITE.ico}</p>
+          </address>
+        </div>
+        <!-- Google Maps embed -->
+        <div>
+          <div class="relative w-full aspect-video overflow-hidden border border-border">
+            <iframe
+              src="https://maps.google.com/maps?q=Pod+Kesnerkou+46,+Praha+5,+150+00&z=16&output=embed"
+              class="absolute inset-0 w-full h-full border-0"
+              loading="lazy"
+              referrerpolicy="no-referrer"
+              sandbox="allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"
+              title={t.mapTitle}
+              aria-label={t.mapAria}
+            ></iframe>
+          </div>
+          <a
+            href="https://www.google.com/maps/dir/?api=1&destination=Pod+Kesnerkou+46,+Praha+5,+150+00"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex items-center gap-2 mt-4 text-[clamp(0.6875rem,0.6rem+0.15vw,0.8125rem)] text-text-secondary uppercase tracking-[0.2em] font-sans font-medium hover:text-gold-deep transition-colors duration-300"
+          >
+            {t.navigate}
+            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25" /></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</Layout>
