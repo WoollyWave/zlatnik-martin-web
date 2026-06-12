@@ -1,5 +1,6 @@
 ---
 import Button from './Button.astro';
+import { SITE } from '../data/site';
 
 interface Props {
   /** Renderuje se přes `set:html` — smí obsahovat pouze důvěryhodný statický HTML (např. `<br>`, `<em>`). NIKDY sem neposílat user input. */
@@ -13,13 +14,13 @@ const {
 } = Astro.props;
 ---
 
-<div class="border border-border bg-[rgba(250,251,248,0.6)] backdrop-blur-sm px-6 sm:px-8 lg:px-12 py-10 sm:py-12 lg:py-16" data-anim="up">
+<div class="border border-border bg-button-text/60 backdrop-blur-sm px-6 sm:px-8 lg:px-12 py-10 sm:py-12 lg:py-16" data-anim="up">
   <div>
     <h2 set:html={heading} />
     <p class="mt-4 text-text-secondary body-lg max-w-xl">{subheading}</p>
     <div class="mt-8 sm:mt-12 flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
-      <Button href="tel:+420774598181" variant="primary">Zavolat</Button>
-      <Button href="https://wa.me/420774598181" variant="secondary">Napsat na WhatsApp</Button>
+      <Button href={SITE.phoneHref} variant="primary">Zavolat</Button>
+      <Button href={SITE.whatsapp} variant="secondary">Napsat na WhatsApp</Button>
     </div>
   </div>
 </div>

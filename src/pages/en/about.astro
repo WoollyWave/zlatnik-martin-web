@@ -1,0 +1,211 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import PhotoFrame from '../../components/PhotoFrame.astro';
+import { graph, aboutPageSchema, personSchema, jewelryStoreSchema, breadcrumbSchema } from '../../lib/seo';
+
+const jsonLd = graph(
+  aboutPageSchema(),
+  personSchema(),
+  jewelryStoreSchema(),
+  breadcrumbSchema([
+    { name: 'Home', url: '/en/' },
+    { name: 'About', url: '/en/about/' },
+  ]),
+);
+---
+
+<Layout
+  locale="en"
+  title="About | Martin Ševr — Goldsmith workshop in Prague"
+  description="Over twenty years of handcrafted work in gold and silver. The story of a goldsmith workshop in Prague."
+  jsonLd={jsonLd}
+  navOverlay
+  ctaHeading="Drop by the <em>workshop</em>."
+  ctaSubtitle="Pod Kesnerkou 46, Prague 5. Just call ahead — I'll happily open up and show you how the jewellery is made."
+>
+
+  <!-- ====== HERO ====== -->
+  <section class="relative bg-bg-primary border-b border-border section-hero overflow-hidden">
+    <div class="radial-overlay"></div>
+    <div class="relative max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-14">
+      <div class="max-w-3xl" data-anim="up">
+        <span class="label-dot">Workshop on Pod Kesnerkou</span>
+        <h1 class="mt-6">
+          <em>20+ years</em> in the workshop on Pod Kesnerkou. Your piece will be made here too.
+        </h1>
+        <p class="mt-6 text-text-secondary body-lg max-w-xl">
+          More than twenty years of handcrafted work in gold and silver. Every piece is an original, made with respect for the material and for the person who'll wear it.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== PORTRAIT + STORY ====== -->
+  <section class="relative bg-bg-primary border-b border-border section-md">
+    <div class="max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-14">
+      <div class="grid lg:grid-cols-[1.15fr_0.85fr] gap-10 lg:gap-16 items-start">
+
+        <div data-anim="scale" class="relative overflow-hidden">
+          <div class="aspect-[3/4] relative overflow-hidden">
+            <img
+              src="/images/o-dilne--portret--martin-sevr-zlatnik.webp"
+              srcset="/images/o-dilne--portret--martin-sevr-zlatnik.webp 1x, /images/o-dilne--portret--martin-sevr-zlatnik@2x.webp 2x"
+              width="900" height="1200"
+              alt="Martin Ševr in the goldsmith workshop"
+              loading="lazy" decoding="async"
+              class="absolute inset-0 w-full h-full object-cover"
+            />
+            <div class="absolute inset-3 border border-white/15 pointer-events-none"></div>
+            <div class="absolute bottom-6 left-6 bg-bg-primary/90 backdrop-blur-md px-5 py-3 shadow-soft">
+              <span class="text-[11px] uppercase tracking-[0.15em] font-medium text-gold-on-light font-sans">Workshop on Pod Kesnerkou</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="lg:sticky lg:top-28 lg:self-start" data-anim="up">
+          <span class="label-dot">Story</span>
+          <h2 class="mt-5">Goldsmithing isn't<br />just <em>work</em></h2>
+
+          <blockquote class="mt-8 pt-8 border-t border-border">
+            <p class="font-serif italic display-quote text-text-primary">
+              "Every piece that leaves the workshop carries a bit of my story — and a lot of yours."
+            </p>
+          </blockquote>
+
+          <div class="mt-8 space-y-4">
+            <p class="text-text-secondary body-md leading-[1.8]">
+              I've been working with gold and silver for more than twenty years. Every piece I make by hand — from the first sketch to the final polish. It isn't only a craft, it's the way I see the world.
+            </p>
+            <p class="text-text-secondary body-md leading-[1.8]">
+              That's why I don't rush and I don't compromise. I'd rather turn a commission down than hand over something I don't fully stand behind.
+            </p>
+          </div>
+
+          <div class="grid grid-cols-3 gap-6 mt-10 pt-8 border-t border-border">
+            <div>
+              <span class="block font-serif stat-number text-text-primary">20+</span>
+              <span class="text-[12px] text-text-muted uppercase tracking-[0.15em] font-sans mt-1 block">Years of experience</span>
+            </div>
+            <div>
+              <span class="block font-serif stat-number text-text-primary">1000+</span>
+              <span class="text-[12px] text-text-muted uppercase tracking-[0.15em] font-sans mt-1 block">Pieces made</span>
+            </div>
+            <div>
+              <span class="block font-serif stat-number text-text-primary">100%</span>
+              <span class="text-[12px] text-text-muted uppercase tracking-[0.15em] font-sans mt-1 block">By hand</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== PHILOSOPHY ====== -->
+  <section class="relative bg-bg-primary border-b border-border section-md overflow-hidden">
+    <div class="radial-overlay"></div>
+    <div class="relative max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-14">
+
+      <span class="label-dot" data-anim="fade">Workshop philosophy</span>
+      <h2 class="mt-5 max-w-3xl" data-anim="up">Four principles I <em>work by</em></h2>
+
+      <blockquote class="mt-10 max-w-4xl" data-anim="up">
+        <p class="font-serif italic display-quote text-text-primary font-normal">
+          "I believe in pieces that <span class="not-italic text-gold-deep">breathe</span> — a craft that strips away what's unnecessary and reveals the <span class="not-italic text-gold-deep">beauty</span> of the material."
+        </p>
+      </blockquote>
+
+      <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mt-16" data-anim="stagger">
+        <div data-anim-child class="pt-6 border-t border-border">
+          <span class="text-[12px] text-text-muted font-sans">01</span>
+          <h3 class="mt-2">Handmade, no compromise</h3>
+          <p class="mt-2 text-text-secondary body-md leading-relaxed">Every piece I make from start to finish with my own hands. No production line.</p>
+        </div>
+        <div data-anim-child class="pt-6 border-t border-border">
+          <span class="text-[12px] text-text-muted font-sans">02</span>
+          <h3 class="mt-2">I know where every stone comes from</h3>
+          <p class="mt-2 text-text-secondary body-md leading-relaxed">Certified metals, hand-picked stones. I know where every material comes from and why I'm using it.</p>
+        </div>
+        <div data-anim-child class="pt-6 border-t border-border">
+          <span class="text-[12px] text-text-muted font-sans">03</span>
+          <h3 class="mt-2">Fewer details, more material</h3>
+          <p class="mt-2 text-text-secondary body-md leading-relaxed">I believe the most beautiful pieces are the ones where every detail has a reason. Restraint over excess.</p>
+        </div>
+        <div data-anim-child class="pt-6 border-t border-border">
+          <span class="text-[12px] text-text-muted font-sans">04</span>
+          <h3 class="mt-2">Old crafts, new forms</h3>
+          <p class="mt-2 text-text-secondary body-md leading-relaxed">Wax models, forging, hand finishing. Techniques that have worked for centuries, used for pieces that fit today.</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ====== GALLERY ====== -->
+  <section class="relative bg-bg-primary border-b border-border section-md overflow-hidden">
+    <div class="max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-14">
+      <span class="label-dot mb-10 block" data-anim="fade">Workshop on Pod Kesnerkou</span>
+      <div class="grid md:grid-cols-3 gap-4 lg:gap-6" data-anim="stagger">
+        <div data-anim-child class="relative overflow-hidden">
+          <img
+            src="/images/o-dilne--galerie-1--ruka-retizek-stroj.webp"
+            srcset="/images/o-dilne--galerie-1--ruka-retizek-stroj.webp 1x, /images/o-dilne--galerie-1--ruka-retizek-stroj@2x.webp 2x"
+            width="800" height="1000" alt="Handcrafting a chain at the bench" loading="lazy" decoding="async"
+            class="w-full aspect-[4/5] object-cover grayscale-[15%] sepia-[10%]"
+          />
+          <PhotoFrame />
+        </div>
+        <div data-anim-child class="relative overflow-hidden">
+          <img
+            src="/images/o-dilne--galerie-2--erbovni-pecet-zlato.webp"
+            srcset="/images/o-dilne--galerie-2--erbovni-pecet-zlato.webp 1x, /images/o-dilne--galerie-2--erbovni-pecet-zlato@2x.webp 2x"
+            width="800" height="1000" alt="Gold signet seal — close-up" loading="lazy" decoding="async"
+            class="w-full aspect-[4/5] object-cover grayscale-[15%] sepia-[10%]"
+          />
+          <PhotoFrame />
+        </div>
+        <div data-anim-child class="relative overflow-hidden">
+          <img
+            src="/images/o-dilne--galerie-3--snubaky-na-dreve-stul.webp"
+            srcset="/images/o-dilne--galerie-3--snubaky-na-dreve-stul.webp 1x, /images/o-dilne--galerie-3--snubaky-na-dreve-stul@2x.webp 2x"
+            width="800" height="1000" alt="Wedding bands on a wooden bench" loading="lazy" decoding="async"
+            class="w-full aspect-[4/5] object-cover grayscale-[15%] sepia-[10%]"
+          />
+          <PhotoFrame />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== CERTIFICATES ====== -->
+  <section class="relative bg-bg-primary section-md">
+    <div class="max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-14">
+      <div class="grid lg:grid-cols-[1.15fr_0.85fr] gap-10 lg:gap-16 items-start">
+        <div data-anim="scale" class="relative overflow-hidden">
+          <div class="aspect-[3/4] relative overflow-hidden">
+            <img
+              src="/images/o-dilne--certifikaty--puncak-martin-sevr.webp"
+              srcset="/images/o-dilne--certifikaty--puncak-martin-sevr.webp 1x, /images/o-dilne--certifikaty--puncak-martin-sevr@2x.webp 2x"
+              width="900" height="1200"
+              alt="Czech hallmarks — metal quality certification"
+              loading="lazy" decoding="async"
+              class="absolute inset-0 w-full h-full object-cover"
+            />
+            <div class="absolute inset-3 border border-white/15 pointer-events-none"></div>
+          </div>
+        </div>
+        <div class="lg:sticky lg:top-28 lg:self-start" data-anim="up">
+          <span class="label-dot">Certificates</span>
+          <h2 class="mt-5">Hallmarked and certified</h2>
+          <p class="mt-4 text-text-secondary body-lg">
+            All my pieces are made from certified materials and stamped with the Czech state hallmark. I work in line with Czech precious-metal regulations.
+          </p>
+          <p class="mt-4 text-text-secondary body-lg">
+            Every piece comes with a certificate of authenticity. Stones are supplied with a gemmological report.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</Layout>

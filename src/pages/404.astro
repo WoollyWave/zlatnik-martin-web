@@ -4,21 +4,34 @@ import Button from '../components/Button.astro';
 ---
 
 <Layout
-  title="Stránka nenalezena | Martin Ševr — Zlatnická dílna Praha"
-  description="Tato stránka neexistuje. Vraťte se na úvodní stránku."
+  title="Stránka nenalezena — 404 | Martin Ševr — Zlatnická dílna Praha"
+  description="Tato stránka neexistuje nebo byla přesunuta. Vraťte se na úvod nebo mi napište."
+  navOverlay
 >
-  <section class="relative bg-bg-primary border-b border-border section-hero overflow-hidden">
+
+  <!-- ====== 404 HERO ====== -->
+  <section class="relative bg-bg-primary border-b border-border section-hero overflow-hidden min-h-[70vh] flex items-center">
     <div class="radial-overlay"></div>
-    <div class="relative max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-14 text-center">
-      <span class="label-dot justify-center">Chyba 404</span>
-      <h1 class="mt-6">Stránka<br /><em>nenalezena</em></h1>
-      <p class="mt-6 text-text-secondary body-lg max-w-md mx-auto">
-        Omlouváme se, tato stránka neexistuje nebo byla přesunuta.
-      </p>
-      <div class="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
-        <Button href="/" variant="primary">Zpět na úvodní stránku</Button>
-        <Button href="/kontakt" variant="secondary">Kontaktovat</Button>
+    <div class="relative w-full max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-14">
+      <div class="flex flex-col items-start text-left md:items-center md:text-center" data-anim="up">
+
+        <span class="label-dot">Chyba 404</span>
+
+        <h1 class="mt-6 max-w-2xl">
+          Tato stránka <em>neexistuje</em>.
+        </h1>
+
+        <p class="mt-6 text-text-secondary body-lg max-w-2xl">
+          Buď byla přesunuta, nebo se odkaz, kterým jste se sem dostali, někde rozpadl. Vraťte se na úvod, nebo mi rovnou napište — pomůžu vám najít, co hledáte.
+        </p>
+
+        <div class="mt-10 flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
+          <Button href="/" variant="primary">Zpět na úvod</Button>
+          <Button href="/kontakt" variant="secondary">Napsat mi</Button>
+        </div>
+
       </div>
     </div>
   </section>
+
 </Layout>

@@ -4,6 +4,8 @@ import Button from '../../components/Button.astro';
 import ProductCard from '../../components/ProductCard.astro';
 import PhotoFrame from '../../components/PhotoFrame.astro';
 import { products, type Product } from '../../data/products';
+import { productSchema, breadcrumbSchema, productPageGraph } from '../../lib/seo';
+import { SITE } from '../../data/site';
 
 export function getStaticPaths() {
   return products.map((product) => ({
@@ -17,30 +19,25 @@ interface Props {
 }
 
 const { product } = Astro.props;
-const otherProducts = products.filter((p) => p.slug !== product.slug).slice(0, 2);
+const currentIndex = products.findIndex((p) => p.slug === product.slug);
+const otherProducts = [
+  ...products.slice(currentIndex + 1),
+  ...products.slice(0, currentIndex),
+].slice(0, 2);
 
-const jsonLd = {
-  "@context": "https://schema.org",
-  "@type": "Product",
-  "name": product.title,
-  "description": product.description,
-  "image": `https://zlatnik-martin.cz${product.image}`,
-  "offers": {
-    "@type": "Offer",
-    "price": product.price.replace(/[^\d]/g, ''),
-    "priceCurrency": "CZK",
-    "availability": "https://schema.org/InStock",
-    "seller": {
-      "@type": "LocalBusiness",
-      "name": "Martin Ševr — Zlatnická dílna"
-    }
-  },
-  "material": product.material,
-  "brand": {
-    "@type": "Brand",
-    "name": "Martin Ševr"
-  }
-};
+const jsonLd = productPageGraph(
+  productSchema(product),
+  breadcrumbSchema([
+    { name: 'Domů', url: '/' },
+    { name: 'Skladem', url: '/skladem' },
+    { name: product.title, url: `/sperky/${product.slug}` },
+  ]),
+);
+
+const isOriginal = product.stockBadge === 'jediny-originalni-kus';
+const availabilityLabel = isOriginal
+  ? 'Jediný originální kus — k vyzvednutí v dílně'
+  : 'Skladem — k vyzvednutí v dílně nebo poštou';
 ---
 
 <Layout
@@ -48,25 +45,29 @@ const jsonLd = {
   description={product.description}
   ogImage={product.image}
   jsonLd={jsonLd}
+  navOverlay
 >
 
   <!-- ====== HERO — Split: info left + photo right ====== -->
-  <section class="relative bg-bg-primary border-b border-border overflow-hidden">
+  <section class="relative bg-bg-primary border-b border-border section-hero overflow-clip">
     <div class="radial-overlay"></div>
     <div class="relative max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-14">
-      <div class="grid lg:grid-cols-[0.85fr_1.15fr] gap-10 lg:gap-16 items-center section-hero">
+      <div class="grid lg:grid-cols-[0.85fr_1.15fr] gap-10 lg:gap-16 items-start">
 
         <!-- Left — info -->
         <div data-anim="up">
-          <a href="/skladem" class="inline-flex items-center gap-2 text-[11px] text-text-muted hover:text-gold-deep transition-colors duration-200 uppercase tracking-[0.2em] font-sans font-medium">
+          <a href="/skladem" class="inline-flex items-center gap-2 text-[clamp(0.6875rem,0.6rem+0.15vw,0.8125rem)] text-text-muted hover:text-gold-deep transition-colors duration-200 uppercase tracking-[0.2em] font-sans font-medium">
             <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" /></svg>
             Zpět na Skladem
           </a>
 
-          <h1 class="mt-8">{product.title}</h1>
+          {isOriginal && (
+            <div class="mt-6 inline-block bg-gold-deep text-button-text px-3 py-1.5 text-[10px] uppercase tracking-[0.15em] font-medium font-sans">
+              ✦ Jediný originální kus
+            </div>
+          )}
 
-          <!-- Price -->
-          <p class="mt-4 font-serif text-[1.5rem] text-gold-deep">{product.price}</p>
+          <h1 class="mt-6">{product.title}</h1>
 
           <p class="mt-6 text-text-secondary body-lg max-w-lg">
             {product.description}
@@ -74,23 +75,70 @@ const jsonLd = {
 
           <!-- Meta -->
           <div class="mt-10 pt-8 border-t border-border grid grid-cols-2 gap-6">
+            {product.size && (
+              <div>
+                <span class="text-[11px] uppercase tracking-[0.15em] font-medium text-text-muted font-sans">Velikost</span>
+                <p class="text-[13px] sm:text-[14px] text-text-primary mt-1 font-sans leading-snug">{product.size}</p>
+              </div>
+            )}
             <div>
               <span class="text-[11px] uppercase tracking-[0.15em] font-medium text-text-muted font-sans">Materiál</span>
               <p class="text-[13px] sm:text-[14px] text-text-primary mt-1 font-sans leading-snug">{product.material}</p>
             </div>
-            <div>
+            <div class={product.size ? 'col-span-2' : ''}>
               <span class="text-[11px] uppercase tracking-[0.15em] font-medium text-text-muted font-sans">Dostupnost</span>
               <p class="text-[13px] sm:text-[14px] text-text-primary mt-1 font-sans leading-snug flex items-center gap-2">
                 <span class="w-1.5 h-1.5 rounded-full bg-success"></span>
-                Skladem — ihned k odběru
+                {availabilityLabel}
               </p>
             </div>
           </div>
 
+          <!-- Cenové varianty -->
+          <div class="mt-10 grid sm:grid-cols-2 gap-4">
+            <!-- Stříbro -->
+            <div class="border border-border bg-bg-primary/60 p-5">
+              <span class="text-[10px] uppercase tracking-[0.2em] font-medium text-gold-on-light font-sans">Stříbro 925/1000</span>
+              <p class="mt-2 text-[11px] text-text-muted font-sans">{isOriginal ? 'Originální kus' : 'Skladem'}</p>
+              <p class="mt-4 font-serif text-[1.5rem] text-gold-deep tracking-tight">{product.priceSilver}</p>
+              <p class="mt-2 text-[12px] text-text-secondary font-sans">Váha: {product.weightSilver}</p>
+            </div>
+
+            <!-- Zlato -->
+            {product.priceGold && (
+              <div class="border border-border bg-bg-secondary/40 p-5">
+                <span class="text-[10px] uppercase tracking-[0.2em] font-medium text-gold-on-light font-sans">Zlato 585/1000</span>
+                <p class="mt-2 text-[11px] text-text-muted font-sans">Na zakázku — do 3 týdnů</p>
+                <p class="mt-4 font-serif text-[1.5rem] text-text-primary tracking-tight">{product.priceGold}</p>
+                {product.weightGold && (
+                  <p class="mt-2 text-[12px] text-text-secondary font-sans">Váha: {product.weightGold}</p>
+                )}
+                {product.goldNote && (
+                  <p class="mt-1 text-[11px] text-text-muted font-sans">({product.goldNote})</p>
+                )}
+              </div>
+            )}
+          </div>
+
+          {product.priceGold && (
+            <p class="mt-4 body-md text-text-muted">
+              Cena zlaté varianty je orientační, platná k 12. 5. 2026. Finální cenu stanovuji v den objednávky.
+            </p>
+          )}
+
+          <!-- Notes -->
+          {product.notes && product.notes.length > 0 && (
+            <ul class="mt-6 space-y-2 border-t border-border pt-6">
+              {product.notes.map((note) => (
+                <li class="body-md text-text-secondary flex gap-2"><span class="text-gold-deep">•</span><span>{note}</span></li>
+              ))}
+            </ul>
+          )}
+
           <!-- CTA -->
           <div class="mt-8 flex flex-col sm:flex-row gap-4">
             <Button href="/kontakt" variant="primary">Chci tento šperk</Button>
-            <Button href="https://wa.me/420774598181" variant="secondary">Napsat na WhatsApp</Button>
+            <Button href={SITE.whatsapp} variant="secondary">Napsat na WhatsApp</Button>
           </div>
 
           <p class="mt-4 body-md text-text-muted">
@@ -99,19 +147,18 @@ const jsonLd = {
         </div>
 
         <!-- Right — main photo -->
-        <div class="relative order-first lg:order-none" data-anim="scale">
+        <div class="relative order-first lg:order-none lg:sticky lg:top-28 lg:self-start">
           {product.image && (
-            <div class="relative overflow-hidden aspect-[1/1]">
+            <div class="relative overflow-hidden aspect-square max-w-[560px] mx-auto" data-anim="scale">
               <img
                 src={product.image}
-                srcset={`${product.image} 800w, ${product.image2x} 1600w`}
-                sizes="(min-width: 1024px) 60vw, 100vw"
-                width="800" height="800"
+                width="1000" height="1000"
+                sizes="(min-width: 1024px) 560px, 100vw"
                 alt={product.alt}
                 loading="eager"
                 fetchpriority="high"
                 decoding="async"
-                class="absolute inset-0 w-full h-full object-cover"
+                class="absolute inset-0 w-full h-full object-contain"
               />
               <div class="absolute inset-3 border border-white/12 pointer-events-none"></div>
             </div>
@@ -134,14 +181,14 @@ const jsonLd = {
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 mt-12" data-anim="stagger">
           {product.detailImages.map((img, i) => (
             <div data-anim-child class="relative overflow-hidden">
-              <div class="aspect-[1/1] relative overflow-hidden">
+              <div class="aspect-square relative overflow-hidden">
                 <img
                   src={img.src}
-                  srcset={`${img.src} 1x, ${img.src2x} 2x`}
-                  width="800" height="800"
+                  width="1000" height="1000"
+                  sizes="(min-width: 1024px) 30vw, (min-width: 768px) 33vw, 100vw"
                   alt={img.alt}
                   loading="lazy" decoding="async"
-                  class="absolute inset-0 w-full h-full object-cover"
+                  class="absolute inset-0 w-full h-full object-contain"
                 />
                 <PhotoFrame />
                 <div class="absolute top-4 left-4 bg-bg-primary/90 backdrop-blur-md px-3 py-1.5">
@@ -177,13 +224,15 @@ const jsonLd = {
             <ProductCard
               title={p.title}
               material={p.material}
-              price={p.price}
+              priceSilver={p.priceSilver}
+              priceGold={p.priceGold}
+              goldNote={p.goldNote}
               href={`/sperky/${p.slug}`}
               category={p.category}
-              image={p.image}
-              image2x={p.image2x}
+              image={p.imageCard || p.image}
               alt={p.alt}
               description={p.description}
+              stockBadge={p.stockBadge}
             />
           </div>
         ))}

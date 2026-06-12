@@ -1,0 +1,74 @@
+---
+/**
+ * Language switcher [CS|EN].
+ *
+ * Best practices 2026:
+ * - Plain anchor tags (no JS) — crawlable
+ * - Links to equivalent page in other language (via slug mapping)
+ * - aria-current="page" on active language
+ * - Active state styled visibly (not just color)
+ */
+import { getLocaleFromUrl, getAlternateUrl, type Locale } from '../i18n';
+import { products } from '../data/products';
+import { portfolioCases } from '../data/portfolio';
+
+interface Props {
+  /** Tailwind classes for outer wrapper (positioning). */
+  class?: string;
+}
+
+const { class: className = '' } = Astro.props;
+
+const currentLocale: Locale = getLocaleFromUrl(Astro.url);
+
+// Buduji mapy slug ↔ slug pro produkty a portfolio (oba směry).
+const productSlugMap = new Map<string, string>();
+for (const p of products) {
+  if (p.slugEn) {
+    productSlugMap.set(p.slug, p.slugEn);
+    productSlugMap.set(p.slugEn, p.slug);
+  }
+}
+
+const portfolioSlugMap = new Map<string, string>();
+for (const c of portfolioCases) {
+  if (c.slugEn) {
+    portfolioSlugMap.set(c.slug, c.slugEn);
+    portfolioSlugMap.set(c.slugEn, c.slug);
+  }
+}
+
+const csUrl = currentLocale === 'cs'
+  ? Astro.url.pathname
+  : getAlternateUrl(Astro.url.pathname, 'en', productSlugMap, portfolioSlugMap);
+
+const enUrl = currentLocale === 'en'
+  ? Astro.url.pathname
+  : getAlternateUrl(Astro.url.pathname, 'cs', productSlugMap, portfolioSlugMap);
+---
+
+<div class={`inline-flex items-center gap-1 text-[11px] tracking-[0.15em] font-sans font-medium uppercase ${className}`} role="group" aria-label="Language selector">
+  <a
+    href={csUrl}
+    hreflang="cs"
+    lang="cs"
+    aria-current={currentLocale === 'cs' ? 'page' : undefined}
+    class={`px-2 py-1 rounded-full transition-colors ${
+      currentLocale === 'cs'
+        ? 'text-text-primary bg-bg-secondary'
+        : 'text-text-muted hover:text-gold-deep'
+    }`}
+  >CS</a>
+  <span class="text-text-muted/40" aria-hidden="true">/</span>
+  <a
+    href={enUrl}
+    hreflang="en"
+    lang="en"
+    aria-current={currentLocale === 'en' ? 'page' : undefined}
+    class={`px-2 py-1 rounded-full transition-colors ${
+      currentLocale === 'en'
+        ? 'text-text-primary bg-bg-secondary'
+        : 'text-text-muted hover:text-gold-deep'
+    }`}
+  >EN</a>
+</div>

@@ -3,46 +3,32 @@ import Layout from '../layouts/Layout.astro';
 import Button from '../components/Button.astro';
 import PhotoFrame from '../components/PhotoFrame.astro';
 import PortfolioListCard from '../components/PortfolioListCard.astro';
-import ResponsivePicture from '../components/ResponsivePicture.astro';
-import { portfolioItems as allPortfolio } from '../data/portfolio';
+import { portfolioCases } from '../data/portfolio';
+import { products } from '../data/products';
+import { homeGraph } from '../lib/seo';
 
-const jsonLd = {
-  "@context": "https://schema.org",
-  "@graph": [
-    {
-      "@type": "LocalBusiness",
-      "name": "Martin Ševr — Zlatnická dílna",
-      "description": "Ruční výroba šperků ze zlata, stříbra a přírodních kamenů. Každý kus originál.",
-      "url": "https://zlatnik-martin.cz",
-      "telephone": "+420774598181",
-      "email": "zlatnikmartin@email.cz",
-      "address": {
-        "@type": "PostalAddress",
-        "streetAddress": "Pod Kesnerkou 46",
-        "addressLocality": "Praha 5",
-        "postalCode": "150 00",
-        "addressCountry": "CZ"
-      },
-      "priceRange": "$$$$",
-      "image": "https://zlatnik-martin.cz/images/og-default.jpg"
-    },
-    {
-      "@type": "WebSite",
-      "name": "Martin Ševr — Zlatnická dílna Praha",
-      "url": "https://zlatnik-martin.cz"
-    }
-  ]
-};
+const jsonLd = homeGraph();
 
-const portfolioItems = allPortfolio.slice(0, 3).map((item, i) => ({
-  title: item.title,
-  tags: item.tags,
-  description: item.description,
-  href: `/tvorba/${item.slug}`,
-  label: `Zakázka 0${i + 1}`,
-  image: item.image,
-  image2x: item.image2x,
-  alt: item.alt,
+const portfolioItems = portfolioCases.slice(0, 3).map((c, i) => ({
+  title: c.title,
+  tags: [c.material],
+  description: c.cardLead,
+  href: `/tvorba/${c.slug}`,
+  label: `Příběh 0${i + 1}`,
+  image: c.cardImage,
+  image2x: c.cardImage2x,
+  alt: c.cardAlt,
+}));
+
+const skladem = products.slice(0, 3).map((p, i) => ({
+  title: p.title,
+  tags: [p.material, `Stříbro · ${p.priceSilver}`],
+  description: p.description,
+  href: `/sperky/${p.slug}`,
+  label: `Skladem 0${i + 1}`,
+  image: p.imageCard || p.image,
+  image2x: p.imageCard || p.image,
+  alt: p.alt,
 }));
 
 const processSteps = [
@@ -50,34 +36,38 @@ const processSteps = [
     number: '01',
     title: 'Konzultace',
     description: 'Sejdeme se v dílně nebo po telefonu. Probereme váš nápad, materiály a rozpočet. Bez závazků.',
-    image: '/images/zakazkova--proces-01--3d-cad-navrh.webp',
-    image2x: '/images/zakazkova--proces-01--3d-cad-navrh@2x.webp',
-    alt: 'Konzultace a návrh šperku',
+    image: '/images/homepage--jak-pracuji-01--vykresy.webp',
+    image2x: '/images/homepage--jak-pracuji-01--vykresy.webp',
+    alt: 'Výkresy a návrh šperku — konzultace v dílně',
   },
   {
     number: '02',
     title: 'Ruční výroba',
     description: 'Každý šperk vyrábím ručně — od prvního náčrtu po finální lesk. Průběh fotím, abyste viděli, jak vzniká.',
-    image: '/images/zakazkova--proces-03--snubaky-v-ruce-vyroba.webp',
-    image2x: '/images/zakazkova--proces-03--snubaky-v-ruce-vyroba@2x.webp',
-    alt: 'Ruční výroba šperku v dílně',
+    image: '/images/homepage--jak-pracuji-02--snubaky-cerveny-hadr.webp',
+    image2x: '/images/homepage--jak-pracuji-02--snubaky-cerveny-hadr.webp',
+    alt: 'Snubní prsteny v ruce na červeném hadříku — dílna Pod Kesnerkou',
   },
   {
     number: '03',
     title: 'Předání s certifikátem',
     description: 'Šperk předám osobně v dílně nebo zašlu pojištěnou zásilkou. Vždy s certifikátem pravosti.',
-    image: '/images/zakazkova--proces-04--privesek-J-na-krku-predani.webp',
-    image2x: '/images/zakazkova--proces-04--privesek-J-na-krku-predani@2x.webp',
-    alt: 'Předání hotového šperku',
+    image: '/images/homepage--jak-pracuji-03--predani-sperku.webp',
+    image2x: '/images/homepage--jak-pracuji-03--predani-sperku.webp',
+    alt: 'Předání hotového šperku s certifikátem',
   },
 ];
 ---
 
 <Layout
-  title="Martin Ševr — Zlatnická dílna Praha | Ruční výroba šperků"
-  description="Ruční výroba šperků ze zlata, stříbra a přírodních kamenů. Každý kus originál. Zakázková tvorba v Praze."
+  title="Zlatník Praha 5 | Martin Ševr — Ruční výroba a zakázková tvorba šperků"
+  description="Zlatník v Praze 5. Ruční výroba šperků na zakázku, snubní prsteny, opravy. 20+ let praxe. Vlastní dílna Pod Kesnerkou."
   jsonLd={jsonLd}
   navOverlay
+  lcpImageMobile="/images/homepage--hero--vltavin-privesek-mobile.webp"
+  lcpImageMobile2x="/images/homepage--hero--vltavin-privesek-mobile@2x.webp"
+  lcpImageDesktop="/images/homepage--hero--vltavin-privesek.webp"
+  lcpImageDesktop2x="/images/homepage--hero--vltavin-privesek@2x.webp"
 >
 
   <!-- ====== HERO ====== -->
@@ -89,14 +79,15 @@ const processSteps = [
 
         <!-- Text -->
         <div class="hero-label">
-          <span class="label-dot">Zlatnická dílna Praha</span>
+          <span class="label-dot">Zlatnická dílna Praha — Pod Kesnerkou</span>
 
           <h1 class="mt-6 hero-headline">
-            Šperky tvarované <em>světlem</em> a krásou materiálu.
+            <span class="block">Šperky vyrobené <em>ručně</em>.</span>
+            <span class="block">Ne anonymně v sérii.</span>
           </h1>
 
           <p class="subtitle mt-6 hero-copy">
-            Ruční výroba šperků ze zlata, stříbra a přírodních kamenů. Každá proporce, textura a přechod promyšlen s tichou precizností.
+            Zakázková tvorba ze zlata, stříbra a přírodních kamenů v pražské dílně. Každý kus s certifikátem pravosti a doživotní zárukou na zpracování.
           </p>
 
           <div class="mt-10 flex flex-col sm:flex-row gap-4 hero-btn-group">
@@ -104,15 +95,20 @@ const processSteps = [
             <Button href="/skladem" variant="secondary">Hotové šperky</Button>
           </div>
 
-          <!-- Meta row -->
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 mt-10 pt-6 border-t border-border hero-meta">
+          <span class="hero-status mt-8 inline-flex items-center gap-2 text-[11px] uppercase tracking-[0.2em] text-text-secondary font-sans font-medium">
+            <span class="w-1.5 h-1.5 rounded-full bg-success pulse-dot"></span>
+            Přijímám zakázky
+          </span>
+
+          <!-- Meta row — skryté na mobile (clean hero, info dostupné v JSON-LD + /o-dilne + footer) -->
+          <div class="hidden sm:grid grid-cols-3 gap-4 sm:gap-6 mt-10 pt-6 border-t border-border hero-meta">
             <div>
               <span class="text-[11px] uppercase tracking-[0.15em] font-medium text-text-muted font-sans">Lokace</span>
-              <p class="text-[13px] sm:text-[14px] text-text-primary mt-1 font-sans leading-snug">Praha — Osobní setkání</p>
+              <p class="text-[13px] sm:text-[14px] text-text-primary mt-1 font-sans leading-snug">Praha 5 — osobní setkání v dílně</p>
             </div>
             <div>
               <span class="text-[11px] uppercase tracking-[0.15em] font-medium text-text-muted font-sans">Zaměření</span>
-              <p class="text-[13px] sm:text-[14px] text-text-primary mt-1 font-sans leading-snug">Ruční výroba / Zakázky</p>
+              <p class="text-[13px] sm:text-[14px] text-text-primary mt-1 font-sans leading-snug">Zakázky / ruční výroba</p>
             </div>
             <div>
               <span class="text-[11px] uppercase tracking-[0.15em] font-medium text-text-muted font-sans">Zkušenosti</span>
@@ -121,19 +117,30 @@ const processSteps = [
           </div>
         </div>
 
-        <!-- Photo — source 1600×1600, aspect-square na mobile/tablet, natural na desktopu -->
-        <div class="relative hero-img-wrap lg:order-none aspect-square lg:aspect-auto overflow-hidden">
-          <img
-            src="/images/homepage--hero--vltavin-privesek.webp"
-            srcset="/images/homepage--hero--vltavin-privesek.webp 800w, /images/homepage--hero--vltavin-privesek@2x.webp 1600w"
-            sizes="(min-width: 1024px) 50vw, 100vw"
-            width="1600" height="1600"
-            alt="Přívěsek s vltavínem a růženínem — zakázková tvorba"
-            loading="eager"
-            fetchpriority="high"
-            decoding="async"
-            class="absolute inset-0 w-full h-full object-cover lg:relative lg:inset-auto lg:h-auto"
-          />
+        <!-- Photo — mobile/tablet vždy 4:3 (žádný horizontální ořez), desktop natural 4:3 -->
+        <div class="relative hero-img-wrap lg:order-none w-full max-w-[440px] sm:max-w-[520px] md:max-w-[600px] mx-auto lg:max-w-none lg:mx-0 overflow-hidden">
+          <picture>
+            <source
+              media="(min-width: 1024px)"
+              srcset="/images/homepage--hero--vltavin-privesek.webp 1x, /images/homepage--hero--vltavin-privesek@2x.webp 2x"
+              width="1200" height="900"
+            />
+            <source
+              media="(max-width: 1023px)"
+              srcset="/images/homepage--hero--vltavin-privesek-mobile.webp 1x, /images/homepage--hero--vltavin-privesek-mobile@2x.webp 2x"
+              width="800" height="600"
+            />
+            <img
+              src="/images/homepage--hero--vltavin-privesek.webp"
+              width="1200" height="900"
+              alt="Přívěsek s vltavínem a růženínem — zakázková tvorba"
+              loading="eager"
+              fetchpriority="high"
+              decoding="async"
+              class="block w-full h-auto"
+            />
+          </picture>
+          <PhotoFrame />
         </div>
 
       </div>
@@ -149,7 +156,7 @@ const processSteps = [
         <div>
           <span class="label-dot" data-anim="fade">Vybran&eacute; pr&aacute;ce</span>
           <h2 class="mt-5" data-anim="stagger">
-            Šperky vyrobené s <em>láskou</em> ke každému detailu.
+            Co vzniklo v dílně <em>Pod Kesnerkou</em>
           </h2>
         </div>
         <div data-anim="up">
@@ -169,6 +176,9 @@ const processSteps = [
             title={item.title}
             description={item.description}
             tags={item.tags}
+            imageRatio="wide"
+            showCta
+            prominentTitle
           />
         ))}
         <div class="border-t border-border"></div>
@@ -242,16 +252,16 @@ const processSteps = [
           <!-- 3 Principles -->
           <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-14" data-anim="stagger">
             <div class="border-t border-border pt-5">
-              <span class="text-[0.75rem] text-text-muted font-sans">01</span>
+              <span class="text-[12px] text-text-muted font-sans">01</span>
               <p class="mt-2 body-md font-medium text-text-primary font-sans">Ruční práce bez kompromisů</p>
             </div>
             <div class="border-t border-border pt-5">
-              <span class="text-[0.75rem] text-text-muted font-sans">02</span>
-              <p class="mt-2 body-md font-medium text-text-primary font-sans">Materiály s příběhem</p>
+              <span class="text-[12px] text-text-muted font-sans">02</span>
+              <p class="mt-2 body-md font-medium text-text-primary font-sans">Vím, odkud každý kámen pochází</p>
             </div>
             <div class="border-t border-border pt-5">
-              <span class="text-[0.75rem] text-text-muted font-sans">03</span>
-              <p class="mt-2 body-md font-medium text-text-primary font-sans">Zdrženlivost místo přebytku</p>
+              <span class="text-[12px] text-text-muted font-sans">03</span>
+              <p class="mt-2 body-md font-medium text-text-primary font-sans">Méně detailů, víc materiálu</p>
             </div>
           </div>
         </div>
@@ -278,7 +288,7 @@ const processSteps = [
       <!-- 3 Cards -->
       <div class="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-10" data-anim="stagger">
         {processSteps.map((step) => (
-          <div class="group">
+          <div data-anim-child class="group h-full flex flex-col border-b border-border">
             <!-- Card photo with icon overlay -->
             <div class="relative aspect-[4/3] overflow-hidden">
               <img
@@ -293,12 +303,12 @@ const processSteps = [
               <!-- Gradient -->
               <div class="absolute inset-0 bg-gradient-to-t from-[rgba(30,27,24,0.25)] via-transparent to-transparent pointer-events-none"></div>
               <!-- Number circle overlay -->
-              <div class="absolute top-4 left-4 h-11 w-11 rounded-full border border-white/60 bg-[rgba(250,251,248,0.85)] backdrop-blur-sm flex items-center justify-center text-gold-deep text-[11px] font-medium uppercase tracking-wider font-sans shadow-[0_10px_24px_rgba(30,27,24,0.10)]">
+              <div class="absolute top-4 left-4 h-11 w-11 rounded-full border border-white/60 bg-button-text/85 backdrop-blur-sm flex items-center justify-center text-gold-deep text-[11px] font-medium uppercase tracking-[0.15em] font-sans shadow-plaque">
                 {step.number}
               </div>
             </div>
             <!-- Info below -->
-            <div class="pt-5 pb-5 border-b border-border">
+            <div class="pt-5 pb-5 flex-1">
               <h3>{step.title}</h3>
               <p class="body-md text-text-secondary leading-relaxed mt-2 font-sans">
                 {step.description}
@@ -312,13 +322,12 @@ const processSteps = [
   </section>
 
 
-  <!-- ====== TESTIMONIAL — Quote + image ====== -->
+  <!-- ====== TESTIMONIAL — Quote + image (skryto, dokud nebude napojené na reálné reference) ======
   <section class="bg-bg-primary border-b border-border section-lg">
     <div class="max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-14">
 
       <div class="grid lg:grid-cols-[1fr_0.6fr] gap-12 lg:gap-16 items-center">
 
-        <!-- Quote side -->
         <div data-anim="up">
           <span class="label-dot mb-8 block">Reference</span>
           <blockquote>
@@ -334,7 +343,6 @@ const processSteps = [
           </blockquote>
         </div>
 
-        <!-- Image side -->
         <div class="relative overflow-hidden aspect-[3/4]" data-anim="up">
           <ResponsivePicture
             base="homepage--hero--ametystovy-cluster-na-ruce"
@@ -345,6 +353,52 @@ const processSteps = [
           />
         </div>
 
+      </div>
+
+    </div>
+  </section>
+  -->
+
+  <!-- ====== SKLADEM — Vertical list (stejný vzhled jako Selected Works) ====== -->
+  <section class="bg-bg-primary border-b border-border section-lg">
+    <div class="max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-14">
+
+      <!-- Header -->
+      <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6 mb-14">
+        <div>
+          <span class="label-dot" data-anim="fade">Skladem</span>
+          <h2 class="mt-5" data-anim="stagger">
+            Hotové šperky — <em>ihned k odnesení</em>
+          </h2>
+        </div>
+        <div data-anim="up">
+          <Button href="/skladem" variant="text">Zobrazit sklad</Button>
+        </div>
+      </div>
+
+      <!-- Vertical list -->
+      <div class="flex flex-col">
+        {skladem.map((item) => (
+          <PortfolioListCard
+            href={item.href}
+            image={item.image}
+            image2x={item.image2x}
+            alt={item.alt}
+            label={item.label}
+            title={item.title}
+            description={item.description}
+            tags={item.tags}
+            imageRatio="wide"
+            showCta
+            prominentTitle
+          />
+        ))}
+        <div class="border-t border-border"></div>
+      </div>
+
+      <!-- CTA button -->
+      <div class="mt-12 text-center" data-anim="up">
+        <Button href="/skladem" variant="secondary">Celý sklad</Button>
       </div>
 
     </div>

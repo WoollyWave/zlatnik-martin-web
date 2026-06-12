@@ -3,7 +3,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 gsap.registerPlugin(ScrollTrigger);
 
-document.addEventListener('DOMContentLoaded', () => {
+function init() {
   const mm = gsap.matchMedia();
 
   mm.add('(prefers-reduced-motion: no-preference)', () => {
@@ -17,15 +17,25 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // 2. Hero orchestrated timeline
-    const heroTl = gsap.timeline({ delay: 0.15, defaults: { ease, duration: dur } });
+    // Animace jde přesně v DOM pořadí: label-dot → H1 → copy → buttons → status → meta.
+    // clearProps + onInterrupt safety net: pokud timeline nedoběhne (hot-reload, scroll, tab blur),
+    // inline opacity:0 ze .from() by jinak nechalo prvky neviditelné.
+    const heroTargets = '.label-dot, .hero-headline span.block, .hero-copy, .hero-btn-group > *, .hero-status, .hero-meta > div, .hero-img-wrap, .hero-plaque, .hero-vol';
+    const heroTl = gsap.timeline({
+      delay: 0.15,
+      defaults: { ease, duration: 0.6 },
+      onComplete: () => gsap.set(heroTargets, { clearProps: 'opacity,transform,scale' }),
+      onInterrupt: () => gsap.set(heroTargets, { clearProps: 'opacity,transform,scale' }),
+    });
     heroTl
-      .from('.hero-label', { opacity: 0, y: 15 }, 0)
-      .from('.hero-headline span.block', { opacity: 0, y: 25, stagger: 0.12 }, 0.1)
-      .from('.hero-copy', { opacity: 0, y: 20 }, 0.4)
-      .from('.hero-btn-group > *', { opacity: 0, y: 15, stagger: 0.1 }, 0.6)
-      .from('.hero-meta > div', { opacity: 0, y: 15, stagger: 0.1 }, 0.8)
-      .from('.hero-img-wrap', { scale: 1.05, opacity: 0, duration: 1.8, ease: 'power2.out' }, 0.2)
-      .from('.hero-plaque', { opacity: 0, y: 20 }, 1.1)
+      .from('.hero-label > .label-dot', { opacity: 0, y: 12 }, 0)
+      .from('.hero-headline span.block', { opacity: 0, y: 20, stagger: 0.1 }, 0.12)
+      .from('.hero-copy', { opacity: 0, y: 16 }, 0.3)
+      .from('.hero-btn-group > *', { opacity: 0, y: 12, stagger: 0.07 }, 0.45)
+      .from('.hero-status', { opacity: 0, y: 10 }, 0.7)
+      .from('.hero-meta > div', { opacity: 0, y: 12, stagger: 0.07 }, 0.85)
+      .from('.hero-img-wrap', { scale: 1.05, opacity: 0, duration: 1.4, ease: 'power2.out' }, 0.2)
+      .from('.hero-plaque', { opacity: 0, y: 16 }, 1.1)
       .from('.hero-vol', { opacity: 0 }, 1.2);
 
     // 3. Image parallax
@@ -90,32 +100,33 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     });
 
-    // Old data-parallax support (for other pages)
-    document.querySelectorAll('[data-parallax]').forEach((section) => {
-      const img = section.querySelector('img');
-      if (!img) return;
-      gsap.to(img, {
-        yPercent: 20,
-        ease: 'none',
-        scrollTrigger: {
-          trigger: section as HTMLElement,
-          start: 'top bottom',
-          end: 'bottom top',
-          scrub: 1.5,
-        },
-      });
-    });
-
-    // Old data-animate support (for other pages)
-    document.querySelectorAll('[data-animate]').forEach((el) => {
-      const htmlEl = el as HTMLElement;
-      const direction = htmlEl.getAttribute('data-animate') || 'up';
-      const fromVars: gsap.TweenVars = { opacity: 0, duration: dur, ease };
-      if (direction === 'up') fromVars.y = 30;
-      gsap.from(htmlEl, {
-        ...fromVars,
-        scrollTrigger: { trigger: htmlEl, start: 'top 90%', once: true },
-      });
+    // Ring reveal — desktop scroll-linked, mobile jednorázový jemný příchod
+    const ringEls = gsap.utils.toArray<HTMLElement>('[data-anim="ring-reveal"]');
+    const isDesktop = window.matchMedia('(min-width: 1024px)').matches;
+    ringEls.forEach((el) => {
+      const section = el.closest('section') as HTMLElement | null;
+      if (!section) return;
+      if (isDesktop) {
+        gsap.fromTo(
+          el,
+          { rotate: -12 },
+          {
+            rotate: 12,
+            ease: 'none',
+            scrollTrigger: { trigger: section, start: 'top bottom', end: 'bottom top', scrub: 0.6 },
+          },
+        );
+      } else {
+        gsap.set(el, { opacity: 0, scale: 0.94, rotate: -6 });
+        gsap.to(el, {
+          opacity: 1,
+          scale: 1,
+          rotate: 0,
+          duration: 1.4,
+          ease: 'power3.out',
+          scrollTrigger: { trigger: el, start: 'top 88%', once: true },
+        });
+      }
     });
 
     // Old data-float support
@@ -135,4 +146,11 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     });
   });
-});
+}
+
+// Spustit hned, pokud DOM už je ready (lazy-loaded skript) — jinak počkat na DOMContentLoaded.
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', init);
+} else {
+  init();
+}

@@ -1,16 +1,65 @@
 ---
+import { SITE } from '../data/site';
+import { useTranslations, localizedPath, type Locale } from '../i18n';
+import LangSwitcher from './LangSwitcher.astro';
+
 interface Props {
   /** Pokud `true`, Nav pluje jako overlay nad první sekcí (skryje 96px spacer). Sekce pak musí mít vlastní padding-top. */
   overlay?: boolean;
+  locale?: Locale;
 }
-const { overlay = false } = Astro.props;
+const { overlay = false, locale = 'cs' } = Astro.props;
+const t = useTranslations(locale);
 const currentPath = Astro.url.pathname;
-const navLinks = [
-  { label: 'Zakázková tvorba', href: '/zakazkova-tvorba', match: ['/zakazkova-tvorba'] },
-  { label: 'Skladem', href: '/skladem', match: ['/skladem', '/sperky/'] },
-  { label: 'Portfolio', href: '/portfolio', match: ['/portfolio', '/tvorba/'] },
-  { label: 'O dílně', href: '/o-dilne', match: ['/o-dilne'] },
+
+interface NavChild {
+  label: string;
+  href: string;
+  match: string[];
+}
+interface NavLink {
+  label: string;
+  href: string;
+  match: string[];
+  children?: NavChild[];
+}
+
+const navLinks: NavLink[] = [
+  {
+    label: t('nav.customJewelry'),
+    href: localizedPath('customJewelry', locale),
+    match: locale === 'cs'
+      ? ['/zakazkova-tvorba', '/snubni-prsteny-na-miru', '/opravy-sperku-praha']
+      : [localizedPath('customJewelry', locale).replace(/\/$/, '')],
+    // CS-only sub-kategorie pod Zakázkovou tvorbou (snubní prsteny + opravy)
+    children: locale === 'cs' ? [
+      { label: 'Snubní prsteny na míru', href: '/snubni-prsteny-na-miru/', match: ['/snubni-prsteny-na-miru'] },
+      { label: 'Opravy šperků', href: '/opravy-sperku-praha/', match: ['/opravy-sperku-praha'] },
+    ] : undefined,
+  },
+  {
+    label: t('nav.inStock'),
+    href: localizedPath('inStock', locale),
+    match: locale === 'cs'
+      ? ['/skladem', '/sperky/']
+      : ['/en/in-stock', '/en/jewelry/'],
+  },
+  {
+    label: t('nav.portfolio'),
+    href: localizedPath('portfolio', locale),
+    match: locale === 'cs'
+      ? ['/portfolio', '/tvorba/']
+      : ['/en/portfolio', '/en/work/'],
+  },
+  {
+    label: t('nav.about'),
+    href: localizedPath('about', locale),
+    match: [localizedPath('about', locale).replace(/\/$/, '')],
+  },
 ];
+
+const contactPath = localizedPath('contact', locale);
+const homePath = localizedPath('home', locale);
 
 function isActive(match: string[]) {
   return match.some(m => currentPath === m || currentPath === m + '/' || currentPath.startsWith(m));
@@ -19,18 +68,15 @@ function isActive(match: string[]) {
 
 <header class="fixed top-4 inset-x-0 z-50 px-4 sm:px-5">
   <div class="max-w-[1400px] mx-auto">
-    <nav id="main-nav" class="relative flex items-center justify-between h-[72px] px-2 sm:px-3 lg:px-4 rounded-full border border-border/75 bg-[rgba(241,238,229,0.96)] sm:bg-[rgba(241,238,229,0.88)] sm:backdrop-blur-md shadow-[0_10px_30px_rgba(30,27,24,0.06)]" aria-label="Hlavní navigace">
-
-      <!-- Subtle top highlight -->
-      <div class="pointer-events-none absolute inset-x-8 top-0 h-px bg-gradient-to-r from-transparent via-white/80 to-transparent"></div>
+    <nav id="main-nav" class="relative flex items-center justify-between h-[72px] px-2 sm:px-3 lg:px-4 rounded-full border border-border/75 bg-bg-primary/96 sm:bg-bg-primary/88 sm:backdrop-blur-md shadow-float" aria-label={t('nav.aria')}>
 
       <!-- Brand -->
-      <a href="/" class="flex items-center gap-2.5 shrink-0 relative z-20" aria-label="Martin Ševr — Domů">
+      <a href={homePath} class="flex items-center gap-2.5 shrink-0 relative z-20" aria-label={t('nav.brandHomeAria')}>
         <div class="h-11 w-11 rounded-full border border-border bg-white/70 flex items-center justify-center text-[12px] text-gold-deep font-medium tracking-[0.22em] uppercase font-sans shadow-[inset_0_1px_0_rgba(255,255,255,0.7)]">
           MŠ
         </div>
         <div class="hidden sm:flex flex-col leading-[1.1] pt-[1px]">
-          <span class="text-[11px] uppercase tracking-[0.2em] text-text-muted font-sans">Zlatnická dílna</span>
+          <span class="text-[clamp(0.75rem,0.7rem+0.15vw,0.8125rem)] tracking-[0.01em] text-text-muted font-sans">{t('nav.brandLine')}</span>
           <span class="text-[1.1rem] tracking-[-0.02em] text-text-primary font-serif italic">Martin Ševr</span>
         </div>
       </a>
@@ -39,68 +85,111 @@ function isActive(match: string[]) {
       <ul class="hidden xl:flex items-center gap-7 absolute left-1/2 -translate-x-1/2">
         {navLinks.map((link) => {
           const active = isActive(link.match);
+          const hasChildren = link.children && link.children.length > 0;
           return (
-            <li>
+            <li class={hasChildren ? 'relative group' : ''}>
               <a href={link.href}
                 aria-current={active ? 'page' : undefined}
-                class={`text-[11px] uppercase tracking-[0.2em] font-sans font-medium transition-colors whitespace-nowrap ${
+                aria-haspopup={hasChildren ? 'true' : undefined}
+                class={`inline-flex items-center gap-1 py-2 text-[clamp(0.9375rem,0.85rem+0.25vw,1.0625rem)] tracking-[0.005em] font-sans font-medium transition-colors whitespace-nowrap ${
                   active ? 'text-gold-deep' : 'text-text-secondary hover:text-gold-deep'
                 }`}>
                 {link.label}
+                {hasChildren && (
+                  <svg class="w-3 h-3 mt-0.5 transition-transform duration-200 group-hover:rotate-180 group-focus-within:rotate-180" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" /></svg>
+                )}
               </a>
+              {hasChildren && (
+                <div
+                  class="nav-dropdown absolute top-full left-1/2 -translate-x-1/2 pt-3 opacity-0 pointer-events-none transition-opacity duration-200 ease-out group-hover:opacity-100 group-hover:pointer-events-auto group-focus-within:opacity-100 group-focus-within:pointer-events-auto"
+                  aria-hidden="true">
+                  <div class="min-w-[240px] rounded-2xl border border-border/80 bg-bg-primary shadow-medium py-3">
+                    {link.children!.map((child) => {
+                      const childActive = isActive(child.match);
+                      return (
+                        <a href={child.href}
+                          aria-current={childActive ? 'page' : undefined}
+                          tabindex="-1"
+                          class={`block px-5 py-2.5 text-[0.9375rem] font-sans font-medium transition-colors duration-200 whitespace-nowrap ${
+                            childActive
+                              ? 'text-gold-deep'
+                              : 'text-text-primary hover:text-gold-deep hover:bg-bg-secondary'
+                          }`}>
+                          {child.label}
+                        </a>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
             </li>
           );
         })}
       </ul>
 
-      <!-- Right: status + CTA -->
-      <div class="hidden xl:flex items-center gap-6">
-        <span class="flex items-center gap-2 text-[11px] tracking-[0.1em] text-text-secondary font-sans font-medium">
-          <span class="w-1.5 h-1.5 rounded-full bg-success pulse-dot"></span>
-          Přijímám zakázky
-        </span>
-        <a href="/kontakt"
-          class="inline-flex items-center gap-2 h-11 px-6 bg-text-primary rounded-full font-sans text-[11px] uppercase tracking-[0.2em] font-medium shadow-md hover:bg-gold-deep transition-colors duration-300"
-          style="color: var(--color-button-text);">
-          Konzultace
+      <!-- Right: lang + CTA -->
+      <div class="hidden xl:flex items-center gap-5">
+        <LangSwitcher />
+        <a href={contactPath}
+          class="inline-flex items-center gap-2 h-11 px-6 bg-text-primary rounded-full font-sans text-[clamp(0.6875rem,0.6rem+0.15vw,0.8125rem)] uppercase tracking-[0.2em] font-medium shadow-md hover:bg-gold-deep transition-colors duration-300 btn-text-light">
+          {t('nav.consultationCta')}
           <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25" /></svg>
         </a>
       </div>
 
       <!-- Mobile toggle -->
-      <button id="mobile-menu-toggle" class="xl:hidden flex flex-col justify-center items-center w-11 h-11 gap-2" aria-label="Otevřít menu" aria-expanded="false" aria-controls="mobile-menu">
-        <span class="menu-line w-5 h-[1.5px] bg-text-primary transition-all duration-300 origin-center"></span>
-        <span class="menu-line w-5 h-[1.5px] bg-text-primary transition-all duration-300 origin-center"></span>
-      </button>
+      <div class="xl:hidden flex items-center gap-2">
+        <LangSwitcher />
+        <button id="mobile-menu-toggle" class="flex flex-col justify-center items-center w-11 h-11 gap-2" aria-label={t('nav.openMenu')} aria-expanded="false" aria-controls="mobile-menu">
+          <span class="menu-line w-5 h-[1.5px] bg-text-primary transition-all duration-300 origin-center"></span>
+          <span class="menu-line w-5 h-[1.5px] bg-text-primary transition-all duration-300 origin-center"></span>
+        </button>
+      </div>
     </nav>
   </div>
 
   <!-- Mobile menu -->
   <div id="mobile-menu" class="xl:hidden hidden mt-2 mx-auto max-w-[1400px]">
-    <div class="rounded-3xl border border-border/80 bg-[rgba(241,238,229,0.96)] backdrop-blur-xl shadow-[0_20px_50px_rgba(30,27,24,0.10)] p-6">
+    <div class="rounded-2xl border border-border/80 bg-bg-primary/96 backdrop-blur-xl shadow-medium p-6">
       <div class="flex flex-col gap-4">
-        <a href="/"
-          aria-current={currentPath === '/' ? 'page' : undefined}
-          class={`body-md font-sans hover:text-gold-deep transition-colors py-2 ${currentPath === '/' ? 'text-gold-deep' : 'text-text-primary'}`}>Domů</a>
+        <a href={homePath}
+          aria-current={currentPath === homePath ? 'page' : undefined}
+          class={`body-md font-sans hover:text-gold-deep transition-colors py-2 ${currentPath === homePath ? 'text-gold-deep' : 'text-text-primary'}`}>{t('nav.home')}</a>
         {navLinks.map((link) => {
           const active = isActive(link.match);
           return (
-            <a href={link.href}
-              aria-current={active ? 'page' : undefined}
-              class={`body-md font-sans hover:text-gold-deep transition-colors py-2 ${active ? 'text-gold-deep' : 'text-text-primary'}`}>
-              {link.label}
-            </a>
+            <div>
+              <a href={link.href}
+                aria-current={active ? 'page' : undefined}
+                class={`body-md font-sans hover:text-gold-deep transition-colors py-2 block ${active ? 'text-gold-deep' : 'text-text-primary'}`}>
+                {link.label}
+              </a>
+              {link.children && (
+                <div class="flex flex-col gap-1 pl-5 border-l border-divider ml-1 mt-1">
+                  {link.children.map((child) => {
+                    const childActive = isActive(child.match);
+                    return (
+                      <a href={child.href}
+                        aria-current={childActive ? 'page' : undefined}
+                        class={`text-[0.9375rem] font-sans hover:text-gold-deep transition-colors py-1.5 ${childActive ? 'text-gold-deep' : 'text-text-secondary'}`}>
+                        {child.label}
+                      </a>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
           );
         })}
-        <a href="/kontakt"
-          aria-current={isActive(['/kontakt']) ? 'page' : undefined}
-          class={`body-md font-sans hover:text-gold-deep transition-colors py-2 ${isActive(['/kontakt']) ? 'text-gold-deep' : 'text-text-primary'}`}>
-          Kontakt
+        <a href={contactPath}
+          aria-current={isActive([contactPath.replace(/\/$/, '')]) ? 'page' : undefined}
+          class={`body-md font-sans hover:text-gold-deep transition-colors py-2 ${isActive([contactPath.replace(/\/$/, '')]) ? 'text-gold-deep' : 'text-text-primary'}`}>
+          {t('nav.contact')}
         </a>
       </div>
       <div class="mt-4 pt-4 border-t border-divider flex flex-col gap-3">
-        <a href="tel:+420774598181" class="inline-flex items-center justify-center h-12 bg-text-primary rounded-full font-sans text-[11px] uppercase tracking-[0.2em] font-medium shadow-md hover:bg-gold-deep transition-colors duration-300" style="color: var(--color-button-text);">Zavolat</a>
-        <a href="https://wa.me/420774598181" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center h-12 border border-border bg-white/80 text-text-primary rounded-full font-sans text-[11px] uppercase tracking-[0.2em] font-medium hover:bg-white transition-colors duration-300">WhatsApp</a>
+        <a href={SITE.phoneHref} class="inline-flex items-center justify-center h-12 bg-text-primary rounded-full font-sans text-[clamp(0.6875rem,0.6rem+0.15vw,0.8125rem)] uppercase tracking-[0.2em] font-medium shadow-md hover:bg-gold-deep transition-colors duration-300 btn-text-light">{t('nav.callCta')}</a>
+        <a href={SITE.whatsapp} target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center h-12 border border-border bg-white/80 text-text-primary rounded-full font-sans text-[clamp(0.6875rem,0.6rem+0.15vw,0.8125rem)] uppercase tracking-[0.2em] font-medium hover:bg-white transition-colors duration-300">WhatsApp</a>
       </div>
     </div>
   </div>

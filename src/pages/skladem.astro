@@ -3,6 +3,7 @@ import Layout from '../layouts/Layout.astro';
 import ProductCard from '../components/ProductCard.astro';
 import FilterPills from '../components/FilterPills.astro';
 import { products } from '../data/products';
+import { graph, productItemList, breadcrumbSchema } from '../lib/seo';
 
 const categories = [...new Set(products.map(p => p.category))];
 const filterLabels = ['Vše', ...categories.map(c => {
@@ -15,12 +16,23 @@ const filterLabels = ['Vše', ...categories.map(c => {
   };
   return map[c] || c;
 })];
+
+const jsonLd = graph(
+  productItemList(products),
+  breadcrumbSchema([
+    { name: 'Domů', url: '/' },
+    { name: 'Skladem', url: '/skladem/' },
+  ]),
+);
 ---
 
 <Layout
-  title="Skladem | Martin Ševr — Zlatnická dílna Praha"
-  description="Stříbrné šperky s přírodními kameny. Ihned k dispozici. Ruční výroba, certifikované materiály."
+  title="Stříbrné šperky s přírodními kameny | Hotové prsteny skladem Praha"
+  description="Hotové stříbrné šperky s přírodními kameny — ametyst, vltavín, opál, turmalín. K vyzvednutí ve zlatnické dílně Praha 5 nebo zaslání poštou. Variantu ve zlatě vyrobím do 3 týdnů."
+  jsonLd={jsonLd}
   navOverlay
+  ctaHeading="Některý vás zaujal? <em>Napište mi.</em>"
+  ctaSubtitle="Šperk si můžete přijít prohlédnout v dílně Pod Kesnerkou, nebo ho pošlu pojištěnou zásilkou kamkoli po Česku."
 >
 
   <!-- ====== HERO ====== -->
@@ -30,10 +42,10 @@ const filterLabels = ['Vše', ...categories.map(c => {
       <div class="max-w-3xl" data-anim="up">
         <span class="label-dot">Skladem</span>
         <h1 class="mt-6">
-          Hotové <em>šperky</em>
+          Šperky, které <em>si odnesete dnes</em>
         </h1>
         <p class="mt-6 text-text-secondary body-lg max-w-xl">
-          Ručně vyrobené šperky ihned k dispozici. Každý kus je originál — stříbro, přírodní kameny, certifikované materiály.
+          Stříbrné prsteny a přívěsky s přírodními kameny. Ihned k odběru v dílně Pod Kesnerkou nebo zaslání pojištěnou zásilkou po Česku do 2 pracovních dnů.
         </p>
       </div>
     </div>
@@ -46,22 +58,28 @@ const filterLabels = ['Vše', ...categories.map(c => {
 
       <FilterPills items={filterLabels} activeIndex={0} />
 
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-10" id="products-grid">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-10" id="products-grid">
         {products.map((product) => (
           <ProductCard
             title={product.title}
             material={product.material}
-            price={product.price}
+            priceSilver={product.priceSilver}
+            priceGold={product.priceGold}
+            goldNote={product.goldNote}
             href={`/sperky/${product.slug}`}
             category={product.category}
-            image={product.image}
-            image2x={product.image2x}
+            image={product.imageCard || product.image}
             alt={product.alt}
             description={product.description}
+            stockBadge={product.stockBadge}
             headingLevel="h2"
           />
         ))}
       </div>
+
+      <p class="mt-12 max-w-3xl font-serif italic text-[15px] text-text-muted leading-[1.7]" data-anim="up">
+        Ceny zlatých variant jsou orientační a platné k {new Date().toLocaleDateString('cs-CZ', { day: 'numeric', month: 'long', year: 'numeric' })}. Cena zlata se denně mění — aktuální vám rád řeknu po telefonu: <a href="tel:+420774598181" class="not-italic font-sans text-gold-on-light hover:text-gold-deep transition-colors font-medium whitespace-nowrap">+420 774 598 181</a>.
+      </p>
 
     </div>
   </section>

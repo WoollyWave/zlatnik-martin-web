@@ -1,4 +1,85 @@
+# https://www.zlatnik-martin.cz — robots.txt
+# Best practices 2026: explicit allow for AI crawlers (AEO),
+# crawl-delay pro agresivní SEO scrapery.
+
+# --- Default: vše povoleno -------------------------------------------------
 User-agent: *
 Allow: /
+Disallow: /404.html
 
-Sitemap: https://zlatnik-martin.cz/sitemap-index.xml
+# --- Search engines (explicitní, pro jistotu) ------------------------------
+User-agent: Googlebot
+Allow: /
+
+User-agent: Googlebot-Image
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Seznam-Heureka
+Allow: /
+
+User-agent: SeznamBot
+Allow: /
+
+User-agent: DuckDuckBot
+Allow: /
+
+# --- AI / LLM crawlers (AEO 2026) ------------------------------------------
+# Povolujeme indexaci do AI odpovědí — chceme být v ChatGPT/Claude/Perplexity.
+
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+User-agent: Bytespider
+Allow: /
+
+User-agent: Amazonbot
+Allow: /
+
+User-agent: meta-externalagent
+Allow: /
+
+User-agent: cohere-ai
+Allow: /
+
+# --- Agresivní SEO scrapery — crawl-delay -----------------------------------
+User-agent: AhrefsBot
+Crawl-delay: 10
+
+User-agent: SemrushBot
+Crawl-delay: 10
+
+User-agent: MJ12bot
+Crawl-delay: 10
+
+User-agent: DotBot
+Crawl-delay: 10
+
+# --- Sitemap ----------------------------------------------------------------
+Sitemap: https://www.zlatnik-martin.cz/sitemap.xml

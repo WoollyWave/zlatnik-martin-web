@@ -14,26 +14,17 @@ document.addEventListener('DOMContentLoaded', () => {
       p.classList.toggle('border', !isTarget);
       p.classList.toggle('border-border', !isTarget);
       p.classList.toggle('text-text-secondary', !isTarget);
-      p.style.color = isTarget ? 'var(--color-button-text)' : '';
+      p.classList.toggle('btn-text-light', isTarget);
     });
   };
 
+  // Třída `.is-filter-hidden` řízena přes CSS (definováno v global.css) — single layout pass,
+  // žádný inline-style thrash. INP-friendly.
   const applyFilter = (filter: string) => {
     cards.forEach((card) => {
       const category = card.getAttribute('data-category') || '';
       const visible = filter === 'all' || category === filter;
-      if (visible) {
-        card.style.display = '';
-        card.style.opacity = '0';
-        card.style.transform = 'translateY(10px)';
-        requestAnimationFrame(() => {
-          card.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
-          card.style.opacity = '1';
-          card.style.transform = 'translateY(0)';
-        });
-      } else {
-        card.style.display = 'none';
-      }
+      card.classList.toggle('is-filter-hidden', !visible);
     });
   };
 

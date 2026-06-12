@@ -1,0 +1,153 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import ContactForm from '../../components/ContactForm.astro';
+import { SITE } from '../../data/site';
+import { graph, contactPageSchema, breadcrumbSchema } from '../../lib/seo';
+
+const jsonLd = graph(
+  contactPageSchema(),
+  breadcrumbSchema([
+    { name: 'Home', url: '/en/' },
+    { name: 'Contact', url: '/en/contact/' },
+  ]),
+);
+
+const contactMethods = [
+  {
+    label: 'Phone',
+    value: SITE.phoneDisplay,
+    href: SITE.phoneHref,
+    description: `Mon–Fri ${SITE.hours.weekdays}`,
+  },
+  {
+    label: 'WhatsApp',
+    value: 'Send a message',
+    href: SITE.whatsapp,
+    description: "I'll reply within 24 hours",
+  },
+  {
+    label: 'Email',
+    value: SITE.email,
+    href: SITE.emailHref,
+    description: 'For longer enquiries',
+  },
+];
+---
+
+<Layout
+  locale="en"
+  title="Contact | Martin Ševr — Goldsmith workshop in Prague"
+  description="Get in touch directly. Phone, WhatsApp, email. I'll reply within 24 hours. Pod Kesnerkou 46, Prague 5."
+  jsonLd={jsonLd}
+  navOverlay
+>
+
+  <!-- ====== HERO ====== -->
+  <section class="relative bg-bg-primary border-b border-border section-hero overflow-hidden">
+    <div class="radial-overlay"></div>
+    <div class="relative max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-14">
+      <div class="max-w-3xl" data-anim="up">
+        <span class="label-dot">Contact</span>
+        <h1 class="mt-6">
+          Write, call, drop by. I'll get back <em>within 24 hours</em>.
+        </h1>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== CONTACT METHODS — 3 cards ====== -->
+  <section class="relative bg-bg-primary border-b border-border section-sm">
+    <div class="max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-14">
+      <div class="grid md:grid-cols-3 gap-6" data-anim="stagger">
+        {contactMethods.map((method) => (
+          <a
+            data-anim-child
+            href={method.href}
+            target={method.label === 'WhatsApp' ? '_blank' : undefined}
+            rel={method.label === 'WhatsApp' ? 'noopener noreferrer' : undefined}
+            class="block border border-border p-6 text-center hover:bg-hover-bg transition-colors duration-200"
+          >
+            <p class="font-sans text-[11px] font-medium uppercase tracking-[0.15em] text-text-muted mb-3">{method.label}</p>
+            <p class="body-lg text-text-primary font-medium">{method.value}</p>
+            <p class="body-md text-text-muted mt-2">{method.description}</p>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== FORM + PHOTO ====== -->
+  <section class="relative bg-bg-primary section-md overflow-hidden">
+    <div class="radial-overlay"></div>
+    <div class="relative max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-14">
+      <div class="grid lg:grid-cols-2 gap-12 lg:gap-20">
+        <div data-anim="up">
+          <span class="label-dot">Write to me</span>
+          <h2 class="mt-5 mb-8">Write to me</h2>
+          <ContactForm locale="en" />
+        </div>
+        <div class="flex items-center justify-center order-first lg:order-none">
+          <img
+            src="/images/kontakt--formular-foto--prsten.webp"
+            srcset="/images/kontakt--formular-foto--prsten.webp 1x, /images/kontakt--formular-foto--prsten.webp 2x"
+            width="800" height="1067"
+            alt="Handmade ring — Martin Ševr goldsmith workshop"
+            loading="lazy"
+            decoding="async"
+            data-anim="ring-reveal"
+            class="w-full max-w-[220px] sm:max-w-xs lg:max-w-md h-auto object-contain will-change-transform"
+          />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== MAP ====== -->
+  <section class="bg-bg-primary border-b border-border section-sm">
+    <div class="max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-14" data-anim="up">
+      <div class="grid lg:grid-cols-[0.34fr_1fr] gap-10 lg:gap-16">
+        <!-- Address -->
+        <div>
+          <span class="label-dot">Where to find me</span>
+          <address class="not-italic body-md text-text-secondary leading-relaxed mt-5">
+            <p class="font-medium text-text-primary">Martin Ševr — Goldsmith workshop</p>
+            <p class="mt-2">Pod Kesnerkou 46</p>
+            <p>Prague 5, 150 00</p>
+            <p class="mt-4">
+              <span class="font-medium text-text-primary">Mon–Fri</span> 9:00–17:00
+            </p>
+            <p>
+              <span class="font-medium text-text-primary">Weekends</span> by appointment
+            </p>
+            <p class="mt-4 body-md text-text-muted">Reg. no.: 87639114</p>
+          </address>
+        </div>
+        <!-- Google Maps embed -->
+        <div>
+          <div class="relative w-full aspect-video overflow-hidden border border-border">
+            <iframe
+              src="https://maps.google.com/maps?q=Pod+Kesnerkou+46,+Praha+5,+150+00&z=16&output=embed"
+              class="absolute inset-0 w-full h-full"
+              style="border:0"
+              loading="lazy"
+              referrerpolicy="no-referrer"
+              sandbox="allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"
+              title="Map — Pod Kesnerkou 46, Prague 5"
+              aria-label="Map of the workshop location — Pod Kesnerkou 46, Prague 5"
+            ></iframe>
+          </div>
+          <a
+            href="https://www.google.com/maps/dir/?api=1&destination=Pod+Kesnerkou+46,+Praha+5,+150+00"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex items-center gap-2 mt-4 text-[clamp(0.6875rem,0.6rem+0.15vw,0.8125rem)] text-text-secondary uppercase tracking-[0.2em] font-sans font-medium hover:text-gold-deep transition-colors duration-300"
+          >
+            Navigate
+            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25" /></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</Layout>

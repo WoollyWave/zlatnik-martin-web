@@ -1,59 +1,212 @@
 # ==========================================================================
-# Hostinger Apache config — static Astro build
+# zlatnik-martin.cz — Hostinger LiteSpeed
+# Static Astro build · SEO + Security + Performance (best practices 2026)
+# Canonical origin: https://www.zlatnik-martin.cz/
 # ==========================================================================
 
-# --- Security headers ------------------------------------------------------
-<IfModule mod_headers.c>
-  # CSP: self pro vše, self-hosted fonty, inline Tailwind + GSAP init.
-  # Google Maps iframe povolen v frame-src (zobrazuje se na /kontakt).
-  Header set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; frame-src https://www.google.com https://maps.google.com; frame-ancestors 'none'; base-uri 'self'; form-action 'self' mailto:"
-  Header set X-Content-Type-Options "nosniff"
-  Header set X-Frame-Options "DENY"
-  Header set Referrer-Policy "strict-origin-when-cross-origin"
-  Header set Permissions-Policy "geolocation=(), microphone=(), camera=(), payment=(), usb=(), interest-cohort=(), browsing-topics=(), accelerometer=(), gyroscope=(), magnetometer=(), midi=(), bluetooth=()"
-  # HSTS zapni, až bude doména výhradně na HTTPS (po certifikátu):
-  # Header set Strict-Transport-Security "max-age=31536000; includeSubDomains"
-</IfModule>
+# --- 0) Server hardening ---------------------------------------------------
+Options -Indexes -MultiViews
+ServerSignature Off
+AddDefaultCharset UTF-8
+DirectoryIndex index.html
 
-# --- HTTPS redirect --------------------------------------------------------
+# --- 1) Canonical URL (HTTPS + www + bez index.html) -----------------------
+# Důležité pro SEO: jeden URL = jeden zdroj. Google Search Console pak nevidí duplicity.
 <IfModule mod_rewrite.c>
   RewriteEngine On
-  RewriteCond %{HTTPS} off
-  RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+  # 1a) HTTP → HTTPS (X-Forwarded-Proto kvůli LiteSpeed/CDN proxy)
+  RewriteCond %{HTTPS} off [OR]
+  RewriteCond %{HTTP:X-Forwarded-Proto} =http
+  RewriteRule ^ https://www.zlatnik-martin.cz%{REQUEST_URI} [L,R=301,NE]
+
+  # 1b) apex/jiný host → www.zlatnik-martin.cz
+  RewriteCond %{HTTP_HOST} !^www\.zlatnik-martin\.cz$ [NC]
+  RewriteCond %{HTTP_HOST} !^$
+  RewriteRule ^ https://www.zlatnik-martin.cz%{REQUEST_URI} [L,R=301,NE]
+
+  # 1c) Strip trailing /index.html → /
+  RewriteCond %{THE_REQUEST} \s/+(.*)index\.html[\s?] [NC]
+  RewriteRule ^ /%1 [L,R=301,NE]
 </IfModule>
 
-# --- Cache control ---------------------------------------------------------
+# --- 2) Security headers (OWASP 2026) --------------------------------------
+<IfModule mod_headers.c>
+  # HSTS — HTTPS-only po 1 rok. Pro HSTS preload list později zvýšit max-age=63072000 a doplnit "preload".
+  Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
+
+  # CSP — povoluje GA4 (gtag.js přes Google Tag Manager) + Google Maps embed
+  Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://*.googletagmanager.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://www.googletagmanager.com https://*.google-analytics.com https://*.googletagmanager.com https://*.g.doubleclick.net; font-src 'self'; connect-src 'self' https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com https://*.g.doubleclick.net; frame-src https://www.google.com https://maps.google.com; frame-ancestors 'none'; base-uri 'self'; form-action 'self' mailto:; object-src 'none'; upgrade-insecure-requests"
+
+  # Anti-clickjacking (legacy + moderní)
+  Header always set X-Frame-Options "DENY"
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+
+  # Permissions-Policy — zakazuje vše, co nepotřebujeme. `unload=()` přidáno 2024
+  # kvůli BFCache (zpětné šipky v prohlížeči). Bez něj se stránka po `back` načítá znovu = pomalé.
+  Header always set Permissions-Policy "geolocation=(), microphone=(), camera=(), payment=(), usb=(), interest-cohort=(), browsing-topics=(), accelerometer=(), gyroscope=(), magnetometer=(), midi=(), bluetooth=(), display-capture=(), fullscreen=(self), picture-in-picture=(), unload=()"
+
+  # Cross-origin policies — povolujeme, aby Google obrázky / sociální sítě mohly preview
+  Header always set Cross-Origin-Opener-Policy "same-origin"
+  Header always set Cross-Origin-Resource-Policy "cross-origin"
+
+  # DNS prefetch zapnutý — rychlejší navigace na externí (Maps, GTM)
+  Header always set X-DNS-Prefetch-Control "on"
+
+  # Odstranit identifikační hlavičky
+  Header unset X-Powered-By
+  Header unset Server
+  Header always unset X-Powered-By
+</IfModule>
+
+# --- 3) MIME types ---------------------------------------------------------
+<IfModule mod_mime.c>
+  AddType image/webp .webp
+  AddType image/avif .avif
+  AddType image/svg+xml .svg .svgz
+  AddType font/woff2 .woff2
+  AddType font/woff .woff
+  AddType application/manifest+json .webmanifest
+  AddType application/xml .xml
+  AddType text/plain .txt
+</IfModule>
+
+# --- 4) Cache: Expires (Last-Modified-based) -------------------------------
 <IfModule mod_expires.c>
   ExpiresActive On
-  ExpiresByType text/html "access plus 0 seconds"
-  ExpiresByType text/css "access plus 1 year"
-  ExpiresByType application/javascript "access plus 1 year"
-  ExpiresByType image/webp "access plus 1 year"
-  ExpiresByType image/svg+xml "access plus 1 year"
-  ExpiresByType font/woff2 "access plus 1 year"
-  ExpiresByType application/manifest+json "access plus 1 week"
+  ExpiresDefault "access plus 1 month"
+
+  # HTML — vždy revalidace (rychlé deploys bez stale cache)
+  ExpiresByType text/html                       "access plus 0 seconds"
+  ExpiresByType application/xhtml+xml           "access plus 0 seconds"
+
+  # Hashované assety — 1 rok
+  ExpiresByType text/css                        "access plus 1 year"
+  ExpiresByType application/javascript          "access plus 1 year"
+  ExpiresByType text/javascript                 "access plus 1 year"
+
+  # Fonty — 1 rok
+  ExpiresByType font/woff2                      "access plus 1 year"
+  ExpiresByType font/woff                       "access plus 1 year"
+
+  # Obrázky — 6 měsíců (favicon update musí stihnout projít)
+  ExpiresByType image/webp                      "access plus 6 months"
+  ExpiresByType image/avif                      "access plus 6 months"
+  ExpiresByType image/svg+xml                   "access plus 6 months"
+  ExpiresByType image/png                       "access plus 6 months"
+  ExpiresByType image/jpeg                      "access plus 6 months"
+  ExpiresByType image/gif                       "access plus 6 months"
+  ExpiresByType image/x-icon                    "access plus 6 months"
+  ExpiresByType image/vnd.microsoft.icon        "access plus 6 months"
+
+  # Sitemap / robots / manifest — krátký cache (mění se nezávisle na buildu)
+  ExpiresByType application/manifest+json       "access plus 1 week"
+  ExpiresByType application/xml                 "access plus 1 day"
+  ExpiresByType text/xml                        "access plus 1 day"
+  ExpiresByType text/plain                      "access plus 1 week"
 </IfModule>
 
+# --- 5) Cache-Control overlay (přesnější než Expires) ----------------------
 <IfModule mod_headers.c>
-  # Immutable pro hashované assety
-  <FilesMatch "\.(css|js|woff2|webp|svg)$">
+  # Hashované assety od Astra → immutable (filename obsahuje hash, nikdy se nezmění)
+  <FilesMatch "\.(css|js|woff2|woff)$">
     Header set Cache-Control "public, max-age=31536000, immutable"
   </FilesMatch>
-  # HTML vždy z čerstvého origin
+
+  # Obrázky → long cache, ALE ne immutable (og-image musí jít update)
+  <FilesMatch "\.(webp|avif|svg|jpg|jpeg|png|gif|ico)$">
+    Header set Cache-Control "public, max-age=15552000"
+  </FilesMatch>
+
+  # Favicony — krátký cache (1 den), aby update favikony rychle prošel browsery.
+  # MUSÍ být PO obecné image pravidle — pozdější Header set vyhrává.
+  <FilesMatch "^(favicon\.ico|favicon\.svg|apple-touch-icon\.png)$">
+    Header set Cache-Control "public, max-age=86400, must-revalidate"
+  </FilesMatch>
+
+  # HTML → fresh, ale využij ETag/304
   <FilesMatch "\.html$">
     Header set Cache-Control "public, max-age=0, must-revalidate"
   </FilesMatch>
+
+  # Sitemap / robots / llms.txt → krátký cache
+  <FilesMatch "\.(xml|txt)$">
+    Header set Cache-Control "public, max-age=3600, must-revalidate"
+  </FilesMatch>
+
+  # Manifest
+  <FilesMatch "\.webmanifest$">
+    Header set Cache-Control "public, max-age=604800"
+  </FilesMatch>
 </IfModule>
 
-# --- Compression -----------------------------------------------------------
+# --- 6) ETags off ----------------------------------------------------------
+# Cache-Control + Last-Modified stačí. ETags komplikují CDN/multi-server.
+<IfModule mod_headers.c>
+  Header unset ETag
+</IfModule>
+FileETag None
+
+# --- 7) Compression --------------------------------------------------------
+# LiteSpeed na Hostinger má Brotli automaticky. mod_deflate = gzip fallback.
+# NEKOMPRIMUJEME woff2 / webp / avif / jpg / png — už jsou komprimované (waste CPU).
 <IfModule mod_deflate.c>
-  AddOutputFilterByType DEFLATE text/html text/css application/javascript application/json image/svg+xml font/woff2
+  AddOutputFilterByType DEFLATE text/html
+  AddOutputFilterByType DEFLATE text/css
+  AddOutputFilterByType DEFLATE text/plain
+  AddOutputFilterByType DEFLATE text/xml
+  AddOutputFilterByType DEFLATE application/javascript
+  AddOutputFilterByType DEFLATE application/json
+  AddOutputFilterByType DEFLATE application/ld+json
+  AddOutputFilterByType DEFLATE application/xml
+  AddOutputFilterByType DEFLATE application/rss+xml
+  AddOutputFilterByType DEFLATE application/atom+xml
+  AddOutputFilterByType DEFLATE application/manifest+json
+  AddOutputFilterByType DEFLATE image/svg+xml
+  AddOutputFilterByType DEFLATE font/eot
 </IfModule>
 
-# --- Block dotfiles --------------------------------------------------------
+# --- 8) LiteSpeed cache (Hostinger native) ---------------------------------
+<IfModule LiteSpeed>
+  # Public cache pro statické HTML — 1h na edge, browser cache řízen Cache-Control výše
+  CacheLookup on
+  RewriteEngine On
+  RewriteRule .* - [E=Cache-Control:max-age=3600]
+</IfModule>
+
+# --- 9) Block dotfiles + citlivé soubory -----------------------------------
 <FilesMatch "^\.">
   Require all denied
 </FilesMatch>
 
-# --- 404 -------------------------------------------------------------------
+<FilesMatch "\.(env|ini|log|sh|sql|conf|bak|backup|swp|fla|psd|ai|sketch|md|yml|yaml)$">
+  Require all denied
+</FilesMatch>
+
+# Povolit veřejné meta soubory
+<Files "site.webmanifest">
+  Require all granted
+</Files>
+<Files "robots.txt">
+  Require all granted
+</Files>
+<Files "llms.txt">
+  Require all granted
+</Files>
+<Files "sitemap.xml">
+  Require all granted
+</Files>
+<Files "sitemap-index.xml">
+  Require all granted
+</Files>
+<Files "favicon.svg">
+  Require all granted
+</Files>
+<Files "apple-touch-icon.png">
+  Require all granted
+</Files>
+
+# --- 10) 404 (custom Astro 404 stránka) ------------------------------------
 ErrorDocument 404 /404.html
+ErrorDocument 403 /404.html

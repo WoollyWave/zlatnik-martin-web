@@ -1,30 +1,42 @@
 # Martin Ševr — Zlatnická dílna Praha
-# https://zlatnik-martin.cz
 
-> Zlatník. Ruční výroba šperků ze zlata, stříbra a přírodních kamenů v centru Prahy.
+> Zlatník v centru Prahy. Ruční výroba šperků ze zlata, stříbra a přírodních kamenů. 20+ let praxe. Zakázková tvorba, hotové šperky skladem, opravy a úpravy stávajících kusů.
 
-## Kdo jsem
-Martin Ševr, zlatník s 20+ lety praxe. IČO 87639114.
-Adresa: Pod Kesnerkou 46, Praha 5, 150 00.
-Telefon/WhatsApp: +420 774 598 181, e-mail: zlatnikmartin@email.cz.
+## Kontakt
 
-## Co dělám
-- Zakázková tvorba šperků (zlato 585/750, stříbro 925, přírodní kameny)
-- Hotové šperky skladem (stříbro + kameny)
-- Opravy a úpravy stávajících šperků
-- Konzultace v dílně nebo na dálku
+- **Adresa:** Pod Kesnerkou 46, Praha 5, 150 00
+- **Telefon / WhatsApp:** +420 774 598 181
+- **E-mail:** zlatnikmartin@email.cz
+- **IČO:** 87639114
+- **Otevřeno:** Po–Pá 9:00–17:00, víkendy po domluvě
 
 ## Stránky
-- /                       — Domů
-- /zakazkova-tvorba       — Proces, materiály, ceník, FAQ
-- /skladem                — Hotové šperky
-- /portfolio              — Realizace s popisem
-- /o-dilne                — Příběh, certifikáty, dílna
-- /kontakt                — Kontaktní údaje, formulář, mapa
-- /sperky/[slug]          — Detaily produktů skladem
-- /tvorba/[slug]          — Detaily realizací
+
+- [Domů](https://www.zlatnik-martin.cz/): Přehled služeb, filozofie dílny, ukázky z portfolia a hotových šperků skladem.
+- [Zakázková tvorba](https://www.zlatnik-martin.cz/zakazkova-tvorba/): Proces výroby šperku na míru, materiály (zlato 585/14 kt + 750/18 kt, stříbro 925, přírodní kameny), orientační ceník, FAQ, expresní výroba do 5 pracovních dnů.
+- [Skladem](https://www.zlatnik-martin.cz/skladem/): Hotové šperky k zakoupení — stříbro 925 s přírodními kameny (ametyst, opál, turmalín, vltavín, perly, růženín a další). Většinu lze vyrobit i ve zlatě.
+- [Portfolio](https://www.zlatnik-martin.cz/portfolio/): Realizace s detailním popisem procesu výroby. Snubní páry, zásnubní prsteny, autorská tvorba, personalizované kusy.
+- [O dílně](https://www.zlatnik-martin.cz/o-dilne/): Příběh Martina Ševra, certifikáty, fotky z dílny, hodnoty a pracovní postup.
+- [Kontakt](https://www.zlatnik-martin.cz/kontakt/): Kontaktní formulář, mapa, telefonní spojení, otvírací doba.
+
+## Co dělám
+
+- **Zakázková tvorba:** Šperk na míru podle vašeho nápadu. Návrh schválíte před tím, než cokoli vznikne. Konzultace zdarma a bez závazků.
+- **Snubní a zásnubní prsteny:** Bílé/žluté zlato 585 nebo 750, s diamantem či bez. Před výrobou ve zlatě vždy vzorek ve stříbře k nošení doma.
+- **Hotové šperky skladem:** Stříbro 925 s přírodními kameny. Většinu modelů vyrobím i ve zlatě do 3 týdnů.
+- **Opravy a úpravy:** Zmenšování a zvětšování velikosti, rytí, oprava ulomených částí, čištění, výměna kamenů.
+- **Expresní výroba:** Jednodušší šperky (prsten bez kamene, hladký řetízek, ražený znak) do 5 pracovních dnů ze zlata 585.
 
 ## Hodnoty
-- Ruční výroba bez kompromisů, žádná sériová výroba.
-- Materiály s certifikátem (puncované kovy, gemologický posudek u kamenů).
-- První osoba — Martin pracuje sám, klient mluví přímo s ním.
+
+- **Ruční výroba bez kompromisů.** Každý šperk vyrábím sám od začátku do konce. Žádná sériová výroba.
+- **Certifikované materiály.** Puncované kovy, gemologické posudky u kamenů.
+- **Přímý kontakt.** Voláte a píšete přímo zlatníkovi, který šperk vyrobí. Žádný asistent, žádné předávání mezi lidmi.
+- **Otevřená dílna.** Můžete sledovat výrobu na vlastní oči, kdykoli se domluvíme.
+
+## Optional
+
+- [Ochrana osobních údajů](https://www.zlatnik-martin.cz/ochrana-osobnich-udaju/): GDPR informace, zpracování dat z formuláře.
+- [Sitemap](https://www.zlatnik-martin.cz/sitemap.xml): XML sitemap všech veřejných URL.
+- [Instagram](https://www.instagram.com/zlatnicka_dilna_martin_sevr/): Ukázky práce z dílny.
+- [Facebook](https://www.facebook.com/MartinSevr): Firemní profil.

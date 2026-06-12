@@ -1,0 +1,22 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(curl -s http://localhost:4321/o-dilne)",
+      "Bash(node -e \"import\\('sharp'\\).then\\(s=>s.default\\('/Users/woollywave/weby/Zlatnik martin/Fotky-k-uprave/Upravene/puncak-martinsever.webp'\\).metadata\\(\\).then\\(m=>console.log\\(m.width+'x'+m.height\\)\\)\\)\")",
+      "Bash(node --input-type=module -e ' *)",
+      "Bash(grep -nA 8 \"skip-to-content\" src/styles/global.css)",
+      "Bash(grep -nB 1 -A 3 \"shadow-float\\\\|--shadow-float\" src/styles/global.css)",
+      "Bash('/Applications/Google Chrome.app/Contents/MacOS/Google Chrome' --headless=new --disable-gpu --hide-scrollbars --window-size=1600,200 --screenshot=/tmp/nav-top.png http://localhost:4321/o-dilne)",
+      "Bash('/Applications/Google Chrome.app/Contents/MacOS/Google Chrome' --headless=new --disable-gpu --hide-scrollbars --window-size=1600,120 --screenshot=/tmp/very-top.png http://localhost:4321/sperky/prsten-s-ametystem-kulaty)",
+      "Bash('/Applications/Google Chrome.app/Contents/MacOS/Google Chrome' --headless=new --disable-gpu --hide-scrollbars --window-size=1400,400 --screenshot=/tmp/sperky-detail.png http://localhost:4321/sperky/prsten-s-ametystem-kulaty)",
+      "Bash(curl -s \"https://www.zlatnik-martin.cz/portfolio\")",
+      "Bash(curl -s \"https://www.zlatnik-martin.cz/portfolio/\" -o /tmp/prod-portfolio.html)",
+      "Bash(curl -sI \"https://zlatnik-martin.cz/portfolio\")",
+      "Bash('/Applications/Google Chrome.app/Contents/MacOS/Google Chrome' --headless=new --disable-gpu --hide-scrollbars --window-size=1400,3500 --screenshot=/tmp/prod-tvorba-opal.png https://www.zlatnik-martin.cz/tvorba/zlaty-prsten-s-opalem/)",
+      "Bash('/Applications/Google Chrome.app/Contents/MacOS/Google Chrome' --headless=new --disable-gpu --hide-scrollbars --window-size=1400,5000 --screenshot=/tmp/prod-tvorba-full.png https://www.zlatnik-martin.cz/tvorba/zlaty-prsten-s-opalem/)",
+      "Bash(awk '/gallery:/{p=1; n=0; next} p && /^[[:space:]]*\\\\]/{print \"  \"n\" photos\"; p=0} p && /src:/{n++} /slug:/{printf $0\" \"}' src/data/portfolio.ts)",
+      "Bash('/Applications/Google Chrome.app/Contents/MacOS/Google Chrome' --headless=new --disable-gpu --hide-scrollbars --window-size=1400,4500 --screenshot=/tmp/tvorba-v4-full.png http://localhost:4321/tvorba/vltavin-jediny-original)",
+      "Bash('/Applications/Google Chrome.app/Contents/MacOS/Google Chrome' --headless=new --disable-gpu --hide-scrollbars --window-size=1400,3200 --screenshot=/tmp/tvorba-clean.png http://localhost:4321/tvorba/vltavin-jediny-original)"
+    ]
+  }
+}

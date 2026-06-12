@@ -2,6 +2,10 @@
 import '../styles/global.css';
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
+import CookieBanner from '../components/CookieBanner.astro';
+import { getLocaleFromUrl, getAlternateUrl, useTranslations, type Locale } from '../i18n';
+import { products } from '../data/products';
+import { portfolioCases } from '../data/portfolio';
 
 interface Props {
   title: string;
@@ -13,6 +17,19 @@ interface Props {
   jsonLd?: object;
   /** `true` = nav pluje nad první sekcí (bez 96px spaceru). První sekce si musí zajistit vlastní padding-top. */
   navOverlay?: boolean;
+  /** LCP image preload hints — výrazně zlepší PageSpeed LCP. */
+  lcpImageMobile?: string;
+  lcpImageMobile2x?: string;
+  lcpImageDesktop?: string;
+  lcpImageDesktop2x?: string;
+  /** Per-page footer CTA heading (HTML přes set:html). Default = homepage CTA. */
+  ctaHeading?: string;
+  /** Per-page subtitle pod nadpisem (plain text, 1–2 věty). */
+  ctaSubtitle?: string;
+  ctaPrimaryLabel?: string;
+  ctaPrimaryHref?: string;
+  /** Explicit locale override — jinak se detekuje z URL. */
+  locale?: Locale;
 }
 
 const {
@@ -24,14 +41,55 @@ const {
   canonical,
   jsonLd,
   navOverlay = false,
+  lcpImageMobile,
+  lcpImageMobile2x,
+  lcpImageDesktop,
+  lcpImageDesktop2x,
+  ctaHeading,
+  ctaSubtitle,
+  ctaPrimaryLabel,
+  ctaPrimaryHref,
+  locale,
 } = Astro.props;
 
-const siteUrl = Astro.site?.toString().replace(/\/$/, '') || 'https://zlatnik-martin.cz';
+const siteUrl = Astro.site?.toString().replace(/\/$/, '') || 'https://www.zlatnik-martin.cz';
 const canonicalUrl = canonical || new URL(Astro.url.pathname, siteUrl).toString();
+
+const currentLocale: Locale = locale ?? getLocaleFromUrl(Astro.url);
+const t = useTranslations(currentLocale);
+
+// Slug mapy pro hreflang alternates u detailových stránek.
+const productSlugMap = new Map<string, string>();
+for (const p of products) {
+  if (p.slugEn) {
+    productSlugMap.set(p.slug, p.slugEn);
+    productSlugMap.set(p.slugEn, p.slug);
+  }
+}
+const portfolioSlugMap = new Map<string, string>();
+for (const c of portfolioCases) {
+  if (c.slugEn) {
+    portfolioSlugMap.set(c.slug, c.slugEn);
+    portfolioSlugMap.set(c.slugEn, c.slug);
+  }
+}
+
+// hreflang URLs — vždy obě varianty + x-default na češtinu
+const csPath = currentLocale === 'cs'
+  ? Astro.url.pathname
+  : getAlternateUrl(Astro.url.pathname, 'en', productSlugMap, portfolioSlugMap);
+const enPath = currentLocale === 'en'
+  ? Astro.url.pathname
+  : getAlternateUrl(Astro.url.pathname, 'cs', productSlugMap, portfolioSlugMap);
+const csUrl = `${siteUrl}${csPath}`;
+const enUrl = `${siteUrl}${enPath}`;
+
+const htmlLang = t('locale.full');
+const ogLocale = t('locale.ogLocale');
 ---
 
 <!doctype html>
-<html lang="cs">
+<html lang={htmlLang}>
   <head>
     <script>document.documentElement.classList.add('js');</script>
     <noscript><style>body { opacity: 1 !important; }</style></noscript>
@@ -44,7 +102,13 @@ const canonicalUrl = canonical || new URL(Astro.url.pathname, siteUrl).toString(
     <meta name="description" content={description} />
     <meta name="author" content="Martin Ševr" />
     <meta name="theme-color" content="#F1EEE5" />
+    <meta name="google-site-verification" content="w_cLfqqzCP8FOZsrvN0fd6bWNChseWl2mlkZJxR3QoE" />
     <link rel="canonical" href={canonicalUrl} />
+
+    <!-- hreflang — vždy obě varianty + x-default (CS = default) -->
+    <link rel="alternate" hreflang="cs" href={csUrl} />
+    <link rel="alternate" hreflang="en" href={enUrl} />
+    <link rel="alternate" hreflang="x-default" href={csUrl} />
 
     <!-- Open Graph -->
     <meta property="og:type" content="website" />
@@ -52,7 +116,8 @@ const canonicalUrl = canonical || new URL(Astro.url.pathname, siteUrl).toString(
     <meta property="og:description" content={ogDescription || description} />
     <meta property="og:image" content={`${siteUrl}${ogImage}`} />
     <meta property="og:url" content={canonicalUrl} />
-    <meta property="og:locale" content="cs_CZ" />
+    <meta property="og:locale" content={ogLocale} />
+    <meta property="og:locale:alternate" content={currentLocale === 'cs' ? 'en_GB' : 'cs_CZ'} />
     <meta property="og:site_name" content="Martin Ševr — Zlatnická dílna Praha" />
 
     <!-- Twitter Card -->
@@ -61,9 +126,15 @@ const canonicalUrl = canonical || new URL(Astro.url.pathname, siteUrl).toString(
     <meta name="twitter:description" content={ogDescription || description} />
     <meta name="twitter:image" content={`${siteUrl}${ogImage}`} />
 
-    <!-- Favicon + Touch Icons -->
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <!-- Favicon + Touch Icons
+         Google Search Results vyžaduje multiples of 48 (48/96/192) v PNG.
+         ?v=2 = cache-buster po výměně favicony 2026-05-17; bump při každé další změně. -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png?v=2" />
+    <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96.png?v=2" />
+    <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png?v=2" />
+    <link rel="icon" type="image/x-icon" href="/favicon.ico?v=2" sizes="32x32" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=2" />
     <link rel="manifest" href="/site.webmanifest" />
 
     <!-- Fonts (all self-hosted) -->
@@ -72,24 +143,113 @@ const canonicalUrl = canonical || new URL(Astro.url.pathname, siteUrl).toString(
     <link rel="preload" href="/fonts/PlayfairDisplay-Regular.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="/fonts/PlayfairDisplay-Italic.woff2" as="font" type="font/woff2" crossorigin />
 
+    <!-- LCP image preload — kritické pro FCP/LCP performance -->
+    {lcpImageMobile && (
+      <link
+        rel="preload"
+        as="image"
+        href={lcpImageMobile}
+        imagesrcset={lcpImageMobile2x ? `${lcpImageMobile} 1x, ${lcpImageMobile2x} 2x` : undefined}
+        media="(max-width: 1023px)"
+        fetchpriority="high"
+      />
+    )}
+    {lcpImageDesktop && (
+      <link
+        rel="preload"
+        as="image"
+        href={lcpImageDesktop}
+        imagesrcset={lcpImageDesktop2x ? `${lcpImageDesktop} 1x, ${lcpImageDesktop2x} 2x` : undefined}
+        media="(min-width: 1024px)"
+        fetchpriority="high"
+      />
+    )}
+
+    <!-- Preconnect na Google Tag Manager (gtag.js se načte deferred po user interaction) -->
+    <link rel="preconnect" href="https://www.googletagmanager.com" crossorigin />
+
     <!-- JSON-LD — escape `</` aby string uvnitř nikdy nemohl předčasně uzavřít <script>. -->
     {jsonLd && (
       <script is:inline type="application/ld+json" set:html={JSON.stringify(jsonLd).replace(/</g, '\\u003c')} />
     )}
+
+    <!-- Consent Mode v2 default = denied (jen inline script, žádný network call) -->
+    <script is:inline>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      window.gtag = gtag;
+      gtag('consent', 'default', {
+        ad_storage: 'denied',
+        ad_user_data: 'denied',
+        ad_personalization: 'denied',
+        analytics_storage: 'denied',
+        wait_for_update: 500,
+      });
+      try {
+        const stored = localStorage.getItem('cookie-consent');
+        if (stored === 'granted') {
+          gtag('consent', 'update', { analytics_storage: 'granted' });
+        }
+      } catch (e) {}
+    </script>
   </head>
   <body class="bg-bg-primary text-text-primary font-sans">
-    <a href="#main" class="skip-to-content">Přeskočit na obsah</a>
-    <Nav overlay={navOverlay} />
-    <main id="main">
+    <a href="#main" class="skip-to-content">{t('common.skipToContent')}</a>
+    <Nav overlay={navOverlay} locale={currentLocale} />
+    <main id="main" tabindex="-1" class="focus:outline-none">
       <slot />
     </main>
-    <Footer />
+    <Footer locale={currentLocale} ctaHeading={ctaHeading} ctaSubtitle={ctaSubtitle} ctaPrimaryLabel={ctaPrimaryLabel} ctaPrimaryHref={ctaPrimaryHref} />
+    <CookieBanner />
+
+    <!-- GA gtag.js — loaded AFTER load+idle, kritické pro PageSpeed -->
+    <script is:inline>
+      function loadGA() {
+        if (window.__gaLoaded) return;
+        window.__gaLoaded = true;
+        var s = document.createElement('script');
+        s.async = true;
+        s.src = 'https://www.googletagmanager.com/gtag/js?id=G-4XK17M8XVJ';
+        document.head.appendChild(s);
+        gtag('js', new Date());
+        gtag('config', 'G-4XK17M8XVJ', { anonymize_ip: true });
+      }
+      // Loading triggers: first user interaction OR idle callback after window load
+      var triggers = ['scroll', 'click', 'keydown', 'touchstart', 'mousemove'];
+      function once() {
+        triggers.forEach(function(e){ window.removeEventListener(e, once, { passive: true }); });
+        loadGA();
+      }
+      triggers.forEach(function(e){ window.addEventListener(e, once, { passive: true, once: true }); });
+      window.addEventListener('load', function() {
+        if ('requestIdleCallback' in window) {
+          requestIdleCallback(loadGA, { timeout: 5000 });
+        } else {
+          setTimeout(loadGA, 3000);
+        }
+      });
+    </script>
+
     <script>
-      const loadAnimations = () => import('../scripts/animations.ts');
+      // Skip GSAP download entirely na stránkách bez animací (např. /ochrana-osobnich-udaju, /404).
+      const hasAnims = document.querySelector('[data-anim],[data-float]');
+      if (hasAnims) {
+        const loadAnimations = () => import('../scripts/animations.ts');
+        if ('requestIdleCallback' in window) {
+          requestIdleCallback(loadAnimations, { timeout: 2500 });
+        } else {
+          setTimeout(loadAnimations, 800);
+        }
+      }
+    </script>
+
+    <script>
+      // Core Web Vitals → GA4. Lazy-load až po idle — nesmí konkurovat LCP/INP měření samému.
+      const loadVitals = () => import('../scripts/web-vitals.ts');
       if ('requestIdleCallback' in window) {
-        requestIdleCallback(loadAnimations, { timeout: 1500 });
+        requestIdleCallback(loadVitals, { timeout: 4000 });
       } else {
-        setTimeout(loadAnimations, 200);
+        setTimeout(loadVitals, 1500);
       }
     </script>
     <script>

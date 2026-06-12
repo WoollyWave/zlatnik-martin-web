@@ -10,12 +10,11 @@ const { items, activeIndex = 0 } = Astro.props;
 <div class="flex flex-wrap gap-3 mb-14" id="filter-pills" role="group" aria-label="Filtrovat šperky">
   {items.map((item, i) => (
     <button
-      class={`filter-pill text-[11px] font-sans font-medium uppercase tracking-[0.15em] px-5 py-2.5 transition-all duration-200 cursor-pointer ${
+      class={`filter-pill text-[clamp(0.6875rem,0.6rem+0.15vw,0.8125rem)] font-sans font-medium uppercase tracking-[0.15em] px-5 py-2.5 transition-all duration-200 cursor-pointer ${
         i === activeIndex
-          ? 'bg-text-primary active'
+          ? 'bg-text-primary active btn-text-light'
           : 'bg-transparent border border-border text-text-secondary hover:border-text-muted hover:text-text-primary'
       }`}
-      style={i === activeIndex ? 'color: var(--color-button-text);' : ''}
       data-filter={item === 'Vše' ? 'all' : item.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')}
       aria-pressed={i === activeIndex ? 'true' : 'false'}
     >

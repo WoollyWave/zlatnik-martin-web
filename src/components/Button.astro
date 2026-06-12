@@ -8,27 +8,24 @@ interface Props {
 }
 const { href, variant = 'primary', class: className = '', type = 'button', ariaLabel } = Astro.props;
 
-const base = 'inline-flex items-center justify-center font-sans font-medium transition-colors duration-300 cursor-pointer';
+const base = 'inline-flex items-center justify-center font-sans font-medium transition-[background-color,color,border-color,box-shadow] duration-300 cursor-pointer';
 
 const variants: Record<string, string> = {
-  primary: `${base} gap-3 h-12 px-6 sm:px-8 bg-text-primary rounded-full text-[11px] uppercase tracking-[0.2em] shadow-md hover:bg-gold-deep`,
-  secondary: `${base} gap-2 h-12 px-5 sm:px-6 border border-border bg-white/80 text-text-primary rounded-full text-[11px] uppercase tracking-[0.2em] shadow-sm hover:bg-white`,
-  text: `${base} text-[11px] text-text-secondary uppercase tracking-[0.2em] hover:text-gold-deep gap-2`,
+  primary: `${base} gap-3 h-12 px-6 sm:px-8 bg-text-primary btn-text-light rounded-full text-[clamp(0.6875rem,0.6rem+0.15vw,0.8125rem)] uppercase tracking-[0.2em] shadow-md hover:bg-gold-deep hover:shadow-lg`,
+  secondary: `${base} gap-2 h-12 px-5 sm:px-6 border border-border bg-white/80 text-text-primary rounded-full text-[clamp(0.6875rem,0.6rem+0.15vw,0.8125rem)] uppercase tracking-[0.2em] shadow-sm hover:bg-white hover:border-gold-deep/60 hover:shadow-md hover:text-gold-deep`,
+  text: `${base} text-[clamp(0.6875rem,0.6rem+0.15vw,0.8125rem)] text-text-secondary uppercase tracking-[0.2em] hover:text-gold-deep gap-2`,
 };
 
-// Tailwind v4 workaround: text-white conflicts with text-[size] on same element.
-// Inline style ensures primary button text color is always visible.
-const colorStyle = variant === 'primary' ? 'color: var(--color-button-text);' : '';
 const classes = `${variants[variant]} ${className}`.trim();
 ---
 
 {href ? (
-  <a href={href} class={classes} style={colorStyle} aria-label={ariaLabel}>
+  <a href={href} class={classes} aria-label={ariaLabel}>
     <slot />
     {variant === 'text' && <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25" /></svg>}
   </a>
 ) : (
-  <button type={type} class={classes} style={colorStyle} aria-label={ariaLabel}>
+  <button type={type} class={classes} aria-label={ariaLabel}>
     <slot />
   </button>
 )}

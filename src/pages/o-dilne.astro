@@ -1,12 +1,26 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import PhotoFrame from '../components/PhotoFrame.astro';
+import { graph, aboutPageSchema, personSchema, jewelryStoreSchema, breadcrumbSchema } from '../lib/seo';
+
+const jsonLd = graph(
+  aboutPageSchema(),
+  personSchema(),
+  jewelryStoreSchema(),
+  breadcrumbSchema([
+    { name: 'Domů', url: '/' },
+    { name: 'O dílně', url: '/o-dilne/' },
+  ]),
+);
 ---
 
 <Layout
-  title="O dílně | Martin Ševr — Zlatnická dílna Praha"
-  description="Víc než dvacet let ruční práce se zlatem a stříbrem. Poznejte příběh zlatnické dílny v Praze."
+  title="O zlatnické dílně Praha 5 | Martin Ševr, zlatník s 20+ lety praxe"
+  description="Zlatnická dílna v Praze 5, Pod Kesnerkou 46. Martin Ševr — zlatník s 20+ lety praxe v ruční výrobě šperků ze zlata a stříbra. Příběh dílny a certifikáty."
+  jsonLd={jsonLd}
   navOverlay
+  ctaHeading="Pojďte se zastavit do <em>dílny</em>."
+  ctaSubtitle="Pod Kesnerkou 46, Praha 5. Stačí předem zavolat — rád vám otevřu a ukážu, jak šperky vznikají."
 >
 
   <!-- ====== HERO ====== -->
@@ -14,9 +28,9 @@ import PhotoFrame from '../components/PhotoFrame.astro';
     <div class="radial-overlay"></div>
     <div class="relative max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-14">
       <div class="max-w-3xl" data-anim="up">
-        <span class="label-dot">O dílně</span>
+        <span class="label-dot">Dílna Pod Kesnerkou</span>
         <h1 class="mt-6">
-          Zlatnictví s tradicí<br />a <em>srdcem</em>
+          <em>20+ let</em> v dílně Pod Kesnerkou. Tady vznikne i váš šperk.
         </h1>
         <p class="mt-6 text-text-secondary body-lg max-w-xl">
           Víc než dvacet let ruční práce se zlatem a stříbrem. Každý šperk je originál, vyrobený s úctou k materiálu a k člověku, který ho bude nosit.
@@ -30,13 +44,13 @@ import PhotoFrame from '../components/PhotoFrame.astro';
     <div class="max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-14">
       <div class="grid lg:grid-cols-[1.15fr_0.85fr] gap-10 lg:gap-16 items-start">
 
-        <!-- Photo — tall, dramatic -->
+        <!-- Photo — tall, dramatic (původní layout) -->
         <div data-anim="scale" class="relative overflow-hidden">
           <div class="aspect-[3/4] relative overflow-hidden">
             <img
-              src="/images/o-dilne--portret--martin-lvi-prsten-v-dilne.webp"
-              srcset="/images/o-dilne--portret--martin-lvi-prsten-v-dilne.webp 1x, /images/o-dilne--portret--martin-lvi-prsten-v-dilne@2x.webp 2x"
-              width="600" height="800"
+              src="/images/o-dilne--portret--martin-sevr-zlatnik.webp"
+              srcset="/images/o-dilne--portret--martin-sevr-zlatnik.webp 1x, /images/o-dilne--portret--martin-sevr-zlatnik@2x.webp 2x"
+              width="900" height="1200"
               alt="Martin Ševr v zlatnické dílně"
               loading="lazy" decoding="async"
               class="absolute inset-0 w-full h-full object-cover"
@@ -71,15 +85,15 @@ import PhotoFrame from '../components/PhotoFrame.astro';
           <div class="grid grid-cols-3 gap-6 mt-10 pt-8 border-t border-border">
             <div>
               <span class="block font-serif stat-number text-text-primary">20+</span>
-              <span class="text-[0.75rem] text-text-muted uppercase tracking-wider font-sans mt-1 block">Let zkušeností</span>
+              <span class="text-[12px] text-text-muted uppercase tracking-[0.15em] font-sans mt-1 block">Let zkušeností</span>
             </div>
             <div>
               <span class="block font-serif stat-number text-text-primary">1000+</span>
-              <span class="text-[0.75rem] text-text-muted uppercase tracking-wider font-sans mt-1 block">Výrobků</span>
+              <span class="text-[12px] text-text-muted uppercase tracking-[0.15em] font-sans mt-1 block">Výrobků</span>
             </div>
             <div>
               <span class="block font-serif stat-number text-text-primary">100%</span>
-              <span class="text-[0.75rem] text-text-muted uppercase tracking-wider font-sans mt-1 block">Ruční práce</span>
+              <span class="text-[12px] text-text-muted uppercase tracking-[0.15em] font-sans mt-1 block">Ruční práce</span>
             </div>
           </div>
         </div>
@@ -93,25 +107,35 @@ import PhotoFrame from '../components/PhotoFrame.astro';
     <div class="radial-overlay"></div>
     <div class="relative max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-14">
 
-      <h2 class="italic max-w-4xl" data-anim="up">
-        Věřím ve šperky, které <span class="not-italic text-gold-deep">dýchají</span> — řemeslo, které odstraní zbytečné a odhalí <span class="not-italic text-gold-deep">krásu</span> materiálu.
-      </h2>
+      <span class="label-dot" data-anim="fade">Filozofie dílny</span>
+      <h2 class="mt-5 max-w-3xl" data-anim="up">Tři pravidla, kterými se v dílně <em>řídím</em></h2>
 
-      <div class="grid md:grid-cols-3 gap-8 mt-16" data-anim="stagger">
+      <blockquote class="mt-10 max-w-4xl" data-anim="up">
+        <p class="font-serif italic display-quote text-text-primary font-normal">
+          „Věřím ve šperky, které <span class="not-italic text-gold-deep">dýchají</span> — řemeslo, které odstraní zbytečné a odhalí <span class="not-italic text-gold-deep">krásu</span> materiálu."
+        </p>
+      </blockquote>
+
+      <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mt-16" data-anim="stagger">
         <div data-anim-child class="pt-6 border-t border-border">
-          <span class="text-[0.75rem] text-text-muted font-sans">01</span>
+          <span class="text-[12px] text-text-muted font-sans">01</span>
           <h3 class="mt-2">Ruční práce bez kompromisů</h3>
-          <p class="mt-2 text-text-secondary body-md leading-relaxed">Každý šperk vyrábím od začátku do konce vlastníma rukama. Žádná sériová výroba, žádné polotovary.</p>
+          <p class="mt-2 text-text-secondary body-md leading-relaxed">Každý šperk vyrábím od začátku do konce vlastníma rukama. Žádná sériová výroba.</p>
         </div>
         <div data-anim-child class="pt-6 border-t border-border">
-          <span class="text-[0.75rem] text-text-muted font-sans">02</span>
-          <h3 class="mt-2">Materiály s příběhem</h3>
+          <span class="text-[12px] text-text-muted font-sans">02</span>
+          <h3 class="mt-2">Vím, odkud každý kámen pochází</h3>
           <p class="mt-2 text-text-secondary body-md leading-relaxed">Certifikované kovy, ručně vybrané kameny. Vím, odkud každý materiál přichází a proč ho používám.</p>
         </div>
         <div data-anim-child class="pt-6 border-t border-border">
-          <span class="text-[0.75rem] text-text-muted font-sans">03</span>
-          <h3 class="mt-2">Zdrženlivost místo přebytku</h3>
-          <p class="mt-2 text-text-secondary body-md leading-relaxed">Méně je více. Věřím, že nejkrásnější šperky jsou ty, kde každý detail má svůj důvod.</p>
+          <span class="text-[12px] text-text-muted font-sans">03</span>
+          <h3 class="mt-2">Méně detailů, víc materiálu</h3>
+          <p class="mt-2 text-text-secondary body-md leading-relaxed">Věřím, že nejkrásnější šperky jsou ty, kde každý detail má svůj důvod. Zdrženlivost místo přebytku.</p>
+        </div>
+        <div data-anim-child class="pt-6 border-t border-border">
+          <span class="text-[12px] text-text-muted font-sans">04</span>
+          <h3 class="mt-2">Stará řemesla, nové tvary</h3>
+          <p class="mt-2 text-text-secondary body-md leading-relaxed">Voskové modely, kování, ruční zpracování. Postupy, které fungují stovky let, použité na šperky, které sedí dnešní době.</p>
         </div>
       </div>
 
@@ -127,7 +151,7 @@ import PhotoFrame from '../components/PhotoFrame.astro';
           <img
             src="/images/o-dilne--galerie-1--ruka-retizek-stroj.webp"
             srcset="/images/o-dilne--galerie-1--ruka-retizek-stroj.webp 1x, /images/o-dilne--galerie-1--ruka-retizek-stroj@2x.webp 2x"
-            width="800" height="600" alt="Ruční výroba řetízku v dílně" loading="lazy" decoding="async"
+            width="800" height="1000" alt="Ruční výroba řetízku v dílně" loading="lazy" decoding="async"
             class="w-full aspect-[4/5] object-cover grayscale-[15%] sepia-[10%]"
           />
           <PhotoFrame />
@@ -136,7 +160,7 @@ import PhotoFrame from '../components/PhotoFrame.astro';
           <img
             src="/images/o-dilne--galerie-2--erbovni-pecet-zlato.webp"
             srcset="/images/o-dilne--galerie-2--erbovni-pecet-zlato.webp 1x, /images/o-dilne--galerie-2--erbovni-pecet-zlato@2x.webp 2x"
-            width="800" height="600" alt="Zlatá erbovní pečeť — detail" loading="lazy" decoding="async"
+            width="800" height="1000" alt="Zlatá erbovní pečeť — detail" loading="lazy" decoding="async"
             class="w-full aspect-[4/5] object-cover grayscale-[15%] sepia-[10%]"
           />
           <PhotoFrame />
@@ -145,7 +169,7 @@ import PhotoFrame from '../components/PhotoFrame.astro';
           <img
             src="/images/o-dilne--galerie-3--snubaky-na-dreve-stul.webp"
             srcset="/images/o-dilne--galerie-3--snubaky-na-dreve-stul.webp 1x, /images/o-dilne--galerie-3--snubaky-na-dreve-stul@2x.webp 2x"
-            width="800" height="600" alt="Snubní prsteny na dřevěném stole" loading="lazy" decoding="async"
+            width="800" height="1000" alt="Snubní prsteny na dřevěném stole" loading="lazy" decoding="async"
             class="w-full aspect-[4/5] object-cover grayscale-[15%] sepia-[10%]"
           />
           <PhotoFrame />
@@ -154,20 +178,24 @@ import PhotoFrame from '../components/PhotoFrame.astro';
     </div>
   </section>
 
-  <!-- ====== CERTIFIKÁTY — foto vlevo, text vpravo ====== -->
+  <!-- ====== CERTIFIKÁTY — puncovní certifikát vlevo, text vpravo (stejný layout jako Martin portrait) ====== -->
   <section class="relative bg-bg-primary section-md">
     <div class="max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-14">
-      <div class="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+      <div class="grid lg:grid-cols-[1.15fr_0.85fr] gap-10 lg:gap-16 items-start">
         <div data-anim="scale" class="relative overflow-hidden">
-          <img
-            src="/images/o-dilne--certifikaty--cad-detail-preciznost.webp"
-            srcset="/images/o-dilne--certifikaty--cad-detail-preciznost.webp 1x, /images/o-dilne--certifikaty--cad-detail-preciznost@2x.webp 2x"
-            width="800" height="600" alt="CAD detail — preciznost zlatnické práce" loading="lazy" decoding="async"
-            class="w-full h-full object-cover grayscale-[15%] sepia-[10%]"
-          />
-          <div class="absolute inset-3 border border-white/10 pointer-events-none"></div>
+          <div class="aspect-[3/4] relative overflow-hidden">
+            <img
+              src="/images/o-dilne--certifikaty--puncak-martin-sevr.webp"
+              srcset="/images/o-dilne--certifikaty--puncak-martin-sevr.webp 1x, /images/o-dilne--certifikaty--puncak-martin-sevr@2x.webp 2x"
+              width="900" height="1200"
+              alt="České puncovní značky — certifikát kvality kovů"
+              loading="lazy" decoding="async"
+              class="absolute inset-0 w-full h-full object-cover"
+            />
+            <div class="absolute inset-3 border border-white/15 pointer-events-none"></div>
+          </div>
         </div>
-        <div data-anim="up">
+        <div class="lg:sticky lg:top-28 lg:self-start" data-anim="up">
           <span class="label-dot">Certifikáty</span>
           <h2 class="mt-5">Puncované a certifikované</h2>
           <p class="mt-4 text-text-secondary body-lg">

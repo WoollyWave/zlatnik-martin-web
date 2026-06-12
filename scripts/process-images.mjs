@@ -27,6 +27,13 @@ const SIZE_MAP = {
 
   // Produktové čtverce 1:1
   'skladem--produkt': { w: 800, h: 800, q: 85 },
+  'snubni--styly': { w: 800, h: 800, q: 85 },
+
+  // Snubni hero — 4:3 s mobilní variantou
+  'snubni--hero': { w: 1200, h: 900, q: 85 },
+
+  // Opravy hero — čtvercový 1:1 portrét Martin při práci
+  'opravy--hero': { w: 1000, h: 1000, q: 85 },
 
   // Detail produkty 1:1
   'detail--': { w: 1000, h: 1000, q: 85 },

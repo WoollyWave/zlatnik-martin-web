@@ -26,14 +26,19 @@
   --font-sans: "General Sans", system-ui, -apple-system, sans-serif;
   --shadow-soft: 0 2px 8px rgba(0, 0, 0, 0.06);
   --shadow-medium: 0 8px 24px rgba(0, 0, 0, 0.08);
+  --shadow-float: 0 10px 30px rgba(30, 27, 24, 0.06);    /* Nav floating bar, panely */
+  --shadow-plaque: 0 10px 24px rgba(30, 27, 24, 0.10);   /* Badge, kruh-plakety */
+  --shadow-scatter: 0 8px 30px rgba(0, 0, 0, 0.08);      /* Zakázková scattered fotky */
 
   /* Section spacing tokens — fluid clamp(), žádné breakpoint jumps.
      Konzistentní vertikální rytmus napříč webem (mobile → ultrawide). */
   --space-section-sm: clamp(3rem, 6vw, 4.5rem);     /* 48 → 72px — utility (mapa, kontakt cards) */
   --space-section-md: clamp(4rem, 8vw, 6rem);       /* 64 → 96px — standard content */
   --space-section-lg: clamp(5rem, 10vw, 8rem);      /* 80 → 128px — narrative/portfolio/CTA */
-  --space-hero-top:   clamp(7rem, 12vw, 10rem);     /* 112 → 160px — hero pod fixed nav */
-  --space-hero-bot:   clamp(4rem, 8vw, 6rem);       /* 64 → 96px — hero spodek */
+  /* Hero top: zahrnuje Nav clearance (88px fixed Nav) + visible gap shodný s bottom.
+     Visible top = (this) - 88px ≈ hero-bot → symetrické */
+  --space-hero-top:   clamp(9.5rem, 8rem + 4vw, 11.5rem);  /* 152 → 184px (visible 64 → 96px) */
+  --space-hero-bot:   clamp(4rem, 8vw, 6rem);              /* 64 → 96px */
 }
 
 @font-face {
@@ -92,7 +97,7 @@ h1, h2, h3, h4 {
 /* Fluid type scale — kalibrováno pro 360→1440px viewport, max ratio řídnější */
 h1 {
   font-size: clamp(2rem, 1.3rem + 2.8vw, 4rem);       /* 32 → 64px */
-  line-height: 1.08;
+  line-height: 1.15;
   letter-spacing: -0.02em;
 }
 h2 {
@@ -133,6 +138,11 @@ a { color: inherit; text-decoration: none; }
   outline: 2px solid var(--color-gold-deep);
   outline-offset: 2px;
 }
+/* Na dark backgrounds (bg-text-primary) přepíná na světlejší gold-soft (11:1 contrast). */
+.bg-text-primary:focus-visible,
+[class*="bg-text-primary"]:focus-visible {
+  outline-color: var(--color-gold-soft);
+}
 
 /* Section label dot — small tracked uppercase, decorative marker */
 .label-dot {
@@ -149,20 +159,20 @@ a { color: inherit; text-decoration: none; }
 
 /* Subtitle — intro paragraph below h1 */
 .subtitle {
-  font-size: clamp(1rem, 0.95rem + 0.2vw, 1.0625rem);  /* 16 → 17px — reading-content floor */
-  line-height: 1.75;
+  font-size: clamp(1rem, 0.9rem + 0.4vw, 1.125rem);    /* 16 → 18px — subtitle */
+  line-height: 1.7;
   color: var(--color-text-secondary);
   max-width: 34rem;
 }
 
-/* Reading-content utilities — 1rem floor pro elderly accessibility (body copy) */
+/* Reading-content utilities — 1rem floor pro accessibility, 18px max pro confident body. */
 .body-lg {
-  font-size: clamp(1rem, 0.95rem + 0.2vw, 1.0625rem);  /* 16 → 17px — body */
-  line-height: 1.75;
+  font-size: clamp(1rem, 0.9rem + 0.4vw, 1.125rem);    /* 16 → 18px — body */
+  line-height: 1.7;
 }
 .body-md {
-  font-size: clamp(1rem, 0.95rem + 0.15vw, 1.0625rem); /* 16 → 17px — card meta */
-  line-height: 1.65;
+  font-size: clamp(1rem, 0.92rem + 0.3vw, 1.125rem);   /* 16 → 18px — card meta */
+  line-height: 1.6;
 }
 .display-quote {
   font-size: clamp(1.25rem, 0.95rem + 1.3vw, 2rem);        /* 20 → 32px */
@@ -177,12 +187,37 @@ a { color: inherit; text-decoration: none; }
   line-height: 1.1;
 }
 
+/* Card title — mezi h2 (48px) a h3 (24px). Jasná hierarchie H1 > card-title.
+   Použij na všech card komponentách (ProductCard, PortfolioListCard). */
+.card-title {
+  font-size: clamp(1.375rem, 1rem + 1.5vw, 2.5rem);        /* 22 → 40px — ratio 1.6× vs H1 (64px) */
+  line-height: 1.15;
+  letter-spacing: -0.015em;
+}
+
+
 /* Section padding utilities — fluid scale, viz tokens v @theme.
    Použij místo `py-X sm:py-Y lg:py-Z` napříč všemi sekcemi. */
 .section-sm   { padding-block: var(--space-section-sm); }
 .section-md   { padding-block: var(--space-section-md); }
 .section-lg   { padding-block: var(--space-section-lg); }
 .section-hero { padding-top: var(--space-hero-top); padding-bottom: var(--space-hero-bot); }
+
+/* Text color pro dark buttony — mimo Tailwind `text-` namespace
+   aby se to nepletlo s `text-[11px]` (font-size). */
+.btn-text-light { color: var(--color-button-text) !important; }
+
+/* Filter pills hide animation — pure CSS, single layout pass (INP-friendly).
+   JS pouze toggle .is-filter-hidden class. */
+[data-category] {
+  transition: opacity 0.35s ease, transform 0.35s ease;
+}
+[data-category].is-filter-hidden {
+  display: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  [data-category] { transition: none; }
+}
 
 /* Skip to content */
 .skip-to-content {
@@ -217,9 +252,50 @@ a { color: inherit; text-decoration: none; }
               radial-gradient(circle at bottom right, rgba(30,27,24,0.04), transparent 28%);
 }
 
-/* Prose */
+/* Prose — vertikální rytmus pro text-heavy stránky (privacy, podmínky, atd.) */
+.prose {
+  font-size: clamp(0.9375rem, 0.875rem + 0.25vw, 1rem); /* 15 → 16px */
+  line-height: 1.75;
+  color: var(--color-text-secondary);
+}
 .prose p { margin-bottom: 1em; }
 .prose p:last-child { margin-bottom: 0; }
+.prose p strong { color: var(--color-text-primary); font-weight: 500; }
+
+.prose h2 {
+  margin-top: clamp(3rem, 5vw, 4.5rem);
+  margin-bottom: 0.75em;
+  scroll-margin-top: 6rem;
+}
+.prose h2:first-child { margin-top: 0; }
+
+.prose h3 {
+  margin-top: clamp(2rem, 3vw, 2.5rem);
+  margin-bottom: 0.5em;
+  color: var(--color-text-primary);
+}
+
+.prose ul {
+  list-style: none;
+  margin: 0 0 1.25em 0;
+  padding: 0;
+}
+.prose ul li {
+  position: relative;
+  padding-left: 1.5em;
+  margin-bottom: 0.5em;
+}
+.prose ul li::before {
+  content: '';
+  position: absolute;
+  left: 0.25em;
+  top: 0.75em;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: var(--color-gold-primary);
+}
+.prose ul li strong { color: var(--color-text-primary); font-weight: 500; }
 
 /* Hero photo — floating depth effect */
 .hero-photo-frame {

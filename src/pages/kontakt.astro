@@ -1,53 +1,42 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import ContactForm from '../components/ContactForm.astro';
-import PhotoFrame from '../components/PhotoFrame.astro';
+import { SITE } from '../data/site';
+import { graph, contactPageSchema, breadcrumbSchema } from '../lib/seo';
 
-const jsonLd = {
-  "@context": "https://schema.org",
-  "@type": "ContactPage",
-  "name": "Kontakt — Martin Ševr",
-  "url": "https://zlatnik-martin.cz/kontakt",
-  "mainEntity": {
-    "@type": "LocalBusiness",
-    "name": "Martin Ševr — Zlatnická dílna",
-    "telephone": "+420774598181",
-    "email": "zlatnikmartin@email.cz",
-    "address": {
-      "@type": "PostalAddress",
-      "streetAddress": "Pod Kesnerkou 46",
-      "addressLocality": "Praha 5",
-      "postalCode": "150 00",
-      "addressCountry": "CZ"
-    }
-  }
-};
+const jsonLd = graph(
+  contactPageSchema(),
+  breadcrumbSchema([
+    { name: 'Domů', url: '/' },
+    { name: 'Kontakt', url: '/kontakt/' },
+  ]),
+);
 
 const contactMethods = [
   {
     label: 'Telefon',
-    value: '+420 774 598 181',
-    href: 'tel:+420774598181',
-    description: 'Po–Pá 9:00–17:00',
+    value: SITE.phoneDisplay,
+    href: SITE.phoneHref,
+    description: `Po–Pá ${SITE.hours.weekdays}`,
   },
   {
     label: 'WhatsApp',
     value: 'Napsat zprávu',
-    href: 'https://wa.me/420774598181',
+    href: SITE.whatsapp,
     description: 'Odpovím do 24 hodin',
   },
   {
     label: 'E-mail',
-    value: 'zlatnikmartin@email.cz',
-    href: 'mailto:zlatnikmartin@email.cz',
+    value: SITE.email,
+    href: SITE.emailHref,
     description: 'Pro obsáhlejší dotazy',
   },
 ];
 ---
 
 <Layout
-  title="Kontakt | Martin Ševr — Zlatnická dílna Praha"
-  description="Kontaktujte mě přímo. Telefon, WhatsApp, e-mail. Odpovím do 24 hodin. Pod Kesnerkou 46, Praha 5."
+  title="Kontakt na zlatnickou dílnu | Pod Kesnerkou 46, Praha 5"
+  description="Zlatnická dílna Pod Kesnerkou 46, Praha 5. Telefon +420 774 598 181, WhatsApp, e-mail. Po–Pá 9:00–17:00. Odpovím do 24 hodin."
   jsonLd={jsonLd}
   navOverlay
 >
@@ -59,11 +48,8 @@ const contactMethods = [
       <div class="max-w-3xl" data-anim="up">
         <span class="label-dot">Kontakt</span>
         <h1 class="mt-6">
-          Pojďme si <em>promluvit</em>
+          Napište, zavolejte, stavte se. Ozvu se <em>do 24 hodin</em>.
         </h1>
-        <p class="mt-6 text-text-secondary body-lg max-w-xl">
-          Nechte mi zprávu nebo zavolejte. Ozvu se do 24 hodin.
-        </p>
       </div>
     </div>
   </section>
@@ -99,17 +85,17 @@ const contactMethods = [
           <h2 class="mt-5 mb-8">Napište mi</h2>
           <ContactForm />
         </div>
-        <div data-anim="scale" class="hidden lg:block relative overflow-hidden">
+        <div class="flex items-center justify-center order-first lg:order-none">
           <img
-            src="/images/kontakt--formular-foto--naramek-na-zapesti.webp"
-            srcset="/images/kontakt--formular-foto--naramek-na-zapesti.webp 1x, /images/kontakt--formular-foto--naramek-na-zapesti@2x.webp 2x"
-            width="600" height="800"
-            alt="Zlatý náramek na zápěstí"
+            src="/images/kontakt--formular-foto--prsten.webp"
+            srcset="/images/kontakt--formular-foto--prsten.webp 1x, /images/kontakt--formular-foto--prsten.webp 2x"
+            width="800" height="1067"
+            alt="Ručně vyrobený prsten — zlatnická dílna Martin Ševr"
             loading="lazy"
             decoding="async"
-            class="w-full h-full object-cover sticky top-24 grayscale-[15%] sepia-[10%]"
+            data-anim="ring-reveal"
+            class="w-full max-w-[220px] sm:max-w-xs lg:max-w-md h-auto object-contain will-change-transform"
           />
-          <PhotoFrame />
         </div>
       </div>
     </div>
@@ -135,14 +121,29 @@ const contactMethods = [
             <p class="mt-4 body-md text-text-muted">IČO: 87639114</p>
           </address>
         </div>
-        <!-- Map placeholder -->
+        <!-- Google Maps embed -->
         <div>
-          <div class="img-placeholder w-full" style="aspect-ratio: 16/9;" role="img" aria-label="Mapa — Pod Kesnerkou 46, Praha 5">
-            <svg class="w-12 h-12 opacity-40" fill="none" viewBox="0 0 24 24" stroke-width="1" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
-              <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z" />
-            </svg>
+          <div class="relative w-full aspect-video overflow-hidden border border-border">
+            <iframe
+              src="https://maps.google.com/maps?q=Pod+Kesnerkou+46,+Praha+5,+150+00&z=16&output=embed"
+              class="absolute inset-0 w-full h-full"
+              style="border:0"
+              loading="lazy"
+              referrerpolicy="no-referrer"
+              sandbox="allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"
+              title="Mapa — Pod Kesnerkou 46, Praha 5"
+              aria-label="Mapa polohy dílny — Pod Kesnerkou 46, Praha 5"
+            ></iframe>
           </div>
+          <a
+            href="https://www.google.com/maps/dir/?api=1&destination=Pod+Kesnerkou+46,+Praha+5,+150+00"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex items-center gap-2 mt-4 text-[clamp(0.6875rem,0.6rem+0.15vw,0.8125rem)] text-text-secondary uppercase tracking-[0.2em] font-sans font-medium hover:text-gold-deep transition-colors duration-300"
+          >
+            Navigovat
+            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25" /></svg>
+          </a>
         </div>
       </div>
     </div>

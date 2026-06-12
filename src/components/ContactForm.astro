@@ -1,28 +1,68 @@
 ---
 import Button from './Button.astro';
-// Statický web bez backendu — při odeslání složíme `mailto:` link a otevřeme
-// uživatelův e-mailový klient. Až klient přepne na Formspree/Web3Forms,
-// stačí nahradit `action` a odstranit JS handler.
-const CONTACT_EMAIL = 'zlatnikmartin@email.cz';
+import { SITE } from '../data/site';
+import type { Locale } from '../i18n';
+
+interface Props {
+  locale?: Locale;
+}
+const { locale = 'cs' } = Astro.props;
+
+const CONTACT_EMAIL = SITE.email;
+
+const t = locale === 'en'
+  ? {
+      hpLabel: 'Website (leave empty)',
+      name: 'Name',
+      namePlaceholder: 'Your name',
+      email: 'Email',
+      emailPlaceholder: 'you@email.com',
+      phone: 'Phone',
+      message: 'Message',
+      messagePlaceholder: 'Tell me your idea...',
+      gdpr: 'I agree to the processing of personal data for the purpose of answering my enquiry. More in the',
+      privacy: 'privacy policy',
+      privacyHref: '/en/privacy/',
+      submit: 'Send message',
+      sending: 'Sending…',
+      errorFallback: 'Could not send the message. Please write directly to',
+    }
+  : {
+      hpLabel: 'Website (nechte prázdné)',
+      name: 'Jméno',
+      namePlaceholder: 'Vaše jméno',
+      email: 'E-mail',
+      emailPlaceholder: 'vas@email.cz',
+      phone: 'Telefon',
+      message: 'Zpráva',
+      messagePlaceholder: 'Popište svou představu...',
+      gdpr: 'Souhlasím se zpracováním osobních údajů za účelem odpovědi na můj dotaz. Více informací v',
+      privacy: 'zásadách ochrany osobních údajů',
+      privacyHref: '/ochrana-osobnich-udaju',
+      submit: 'Odeslat zprávu',
+      sending: 'Odesílám…',
+      errorFallback: 'Zprávu se nepodařilo odeslat. Napište prosím přímo na',
+    };
 ---
 
 <form
   class="space-y-6"
   data-contact-form
-  action={`mailto:${CONTACT_EMAIL}`}
+  data-sending-text={t.sending}
+  data-error-fallback={t.errorFallback}
+  data-fallback-email={CONTACT_EMAIL}
+  action="/send.php"
   method="POST"
-  enctype="text/plain"
   novalidate
 >
-  <!-- Honeypot — skrytý před lidmi i AT, boti vyplní -->
   <div class="absolute left-[-9999px]" aria-hidden="true">
-    <label>Website (nechte prázdné)
+    <label>{t.hpLabel}
       <input type="text" name="website" tabindex="-1" autocomplete="off" />
     </label>
   </div>
 
   <div>
-    <label for="name" class="block body-md font-medium text-text-primary mb-2">Jméno</label>
+    <label for="name" class="block body-md font-medium text-text-primary mb-2">{t.name}</label>
     <input
       type="text"
       id="name"
@@ -31,12 +71,12 @@ const CONTACT_EMAIL = 'zlatnikmartin@email.cz';
       required
       aria-required="true"
       class="w-full px-4 py-3 bg-white border border-border rounded-[2px] text-text-primary body-md focus:outline-none focus:ring-2 focus:ring-gold-primary/35 focus:border-gold-primary transition-colors duration-200"
-      placeholder="Vaše jméno"
+      placeholder={t.namePlaceholder}
     />
   </div>
 
   <div>
-    <label for="email" class="block body-md font-medium text-text-primary mb-2">E-mail</label>
+    <label for="email" class="block body-md font-medium text-text-primary mb-2">{t.email}</label>
     <input
       type="email"
       id="email"
@@ -45,12 +85,12 @@ const CONTACT_EMAIL = 'zlatnikmartin@email.cz';
       required
       aria-required="true"
       class="w-full px-4 py-3 bg-white border border-border rounded-[2px] text-text-primary body-md focus:outline-none focus:ring-2 focus:ring-gold-primary/35 focus:border-gold-primary transition-colors duration-200"
-      placeholder="vas@email.cz"
+      placeholder={t.emailPlaceholder}
     />
   </div>
 
   <div>
-    <label for="phone" class="block body-md font-medium text-text-primary mb-2">Telefon</label>
+    <label for="phone" class="block body-md font-medium text-text-primary mb-2">{t.phone}</label>
     <input
       type="tel"
       id="phone"
@@ -62,29 +102,13 @@ const CONTACT_EMAIL = 'zlatnikmartin@email.cz';
   </div>
 
   <div>
-    <label for="interest" class="block body-md font-medium text-text-primary mb-2">Zájem o</label>
-    <select
-      id="interest"
-      name="interest"
-      class="w-full px-4 py-3 bg-white border border-border rounded-[2px] text-text-primary body-md focus:outline-none focus:ring-2 focus:ring-gold-primary/35 focus:border-gold-primary transition-colors duration-200"
-    >
-      <option value="">Vyberte...</option>
-      <option value="zakazka">Zakázkový šperk</option>
-      <option value="skladem">Šperk skladem</option>
-      <option value="oprava">Oprava šperků</option>
-      <option value="konzultace">Konzultace</option>
-      <option value="jine">Jiné</option>
-    </select>
-  </div>
-
-  <div>
-    <label for="message" class="block body-md font-medium text-text-primary mb-2">Zpráva</label>
+    <label for="message" class="block body-md font-medium text-text-primary mb-2">{t.message}</label>
     <textarea
       id="message"
       name="message"
       rows="5"
       class="w-full px-4 py-3 bg-white border border-border rounded-[2px] text-text-primary body-md focus:outline-none focus:ring-2 focus:ring-gold-primary/35 focus:border-gold-primary transition-colors duration-200 resize-vertical"
-      placeholder="Popište svou představu..."
+      placeholder={t.messagePlaceholder}
     ></textarea>
   </div>
 
@@ -95,54 +119,69 @@ const CONTACT_EMAIL = 'zlatnikmartin@email.cz';
       name="gdpr"
       required
       aria-required="true"
-      class="mt-1 w-4 h-4 border-border rounded-[2px] text-gold-primary focus:ring-gold-primary/35"
+      class="mt-1 w-4 h-4 border-border rounded-[2px] accent-gold-deep focus:ring-2 focus:ring-gold-deep/40"
     />
     <label for="gdpr" class="body-md text-text-secondary leading-relaxed">
-      Souhlasím se zpracováním osobních údajů za účelem odpovědi na můj dotaz. Více informací v <a href="/ochrana-osobnich-udaju" class="underline hover:text-gold-on-light transition-colors">zásadách ochrany osobních údajů</a>.
+      {t.gdpr} <a href={t.privacyHref} class="underline hover:text-gold-on-light transition-colors">{t.privacy}</a>.
     </label>
   </div>
 
-  <p data-form-status role="status" aria-live="polite" class="hidden body-md text-success"></p>
+  <p data-form-status role="status" aria-live="polite" class="hidden body-md"></p>
 
-  <Button type="submit" variant="primary">Odeslat zprávu</Button>
+  <Button type="submit" variant="primary">{t.submit}</Button>
 </form>
 
 <script>
   const form = document.querySelector<HTMLFormElement>('[data-contact-form]');
   if (form) {
     const status = form.querySelector<HTMLParagraphElement>('[data-form-status]');
-    form.addEventListener('submit', (e) => {
+    const submitBtn = form.querySelector<HTMLButtonElement>('button[type="submit"]');
+    const originalLabel = submitBtn?.textContent ?? '';
+    const sendingText = form.dataset.sendingText || 'Odesílám…';
+    const errorFallback = form.dataset.errorFallback || 'Zprávu se nepodařilo odeslat. Napište prosím přímo na';
+    const fallbackEmail = form.dataset.fallbackEmail || '';
+
+    function setStatus(message: string, kind: 'success' | 'error') {
+      if (!status) return;
+      status.textContent = message;
+      status.classList.remove('hidden', 'text-success', 'text-error');
+      status.classList.add(kind === 'success' ? 'text-success' : 'text-error');
+    }
+
+    form.addEventListener('submit', async (e) => {
       e.preventDefault();
       if (!form.reportValidity()) return;
 
       const honeypot = form.elements.namedItem('website') as HTMLInputElement | null;
       if (honeypot?.value) return;
 
-      const data = new FormData(form);
-      const name = String(data.get('name') ?? '');
-      const email = String(data.get('email') ?? '');
-      const phone = String(data.get('phone') ?? '');
-      const interest = String(data.get('interest') ?? '');
-      const message = String(data.get('message') ?? '');
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.textContent = sendingText;
+      }
 
-      const body = [
-        `Jméno: ${name}`,
-        `E-mail: ${email}`,
-        phone && `Telefon: ${phone}`,
-        interest && `Zájem o: ${interest}`,
-        '',
-        message,
-      ].filter(Boolean).join('\n');
+      try {
+        const res = await fetch(form.action, {
+          method: 'POST',
+          body: new FormData(form),
+          headers: { 'Accept': 'application/json' },
+        });
+        const data = await res.json().catch(() => null) as { ok?: boolean; message?: string; error?: string } | null;
 
-      const to = form.getAttribute('action')!.replace('mailto:', '');
-      const subject = `Poptávka z webu — ${name || email}`;
-      const href = `mailto:${to}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-
-      window.location.href = href;
-
-      if (status) {
-        status.textContent = 'Otevřel jsem váš e-mailový klient s předvyplněnou zprávou. Pokud se nic nestalo, napište prosím přímo na ' + to + '.';
-        status.classList.remove('hidden');
+        if (res.ok && data?.ok) {
+          setStatus(data.message || 'Děkuji, ozvu se vám co nejdříve.', 'success');
+          form.reset();
+        } else {
+          const msg = data?.error || `${errorFallback} ${fallbackEmail}.`;
+          setStatus(msg, 'error');
+        }
+      } catch {
+        setStatus(`${errorFallback} ${fallbackEmail}.`, 'error');
+      } finally {
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.textContent = originalLabel;
+        }
       }
     });
   }
