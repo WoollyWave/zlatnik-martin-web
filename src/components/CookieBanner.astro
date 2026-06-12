@@ -1,5 +1,29 @@
 ---
 // Cookie banner — GDPR souhlas pro GA4. Skrytý dokud JS nezjistí, že rozhodnutí ještě neexistuje.
+import type { Locale } from '../i18n';
+
+interface Props {
+  locale?: Locale;
+}
+const { locale = 'cs' } = Astro.props;
+
+const t = locale === 'en'
+  ? {
+      heading: 'Cookies and analytics',
+      body: 'I use Google Analytics to improve this site — anonymous statistics about how you browse. No advertising cookies. More in the',
+      privacyLabel: 'privacy policy',
+      privacyHref: '/en/privacy/',
+      decline: 'Decline',
+      accept: 'Accept',
+    }
+  : {
+      heading: 'Cookies a měření návštěvnosti',
+      body: 'Pro zlepšování webu používám Google Analytics — anonymní statistiky o tom, jak se na stránce pohybujete. Žádné reklamní cookies. Více v',
+      privacyLabel: 'ochraně osobních údajů',
+      privacyHref: '/ochrana-osobnich-udaju',
+      decline: 'Odmítnout',
+      accept: 'Souhlasím',
+    };
 ---
 
 <div
@@ -11,12 +35,11 @@
     <div class="grid lg:grid-cols-[1fr_auto] items-start gap-6 lg:gap-10 p-5 sm:p-6 lg:p-7">
       <div>
         <p class="font-serif text-[clamp(1.05rem,0.95rem+0.4vw,1.2rem)] text-text-primary leading-snug">
-          Cookies a měření návštěvnosti
+          {t.heading}
         </p>
         <p class="mt-2 body-md text-text-secondary leading-relaxed max-w-[640px]">
-          Pro zlepšování webu používám Google Analytics — anonymní statistiky o tom, jak se na stránce pohybujete.
-          Žádné reklamní cookies. Více v
-          <a href="/ochrana-osobnich-udaju" class="text-gold-deep hover:underline">ochraně osobních údajů</a>.
+          {t.body}
+          <a href={t.privacyHref} class="text-gold-deep hover:underline">{t.privacyLabel}</a>.
         </p>
       </div>
 
@@ -26,14 +49,14 @@
           id="cookie-decline"
           class="inline-flex items-center justify-center h-12 px-6 sm:px-8 rounded-full border border-border bg-white/80 text-text-primary text-[11px] uppercase tracking-[0.2em] font-medium font-sans hover:bg-white transition-colors duration-200"
         >
-          Odmítnout
+          {t.decline}
         </button>
         <button
           type="button"
           id="cookie-accept"
           class="inline-flex items-center justify-center h-12 px-6 sm:px-8 rounded-full bg-text-primary text-button-text text-[11px] uppercase tracking-[0.2em] font-medium font-sans hover:bg-gold-deep transition-colors duration-200"
         >
-          Souhlasím
+          {t.accept}
         </button>
       </div>
     </div>
@@ -70,6 +93,8 @@
       window.gtag?.('consent', 'update', {
         analytics_storage: 'granted',
       });
+      // Basic consent mode: gtag.js se načítá až teď — před souhlasem neexistuje.
+      window.__loadGA?.();
       hide();
     };
     const deny = () => {

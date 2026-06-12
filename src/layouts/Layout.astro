@@ -169,12 +169,20 @@ const ogLocale = t('locale.ogLocale');
       <script is:inline type="application/ld+json" set:html={JSON.stringify(jsonLd).replace(/</g, '\\u003c')} />
     )}
 
-    <!-- Consent Mode v2 default = denied (jen inline script, žádný network call) -->
-    <script is:inline>
+    <!-- Consent Mode v2 default = denied. Processed script (ne is:inline) — Astro CSP
+         hashuje jen zpracované skripty; is:inline by striktní CSP zablokovala.
+         Deferred provedení je v basic módu bezpečné: gtag.js se načítá až po souhlasu,
+         do té doby gtag() jen řadí do dataLayer fronty. -->
+    <script>
       window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      window.gtag = gtag;
-      gtag('consent', 'default', {
+      // gtag.js vyžaduje v dataLayer `arguments` objekty — rest parametr (pole) by
+      // commandy tiše zahodil. Proto klasická funkce s arguments.
+      function gtag() {
+        // eslint-disable-next-line prefer-rest-params
+        window.dataLayer!.push(arguments);
+      }
+      window.gtag = gtag as Window['gtag'];
+      window.gtag!('consent', 'default', {
         ad_storage: 'denied',
         ad_user_data: 'denied',
         ad_personalization: 'denied',
@@ -182,11 +190,12 @@ const ogLocale = t('locale.ogLocale');
         wait_for_update: 500,
       });
       try {
-        const stored = localStorage.getItem('cookie-consent');
-        if (stored === 'granted') {
-          gtag('consent', 'update', { analytics_storage: 'granted' });
+        if (localStorage.getItem('cookie-consent') === 'granted') {
+          window.gtag!('consent', 'update', { analytics_storage: 'granted' });
         }
-      } catch (e) {}
+      } catch {
+        /* private mode bez localStorage — default denied zůstává */
+      }
     </script>
   </head>
   <body class="bg-bg-primary text-text-primary font-sans">
@@ -196,34 +205,51 @@ const ogLocale = t('locale.ogLocale');
       <slot />
     </main>
     <Footer locale={currentLocale} ctaHeading={ctaHeading} ctaSubtitle={ctaSubtitle} ctaPrimaryLabel={ctaPrimaryLabel} ctaPrimaryHref={ctaPrimaryHref} />
-    <CookieBanner />
+    <CookieBanner locale={currentLocale} />
 
-    <!-- GA gtag.js — loaded AFTER load+idle, kritické pro PageSpeed -->
-    <script is:inline>
+    <!-- GA gtag.js — Consent Mode v2 BASIC: skript se načte VÝHRADNĚ po souhlasu.
+         Bez souhlasu (nebo při odmítnutí) na Google neodejde jediný request.
+         Po souhlasu se načítá deferred (interakce/idle) — kritické pro PageSpeed. -->
+    <script>
+      const GA_ID = 'G-4XK17M8XVJ';
+
       function loadGA() {
         if (window.__gaLoaded) return;
         window.__gaLoaded = true;
-        var s = document.createElement('script');
+        const s = document.createElement('script');
         s.async = true;
-        s.src = 'https://www.googletagmanager.com/gtag/js?id=G-4XK17M8XVJ';
+        s.src = `https://www.googletagmanager.com/gtag/js?id=${GA_ID}`;
         document.head.appendChild(s);
-        gtag('js', new Date());
-        gtag('config', 'G-4XK17M8XVJ', { anonymize_ip: true });
+        window.gtag?.('js', new Date());
+        window.gtag?.('config', GA_ID, { anonymize_ip: true });
       }
-      // Loading triggers: first user interaction OR idle callback after window load
-      var triggers = ['scroll', 'click', 'keydown', 'touchstart', 'mousemove'];
-      function once() {
-        triggers.forEach(function(e){ window.removeEventListener(e, once, { passive: true }); });
-        loadGA();
+      // Volá CookieBanner okamžitě po kliknutí na „Souhlasím".
+      window.__loadGA = loadGA;
+
+      // Deferred load jen pro vracející se návštěvníky s dříve uděleným souhlasem.
+      let consent: string | null = null;
+      try {
+        consent = localStorage.getItem('cookie-consent');
+      } catch {
+        /* bez localStorage = bez souhlasu = GA se nenačte */
       }
-      triggers.forEach(function(e){ window.addEventListener(e, once, { passive: true, once: true }); });
-      window.addEventListener('load', function() {
-        if ('requestIdleCallback' in window) {
-          requestIdleCallback(loadGA, { timeout: 5000 });
-        } else {
-          setTimeout(loadGA, 3000);
-        }
-      });
+      if (consent === 'granted') {
+        const triggers = ['scroll', 'click', 'keydown', 'touchstart', 'mousemove'];
+        const once = () => {
+          triggers.forEach((e) => window.removeEventListener(e, once));
+          loadGA();
+        };
+        triggers.forEach((e) => window.addEventListener(e, once, { passive: true, once: true }));
+        window.addEventListener('load', () => {
+          if ('requestIdleCallback' in window) {
+            requestIdleCallback(loadGA, { timeout: 5000 });
+          } else {
+            setTimeout(loadGA, 3000);
+          }
+        });
+        // Lazy-loaded module může běžet až po load eventu — pak naplánuj rovnou.
+        if (document.readyState === 'complete') loadGA();
+      }
     </script>
 
     <script>

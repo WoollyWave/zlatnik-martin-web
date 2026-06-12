@@ -100,3 +100,15 @@ Tailwind v4 přes `@tailwindcss/vite` + CSS-first `@theme {}` už projekt měl (
 - **Prověřeno bez zásahu:** spacing tokeny (`section-sm/md/lg`, hero) konzistentně použité; typografická škála fluid clamp z global.css; radius systém dodržen (pill UI / `rounded-[2px]` formuláře a fotorámy / `rounded-2xl` plovoucí panely); hover/focus stavy na všech interaktivních prvcích; CTA styly jednotné přes `Button.astro`.
 - **Ponecháno (odvozené od tokenů, do reportu):** rgba s alfou v radial-gradientech (Footer dekor) a scoped CSS lightboxu — hodnoty derivují z gold-primary/text-primary/button-text; převod na `color-mix(...)` by byl jen kosmetický.
 - `<meta name="theme-color" content="#F1EEE5">` — literál nutný (meta tag neumí var()), odpovídá `--color-bg-primary`.
+
+---
+
+## Krok 7 — Cookie lišta a Consent Mode v2
+
+- **GA se načítala i bez souhlasu — opraveno** (Layout.astro): gtag.js se dřív injektoval při první interakci/idle bez ohledu na consent (advanced mode = cookieless pingy na Google). Teď **basic mode**: skript se načítá VÝHRADNĚ (a) po kliknutí na „Souhlasím" (banner volá `window.__loadGA()`), nebo (b) deferred pro vracející se návštěvníky s dříve uloženým souhlasem. **Bez souhlasu / při odmítnutí neodejde na Google jediný request** — ověřeno v prohlížeči (interakce, reload, žádný gtag.js v DOM).
+- **Consent Mode v2** — `gtag('consent', 'default', { …všechno denied, wait_for_update: 500 })` zachováno + update na granted po souhlasu/z localStorage.
+- **CSP past odhalena testem**: Astro CSP hashuje jen *zpracované* skripty — `is:inline` consent/GA skripty striktní CSP tiše blokovala (consent přežíval jen díky pozici před `<meta>` CSP). Oba převedeny na zpracované module skripty (Astro je hashuje automaticky). Deferred provedení je v basic módu bezpečné — gtag.js před souhlasem neexistuje, `gtag()` jen plní dataLayer frontu. Pozor zachováno: dataLayer dostává `arguments` objekty (rest parametr by gtag commandy rozbil).
+- **Banner lokalizován** (CookieBanner.astro) — texty byly natvrdo česky i na EN stránkách; teď `locale` prop (heading, body, tlačítka, odkaz na /en/privacy/).
+- **Tlačítka Odmítnout/Souhlasím** — už byla rovnocenná (h-12, shodný padding, plná šířka na mobilu) ✓. Keyboard: nativní `<button>` ✓. Volba se ukládá do localStorage ✓.
+- **E2E ověřeno v prohlížeči (built output, striktní CSP):** ① bez rozhodnutí: banner viditelný, GA nikde ani po scrollu/kliku, consent default denied v dataLayer; ② souhlas: localStorage granted, gtag.js injektován, banner mizí; ③ odmítnutí + reload: banner se nevrací, GA se nenačte ani po interakcích; ④ mobilní viewport screenshot ✓.
+- **Ověření:** `pnpm typecheck` ✓ 0/0/0, `pnpm build` ✓, všechny vykonatelné inline skripty mají SHA-256 hash v CSP ✓.
