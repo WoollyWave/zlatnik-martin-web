@@ -91,3 +91,12 @@ Tailwind v4 přes `@tailwindcss/vite` + CSS-first `@theme {}` už projekt měl (
 - **Layout stabilizéry doplněny** (global.css): `.flex-child{min-width:0}`, `.card img{object-fit:cover}`. Už existovalo: box-sizing, img max-width/height auto, overflow-wrap na body.
 - **Prověřeno bez nálezu:** width/height na všech obrázcích, `loading="eager" fetchpriority="high"` na hero / `lazy` mimo viewport, LCP preload s imagesrcset, font-weight všude číslem, žádné scroll-driven CSS animace (GSAP za matchMedia), GSAP+web-vitals lazy po idle, GA preconnect.
 - **Ověření:** `pnpm build` ✓, vizuální kontrola homepage v prohlížeči ✓.
+
+---
+
+## Krok 6 — Design konzistence
+
+- **`from-[rgba(30,27,24,0.25)]` → `from-text-primary/25`** (index, zakazkova-tvorba, en/index) — gradient overlay na fotkách teď referencuje token místo literálu (stejná barva, stejná alfa).
+- **Prověřeno bez zásahu:** spacing tokeny (`section-sm/md/lg`, hero) konzistentně použité; typografická škála fluid clamp z global.css; radius systém dodržen (pill UI / `rounded-[2px]` formuláře a fotorámy / `rounded-2xl` plovoucí panely); hover/focus stavy na všech interaktivních prvcích; CTA styly jednotné přes `Button.astro`.
+- **Ponecháno (odvozené od tokenů, do reportu):** rgba s alfou v radial-gradientech (Footer dekor) a scoped CSS lightboxu — hodnoty derivují z gold-primary/text-primary/button-text; převod na `color-mix(...)` by byl jen kosmetický.
+- `<meta name="theme-color" content="#F1EEE5">` — literál nutný (meta tag neumí var()), odpovídá `--color-bg-primary`.
