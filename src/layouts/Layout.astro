@@ -113,6 +113,8 @@ const ogLocale = t('locale.ogLocale');
     <meta property="og:title" content={ogTitle || title} />
     <meta property="og:description" content={ogDescription || description} />
     <meta property="og:image" content={`${siteUrl}${ogImage}`} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
     <meta property="og:url" content={canonicalUrl} />
     <meta property="og:locale" content={ogLocale} />
     <meta property="og:locale:alternate" content={currentLocale === 'cs' ? 'en_GB' : 'cs_CZ'} />

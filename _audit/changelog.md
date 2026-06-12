@@ -112,3 +112,13 @@ Tailwind v4 přes `@tailwindcss/vite` + CSS-first `@theme {}` už projekt měl (
 - **Tlačítka Odmítnout/Souhlasím** — už byla rovnocenná (h-12, shodný padding, plná šířka na mobilu) ✓. Keyboard: nativní `<button>` ✓. Volba se ukládá do localStorage ✓.
 - **E2E ověřeno v prohlížeči (built output, striktní CSP):** ① bez rozhodnutí: banner viditelný, GA nikde ani po scrollu/kliku, consent default denied v dataLayer; ② souhlas: localStorage granted, gtag.js injektován, banner mizí; ③ odmítnutí + reload: banner se nevrací, GA se nenačte ani po interakcích; ④ mobilní viewport screenshot ✓.
 - **Ověření:** `pnpm typecheck` ✓ 0/0/0, `pnpm build` ✓, všechny vykonatelné inline skripty mají SHA-256 hash v CSP ✓.
+
+---
+
+## Krok 8 — Fotky a média
+
+- **Vlastní OG obrázky 1200×630** — nový generátor `scripts/generate-og.mjs` (Sharp, attention/center crop, mozjpeg q82, 38–142 kB). Vygenerováno 7 obrázků do `public/images/og/` z existujících fotek projektu a napojeno přes `ogImage` prop na 12 stránek (CS+EN): kontakt (Martin u ponku), zakázková tvorba (přívěsek quartz), skladem (vltavínový prsten), portfolio (vltavín wide), o dílně (dílna), snubní prsteny (snubáky), opravy (Martin portrét). Vizuálně zkontrolovány všechny výřezy.
+- **`og:image:width/height`** doplněno do Layout head (rychlejší první share — scraper nemusí obrázek stahovat kvůli rozměrům). Homepage zůstává na og-default.jpg (1200×630 ✓).
+- **Oprava srcset** (kontakt cs+en) — `srcset` odkazoval stejný soubor pro 1x i 2x (@2x verze neexistuje) → odstraněn.
+- **Alt texty, rozměry, lazy loading, formáty** — prověřeno v krocích 4–5, bez dalších nálezů. Relevance fotek k sekcím: bez problémů; případné výměny viz report.
+- **Ověření:** `pnpm build` ✓, og:image meta zkontrolována v dist na 8 stránkách.
