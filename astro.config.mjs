@@ -25,6 +25,32 @@ export default defineConfig({
   build: {
     inlineStylesheets: 'always',
   },
+  // Native CSP (Astro 6) — auto-hash všech inline <script>/<style> → žádný
+  // 'unsafe-inline'. Emituje se jako <meta http-equiv>. frame-ancestors meta
+  // neumí přenést → zůstává v .htaccess (spolu s X-Frame-Options).
+  security: {
+    csp: {
+      algorithm: 'SHA-256',
+      directives: [
+        "default-src 'self'",
+        "img-src 'self' data: https://www.googletagmanager.com https://*.google-analytics.com https://*.googletagmanager.com",
+        "font-src 'self'",
+        "connect-src 'self' https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com",
+        'frame-src https://www.google.com https://maps.google.com',
+        "base-uri 'self'",
+        "form-action 'self' mailto:",
+        "object-src 'none'",
+        'upgrade-insecure-requests',
+      ],
+      scriptDirective: {
+        // gtag.js se injektuje dynamicky → potřebuje explicitní doménu (hash nestačí).
+        resources: ["'self'", 'https://www.googletagmanager.com', 'https://*.googletagmanager.com'],
+      },
+      styleDirective: {
+        resources: ["'self'"],
+      },
+    },
+  },
   // Astro 6 Fonts API — self-hosting, automatické metric-compatible fallbacky,
   // preload přes <Font /> v Layoutu. Nahrazuje ruční @font-face + <link rel="preload">.
   fonts: [

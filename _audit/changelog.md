@@ -32,3 +32,19 @@ Tailwind v4 přes `@tailwindcss/vite` + CSS-first `@theme {}` už projekt měl (
 - **Raw `<img>` → Astro `<Image>` NEPROVEDENO — záměrně.** Všechny obrázky žijí v `public/` a prochází vlastní Sharp pipeline (`scripts/process-images.mjs`: 1x/@2x + mobile varianty WebP). Astro `<Image>` optimalizuje jen importy ze `src/` — u `public/` cest by nepřinesl nic a migrace ~300 souborů by jen riskovala regrese. Všechny `<img>` mají width/height/loading/decoding/srcset. Detail v reportu.
 - **Lightbox `alt=""`** (tvorba/[slug], en/work/[slug]) — prověřeno, NENÍ chyba: JS nastavuje `alt` z `data-alt` při každém renderu, prázdná hodnota je jen initial state zavřeného dialogu.
 - **Ověření:** `pnpm build` ✓ 57 stránek, `pnpm typecheck` ✓ 0/0/0.
+
+---
+
+## Krok 2 — Bezpečnost
+
+- **`pnpm audit`:** 1 moderate CVE — `yaml` <2.8.3 (stack overflow, GHSA-48c2-rrv3-qjmp), tranzitivní přes `@astrojs/check` (dev-only). Opraveno overridem `yaml: 2.9.0`. Po opravě: **0 zranitelností**.
+- **Native Astro 6 CSP** (`astro.config.mjs` → `security.csp`):
+  - Všechny inline `<script>`/`<style>` dostávají SHA-256 hash → **odstraněn `'unsafe-inline'`** ze script-src i style-src (předtím v .htaccess CSP). Reálné zpřísnění: injektovaný skript bez známého hashe se nespustí.
+  - `script-src` resources: self + googletagmanager (gtag.js se injektuje dynamicky).
+  - Direktivy (img/connect/frame/form-action/object/base-uri/upgrade-insecure-requests) přeneseny z .htaccess; vypuštěny `*.g.doubleclick.net` (web nemá reklamy, jen GA4 analytics).
+  - **`.htaccess`**: CSP header zredukován na `frame-ancestors 'none'` — jediná direktiva, kterou `<meta>` CSP přenést neumí. Zbytek (X-Frame-Options, HSTS, Permissions-Policy…) beze změny.
+  - `style="border:0"` na Maps iframe (kontakt cs+en) → třída `border-0` — poslední inline style atribut, který by striktní style-src blokoval.
+  - **Ověřeno v prohlížeči proti built outputu**: 0 CSP violations, fonty/styly/GSAP/JSON-LD fungují.
+- **Meta generator tag** — smazán už v kroku 1.
+- **Secrets sken:** žádné FTP credentials, API klíče ani tokeny v repu (prohledáno vč. scripts/, .claude/, send.php). GA Measurement ID a GSC verification token jsou z podstaty veřejné. `send.php` prověřen: origin check, honeypot, rate-limit, header-injection guard, GDPR checkbox vyžadován — bez nálezu.
+- **`.env`:** projekt žádné env proměnné nepoužívá (jen dev-time `$PORT`), `.env*` už je v .gitignore. `.env.example` záměrně nepřidán — není co exemplifikovat; přidat až s první reálnou proměnnou.

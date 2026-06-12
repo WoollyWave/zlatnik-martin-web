@@ -35,8 +35,10 @@ DirectoryIndex index.html
   # HSTS — HTTPS-only po 1 rok. Pro HSTS preload list později zvýšit max-age=63072000 a doplnit "preload".
   Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
 
-  # CSP — povoluje GA4 (gtag.js přes Google Tag Manager) + Google Maps embed
-  Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://*.googletagmanager.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://www.googletagmanager.com https://*.google-analytics.com https://*.googletagmanager.com https://*.g.doubleclick.net; font-src 'self'; connect-src 'self' https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com https://*.g.doubleclick.net; frame-src https://www.google.com https://maps.google.com; frame-ancestors 'none'; base-uri 'self'; form-action 'self' mailto:; object-src 'none'; upgrade-insecure-requests"
+  # CSP — hlavní policy generuje Astro jako <meta http-equiv> s SHA-256 hashi
+  # inline skriptů/stylů (žádný 'unsafe-inline', viz security.csp v astro.config.mjs).
+  # Header nese jen frame-ancestors — ten <meta> varianta CSP přenést neumí.
+  Header always set Content-Security-Policy "frame-ancestors 'none'"
 
   # Anti-clickjacking (legacy + moderní)
   Header always set X-Frame-Options "DENY"
