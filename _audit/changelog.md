@@ -48,3 +48,16 @@ Tailwind v4 přes `@tailwindcss/vite` + CSS-first `@theme {}` už projekt měl (
 - **Meta generator tag** — smazán už v kroku 1.
 - **Secrets sken:** žádné FTP credentials, API klíče ani tokeny v repu (prohledáno vč. scripts/, .claude/, send.php). GA Measurement ID a GSC verification token jsou z podstaty veřejné. `send.php` prověřen: origin check, honeypot, rate-limit, header-injection guard, GDPR checkbox vyžadován — bez nálezu.
 - **`.env`:** projekt žádné env proměnné nepoužívá (jen dev-time `$PORT`), `.env*` už je v .gitignore. `.env.example` záměrně nepřidán — není co exemplifikovat; přidat až s první reálnou proměnnou.
+
+---
+
+## Krok 3 — Kvalita kódu
+
+- **`src/scripts/animations.ts` — refactor** (144řádkový `init()` → 6 pojmenovaných funkcí):
+  - `animateNav / animateHero / animateParallax / animateScrollReveals / animateRingReveal / animateFloats` — každá jedna zodpovědnost.
+  - Magická čísla → konstanty `EASE`, `DUR`, `SCROLL_START`, `DESKTOP_MQ`.
+  - Varianty up/fade/scale sjednoceny do mapy — odstraněna trojí duplicita téhož bloku.
+  - **Oprava console šumu:** hero timeline se stavěla na všech stránkách a GSAP logoval "target not found" pro chybějící prvky (~60 warningů na load). Selektory se teď filtrují podle přítomnosti v DOM (`ifExists`). Ověřeno v prohlížeči: 0 nových warningů, hero animace funguje.
+- **`nav.ts`, `filter-pills.ts`, `web-vitals.ts`** — prověřeny, čisté (focus trap, INP-friendly filter přes CSS třídu, vitals s consent guardem). Bez zásahu.
+- **CS/EN duplicita stránek** — strukturální nález do reportu (řešení = sloučení do `[locale]` dynamických rout, větší zásah vyžadující schválení).
+- **Ověření:** `pnpm typecheck` ✓ 0/0/0, `pnpm build` ✓, vizuální kontrola v prohlížeči ✓.
