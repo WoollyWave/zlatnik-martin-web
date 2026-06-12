@@ -30,12 +30,14 @@ const navLinks: NavLink[] = [
     href: localizedPath('customJewelry', locale),
     match: locale === 'cs'
       ? ['/zakazkova-tvorba', '/snubni-prsteny-na-miru', '/opravy-sperku-praha']
-      : [localizedPath('customJewelry', locale).replace(/\/$/, '')],
-    // CS-only sub-kategorie pod Zakázkovou tvorbou (snubní prsteny + opravy)
+      : ['/en/custom-jewelry', '/en/wedding-rings'],
+    // Sub-kategorie pod Zakázkovou tvorbou — opravy jsou CS-only landing page.
     children: locale === 'cs' ? [
       { label: 'Snubní prsteny na míru', href: '/snubni-prsteny-na-miru/', match: ['/snubni-prsteny-na-miru'] },
       { label: 'Opravy šperků', href: '/opravy-sperku-praha/', match: ['/opravy-sperku-praha'] },
-    ] : undefined,
+    ] : [
+      { label: 'Wedding rings', href: '/en/wedding-rings/', match: ['/en/wedding-rings'] },
+    ],
   },
   {
     label: t('nav.inStock'),

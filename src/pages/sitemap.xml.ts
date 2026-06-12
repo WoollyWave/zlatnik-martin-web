@@ -60,6 +60,7 @@ export const GET: APIRoute = () => {
   const topLevelPairs: Array<[csPath: string, enPath: string, priority: number, changefreq: SitemapEntry['changefreq']]> = [
     ['/',                          '/en/',                       1.0, 'weekly'],
     ['/zakazkova-tvorba/',         '/en/custom-jewelry/',        0.9, 'monthly'],
+    ['/snubni-prsteny-na-miru/',   '/en/wedding-rings/',         0.9, 'monthly'],
     ['/skladem/',                  '/en/in-stock/',              0.9, 'weekly'],
     ['/portfolio/',                '/en/portfolio/',             0.9, 'monthly'],
     ['/o-dilne/',                  '/en/about/',                 0.8, 'monthly'],
@@ -78,7 +79,6 @@ export const GET: APIRoute = () => {
   // --- CS-only landing pages (žádné EN ekvivalenty) ---
   const csOnlyPages: Array<[path: string, priority: number, changefreq: SitemapEntry['changefreq']]> = [
     ['/opravy-sperku-praha/',      0.85, 'monthly'],
-    ['/snubni-prsteny-na-miru/',   0.9,  'monthly'],
   ];
   const csOnlyEntries: SitemapEntry[] = csOnlyPages.map(([path, priority, changefreq]) => ({
     loc: abs(path), lastmod: BUILD_DATE, priority, changefreq,

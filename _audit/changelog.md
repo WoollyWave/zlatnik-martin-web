@@ -139,3 +139,14 @@ Tailwind v4 přes `@tailwindcss/vite` + CSS-first `@theme {}` už projekt měl (
   - Interní prolinkování: opravy-sperku-praha a snubni-prsteny-na-miru linkované z Nav dropdownu (nyní i přístupného) a footeru — žádné orphan stránky.
 - **AEO návrhy textů FAQ** (cena zakázky, doba výroby, opravy) → report ke schválení; struktura (FAQ.astro + faqPageSchema) připravena.
 - **Ověření:** `pnpm typecheck` ✓, `pnpm build` ✓, JSON-LD parse test na všech stránkách ✓.
+
+---
+
+## Krok 10 — Sloučení CS/EN do sdílených šablon + EN snubní prsteny (schváleno Danielem)
+
+- **8 párů stránek sloučeno do `src/page-templates/`** (Home, CustomJewelry, InStock, Portfolio, About, Contact, ProductDetail, CaseStudy + WeddingRings) — route soubory jsou 5řádkové wrappery, texty v per-locale slovnících, `getStaticPaths` zůstává ve wrapperech. Privacy pár záměrně nesloučen (celostránková právní próza). Netto −864 řádků.
+- **Verifikace:** vlastní nástroj `scripts/diff-dist.py` — HTML výstup PŘED a PO refactoru porovnán na všech 57 stránkách (normalizace: whitespace na hranicích tagů, HTML entity, komentáře, pořadí CSP hashů). Výsledek: ✓ IDENTICKÉ. Mezery u inline `<em>` (normalizací maskované) zkontrolovány vizuálně v prohlížeči.
+- **Odhalený drift CS/EN (nyní už nemožný):** CS „Tři pravidla" vs 4 karty (EN „Four principles" správně) — ke schválení v reportu; gradient overlay class nekonzistence; CS odkazy bez trailing slash vs EN s; EN chybělo testimonial-zakomentování.
+- **Nová stránka `/en/wedding-rings/`** — překlad schválené CS copy (voice & tone: 1. osoba, bez vykřičníků). Zapojeno: `PATH_MAP.weddingRings`, hreflang pár, sitemap alternates, EN nav dropdown („Wedding rings"), `weddingRingsServiceSchema(locale)`, OG obrázek sdílený. Build: 58 stránek.
+- **Oprava pre-existující hreflang chyby:** CS-only stránky (opravy) deklarovaly `hreflang="en"` na homepage — mismatched hreflang. Nově `getAlternatePathStrict()`: hreflang se emituje jen při reálném ekvivalentu; opravy teď hreflang nemají vůbec (správně).
+- **FAQ opravy (R2)**: zjištěno, že stránka už kompletní FAQ s cenami + FAQPage schema má (návrh v reportu vycházel z nepřesného průzkumu). Ceny (400–900 Kč zmenšení atd.) jdou na web prvním deployem — potvrdit s Martinem.

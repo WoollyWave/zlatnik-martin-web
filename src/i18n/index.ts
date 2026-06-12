@@ -34,6 +34,7 @@ export function getLocaleFromUrl(url: URL | { pathname: string }): Locale {
 export const PATH_MAP: Record<string, { cs: string; en: string }> = {
   home: { cs: '/', en: '/en/' },
   customJewelry: { cs: '/zakazkova-tvorba/', en: '/en/custom-jewelry/' },
+  weddingRings: { cs: '/snubni-prsteny-na-miru/', en: '/en/wedding-rings/' },
   inStock: { cs: '/skladem/', en: '/en/in-stock/' },
   portfolio: { cs: '/portfolio/', en: '/en/portfolio/' },
   about: { cs: '/o-dilne/', en: '/en/about/' },
@@ -44,6 +45,26 @@ export const PATH_MAP: Record<string, { cs: string; en: string }> = {
 /** Vrací URL pro top-level routu v daném jazyce. */
 export function localizedPath(key: keyof typeof PATH_MAP, locale: Locale): string {
   return PATH_MAP[key][locale];
+}
+
+/**
+ * Striktní varianta: vrací ekvivalent ve druhém jazyce, nebo null pokud
+ * neexistuje. Pro hreflang — CS-only stránka (opravy) NESMÍ deklarovat
+ * alternate na homepage, to Google mate (mismatched hreflang).
+ */
+export function getAlternatePathStrict(
+  currentPath: string,
+  currentLocale: Locale,
+  productSlugMap?: Map<string, string>,
+  portfolioSlugMap?: Map<string, string>,
+): string | null {
+  const alt = getAlternateUrl(currentPath, currentLocale, productSlugMap, portfolioSlugMap);
+  const fallbackHome = currentLocale === 'cs' ? '/en/' : '/';
+  const isHome = Object.values(PATH_MAP)[0];
+  // getAlternateUrl vrací homepage jako fallback — skutečná homepage je legitimní
+  // jen když na ní opravdu jsme.
+  if (alt === fallbackHome && currentPath !== isHome[currentLocale]) return null;
+  return alt;
 }
 
 /**
