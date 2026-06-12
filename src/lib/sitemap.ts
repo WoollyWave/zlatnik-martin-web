@@ -23,9 +23,7 @@ interface Alternate {
 export interface SitemapEntry {
   loc: string;
   lastmod: string;
-  priority: number;
-  changefreq: 'always' | 'hourly' | 'daily' | 'weekly' | 'monthly' | 'yearly' | 'never';
-  images?: { loc: string; caption?: string }[];
+  images?: { loc: string }[];
   alternates?: Alternate[];
 }
 
@@ -52,31 +50,31 @@ function altPair(csPath: string, enPath: string): Alternate[] {
 
 export function buildSitemapEntries(): SitemapEntry[] {
   // --- Top-level CS pages with EN alternates ---
-  const topLevelPairs: Array<[csPath: string, enPath: string, priority: number, changefreq: SitemapEntry['changefreq']]> = [
-    ['/',                          '/en/',                       1.0, 'weekly'],
-    ['/zakazkova-tvorba/',         '/en/custom-jewelry/',        0.9, 'monthly'],
-    ['/snubni-prsteny-na-miru/',   '/en/wedding-rings/',         0.9, 'monthly'],
-    ['/skladem/',                  '/en/in-stock/',              0.9, 'weekly'],
-    ['/portfolio/',                '/en/portfolio/',             0.9, 'monthly'],
-    ['/o-dilne/',                  '/en/about/',                 0.8, 'monthly'],
-    ['/kontakt/',                  '/en/contact/',               0.8, 'yearly'],
-    ['/ochrana-osobnich-udaju/',   '/en/privacy/',               0.3, 'yearly'],
+  // <priority>/<changefreq> záměrně neuvádíme — Google je dle vlastní dokumentace
+  // ignoruje („Google ignores <priority> and <changefreq> values").
+  const topLevelPairs: Array<[csPath: string, enPath: string]> = [
+    ['/',                          '/en/'],
+    ['/zakazkova-tvorba/',         '/en/custom-jewelry/'],
+    ['/snubni-prsteny-na-miru/',   '/en/wedding-rings/'],
+    ['/skladem/',                  '/en/in-stock/'],
+    ['/portfolio/',                '/en/portfolio/'],
+    ['/o-dilne/',                  '/en/about/'],
+    ['/kontakt/',                  '/en/contact/'],
+    ['/ochrana-osobnich-udaju/',   '/en/privacy/'],
   ];
 
-  const staticEntries: SitemapEntry[] = topLevelPairs.flatMap(([csPath, enPath, priority, changefreq]) => {
+  const staticEntries: SitemapEntry[] = topLevelPairs.flatMap(([csPath, enPath]) => {
     const alternates = altPair(csPath, enPath);
     return [
-      { loc: abs(csPath), lastmod: BUILD_DATE, priority, changefreq, alternates },
-      { loc: abs(enPath), lastmod: BUILD_DATE, priority, changefreq, alternates },
+      { loc: abs(csPath), lastmod: BUILD_DATE, alternates },
+      { loc: abs(enPath), lastmod: BUILD_DATE, alternates },
     ];
   });
 
   // --- CS-only landing pages (žádné EN ekvivalenty) ---
-  const csOnlyPages: Array<[path: string, priority: number, changefreq: SitemapEntry['changefreq']]> = [
-    ['/opravy-sperku-praha/',      0.85, 'monthly'],
-  ];
-  const csOnlyEntries: SitemapEntry[] = csOnlyPages.map(([path, priority, changefreq]) => ({
-    loc: abs(path), lastmod: BUILD_DATE, priority, changefreq,
+  const csOnlyPages: string[] = ['/opravy-sperku-praha/'];
+  const csOnlyEntries: SitemapEntry[] = csOnlyPages.map((path) => ({
+    loc: abs(path), lastmod: BUILD_DATE,
   }));
 
   // --- Product detail pages (CS + EN) ---
@@ -84,13 +82,13 @@ export function buildSitemapEntries(): SitemapEntry[] {
     const csPath = `/sperky/${p.slug}/`;
     const enPath = `/en/jewelry/${p.slugEn || p.slug}/`;
     const alternates = p.slugEn ? altPair(csPath, enPath) : undefined;
-    const csImage = { loc: abs(p.image), caption: p.alt };
-    const enImage = { loc: abs(p.image), caption: p.altEn || p.alt };
+    // <image:caption> je deprecated — podporovaný zůstal jen <image:loc>.
+    const image = { loc: abs(p.image) };
     const entries: SitemapEntry[] = [
-      { loc: abs(csPath), lastmod: BUILD_DATE, priority: 0.7, changefreq: 'monthly', images: [csImage], alternates },
+      { loc: abs(csPath), lastmod: BUILD_DATE, images: [image], alternates },
     ];
     if (p.slugEn) {
-      entries.push({ loc: abs(enPath), lastmod: BUILD_DATE, priority: 0.7, changefreq: 'monthly', images: [enImage], alternates });
+      entries.push({ loc: abs(enPath), lastmod: BUILD_DATE, images: [image], alternates });
     }
     return entries;
   });
@@ -100,14 +98,12 @@ export function buildSitemapEntries(): SitemapEntry[] {
     const csPath = `/tvorba/${c.slug}/`;
     const enPath = `/en/work/${c.slugEn || c.slug}/`;
     const alternates = c.slugEn ? altPair(csPath, enPath) : undefined;
-    const hero = c.heroImage || c.cardImage;
-    const csImage = { loc: abs(hero), caption: c.heroAlt || c.cardAlt };
-    const enImage = { loc: abs(hero), caption: c.heroAltEn || c.cardAltEn || c.heroAlt || c.cardAlt };
+    const image = { loc: abs(c.heroImage || c.cardImage) };
     const entries: SitemapEntry[] = [
-      { loc: abs(csPath), lastmod: BUILD_DATE, priority: 0.7, changefreq: 'monthly', images: [csImage], alternates },
+      { loc: abs(csPath), lastmod: BUILD_DATE, images: [image], alternates },
     ];
     if (c.slugEn) {
-      entries.push({ loc: abs(enPath), lastmod: BUILD_DATE, priority: 0.7, changefreq: 'monthly', images: [enImage], alternates });
+      entries.push({ loc: abs(enPath), lastmod: BUILD_DATE, images: [image], alternates });
     }
     return entries;
   });
@@ -122,10 +118,8 @@ export function renderSitemapXml(entries: SitemapEntry[]): Response {
         xmlns:xhtml="http://www.w3.org/1999/xhtml">
 ${entries.map((e) => `  <url>
     <loc>${escapeXml(e.loc)}</loc>
-    <lastmod>${e.lastmod}</lastmod>
-    <changefreq>${e.changefreq}</changefreq>
-    <priority>${e.priority.toFixed(1)}</priority>${e.alternates ? '\n' + e.alternates.map((a) => `    <xhtml:link rel="alternate" hreflang="${a.hreflang}" href="${escapeXml(a.href)}" />`).join('\n') : ''}${e.images ? '\n' + e.images.map((img) => `    <image:image>
-      <image:loc>${escapeXml(img.loc)}</image:loc>${img.caption ? `\n      <image:caption>${escapeXml(img.caption)}</image:caption>` : ''}
+    <lastmod>${e.lastmod}</lastmod>${e.alternates ? '\n' + e.alternates.map((a) => `    <xhtml:link rel="alternate" hreflang="${a.hreflang}" href="${escapeXml(a.href)}" />`).join('\n') : ''}${e.images ? '\n' + e.images.map((img) => `    <image:image>
+      <image:loc>${escapeXml(img.loc)}</image:loc>
     </image:image>`).join('\n') : ''}
   </url>`).join('\n')}
 </urlset>`;
