@@ -122,3 +122,20 @@ Tailwind v4 přes `@tailwindcss/vite` + CSS-first `@theme {}` už projekt měl (
 - **Oprava srcset** (kontakt cs+en) — `srcset` odkazoval stejný soubor pro 1x i 2x (@2x verze neexistuje) → odstraněn.
 - **Alt texty, rozměry, lazy loading, formáty** — prověřeno v krocích 4–5, bez dalších nálezů. Relevance fotek k sekcím: bez problémů; případné výměny viz report.
 - **Ověření:** `pnpm build` ✓, og:image meta zkontrolována v dist na 8 stránkách.
+
+---
+
+## Krok 9 — SEO / AEO / GEO / AIO
+
+- **Product schema opravy** (`src/lib/seo.ts`, `src/data/products.ts`):
+  - Odstraněn neplatný `productionDate: 'on-demand'` (schema.org očekává Date — validátor by hlásil chybu).
+  - **`availability` přepínač InStock/SoldOut**: nové pole `sold?: boolean` na Product — `sold: true` přepne offer na `schema.org/SoldOut` (stránka se nemaže, drží SERP historii). Všechny kusy aktuálně skladem = beze změny dat.
+- **NAP konzistence (GEO)**: footer zobrazoval adresu bez PSČ („Pod Kesnerkou 46, Praha 5") — sjednoceno na `SITE.address.full` → **„Pod Kesnerkou 46, Praha 5, 150 00" znak po znaku identicky** ve footeru, na kontaktu, v JSON-LD i llms.txt. Telefon/e-mail/IČO už konzistentní byly (jediný zdroj `site.ts`).
+- **Prověřeno bez zásahu (už implementováno správně):**
+  - Unikátní title + description všude, canonical, **obousměrný hreflang cs/en/x-default** (ověřeno v dist na statických i detailových stránkách vč. přeložených slugů).
+  - JSON-LD @graph: JewelryStore+LocalBusiness (adresa, telefon, geo 50.058644/14.403715, otevírací doba Po–Pá 9–17), Person (Martin Ševr, E-E-A-T), WebSite+speakable, Product s Merchant Listing poli (vratky, doprava), BreadcrumbList, Service (zakázková/opravy/snubní), CollectionPage+ItemList, FAQPage na zakázkové tvorbě. Všech 57 stránek parsuje validně.
+  - Vlastní sitemap.xml endpoint s lastmod + image: + hreflang alternates; robots.txt explicitně povoluje GPTBot, ChatGPT-User, OAI-SearchBot, ClaudeBot, Claude-Web, anthropic-ai, PerplexityBot, Google-Extended a další; llms.txt s NAP, službami a popisem stránek.
+  - Klíčové info (kontakt, adresa, služby) v plain HTML bez JS závislosti (statický Astro výstup).
+  - Interní prolinkování: opravy-sperku-praha a snubni-prsteny-na-miru linkované z Nav dropdownu (nyní i přístupného) a footeru — žádné orphan stránky.
+- **AEO návrhy textů FAQ** (cena zakázky, doba výroby, opravy) → report ke schválení; struktura (FAQ.astro + faqPageSchema) připravena.
+- **Ověření:** `pnpm typecheck` ✓, `pnpm build` ✓, JSON-LD parse test na všech stránkách ✓.

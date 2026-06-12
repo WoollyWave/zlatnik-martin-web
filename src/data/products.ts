@@ -15,6 +15,8 @@ export interface Product {
   alt: string;
   detailImages?: { src: string; alt: string; altEn?: string }[];
   stockBadge?: 'jediny-originalni-kus' | null;
+  /** true = vyprodáno → Product schema availability SoldOut (stránka zůstává kvůli SEO). */
+  sold?: boolean;
   notes?: string[];
 
   // --- English variants (used by /en/jewelry/[slug] pages) ---

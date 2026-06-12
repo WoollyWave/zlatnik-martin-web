@@ -275,12 +275,18 @@ export function productSchema(product: Product, locale: ProductLocale = 'cs') {
 
   // Merchant Listing requirements (Google od 2024) — INLINE objekty, ne @id reference.
   // Google's parser někdy nedereferencuje @id, takže má GSC warning "Missing field shippingDetails".
+  // Vyprodaný kus → SoldOut (nastavit `sold: true` v products.ts, stránku nemazat —
+  // SoldOut Product schema si drží SERP historii a může konvertovat na poptávku zlaté verze).
+  const silverAvailability = product.sold
+    ? 'https://schema.org/SoldOut'
+    : 'https://schema.org/InStock';
+
   const offers: Record<string, unknown>[] = [
     {
       '@type': 'Offer',
       price: parsePrice(priceSilverDisplay),
       priceCurrency: 'CZK',
-      availability: 'https://schema.org/InStock',
+      availability: silverAvailability,
       itemCondition: 'https://schema.org/NewCondition',
       url: `${SITE.url}${detailUrlPath}`,
       seller: { '@id': `${SITE.url}#business` },
@@ -339,7 +345,6 @@ export function productSchema(product: Product, locale: ProductLocale = 'cs') {
     countryOfOrigin: { '@type': 'Country', name: countryName },
     audience: { '@type': 'PeopleAudience', suggestedMinAge: 16 },
     isFamilyFriendly: true,
-    productionDate: 'on-demand',
     inLanguage: isEn ? 'en-GB' : 'cs-CZ',
   };
 
