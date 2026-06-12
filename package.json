@@ -2,8 +2,15 @@
   "name": "staticky-web",
   "type": "module",
   "version": "0.0.1",
+  "packageManager": "pnpm@9.15.0",
   "engines": {
     "node": ">=22.12.0"
+  },
+  "pnpm": {
+    "overrides": {
+      "vite": "7.3.5",
+      "zod": "4.4.3"
+    }
   },
   "scripts": {
     "dev": "astro dev",
@@ -14,16 +21,15 @@
     "typecheck": "astro check"
   },
   "dependencies": {
-    "@astrojs/sitemap": "^3.7.2",
-    "@tailwindcss/vite": "^4.2.2",
-    "astro": "^6.1.7",
-    "gsap": "^3.15.0",
-    "tailwindcss": "^4.2.2",
-    "web-vitals": "^5.2.0"
+    "@tailwindcss/vite": "4.3.0",
+    "astro": "6.4.6",
+    "gsap": "3.15.0",
+    "tailwindcss": "4.3.0",
+    "web-vitals": "5.3.0"
   },
   "devDependencies": {
-    "@astrojs/check": "^0.9.8",
-    "sharp": "^0.34.5",
-    "typescript": "^5.9.3"
+    "@astrojs/check": "0.9.9",
+    "sharp": "0.35.1",
+    "typescript": "5.9.3"
   }
 }
