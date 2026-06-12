@@ -31,8 +31,8 @@ Detailní záznam všech změn po krocích: [`_audit/changelog.md`](changelog.md
 
 ### 🔴 Důležité
 
-**R1 — `formular@zlatnik-martin.cz` musí existovat na Hostingeru.**
-`send.php` posílá z této adresy (`SENDER_FROM`). Pokud schránka/alias neexistuje nebo chybí SPF/DKIM pro doménu, formulář skončí ve spamu nebo se neodešle. → Ověř v hPanelu: e-mailový účet + SPF/DKIM záznamy. (Kód je připravený, jde čistě o konfiguraci hostingu.)
+**R1 — `formular@zlatnik-martin.cz` musí existovat na Hostingeru. ✅ VYŘEŠENO (ověřeno 12. 6. 2026)**
+Ověřeno proti ostrému provozu: schránka existuje (SMTP RCPT `250 Ok`, přičemž neexistující adresa na stejné doméně vrací `550` — server není accept-all), MX → Hostinger, SPF + DKIM (hostingermail-a/b/c) + DMARC záznamy v DNS kompletní. `send.php` je na produkci nasazený a odpovídá správně (405 na GET). Zbývá jen běžný post-deploy test formuláře (checklist bod 1).
 
 **R2 — AEO: návrhy FAQ textů ke schválení.** Struktura (FAQ.astro + FAQPage schema) je hotová, zakázková tvorba má 5 otázek. Navrhuji doplnit na **/opravy-sperku-praha** (nemá žádné FAQ, přitom cílí na nejčastější dotazy):
 1. *„Kolik stojí oprava prstenu?"* — Zmenšení/zvětšení stříbrného prstenu od několika set korun, u zlata dle gramáže; přesnou cenu řeknu po prohlédnutí kusu — pošlete fotku na WhatsApp, odpovím do 24 hodin.
