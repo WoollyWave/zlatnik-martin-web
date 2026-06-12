@@ -441,26 +441,42 @@ export function jewelryRepairServiceSchema() {
   };
 }
 
-/** Service schema pro snubní a zásnubní prsteny na míru. */
-export function weddingRingsServiceSchema() {
+/** Service schema pro snubní a zásnubní prsteny na míru (CS i EN varianta stránky). */
+export function weddingRingsServiceSchema(locale: 'cs' | 'en' = 'cs') {
+  const isEn = locale === 'en';
+  const pageUrl = isEn ? `${SITE.url}/en/wedding-rings/` : `${SITE.url}/snubni-prsteny-na-miru/`;
   return {
     '@type': 'Service',
-    '@id': `${SITE.url}/snubni-prsteny-na-miru/#service`,
-    serviceType: 'Zakázková výroba snubních a zásnubních prstenů',
-    name: 'Snubní prsteny na míru Praha — ruční výroba',
-    description: 'Snubní a zásnubní prsteny na míru z žlutého, bílého nebo růžového zlata 585/1000 a 750/1000. Ruční výroba ve vlastní dílně Pod Kesnerkou v Praze 5.',
+    '@id': `${pageUrl}#service`,
+    serviceType: isEn
+      ? 'Custom-made wedding and engagement rings'
+      : 'Zakázková výroba snubních a zásnubních prstenů',
+    name: isEn
+      ? 'Custom wedding rings Prague — handcrafted'
+      : 'Snubní prsteny na míru Praha — ruční výroba',
+    description: isEn
+      ? 'Custom wedding and engagement rings in yellow, white or rose gold, 585/1000 and 750/1000. Handcrafted in my own workshop at Pod Kesnerkou, Prague 5.'
+      : 'Snubní a zásnubní prsteny na míru z žlutého, bílého nebo růžového zlata 585/1000 a 750/1000. Ruční výroba ve vlastní dílně Pod Kesnerkou v Praze 5.',
     provider: { '@id': `${SITE.url}#business` },
-    areaServed: { '@type': 'Country', name: 'Česká republika' },
-    url: `${SITE.url}/snubni-prsteny-na-miru/`,
+    areaServed: { '@type': 'Country', name: isEn ? 'Czechia' : 'Česká republika' },
+    url: pageUrl,
     hasOfferCatalog: {
       '@type': 'OfferCatalog',
-      name: 'Snubní a zásnubní prsteny',
-      itemListElement: [
-        { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Snubní prsteny ze žlutého zlata 585/1000' } },
-        { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Snubní prsteny z bílého zlata 750/1000' } },
-        { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Zásnubní prsten s diamantem nebo barevným kamenem' } },
-        { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Tricolor prsten (bílé + žluté + růžové zlato)' } },
-      ],
+      name: isEn ? 'Wedding and engagement rings' : 'Snubní a zásnubní prsteny',
+      itemListElement: (isEn
+        ? [
+            'Yellow gold wedding rings, 585/1000',
+            'White gold wedding rings, 750/1000',
+            'Engagement ring with a diamond or coloured stone',
+            'Tricolour ring (white + yellow + rose gold)',
+          ]
+        : [
+            'Snubní prsteny ze žlutého zlata 585/1000',
+            'Snubní prsteny z bílého zlata 750/1000',
+            'Zásnubní prsten s diamantem nebo barevným kamenem',
+            'Tricolor prsten (bílé + žluté + růžové zlato)',
+          ]
+      ).map((name) => ({ '@type': 'Offer', itemOffered: { '@type': 'Service', name } })),
     },
   };
 }

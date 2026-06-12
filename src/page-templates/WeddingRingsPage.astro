@@ -1,0 +1,373 @@
+---
+/**
+ * Sdílená šablona Snubní prsteny na míru (CS /snubni-prsteny-na-miru/ + EN /en/wedding-rings/).
+ * CS texty převzaty doslova z původní stránky; EN je překlad schválené CS copy
+ * (první osoba, klidná jistota, žádné vykřičníky — viz voice & tone v CLAUDE.md).
+ */
+import Layout from '../layouts/Layout.astro';
+import Button from '../components/Button.astro';
+import FAQ from '../components/FAQ.astro';
+import { SITE } from '../data/site';
+import { graph, weddingRingsServiceSchema, faqPageSchema, breadcrumbSchema } from '../lib/seo';
+import type { Locale } from '../i18n';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const isEn = locale === 'en';
+
+const t = isEn
+  ? {
+      title: 'Custom wedding rings Prague | Handcrafted in gold — Martin Ševr',
+      description: 'Custom wedding and engagement rings in Prague. Yellow, white and rose gold, 14k/18k. Handcrafted in my own workshop. Ready in 4–8 weeks. 20+ years of experience.',
+      breadcrumb: [
+        { name: 'Home', url: '/en/' },
+        { name: 'Custom wedding rings', url: '/en/wedding-rings/' },
+      ],
+      ctaHeading: "Let's start your <em>wedding ring</em>",
+      ctaSubtitle: 'A consultation in the workshop is free and without obligation. We will discuss style, profile, material and budget — and I will prepare a design for you.',
+      ctaPrimaryLabel: 'Book a consultation',
+      heroLabel: 'Wedding & engagement rings — Prague',
+      heroHeadingPre: 'Wedding rings',
+      heroHeadingEm: 'made by hand',
+      heroHeadingPost: '. Not cast in a mould.',
+      heroCopy: 'I will make your wedding or engagement ring to order. Yellow, white and rose gold, 14k and 18k. Handcrafted in my own workshop at Pod Kesnerkou — from the first sketch to the handover. 20+ years of experience.',
+      heroPrimaryHref: '/en/contact/',
+      heroPrimaryLabel: 'Book a consultation',
+      heroSecondaryLabel: 'Call me directly',
+      heroAlt: 'A pair of white gold wedding rings — matte satin finish, small diamonds',
+      stylesLabel: 'What I make',
+      stylesHeadingPre: 'From classic to',
+      stylesHeadingEm: 'original shapes',
+      processLabel: 'How it works',
+      processHeadingPre: 'Step by step.',
+      processHeadingEm: 'No stress',
+      processIntro: 'The whole process, from the first consultation to handing over the finished rings, takes 4–8 weeks depending on complexity. Plan with a margin — ideally 3 months before the wedding.',
+      faqLabel: 'Frequently asked questions',
+      faqHeading: 'Frequently asked questions',
+    }
+  : {
+      title: 'Snubní prsteny na míru Praha | Ruční výroba ze zlata — Martin Ševr',
+      description: 'Snubní a zásnubní prsteny na míru v Praze. Žluté, bílé, růžové zlato 14k/18k. Ruční výroba ve vlastní dílně. Termín 4–8 týdnů. 20+ let praxe.',
+      breadcrumb: [
+        { name: 'Domů', url: '/' },
+        { name: 'Snubní prsteny na míru', url: '/snubni-prsteny-na-miru/' },
+      ],
+      ctaHeading: 'Začněme váš <em>snubní prsten</em>',
+      ctaSubtitle: 'Konzultace v dílně je zdarma a bez závazků. Probereme styl, profil, materiál i rozpočet — a já vám připravím návrh.',
+      ctaPrimaryLabel: 'Domluvit konzultaci',
+      heroLabel: 'Snubní a zásnubní prsteny — Praha',
+      heroHeadingPre: 'Snubní prsteny',
+      heroHeadingEm: 'vyrobené ručně',
+      heroHeadingPost: '. Ne odlité do formy.',
+      heroCopy: 'Vyrobím vám snubní nebo zásnubní prsten na míru. Žluté, bílé i růžové zlato 14k a 18k. Ruční výroba ve vlastní dílně Pod Kesnerkou — od první skici po předání. 20+ let praxe.',
+      heroPrimaryHref: '/kontakt',
+      heroPrimaryLabel: 'Domluvit konzultaci',
+      heroSecondaryLabel: 'Zavolat rovnou',
+      heroAlt: 'Pár snubních prstenů z bílého zlata — matný satén, drobné diamanty',
+      stylesLabel: 'Co vyrábím',
+      stylesHeadingPre: 'Od klasiky po',
+      stylesHeadingEm: 'autorské tvary',
+      processLabel: 'Jak to probíhá',
+      processHeadingPre: 'Krok za krokem.',
+      processHeadingEm: 'Bez stresu',
+      processIntro: 'Celý proces od první konzultace po předání hotových prstenů trvá 4–8 týdnů podle složitosti. Plánujte s rezervou — ideálně 3 měsíce před svatbou.',
+      faqLabel: 'Časté otázky',
+      faqHeading: 'Časté otázky',
+    };
+
+const ringStyles = isEn
+  ? [
+      {
+        number: '01',
+        title: 'Classic wedding rings',
+        description: 'A smooth or profiled band in yellow, white or rose gold, 14k (585/1000) or 18k (750/1000). A timeless shape that never goes out of style.',
+        image: '/images/snubni--styly-01--klasicky.webp',
+        image2x: '/images/snubni--styly-01--klasicky@2x.webp',
+        alt: 'Classic wedding ring with a smooth half-round band — handmade',
+      },
+      {
+        number: '02',
+        title: 'Profiled and shaped',
+        description: 'Braided, profiled or with a hammered texture. For couples who want a ring with character that still feels timeless. I make them in white, yellow or combined gold.',
+        image: '/images/snubni--styly-02--spletany.webp',
+        image2x: '/images/snubni--styly-02--spletany@2x.webp',
+        alt: 'Braided wedding ring with a shaped profile — original work',
+      },
+      {
+        number: '03',
+        title: 'With diamonds and stones',
+        description: 'Solitaire, halo, eternity, pavé. A certified diamond (GIA, IGI) or a natural sapphire, ruby or emerald. I will help you choose a stone that suits her hand and your budget.',
+        image: '/images/snubni--styly-03--pave-diamanty.webp',
+        image2x: '/images/snubni--styly-03--pave-diamanty@2x.webp',
+        alt: 'Ring with diamond pavé — engagement or eternity style',
+      },
+      {
+        number: '04',
+        title: 'Original shapes',
+        description: "Something out of the ordinary — origami facets, irregularly placed stones, hammered texture. We start from a sketch or your inspiration. I will make a ring unlike anyone else's.",
+        image: '/images/snubni--styly-04--origami.webp',
+        image2x: '/images/snubni--styly-04--origami@2x.webp',
+        alt: 'Original wedding ring with origami facets — structural design',
+      },
+    ]
+  : [
+      {
+        number: '01',
+        title: 'Klasické snubní prsteny',
+        description: 'Hladká nebo profilovaná obroučka ze žlutého, bílého nebo růžového zlata 14k (585/1000) i 18k (750/1000). Nadčasový tvar, který nikdy nevyjde z módy.',
+        image: '/images/snubni--styly-01--klasicky.webp',
+        image2x: '/images/snubni--styly-01--klasicky@2x.webp',
+        alt: 'Klasický snubní prsten s hladkou půlkruhovou obroučkou — ruční výroba',
+      },
+      {
+        number: '02',
+        title: 'Profilové a tvarované',
+        description: 'Spletené, profilové nebo s kovanou texturou. Pro páry, které chtějí prsten s charakterem, ale zároveň nadčasový. Vyrobím z bílého, žlutého i kombinovaného zlata.',
+        image: '/images/snubni--styly-02--spletany.webp',
+        image2x: '/images/snubni--styly-02--spletany@2x.webp',
+        alt: 'Spletený snubní prsten s tvarovaným profilem — autorská práce',
+      },
+      {
+        number: '03',
+        title: 'S diamanty a kameny',
+        description: 'Sólitér, halo, eternity, pavé. Diamant s certifikátem (GIA, IGI) nebo přírodní safír, rubín, smaragd. Pomůžu vybrat kámen, který sedí k její ruce i k vašemu rozpočtu.',
+        image: '/images/snubni--styly-03--pave-diamanty.webp',
+        image2x: '/images/snubni--styly-03--pave-diamanty@2x.webp',
+        alt: 'Prsten s pavé z brilantů — zásnubní nebo eternity styl',
+      },
+      {
+        number: '04',
+        title: 'Autorské tvary',
+        description: 'Něco nestandardního — origami fasety, kameny v nepravidelném rozmístění, kovaná textura. Začneme od skicy nebo vaší inspirace. Vyrobím prsten, který se podobá nikomu jinému.',
+        image: '/images/snubni--styly-04--origami.webp',
+        image2x: '/images/snubni--styly-04--origami@2x.webp',
+        alt: 'Autorský snubní prsten s origami fasetami — strukturální design',
+      },
+    ];
+
+const processSteps = isEn
+  ? [
+      {
+        number: '01',
+        title: 'Consultation in the workshop',
+        description: 'We meet in Prague 5. You will see materials, finished pieces from my portfolio and gold samples. We discuss style, ring profile, budget and timing. The consultation is free.',
+      },
+      {
+        number: '02',
+        title: 'Design and 3D model',
+        description: 'I prepare a sketch, and for more complex shapes a 3D model or wax prototype. We fine-tune the details — width, profile, finish, stone. You approve everything; nothing is made before that.',
+      },
+      {
+        number: '03',
+        title: 'Handcrafting',
+        description: 'I make every ring myself, by hand, in my workshop at Pod Kesnerkou. No mass casting. I photograph the process so you can see your rings come to life.',
+      },
+      {
+        number: '04',
+        title: 'Handover and engraving',
+        description: 'I hand over the finished rings in person at the workshop. If you would like an engraving (wedding date, names, a motif), we do it as the final step — machine or hand engraved.',
+      },
+    ]
+  : [
+      {
+        number: '01',
+        title: 'Konzultace v dílně',
+        description: 'Sejdeme se v Praze 5. Podíváte se na materiály, hotové kusy z portfolia, vzorníky zlata. Probereme styl, profil prstenu, rozpočet a termín. Konzultace je zdarma.',
+      },
+      {
+        number: '02',
+        title: 'Návrh a 3D model',
+        description: 'Připravím skicu, u složitějších tvarů 3D model nebo voskový prototyp. Doladíme detaily — šířku, profil, povrch, kámen. Schvalujete vy, nic nevznikne dřív.',
+      },
+      {
+        number: '03',
+        title: 'Ruční výroba',
+        description: 'Každý prsten vyrábím sám, ručně, v dílně Pod Kesnerkou. Žádné odlévání ve velkém. Průběh fotím, abyste viděli, jak prsteny vznikají.',
+      },
+      {
+        number: '04',
+        title: 'Předání a gravura',
+        description: 'Hotové prsteny předám osobně v dílně. Pokud chcete gravuru (datum svatby, jména, motiv), uděláme ji jako poslední krok — strojně nebo ručně.',
+      },
+    ];
+
+const faqItems = isEn
+  ? [
+      {
+        question: 'How much do custom wedding rings cost?',
+        answer: 'A pair of simple 14k gold wedding rings starts at CZK 18,000. The final price depends on the weight of the gold, the chosen purity (14k vs 18k) and any stones. I will prepare a specific quote after the first consultation, based on your preferences.',
+      },
+      {
+        question: 'How much time do you need?',
+        answer: 'Standard production takes 4–6 weeks from design approval. More complex pieces (engagement rings with a diamond, original shapes) take 6–8 weeks. Plan with a margin — ideally 3 months before the wedding.',
+      },
+      {
+        question: 'Can I bring my own gold (inherited, from old jewellery)?',
+        answer: 'Yes, I also work with your material. I melt the gold down and make new rings from it — symbolically meaningful and better value. You need at least 8–10 grams of gold of the same purity. We will discuss it in the workshop.',
+      },
+      {
+        question: 'Can a wedding ring be adjusted after the wedding?',
+        answer: 'If your size changes, I can make the ring larger or smaller by 1–3 sizes without losing quality. For rings I made, I do this free of charge within 1 year of handover. The same goes for a free professional cleaning once a year — for the lifetime of the ring.',
+      },
+      {
+        question: 'Do you have experience with diamond engagement rings?',
+        answer: 'Yes, diamond engagement rings are among my most frequent commissions. I work with certified diamonds (GIA, IGI). I will recommend a carat weight and quality to match your budget — from a simple solitaire to a halo setting.',
+      },
+    ]
+  : [
+      {
+        question: 'Kolik stojí snubní prsteny na míru?',
+        answer: 'Pár jednoduchých snubních prstenů ze 14k zlata začíná na 18 000 Kč. Cena finální závisí na váze (gramáži zlata), zvolené ryzosti (14k vs 18k) a případných kamenech. Konkrétní kalkulaci připravím po první konzultaci, podle vašich preferencí.',
+      },
+      {
+        question: 'Kolik času potřebujete na výrobu?',
+        answer: 'Standardní výroba snubních prstenů trvá 4–6 týdnů od schválení návrhu. U složitějších kusů (zásnubní s diamantem, autorské tvary) 6–8 týdnů. Plánujte s rezervou — ideálně 3 měsíce před svatbou.',
+      },
+      {
+        question: 'Můžu si přinést vlastní zlato (po babičce, ze starých šperků)?',
+        answer: 'Ano, pracuji i s vašim materiálem. Zlato přetavím a vyrobím z něj nové prsteny — symbolicky příjemné, hodnotově efektivnější. Potřebujete alespoň 8–10 gramů zlata stejné ryzosti. Probereme to v dílně.',
+      },
+      {
+        question: 'Dá se snubní prsten upravit po svatbě?',
+        answer: 'Pokud změníte velikost, prsten zvětším nebo zmenším o 1–3 čísla bez ztráty kvality. U svých prstenů to dělám zdarma do 1 roku od předání. Stejně tak roční bezplatné profesionální čištění — po celou dobu životnosti prstenu.',
+      },
+      {
+        question: 'Máte zkušenost se zásnubními prsteny s diamantem?',
+        answer: 'Ano, zásnubní prsteny s diamantem patří mezi mé nejčastější zakázky. Pracuji s certifikovanými diamanty (GIA, IGI). Doporučím vám karátáž a kvalitu odpovídající vašemu rozpočtu — od jednoduchého sólitéru po halo zasazení.',
+      },
+    ];
+
+const jsonLd = graph(
+  weddingRingsServiceSchema(locale),
+  faqPageSchema(faqItems),
+  breadcrumbSchema(t.breadcrumb),
+);
+---
+
+<Layout
+  locale={locale}
+  title={t.title}
+  ogImage="/images/og/og-snubni-prsteny.jpg"
+  description={t.description}
+  jsonLd={jsonLd}
+  navOverlay
+  lcpImageDesktop="/images/portfolio--snubaky--hero.webp"
+  lcpImageDesktop2x="/images/portfolio--snubaky--hero@2x.webp"
+  ctaHeading={t.ctaHeading}
+  ctaSubtitle={t.ctaSubtitle}
+  ctaPrimaryLabel={t.ctaPrimaryLabel}
+>
+
+  <!-- ====== HERO — split layout ====== -->
+  <section class="relative bg-bg-primary border-b border-border overflow-hidden">
+    <div class="radial-overlay"></div>
+    <div class="relative max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-14">
+      <div class="grid lg:grid-cols-2 gap-10 sm:gap-12 lg:gap-20 items-center min-h-[80vh] lg:min-h-dvh section-hero">
+
+        <!-- Text -->
+        <div data-anim="up">
+          <span class="label-dot">{t.heroLabel}</span>
+          <h1 class="mt-6">
+            {t.heroHeadingPre} <em>{t.heroHeadingEm}</em>{t.heroHeadingPost}
+          </h1>
+          <p class="mt-6 text-text-secondary body-lg max-w-xl">
+            {t.heroCopy}
+          </p>
+          <div class="mt-10 flex flex-col sm:flex-row gap-4">
+            <Button href={t.heroPrimaryHref} variant="primary">{t.heroPrimaryLabel}</Button>
+            <Button href={SITE.phoneHref} variant="secondary">{t.heroSecondaryLabel}</Button>
+          </div>
+        </div>
+
+        <!-- Photo -->
+        <div class="relative">
+          <img
+            src="/images/portfolio--snubaky--hero.webp"
+            srcset="/images/portfolio--snubaky--hero.webp 1x, /images/portfolio--snubaky--hero@2x.webp 2x"
+            width="1000" height="1000"
+            alt={t.heroAlt}
+            fetchpriority="high"
+            decoding="async"
+            class="w-full h-auto object-contain max-w-[560px] mx-auto"
+          />
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== STYLES ====== -->
+  <section class="relative bg-bg-primary border-b border-border section-lg overflow-hidden">
+    <div class="radial-overlay"></div>
+    <div class="relative max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-14">
+
+      <div class="max-w-3xl mb-14" data-anim="up">
+        <span class="label-dot">{t.stylesLabel}</span>
+        <h2 class="mt-5">
+          {t.stylesHeadingPre} <em>{t.stylesHeadingEm}</em>
+        </h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-10 lg:gap-12" data-anim="stagger">
+        {ringStyles.map((item) => (
+          <div data-anim-child class="flex flex-col">
+            <div class="aspect-square overflow-hidden">
+              <img
+                src={item.image}
+                srcset={`${item.image} 1x, ${item.image2x} 2x`}
+                width="800" height="800"
+                alt={item.alt}
+                loading="lazy"
+                decoding="async"
+                class="w-full h-full object-contain"
+              />
+            </div>
+            <div class="pt-6 pb-2">
+              <span class="font-sans text-[11px] font-medium uppercase tracking-[0.2em] text-gold-on-light">{item.number}</span>
+              <h3 class="mt-3">{item.title}</h3>
+              <p class="body-md text-text-secondary leading-relaxed mt-3 font-sans">{item.description}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== PROCESS ====== -->
+  <section class="relative bg-bg-primary border-b border-border section-lg overflow-hidden">
+    <div class="radial-overlay"></div>
+    <div class="relative max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-14">
+      <div class="grid lg:grid-cols-[0.4fr_1fr] gap-10 lg:gap-20">
+        <div class="lg:sticky lg:top-32 lg:self-start" data-anim="up">
+          <span class="label-dot">{t.processLabel}</span>
+          <h2 class="mt-5">{t.processHeadingPre} <em>{t.processHeadingEm}</em>.</h2>
+          <p class="mt-6 body-md text-text-secondary leading-relaxed font-sans max-w-md">
+            {t.processIntro}
+          </p>
+        </div>
+        <div class="space-y-10" data-anim="stagger">
+          {processSteps.map((step) => (
+            <div data-anim-child class="border-b border-border pb-8">
+              <span class="font-sans text-[11px] font-medium uppercase tracking-[0.2em] text-gold-on-light">{step.number}</span>
+              <h3 class="mt-3">{step.title}</h3>
+              <p class="body-md text-text-secondary leading-relaxed mt-3 font-sans max-w-2xl">{step.description}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== FAQ ====== -->
+  <section class="relative bg-bg-primary section-md overflow-hidden">
+    <div class="radial-overlay"></div>
+    <div class="relative max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-14">
+      <span class="label-dot" data-anim="fade">{t.faqLabel}</span>
+      <h2 class="mt-5 mb-12" data-anim="up">{t.faqHeading}</h2>
+      <FAQ items={faqItems} />
+    </div>
+  </section>
+
+</Layout>

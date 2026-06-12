@@ -1,0 +1,181 @@
+---
+/**
+ * Sdílená šablona stránky Portfolio (CS /portfolio/ + EN /en/portfolio/).
+ * Route soubory v src/pages/ jsou tenké wrappery — veškerá struktura žije tady,
+ * texty v lokálním slovníku `t`. Vzor: ContactPage.astro.
+ */
+import Layout from '../layouts/Layout.astro';
+import PhotoFrame from '../components/PhotoFrame.astro';
+import { portfolioCases } from '../data/portfolio';
+import { graph, portfolioItemList, breadcrumbSchema } from '../lib/seo';
+import type { Locale } from '../i18n';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const isEn = locale === 'en';
+
+const t = isEn
+  ? {
+      title: 'Portfolio | Martin Ševr — Goldsmith workshop in Prague',
+      description: "Four stories from Martin Ševr's workshop — from signature pieces through wedding and engagement rings to personalised commissions. Each piece has its own path.",
+      ctaHeading: "Like what you see? <em>I'll make you something similar.</em>",
+      ctaSubtitle: "Tell me what caught your eye. I'll take it as inspiration and craft a piece that's just for you. Consultation is free.",
+      ctaPrimaryLabel: 'Book a consultation',
+      ctaPrimaryHref: '/en/contact/',
+      breadcrumb: [
+        { name: 'Home', url: '/en/' },
+        { name: 'Portfolio', url: '/en/portfolio/' },
+      ],
+      categoryTypeLabels: {
+        'autorska-tvorba': 'Signature piece',
+        'snubni-prsteny': 'Wedding bands',
+        'zasnubni-prsteny': 'Engagement',
+        'personalizovane': 'Commission',
+      } as Record<string, string>,
+      categoryFallback: 'Commission',
+      heroHeading: "What's been made in the workshop — selected",
+      heroHeadingEm: 'commissions',
+      heroLead: "Wedding bands, engagement rings, signature pieces. For each one you'll find the materials, the process, and the client's story. If something catches your eye, we can use it as inspiration for your own commission.",
+      caseLabel: 'Commission',
+      details: 'Details',
+    }
+  : {
+      title: 'Portfolio realizací | Snubní prsteny a autorské šperky na zakázku Praha',
+      description: 'Příběhy z dílny Martina Ševra — snubní a zásnubní prsteny na míru, autorská tvorba, personalizované kusy. Realizace zakázek v Praze.',
+      ctaHeading: 'Líbí se vám něco? <em>Vyrobím vám podobné.</em>',
+      ctaSubtitle: 'Vezmu si vaši inspiraci a vyrobím šperk, který bude jen váš. Konzultace v dílně je zdarma.',
+      ctaPrimaryLabel: 'Domluvit konzultaci',
+      ctaPrimaryHref: '/kontakt',
+      breadcrumb: [
+        { name: 'Domů', url: '/' },
+        { name: 'Portfolio', url: '/portfolio/' },
+      ],
+      categoryTypeLabels: {
+        'autorska-tvorba': 'Autorský kus',
+        'snubni-prsteny': 'Snubní pár',
+        'zasnubni-prsteny': 'Zásnubní',
+        'personalizovane': 'Zakázka',
+      } as Record<string, string>,
+      categoryFallback: 'Zakázka',
+      heroHeading: 'Co vzniklo v dílně — výběr',
+      heroHeadingEm: 'zakázek',
+      heroLead: 'Snubáky, zásnubní prsteny, autorské kusy. U každého najdete materiál, postup výroby a příběh klienta. Pokud vás něco zaujme, můžeme se inspirovat při vaší zakázce.',
+      caseLabel: 'Zakázka',
+      details: 'Podrobnosti',
+    };
+
+function materialTags(material: string): string[] {
+  return material
+    .split(/[,·]/)
+    .map((t) => t.trim())
+    .filter(Boolean)
+    .slice(0, 2);
+}
+
+const jsonLd = graph(
+  portfolioItemList(portfolioCases),
+  breadcrumbSchema(t.breadcrumb),
+);
+---
+
+<Layout
+  locale={locale}
+  title={t.title}
+  ogImage="/images/og/og-portfolio.jpg"
+  description={t.description}
+  jsonLd={jsonLd}
+  navOverlay
+  ctaHeading={t.ctaHeading}
+  ctaSubtitle={t.ctaSubtitle}
+  ctaPrimaryLabel={t.ctaPrimaryLabel}
+  ctaPrimaryHref={t.ctaPrimaryHref}
+>
+
+  <!-- ====== HERO ====== -->
+  <section class="relative bg-bg-primary border-b border-border section-hero overflow-hidden">
+    <div class="radial-overlay"></div>
+    <div class="relative max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-14">
+      <div class="max-w-3xl" data-anim="up">
+        <span class="label-dot">Portfolio</span>
+        <h1 class="mt-6">{t.heroHeading} <em>{t.heroHeadingEm}</em></h1>
+        <p class="mt-6 text-text-secondary body-lg max-w-xl">
+          {t.heroLead}
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== CASES — Vertical list (foto vlevo, info vpravo) ====== -->
+  <section class="relative bg-bg-primary section-md overflow-hidden">
+    <div class="radial-overlay"></div>
+    <div class="relative max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-14">
+
+      <div class="flex flex-col">
+        {portfolioCases.map((c, i) => {
+          const num = String(i + 1).padStart(2, '0');
+          const materialForTags = isEn ? (c.materialEn || c.material) : c.material;
+          const tags = [...materialTags(materialForTags), t.categoryTypeLabels[c.category] || t.categoryFallback];
+          const href = isEn ? `/en/work/${c.slugEn || c.slug}/` : `/tvorba/${c.slug}`;
+          const cardTitle = isEn ? (c.titleEn || c.title) : c.title;
+          const cardLead = isEn ? (c.cardLeadEn || c.cardLead) : c.cardLead;
+          const cardAlt = isEn ? (c.cardAltEn || c.cardAlt) : c.cardAlt;
+          return (
+            <a href={href}
+               class="group relative block border-t border-border py-10 md:py-14"
+               data-anim="up">
+              <div class="grid grid-cols-1 md:grid-cols-[0.35fr_1fr] gap-8 md:gap-12 lg:gap-16 items-center">
+
+                <!-- Photo -->
+                <div class="relative aspect-[3/2] overflow-hidden">
+                  <img
+                    src={c.cardImage}
+                    srcset={`${c.cardImage} 1x, ${c.cardImage2x} 2x`}
+                    width="800" height="600"
+                    sizes="(min-width: 768px) 30vw, 100vw"
+                    alt={cardAlt}
+                    loading={i < 2 ? 'eager' : 'lazy'}
+                    decoding="async"
+                    class="absolute inset-0 w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-700"
+                  />
+                  <PhotoFrame />
+                  <div class="absolute bottom-4 left-4 bg-bg-primary/90 backdrop-blur-md px-4 py-2.5 shadow-soft">
+                    <span class="text-[11px] uppercase tracking-[0.15em] font-medium text-gold-on-light font-sans">{`${t.caseLabel} ${num}`}</span>
+                  </div>
+                </div>
+
+                <!-- Info -->
+                <div class="pr-14 md:pr-16">
+                  <span class="text-[11px] uppercase tracking-[0.15em] font-medium text-gold-on-light font-sans">{`${t.caseLabel} ${num}`}</span>
+                  <h2 class="mt-2 card-title group-hover:text-gold-deep transition-colors duration-300">{cardTitle}</h2>
+                  <p class="body-md text-text-secondary leading-relaxed mt-3 max-w-xl font-sans">{cardLead}</p>
+                  <div class="flex flex-wrap gap-3 mt-5">
+                    {tags.map((tag) => (
+                      <span class="text-[11px] uppercase tracking-[0.15em] text-text-muted font-sans border border-border px-3 py-1.5">{tag}</span>
+                    ))}
+                  </div>
+                  <div class="mt-6">
+                    <span class="text-[clamp(0.6875rem,0.6rem+0.15vw,0.8125rem)] text-text-secondary uppercase tracking-[0.2em] font-sans font-medium group-hover:text-gold-deep transition-colors duration-300 inline-flex items-center gap-2">
+                      {t.details}
+                      <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25" /></svg>
+                    </span>
+                  </div>
+                </div>
+
+              </div>
+
+              <!-- Arrow in top-right corner -->
+              <div class="hidden md:flex absolute top-10 md:top-14 right-0 h-10 w-10 rounded-full border border-border items-center justify-center group-hover:bg-text-primary group-hover:border-text-primary transition-colors duration-300">
+                <svg class="w-4 h-4 text-text-primary group-hover:text-white transition-colors duration-300" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25" /></svg>
+              </div>
+            </a>
+          );
+        })}
+        <div class="border-t border-border"></div>
+      </div>
+
+    </div>
+  </section>
+
+</Layout>

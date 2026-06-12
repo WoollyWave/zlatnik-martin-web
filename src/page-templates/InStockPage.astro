@@ -1,0 +1,144 @@
+---
+/**
+ * Sdílená šablona stránky Skladem (CS /skladem/ + EN /en/in-stock/).
+ * Route soubory v src/pages/ jsou tenké wrappery — veškerá struktura žije tady,
+ * texty v lokálním slovníku `t`.
+ */
+import Layout from '../layouts/Layout.astro';
+import ProductCard from '../components/ProductCard.astro';
+import FilterPills from '../components/FilterPills.astro';
+import { products } from '../data/products';
+import { graph, productItemList, breadcrumbSchema } from '../lib/seo';
+import type { Locale } from '../i18n';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const isEn = locale === 'en';
+
+const t = isEn
+  ? {
+      title: 'In stock | Martin Ševr — Goldsmith workshop in Prague',
+      description: 'Silver pieces with natural stones — ready to collect at the workshop or shipped anywhere. Most models can also be made in gold within three weeks.',
+      breadcrumb: [
+        { name: 'Home', url: '/en/' },
+        { name: 'In stock', url: '/en/in-stock/' },
+      ],
+      ctaHeading: 'Something caught your eye? <em>Write to me.</em>',
+      ctaSubtitle: "Come see the piece at the workshop Pod Kesnerkou, or I'll ship it insured anywhere in Europe.",
+      filterAll: 'All',
+      categoryMap: {
+        'prsteny': 'Rings',
+        'nausnice': 'Earrings',
+        'privesky': 'Pendants',
+        'retizky': 'Chains',
+        'sady': 'Sets',
+      } as Record<string, string>,
+      heroLabel: 'In stock',
+      heroHeading: 'Pieces you',
+      heroHeadingEm: 'take home today',
+      heroText: 'Silver rings and pendants with natural stones. Pick up directly at the Pod Kesnerkou workshop, or shipped as an insured parcel anywhere in Czechia within two business days.',
+      noteBefore: 'Prices of gold versions are indicative and valid as of',
+      noteAfter: ". The gold price changes daily — I'll be happy to give you the current rate over the phone:",
+      dateLocale: 'en-GB',
+    }
+  : {
+      title: 'Stříbrné šperky s přírodními kameny | Hotové prsteny skladem Praha',
+      description: 'Hotové stříbrné šperky s přírodními kameny — ametyst, vltavín, opál, turmalín. K vyzvednutí ve zlatnické dílně Praha 5 nebo zaslání poštou. Variantu ve zlatě vyrobím do 3 týdnů.',
+      breadcrumb: [
+        { name: 'Domů', url: '/' },
+        { name: 'Skladem', url: '/skladem/' },
+      ],
+      ctaHeading: 'Některý vás zaujal? <em>Napište mi.</em>',
+      ctaSubtitle: 'Šperk si můžete přijít prohlédnout v dílně Pod Kesnerkou, nebo ho pošlu pojištěnou zásilkou kamkoli po Česku.',
+      filterAll: 'Vše',
+      categoryMap: {
+        'prsteny': 'Prsteny',
+        'nausnice': 'Náušnice',
+        'privesky': 'Přívěsky',
+        'retizky': 'Řetízky',
+        'sady': 'Sady',
+      } as Record<string, string>,
+      heroLabel: 'Skladem',
+      heroHeading: 'Šperky, které',
+      heroHeadingEm: 'si odnesete dnes',
+      heroText: 'Stříbrné prsteny a přívěsky s přírodními kameny. Ihned k odběru v dílně Pod Kesnerkou nebo zaslání pojištěnou zásilkou po Česku do 2 pracovních dnů.',
+      noteBefore: 'Ceny zlatých variant jsou orientační a platné k',
+      noteAfter: '. Cena zlata se denně mění — aktuální vám rád řeknu po telefonu:',
+      dateLocale: 'cs-CZ',
+    };
+
+const categories = [...new Set(products.map(p => p.category))];
+const filterLabels = [t.filterAll, ...categories.map(c => t.categoryMap[c] || c)];
+
+const jsonLd = graph(
+  productItemList(products),
+  breadcrumbSchema(t.breadcrumb),
+);
+
+const priceDate = new Date().toLocaleDateString(t.dateLocale, { day: 'numeric', month: 'long', year: 'numeric' });
+---
+
+<Layout
+  locale={locale}
+  title={t.title}
+  ogImage="/images/og/og-skladem.jpg"
+  description={t.description}
+  jsonLd={jsonLd}
+  navOverlay
+  ctaHeading={t.ctaHeading}
+  ctaSubtitle={t.ctaSubtitle}
+>
+
+  <!-- ====== HERO ====== -->
+  <section class="relative bg-bg-primary border-b border-border section-hero overflow-hidden">
+    <div class="radial-overlay"></div>
+    <div class="relative max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-14">
+      <div class="max-w-3xl" data-anim="up">
+        <span class="label-dot">{t.heroLabel}</span>
+        <h1 class="mt-6">
+          {t.heroHeading} <em>{t.heroHeadingEm}</em>
+        </h1>
+        <p class="mt-6 text-text-secondary body-lg max-w-xl">
+          {t.heroText}
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== PRODUCTS ====== -->
+  <section class="relative bg-bg-primary section-md overflow-hidden">
+    <div class="radial-overlay"></div>
+    <div class="relative max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-14">
+
+      <FilterPills items={filterLabels} activeIndex={0} />
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-10" id="products-grid">
+        {products.map((product) => (
+          <ProductCard
+            locale={locale}
+            title={isEn ? (product.titleEn || product.title) : product.title}
+            material={isEn ? (product.materialEn || product.material) : product.material}
+            priceSilver={isEn ? (product.priceSilverEn || product.priceSilver) : product.priceSilver}
+            priceGold={isEn ? (product.priceGoldEn || product.priceGold) : product.priceGold}
+            goldNote={isEn ? (product.goldNoteEn || product.goldNote) : product.goldNote}
+            href={isEn ? `/en/jewelry/${product.slugEn || product.slug}/` : `/sperky/${product.slug}`}
+            category={product.category}
+            image={product.imageCard || product.image}
+            alt={isEn ? (product.altEn || product.alt) : product.alt}
+            description={isEn ? (product.descriptionEn || product.description) : product.description}
+            stockBadge={product.stockBadge}
+            headingLevel="h2"
+          />
+        ))}
+      </div>
+
+      <p class="mt-12 max-w-3xl font-serif italic text-[15px] text-text-muted leading-[1.7]" data-anim="up">
+        {t.noteBefore} {priceDate}{t.noteAfter} <a href="tel:+420774598181" class="not-italic font-sans text-gold-on-light hover:text-gold-deep transition-colors font-medium whitespace-nowrap">+420 774 598 181</a>.
+      </p>
+
+    </div>
+  </section>
+
+</Layout>

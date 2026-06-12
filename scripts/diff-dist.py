@@ -15,11 +15,19 @@ def normalize(html: str) -> str:
     # Unescape až PO odstranění tagů by bylo bezpečnější, ale entity v atributech
     # tady nehrozí kolizí (žádné < > v textech) — plošný unescape stačí.
     html = html_mod.unescape(html)
+    # HTML komentáře se nerenderují — šablony nesou jednu (CS) sadu komentářů pro oba jazyky.
+    html = re.sub(r'<!--.*?-->', '', html, flags=re.S)
     # CSP hash pořadí se může lišit při shodném obsahu skriptů — seřadit uvnitř meta
     def sort_csp(m):
         return 'content="' + ';'.join(sorted(m.group(1).split(';'))) + '"'
     html = re.sub(r'content="([^"]*script-src[^"]*)"', sort_csp, html, count=1)
-    return re.sub(r'\s+', ' ', html).strip()
+    html = re.sub(r'\s+', ' ', html).strip()
+    # Okrajové mezery textu hned za otevíracím / před zavíracím tagem nerenderují
+    # (JSX výrazy je neemitují, literály ano). POZOR: maskuje to i mezery u inline
+    # tagů (<em>) — mezislovní mezery uvnitř textů zůstávají kontrolované.
+    html = re.sub(r'> ', '>', html)
+    html = re.sub(r' <', '<', html)
+    return html
 
 def main():
     base_dir, new_dir = Path(sys.argv[1]), Path(sys.argv[2])
