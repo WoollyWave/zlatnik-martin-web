@@ -34,7 +34,13 @@ Detailní záznam všech změn po krocích: [`_audit/changelog.md`](changelog.md
 **R1 — `formular@zlatnik-martin.cz` musí existovat na Hostingeru. ✅ VYŘEŠENO (ověřeno 12. 6. 2026)**
 Ověřeno proti ostrému provozu: schránka existuje (SMTP RCPT `250 Ok`, přičemž neexistující adresa na stejné doméně vrací `550` — server není accept-all), MX → Hostinger, SPF + DKIM (hostingermail-a/b/c) + DMARC záznamy v DNS kompletní. `send.php` je na produkci nasazený a odpovídá správně (405 na GET). Zbývá jen běžný post-deploy test formuláře (checklist bod 1).
 
-**R2 — AEO: návrhy FAQ textů ke schválení.** Struktura (FAQ.astro + FAQPage schema) je hotová, zakázková tvorba má 5 otázek. Navrhuji doplnit na **/opravy-sperku-praha** (nemá žádné FAQ, přitom cílí na nejčastější dotazy):
+**R2 — AEO FAQ: ✅ VYŘEŠENO (12. 6. 2026).** Stránka oprav už kompletní FAQ s FAQPage schématem má (5 otázek vč. cen 400–900 Kč za zmenšení, lhůt do 5 dnů) — můj původní návrh vycházel z nepřesného průzkumu. Ceny jdou na web prvním deployem → při kontrole před deployem je s Martinem potvrď. Totéž platí pro ceny ve FAQ snubních prstenů (od 18 000 Kč/pár, 4–8 týdnů).
+
+**R3+Y1 — EN snubní prsteny + sloučení CS/EN: ✅ HOTOVO (12. 6. 2026, schváleno Danielem).** `/en/wedding-rings/` vytvořeno (překlad CS copy, hreflang, sitemap, EN nav dropdown). 9 párů stránek sloučeno do `src/page-templates/` — HTML výstup ověřen jako identický (`scripts/diff-dist.py`). Bonus: opravena pre-existující hreflang chyba CS-only stránek (deklarovaly EN alternate na homepage).
+
+**NOVÉ — Keyword optimalizace (12. 6. 2026, detailně v [_audit/keywords.md](keywords.md)):** „zlatnictví" (2→20 stránek), „Smíchov" (1→22), „šperky na zakázku" (1→20), „vltavín" v titles listingů, EN titles keyword-first, JewelryStore areaServed+keywords, oprava llms.txt („v centru Prahy" → Smíchov — fakticky špatný údaj pro AI odpovědi). Body copy nedotčeno. Ke zvážení zůstává: zmínka „10 minut od Anděla" v textu (body copy → schválit), obsahová vrstva (blog) pro informační dotazy, Google Business Profile kategorie „Zlatnictví".
+
+**PŮVODNÍ R2 (přeskočeno — nahrazeno výše) — návrhy FAQ textů:** Struktura (FAQ.astro + FAQPage schema) je hotová, zakázková tvorba má 5 otázek. Navrhuji doplnit na **/opravy-sperku-praha** (nemá žádné FAQ, přitom cílí na nejčastější dotazy):
 1. *„Kolik stojí oprava prstenu?"* — Zmenšení/zvětšení stříbrného prstenu od několika set korun, u zlata dle gramáže; přesnou cenu řeknu po prohlédnutí kusu — pošlete fotku na WhatsApp, odpovím do 24 hodin.
 2. *„Opravíte i šperk koupený jinde?"* — Ano. Opravuji šperky bez ohledu na to, kde vznikly — včetně zděděných a starožitných kusů.
 3. *„Jak dlouho oprava trvá?"* — Běžné opravy do týdne, jednoduché úpravy často na počkání po domluvě.
