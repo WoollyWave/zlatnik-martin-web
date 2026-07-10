@@ -1,8 +1,10 @@
 ---
 // Responzivní <picture> wrapper. Na viewportech ≤640px servíruje mobilní variantu.
-// Vyžaduje sourozenecké soubory v `public/images/`:
-//   {base}.webp, {base}@2x.webp, {base}-mobile.webp, {base}-mobile@2x.webp
-// Mobilní varianty generuje `npm run images` pro zdroje s cílovou šířkou ≥1200px.
+// AVIF má přednost před WebP (pořadí <source> rozhoduje) — typicky o 30–50 % menší.
+// Vyžaduje sourozenecké soubory v `public/images/` (generuje `npm run images`,
+// AVIF ke starším WebP dogeneruje `node scripts/process-images.mjs --backfill-avif`):
+//   {base}.{avif,webp}, {base}@2x.*, {base}-mobile.*, {base}-mobile@2x.*
+// Mobilní varianty vznikají pro zdroje s cílovou šířkou ≥1200px.
 interface Props {
   base: string;            // např. "homepage--hero--ametystovy-cluster-na-ruce"
   alt: string;
@@ -30,8 +32,17 @@ const baseUrl = `/images/${base}`;
 <picture>
   <source
     media={`(max-width: ${mobileBreakpoint}px)`}
+    type="image/avif"
+    srcset={`${baseUrl}-mobile.avif 1x, ${baseUrl}-mobile@2x.avif 2x`}
+  />
+  <source
+    media={`(max-width: ${mobileBreakpoint}px)`}
     type="image/webp"
     srcset={`${baseUrl}-mobile.webp 1x, ${baseUrl}-mobile@2x.webp 2x`}
+  />
+  <source
+    type="image/avif"
+    srcset={`${baseUrl}.avif 1x, ${baseUrl}@2x.avif 2x`}
   />
   <img
     src={`${baseUrl}.webp`}

@@ -54,17 +54,26 @@ const detailsLabel = ctaLabel ?? (locale === 'en' ? 'Details' : 'Podrobnosti');
   <div class={`grid grid-cols-1 ${gridCols} gap-8 md:gap-12 lg:gap-16 items-center`}>
 
     <div class="relative aspect-[3/2] overflow-hidden">
-      <img
-        src={image}
-        srcset={`${image} 800w, ${image2x} 1600w`}
-        sizes="(min-width: 768px) 40vw, 100vw"
-        width="800"
-        height="600"
-        alt={alt}
-        loading={loading}
-        decoding="async"
-        class="absolute inset-0 w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-700"
-      />
+      <picture>
+        {image.endsWith('.webp') && image2x.endsWith('.webp') && (
+          <source
+            type="image/avif"
+            srcset={`${image.replace(/\.webp$/, '.avif')} 800w, ${image2x.replace(/\.webp$/, '.avif')} 1600w`}
+            sizes="(min-width: 768px) 40vw, 100vw"
+          />
+        )}
+        <img
+          src={image}
+          srcset={`${image} 800w, ${image2x} 1600w`}
+          sizes="(min-width: 768px) 40vw, 100vw"
+          width="800"
+          height="600"
+          alt={alt}
+          loading={loading}
+          decoding="async"
+          class="absolute inset-0 w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-700"
+        />
+      </picture>
       <PhotoFrame />
       <div class="absolute bottom-4 left-4 bg-bg-primary/90 backdrop-blur-md px-4 py-2.5 shadow-soft">
         <span class="text-[11px] uppercase tracking-[0.15em] font-medium text-gold-on-light font-sans">{label}</span>

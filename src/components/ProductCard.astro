@@ -64,18 +64,23 @@ const labels = locale === 'en'
 
 <a href={href} class="group flex flex-col h-full border border-border hover:border-text-muted/30 transition-all duration-300" data-category={category} data-sold={sold ? 'true' : undefined}>
 
-  <!-- Photo -->
+  <!-- Photo — AVIF s WebP fallbackem (avif sourozence generuje process-images) -->
   <div class="relative aspect-[3/2] overflow-hidden">
     {image ? (
-      <img
-        src={image}
-        width="1200" height="800"
-        sizes="(min-width: 1024px) 660px, 100vw"
-        alt={alt || title}
-        loading="lazy"
-        decoding="async"
-        class="absolute inset-0 w-full h-full object-cover object-center group-hover:scale-[1.03] transition-transform duration-700"
-      />
+      <picture>
+        {image.endsWith('.webp') && (
+          <source type="image/avif" srcset={image.replace(/\.webp$/, '.avif')} />
+        )}
+        <img
+          src={image}
+          width="1200" height="800"
+          sizes="(min-width: 1024px) 660px, 100vw"
+          alt={alt || title}
+          loading="lazy"
+          decoding="async"
+          class="absolute inset-0 w-full h-full object-cover object-center group-hover:scale-[1.03] transition-transform duration-700"
+        />
+      </picture>
     ) : (
       <div class="absolute inset-0 bg-bg-tertiary flex items-center justify-center">
         <svg class="w-12 h-12 text-text-muted/30" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1" stroke="currentColor">
@@ -105,7 +110,7 @@ const labels = locale === 'en'
     <div class="flex items-start justify-between gap-4 pb-6">
       <div class="min-w-0">
         <Heading class="card-title group-hover:text-gold-deep transition-colors duration-300">{title}</Heading>
-        <p class="body-md text-text-muted mt-1.5 font-sans">{material}</p>
+        <p class="body-md text-text-secondary mt-1.5 font-sans">{material}</p>
         {description && (
           <p class="body-md text-text-secondary mt-3 leading-relaxed font-sans line-clamp-2">{description}</p>
         )}
