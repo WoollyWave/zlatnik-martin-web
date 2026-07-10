@@ -11,22 +11,25 @@ AddDefaultCharset UTF-8
 DirectoryIndex index.html
 
 # --- 1) Canonical URL (HTTPS + www + bez index.html) -----------------------
-# Důležité pro SEO: jeden URL = jeden zdroj. Google Search Console pak nevidí duplicity.
+# SEO/AEO: jeden URL = jeden zdroj, VŽDY jediným 301 skokem na kanonický origin
+# (řetězené redirecty ředí crawl budget a zpomalují first-load). Pořadí pravidel
+# je záměrné: apex se řeší PŘED obecným HTTPS upgradem, aby http://apex šel na
+# https://www jedním skokem, ne dvěma.
 <IfModule mod_rewrite.c>
   RewriteEngine On
 
-  # 1a) HTTP → HTTPS na AKTUÁLNÍM hostu (X-Forwarded-Proto kvůli LiteSpeed/CDN
-  # proxy). Cíl přes %{HTTP_HOST}, ne hardcoded doménu — jinak staging
-  # (web.vilim.sbs) přesměruje na produkci a nejde zkontrolovat.
+  # 1a) apex zlatnik-martin.cz (http i https) → https://www JEDNÍM skokem.
+  # Záměrně host-scoped, ne catch-all: stejný build běží i na stagingu
+  # (web.vilim.sbs), který musí zůstat na svém hostu (indexaci mu zakazuje
+  # X-Robots-Tag guard v sekci 2).
+  RewriteCond %{HTTP_HOST} ^zlatnik-martin\.cz$ [NC]
+  RewriteRule ^ https://www.zlatnik-martin.cz%{REQUEST_URI} [L,R=301,NE]
+
+  # 1b) HTTP → HTTPS na aktuálním hostu (produkční www i staging; apex už
+  # odbavilo 1a). X-Forwarded-Proto kvůli LiteSpeed/CDN proxy.
   RewriteCond %{HTTPS} off [OR]
   RewriteCond %{HTTP:X-Forwarded-Proto} =http
   RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301,NE]
-
-  # 1b) POUZE apex zlatnik-martin.cz → www varianta. Záměrně ne catch-all na
-  # cizí hosty: stejný build běží i na stagingu (vilim.sbs) a ten musí zůstat
-  # na svém hostu.
-  RewriteCond %{HTTP_HOST} ^zlatnik-martin\.cz$ [NC]
-  RewriteRule ^ https://www.zlatnik-martin.cz%{REQUEST_URI} [L,R=301,NE]
 
   # 1c) Strip trailing /index.html → /
   RewriteCond %{THE_REQUEST} \s/+(.*)index\.html[\s?] [NC]
