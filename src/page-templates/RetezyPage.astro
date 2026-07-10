@@ -265,16 +265,23 @@ const jsonLd = graph(
         {colors.map((c) => (
           <div data-anim-child class="flex flex-col">
             <div class="relative overflow-hidden aspect-video bg-bg-secondary">
-              <img
-                src={`${c.image}.webp`}
-                srcset={`${c.image}.webp 1x, ${c.image}@2x.webp 2x`}
-                width="1000" height="563"
-                sizes="(min-width: 768px) 33vw, 100vw"
-                alt={c.alt}
-                loading="lazy"
-                decoding="async"
-                class="absolute inset-0 w-full h-full object-cover"
-              />
+              <picture>
+                <source
+                  type="image/avif"
+                  srcset={`${c.image}.avif 1x, ${c.image}@2x.avif 2x`}
+                  sizes="(min-width: 768px) 33vw, 100vw"
+                />
+                <img
+                  src={`${c.image}.webp`}
+                  srcset={`${c.image}.webp 1x, ${c.image}@2x.webp 2x`}
+                  width="1000" height="563"
+                  sizes="(min-width: 768px) 33vw, 100vw"
+                  alt={c.alt}
+                  loading="lazy"
+                  decoding="async"
+                  class="absolute inset-0 w-full h-full object-cover"
+                />
+              </picture>
             </div>
             <div class="pt-5">
               <h3>{c.name}</h3>

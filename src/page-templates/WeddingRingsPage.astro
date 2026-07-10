@@ -348,15 +348,23 @@ const jsonLd = graph(
         {ringStyles.map((item) => (
           <div data-anim-child class="flex flex-col">
             <div class="aspect-square overflow-hidden">
-              <img
-                src={item.image}
-                srcset={`${item.image} 1x, ${item.image2x} 2x`}
-                width="800" height="800"
-                alt={item.alt}
-                loading="lazy"
-                decoding="async"
-                class="w-full h-full object-contain"
-              />
+              <picture>
+                {item.image.endsWith('.webp') && item.image2x.endsWith('.webp') && (
+                  <source
+                    type="image/avif"
+                    srcset={`${item.image.replace(/\.webp$/, '.avif')} 1x, ${item.image2x.replace(/\.webp$/, '.avif')} 2x`}
+                  />
+                )}
+                <img
+                  src={item.image}
+                  srcset={`${item.image} 1x, ${item.image2x} 2x`}
+                  width="800" height="800"
+                  alt={item.alt}
+                  loading="lazy"
+                  decoding="async"
+                  class="w-full h-full object-contain"
+                />
+              </picture>
             </div>
             <div class="pt-6 pb-2">
               <span class="font-sans text-[11px] font-medium uppercase tracking-[0.2em] text-gold-on-light">{item.number}</span>
@@ -382,16 +390,23 @@ const jsonLd = graph(
         {galleryItems.map((item) => (
           <div data-anim-child>
             <div class="border border-border aspect-square overflow-hidden flex items-center justify-center p-5 bg-bg-primary">
-              <img
-                src={`/images/${item.base}.webp`}
-                srcset={`/images/${item.base}.webp 1x, /images/${item.base}@2x.webp 2x`}
-                width="700" height="700"
-                sizes="(min-width: 1024px) 22vw, (min-width: 768px) 30vw, 45vw"
-                alt={item.alt}
-                loading="lazy"
-                decoding="async"
-                class="w-full h-full object-contain"
-              />
+              <picture>
+                <source
+                  type="image/avif"
+                  srcset={`/images/${item.base}.avif 1x, /images/${item.base}@2x.avif 2x`}
+                  sizes="(min-width: 1024px) 22vw, (min-width: 768px) 30vw, 45vw"
+                />
+                <img
+                  src={`/images/${item.base}.webp`}
+                  srcset={`/images/${item.base}.webp 1x, /images/${item.base}@2x.webp 2x`}
+                  width="700" height="700"
+                  sizes="(min-width: 1024px) 22vw, (min-width: 768px) 30vw, 45vw"
+                  alt={item.alt}
+                  loading="lazy"
+                  decoding="async"
+                  class="w-full h-full object-contain"
+                />
+              </picture>
             </div>
             <p class="mt-3 body-md text-text-secondary font-sans">{item.title}</p>
           </div>

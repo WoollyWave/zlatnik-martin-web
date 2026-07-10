@@ -317,14 +317,23 @@ const reviewDateFmt = new Intl.DateTimeFormat(isEn ? 'en-GB' : 'cs-CZ', { year: 
           {product.detailImages.map((img, i) => (
             <div data-anim-child class="relative overflow-hidden">
               <div class="aspect-square relative overflow-hidden">
-                <img
-                  src={img.src}
-                  width="1000" height="1000"
-                  sizes="(min-width: 1024px) 30vw, (min-width: 768px) 33vw, 100vw"
-                  alt={isEn ? img.altEn || img.alt : img.alt}
-                  loading="lazy" decoding="async"
-                  class="absolute inset-0 w-full h-full object-contain"
-                />
+                <picture>
+                  {img.src.endsWith('.webp') && (
+                    <source
+                      type="image/avif"
+                      srcset={img.src.replace(/\.webp$/, '.avif')}
+                      sizes="(min-width: 1024px) 30vw, (min-width: 768px) 33vw, 100vw"
+                    />
+                  )}
+                  <img
+                    src={img.src}
+                    width="1000" height="1000"
+                    sizes="(min-width: 1024px) 30vw, (min-width: 768px) 33vw, 100vw"
+                    alt={isEn ? img.altEn || img.alt : img.alt}
+                    loading="lazy" decoding="async"
+                    class="absolute inset-0 w-full h-full object-contain"
+                  />
+                </picture>
                 <PhotoFrame />
                 <div class="absolute top-4 left-4 bg-bg-primary/90 backdrop-blur-md px-3 py-1.5">
                   <span class="text-[11px] font-medium text-gold-on-light font-sans">{`0${i + 1}`}</span>

@@ -158,14 +158,20 @@ const jsonLd = graph(
         <!-- Photo — tall, dramatic (původní layout) -->
         <div data-anim="scale" class="relative overflow-hidden">
           <div class="aspect-[3/4] relative overflow-hidden">
-            <img
-              src="/images/o-dilne--portret--martin-sevr-zlatnik.webp"
-              srcset="/images/o-dilne--portret--martin-sevr-zlatnik.webp 1x, /images/o-dilne--portret--martin-sevr-zlatnik@2x.webp 2x"
-              width="900" height="1200"
-              alt={t.portraitAlt}
-              loading="lazy" decoding="async"
-              class="absolute inset-0 w-full h-full object-cover"
-            />
+            <picture>
+              <source
+                type="image/avif"
+                srcset="/images/o-dilne--portret--martin-sevr-zlatnik.avif 1x, /images/o-dilne--portret--martin-sevr-zlatnik@2x.avif 2x"
+              />
+              <img
+                src="/images/o-dilne--portret--martin-sevr-zlatnik.webp"
+                srcset="/images/o-dilne--portret--martin-sevr-zlatnik.webp 1x, /images/o-dilne--portret--martin-sevr-zlatnik@2x.webp 2x"
+                width="900" height="1200"
+                alt={t.portraitAlt}
+                loading="lazy" decoding="async"
+                class="absolute inset-0 w-full h-full object-cover"
+              />
+            </picture>
             <div class="absolute inset-3 border border-white/15 pointer-events-none"></div>
             <div class="absolute bottom-6 left-6 bg-bg-primary/90 backdrop-blur-md px-5 py-3 shadow-soft">
               <span class="text-[11px] uppercase tracking-[0.15em] font-medium text-gold-on-light font-sans">{t.portraitBadge}</span>
@@ -247,30 +253,48 @@ const jsonLd = graph(
       <span class="label-dot mb-10 block" data-anim="fade">{t.galleryLabel}</span>
       <div class="grid md:grid-cols-3 gap-4 lg:gap-6" data-anim="stagger">
         <div data-anim-child class="relative overflow-hidden">
-          <img
-            src="/images/o-dilne--galerie-1--ruka-retizek-stroj.webp"
-            srcset="/images/o-dilne--galerie-1--ruka-retizek-stroj.webp 1x, /images/o-dilne--galerie-1--ruka-retizek-stroj@2x.webp 2x"
-            width="800" height="1000" alt={t.g1Alt} loading="lazy" decoding="async"
-            class="w-full aspect-[4/5] object-cover grayscale-[15%] sepia-[10%]"
-          />
+          <picture>
+            <source
+              type="image/avif"
+              srcset="/images/o-dilne--galerie-1--ruka-retizek-stroj.avif 1x, /images/o-dilne--galerie-1--ruka-retizek-stroj@2x.avif 2x"
+            />
+            <img
+              src="/images/o-dilne--galerie-1--ruka-retizek-stroj.webp"
+              srcset="/images/o-dilne--galerie-1--ruka-retizek-stroj.webp 1x, /images/o-dilne--galerie-1--ruka-retizek-stroj@2x.webp 2x"
+              width="800" height="1000" alt={t.g1Alt} loading="lazy" decoding="async"
+              class="w-full aspect-[4/5] object-cover grayscale-[15%] sepia-[10%]"
+            />
+          </picture>
           <PhotoFrame />
         </div>
         <div data-anim-child class="relative overflow-hidden">
-          <img
-            src="/images/o-dilne--galerie-2--erbovni-pecet-zlato.webp"
-            srcset="/images/o-dilne--galerie-2--erbovni-pecet-zlato.webp 1x, /images/o-dilne--galerie-2--erbovni-pecet-zlato@2x.webp 2x"
-            width="800" height="1000" alt={t.g2Alt} loading="lazy" decoding="async"
-            class="w-full aspect-[4/5] object-cover grayscale-[15%] sepia-[10%]"
-          />
+          <picture>
+            <source
+              type="image/avif"
+              srcset="/images/o-dilne--galerie-2--erbovni-pecet-zlato.avif 1x, /images/o-dilne--galerie-2--erbovni-pecet-zlato@2x.avif 2x"
+            />
+            <img
+              src="/images/o-dilne--galerie-2--erbovni-pecet-zlato.webp"
+              srcset="/images/o-dilne--galerie-2--erbovni-pecet-zlato.webp 1x, /images/o-dilne--galerie-2--erbovni-pecet-zlato@2x.webp 2x"
+              width="800" height="1000" alt={t.g2Alt} loading="lazy" decoding="async"
+              class="w-full aspect-[4/5] object-cover grayscale-[15%] sepia-[10%]"
+            />
+          </picture>
           <PhotoFrame />
         </div>
         <div data-anim-child class="relative overflow-hidden">
-          <img
-            src="/images/o-dilne--galerie-3--snubaky-na-dreve-stul.webp"
-            srcset="/images/o-dilne--galerie-3--snubaky-na-dreve-stul.webp 1x, /images/o-dilne--galerie-3--snubaky-na-dreve-stul@2x.webp 2x"
-            width="800" height="1000" alt={t.g3Alt} loading="lazy" decoding="async"
-            class="w-full aspect-[4/5] object-cover grayscale-[15%] sepia-[10%]"
-          />
+          <picture>
+            <source
+              type="image/avif"
+              srcset="/images/o-dilne--galerie-3--snubaky-na-dreve-stul.avif 1x, /images/o-dilne--galerie-3--snubaky-na-dreve-stul@2x.avif 2x"
+            />
+            <img
+              src="/images/o-dilne--galerie-3--snubaky-na-dreve-stul.webp"
+              srcset="/images/o-dilne--galerie-3--snubaky-na-dreve-stul.webp 1x, /images/o-dilne--galerie-3--snubaky-na-dreve-stul@2x.webp 2x"
+              width="800" height="1000" alt={t.g3Alt} loading="lazy" decoding="async"
+              class="w-full aspect-[4/5] object-cover grayscale-[15%] sepia-[10%]"
+            />
+          </picture>
           <PhotoFrame />
         </div>
       </div>
@@ -283,14 +307,20 @@ const jsonLd = graph(
       <div class="grid lg:grid-cols-[1.15fr_0.85fr] gap-10 lg:gap-16 items-start">
         <div data-anim="scale" class="relative overflow-hidden">
           <div class="aspect-[3/4] relative overflow-hidden">
-            <img
-              src="/images/o-dilne--certifikaty--puncak-martin-sevr.webp"
-              srcset="/images/o-dilne--certifikaty--puncak-martin-sevr.webp 1x, /images/o-dilne--certifikaty--puncak-martin-sevr@2x.webp 2x"
-              width="900" height="1200"
-              alt={t.certAlt}
-              loading="lazy" decoding="async"
-              class="absolute inset-0 w-full h-full object-cover"
-            />
+            <picture>
+              <source
+                type="image/avif"
+                srcset="/images/o-dilne--certifikaty--puncak-martin-sevr.avif 1x, /images/o-dilne--certifikaty--puncak-martin-sevr@2x.avif 2x"
+              />
+              <img
+                src="/images/o-dilne--certifikaty--puncak-martin-sevr.webp"
+                srcset="/images/o-dilne--certifikaty--puncak-martin-sevr.webp 1x, /images/o-dilne--certifikaty--puncak-martin-sevr@2x.webp 2x"
+                width="900" height="1200"
+                alt={t.certAlt}
+                loading="lazy" decoding="async"
+                class="absolute inset-0 w-full h-full object-cover"
+              />
+            </picture>
             <div class="absolute inset-3 border border-white/15 pointer-events-none"></div>
           </div>
         </div>

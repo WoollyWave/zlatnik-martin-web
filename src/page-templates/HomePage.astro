@@ -392,15 +392,21 @@ const processSteps = isEn
               </p>
             </div>
             <div class="relative overflow-hidden" data-anim="up">
-              <img
-                src="/images/homepage--o-dilne-preview--ruce-bruseni.webp"
-                srcset="/images/homepage--o-dilne-preview--ruce-bruseni.webp 1x, /images/homepage--o-dilne-preview--ruce-bruseni@2x.webp 2x"
-                width="800" height="600"
-                alt={t.philosophyImgAlt}
-                loading="lazy"
-                decoding="async"
-                class="w-full h-full object-cover grayscale-[15%] sepia-[10%]"
-              />
+              <picture>
+                <source
+                  type="image/avif"
+                  srcset="/images/homepage--o-dilne-preview--ruce-bruseni.avif 1x, /images/homepage--o-dilne-preview--ruce-bruseni@2x.avif 2x"
+                />
+                <img
+                  src="/images/homepage--o-dilne-preview--ruce-bruseni.webp"
+                  srcset="/images/homepage--o-dilne-preview--ruce-bruseni.webp 1x, /images/homepage--o-dilne-preview--ruce-bruseni@2x.webp 2x"
+                  width="800" height="600"
+                  alt={t.philosophyImgAlt}
+                  loading="lazy"
+                  decoding="async"
+                  class="w-full h-full object-cover grayscale-[15%] sepia-[10%]"
+                />
+              </picture>
               <PhotoFrame />
               <!-- Plaque -->
               <div class="absolute bottom-4 left-4 bg-bg-primary/90 backdrop-blur-md px-4 py-2.5 shadow-soft">
@@ -449,15 +455,23 @@ const processSteps = isEn
           <div data-anim-child class="group h-full flex flex-col border-b border-border">
             <!-- Card photo with icon overlay -->
             <div class="relative aspect-[4/3] overflow-hidden">
-              <img
-                src={step.image}
-                srcset={`${step.image} 1x, ${step.image2x} 2x`}
-                width="800" height="600"
-                alt={step.alt}
-                loading="lazy"
-                decoding="async"
-                class="absolute inset-0 w-full h-full object-cover grayscale-[15%] sepia-[10%]"
-              />
+              <picture>
+                {step.image.endsWith('.webp') && step.image2x.endsWith('.webp') && (
+                  <source
+                    type="image/avif"
+                    srcset={`${step.image.replace(/\.webp$/, '.avif')} 1x, ${step.image2x.replace(/\.webp$/, '.avif')} 2x`}
+                  />
+                )}
+                <img
+                  src={step.image}
+                  srcset={`${step.image} 1x, ${step.image2x} 2x`}
+                  width="800" height="600"
+                  alt={step.alt}
+                  loading="lazy"
+                  decoding="async"
+                  class="absolute inset-0 w-full h-full object-cover grayscale-[15%] sepia-[10%]"
+                />
+              </picture>
               <!-- Gradient -->
               <div class="absolute inset-0 bg-gradient-to-t from-text-primary/25 via-transparent to-transparent pointer-events-none"></div>
               <!-- Number circle overlay -->

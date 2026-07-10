@@ -64,15 +64,21 @@ const navHeading = locale === 'en' ? 'Navigation' : 'Navigace';
 
         <!-- Photo — floating ring -->
         <div class="flex items-center justify-center relative order-first lg:order-none">
-          <img
-            src="/images/footer--cta--prsten-detail.webp"
-            srcset="/images/footer--cta--prsten-detail.webp 1x, /images/footer--cta--prsten-detail@2x.webp 2x"
-            width="600" height="500"
-            alt={locale === 'en' ? 'Close-up of a handmade ring' : 'Detail ručně vyrobeného prstenu'}
-            loading="lazy"
-            decoding="async"
-            class="cta-ring w-full max-w-[180px] sm:max-w-[240px] lg:max-w-[300px] h-auto object-cover relative z-10"
-          />
+          <picture>
+            <source
+              type="image/avif"
+              srcset="/images/footer--cta--prsten-detail.avif 1x, /images/footer--cta--prsten-detail@2x.avif 2x"
+            />
+            <img
+              src="/images/footer--cta--prsten-detail.webp"
+              srcset="/images/footer--cta--prsten-detail.webp 1x, /images/footer--cta--prsten-detail@2x.webp 2x"
+              width="600" height="500"
+              alt={locale === 'en' ? 'Close-up of a handmade ring' : 'Detail ručně vyrobeného prstenu'}
+              loading="lazy"
+              decoding="async"
+              class="cta-ring w-full max-w-[180px] sm:max-w-[240px] lg:max-w-[300px] h-auto object-cover relative z-10"
+            />
+          </picture>
         </div>
       </div>
 

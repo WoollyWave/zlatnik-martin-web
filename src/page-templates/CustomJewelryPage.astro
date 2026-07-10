@@ -394,12 +394,18 @@ const jsonLd = graph(
     <div class="hidden lg:block absolute inset-y-0 left-1/2 -translate-x-1/2 w-full max-w-[1600px] pointer-events-none" aria-hidden="true">
       {scatteredGallery.map((img) => (
         <div class={`absolute ${img.pos}`} data-float={img.float}>
-          <img
-            src={`/images/${img.base}.webp`}
-            srcset={`/images/${img.base}.webp 1x, /images/${img.base}@2x.webp 2x`}
-            alt="" width={img.w} height={img.h} loading="lazy" decoding="async"
-            class="w-full h-auto object-cover shadow-scatter"
-          />
+          <picture>
+            <source
+              type="image/avif"
+              srcset={`/images/${img.base}.avif 1x, /images/${img.base}@2x.avif 2x`}
+            />
+            <img
+              src={`/images/${img.base}.webp`}
+              srcset={`/images/${img.base}.webp 1x, /images/${img.base}@2x.webp 2x`}
+              alt="" width={img.w} height={img.h} loading="lazy" decoding="async"
+              class="w-full h-auto object-cover shadow-scatter"
+            />
+          </picture>
         </div>
       ))}
     </div>
@@ -420,12 +426,18 @@ const jsonLd = graph(
       <!-- CAD render pod tlačítky — v toku obsahu, takže nikdy nekoliduje
            (absolutní kotvení selhávalo na oknech nižších než obsah) -->
       <div class="hidden xl:block mt-14" data-anim="fade" aria-hidden="true">
-        <img
-          src="/images/zakazkova--cad-navrh--prsten-kruh.webp"
-          srcset="/images/zakazkova--cad-navrh--prsten-kruh.webp 1x, /images/zakazkova--cad-navrh--prsten-kruh@2x.webp 2x"
-          alt="" width="800" height="800" loading="lazy" decoding="async"
-          class="w-[min(11vw,175px)] h-auto shadow-scatter"
-        />
+        <picture>
+          <source
+            type="image/avif"
+            srcset="/images/zakazkova--cad-navrh--prsten-kruh.avif 1x, /images/zakazkova--cad-navrh--prsten-kruh@2x.avif 2x"
+          />
+          <img
+            src="/images/zakazkova--cad-navrh--prsten-kruh.webp"
+            srcset="/images/zakazkova--cad-navrh--prsten-kruh.webp 1x, /images/zakazkova--cad-navrh--prsten-kruh@2x.webp 2x"
+            alt="" width="800" height="800" loading="lazy" decoding="async"
+            class="w-[min(11vw,175px)] h-auto shadow-scatter"
+          />
+        </picture>
       </div>
 
       <!-- Mobile + tablet (pod lg) -->
@@ -454,15 +466,23 @@ const jsonLd = graph(
           <div data-anim-child class="group">
             <!-- Photo with number plaque -->
             <div class="relative aspect-square overflow-hidden">
-              <img
-                src={step.image}
-                srcset={`${step.image} 1x, ${step.image2x} 2x`}
-                width="1200" height="1200"
-                alt={step.alt}
-                loading="lazy"
-                decoding="async"
-                class="absolute inset-0 w-full h-full object-cover grayscale-[15%] sepia-[10%]"
-              />
+              <picture>
+                {step.image.endsWith('.webp') && step.image2x.endsWith('.webp') && (
+                  <source
+                    type="image/avif"
+                    srcset={`${step.image.replace(/\.webp$/, '.avif')} 1x, ${step.image2x.replace(/\.webp$/, '.avif')} 2x`}
+                  />
+                )}
+                <img
+                  src={step.image}
+                  srcset={`${step.image} 1x, ${step.image2x} 2x`}
+                  width="1200" height="1200"
+                  alt={step.alt}
+                  loading="lazy"
+                  decoding="async"
+                  class="absolute inset-0 w-full h-full object-cover grayscale-[15%] sepia-[10%]"
+                />
+              </picture>
               <!-- Soft top→bottom gradient pro čitelnost plaque -->
               <div class={`absolute inset-0 bg-gradient-to-t ${t.processGradientFrom} via-transparent to-transparent pointer-events-none`}></div>
               <!-- Number plaque (jako homepage process) -->
@@ -490,15 +510,21 @@ const jsonLd = graph(
 
       <div class="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center mt-14" data-anim="up">
         <div class="relative overflow-hidden" data-anim="scale">
-          <img
-            src="/images/zakazkova--materialy--opal-centr.webp"
-            srcset="/images/zakazkova--materialy--opal-centr.webp 1x, /images/zakazkova--materialy--opal-centr@2x.webp 2x"
-            width="800" height="600"
-            alt={t.materialsImgAlt}
-            loading="lazy"
-            decoding="async"
-            class="w-full h-full object-cover grayscale-[15%] sepia-[10%]"
-          />
+          <picture>
+            <source
+              type="image/avif"
+              srcset="/images/zakazkova--materialy--opal-centr.avif 1x, /images/zakazkova--materialy--opal-centr@2x.avif 2x"
+            />
+            <img
+              src="/images/zakazkova--materialy--opal-centr.webp"
+              srcset="/images/zakazkova--materialy--opal-centr.webp 1x, /images/zakazkova--materialy--opal-centr@2x.webp 2x"
+              width="800" height="600"
+              alt={t.materialsImgAlt}
+              loading="lazy"
+              decoding="async"
+              class="w-full h-full object-cover grayscale-[15%] sepia-[10%]"
+            />
+          </picture>
           <PhotoFrame />
         </div>
         <div class="space-y-8">
@@ -547,15 +573,21 @@ const jsonLd = graph(
               </p>
             </div>
             <div class="relative overflow-hidden" data-anim="up">
-              <img
-                src="/images/druhy-zivot--hero--martin-pri-praci.webp"
-                srcset="/images/druhy-zivot--hero--martin-pri-praci.webp 1x, /images/druhy-zivot--hero--martin-pri-praci@2x.webp 2x"
-                width="800" height="600"
-                alt={t.secondLifeImgAlt}
-                loading="lazy"
-                decoding="async"
-                class="block w-full h-auto object-cover grayscale-[15%] sepia-[10%]"
-              />
+              <picture>
+                <source
+                  type="image/avif"
+                  srcset="/images/druhy-zivot--hero--martin-pri-praci.avif 1x, /images/druhy-zivot--hero--martin-pri-praci@2x.avif 2x"
+                />
+                <img
+                  src="/images/druhy-zivot--hero--martin-pri-praci.webp"
+                  srcset="/images/druhy-zivot--hero--martin-pri-praci.webp 1x, /images/druhy-zivot--hero--martin-pri-praci@2x.webp 2x"
+                  width="800" height="600"
+                  alt={t.secondLifeImgAlt}
+                  loading="lazy"
+                  decoding="async"
+                  class="block w-full h-auto object-cover grayscale-[15%] sepia-[10%]"
+                />
+              </picture>
               <PhotoFrame />
               <div class="absolute bottom-4 left-4 bg-bg-primary/90 backdrop-blur-md px-4 py-2.5 shadow-soft">
                 <span class="text-[11px] uppercase tracking-[0.15em] font-medium text-gold-on-light font-sans">{t.secondLifeBadge}</span>
@@ -651,15 +683,21 @@ const jsonLd = graph(
             </div>
           </div>
           <div class="hidden lg:flex items-center justify-center relative" data-anim="scale">
-            <img
-              src="/images/zakazkova--express--prsten-safir.webp"
-              srcset="/images/zakazkova--express--prsten-safir.webp 1x, /images/zakazkova--express--prsten-safir@2x.webp 2x"
-              width="600" height="600"
-              alt={t.expressImgAlt}
-              loading="lazy"
-              decoding="async"
-              class="w-full max-w-[300px] h-auto object-cover relative z-10"
-            />
+            <picture>
+              <source
+                type="image/avif"
+                srcset="/images/zakazkova--express--prsten-safir.avif 1x, /images/zakazkova--express--prsten-safir@2x.avif 2x"
+              />
+              <img
+                src="/images/zakazkova--express--prsten-safir.webp"
+                srcset="/images/zakazkova--express--prsten-safir.webp 1x, /images/zakazkova--express--prsten-safir@2x.webp 2x"
+                width="600" height="600"
+                alt={t.expressImgAlt}
+                loading="lazy"
+                decoding="async"
+                class="w-full max-w-[300px] h-auto object-cover relative z-10"
+              />
+            </picture>
           </div>
         </div>
       </div>

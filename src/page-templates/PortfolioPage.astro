@@ -6,6 +6,7 @@
  */
 import Layout from '../layouts/Layout.astro';
 import PhotoFrame from '../components/PhotoFrame.astro';
+import IconArrowUpRight from '../components/IconArrowUpRight.astro';
 import { portfolioCases } from '../data/portfolio';
 import { graph, portfolioItemList, breadcrumbSchema } from '../lib/seo';
 import { materialTags } from '../lib/text';
@@ -180,7 +181,7 @@ const jsonLd = graph(
                   <div class="mt-6">
                     <span class="text-[clamp(0.6875rem,0.6rem+0.15vw,0.8125rem)] text-text-secondary uppercase tracking-[0.2em] font-sans font-medium group-hover:text-gold-deep transition-colors duration-300 inline-flex items-center gap-2">
                       {t.details}
-                      <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25" /></svg>
+                      <IconArrowUpRight class="w-3.5 h-3.5" />
                     </span>
                   </div>
                 </div>
@@ -189,7 +190,7 @@ const jsonLd = graph(
 
               <!-- Arrow in top-right corner -->
               <div class="hidden md:flex absolute top-10 md:top-14 right-0 h-10 w-10 rounded-full border border-border items-center justify-center group-hover:bg-text-primary group-hover:border-text-primary transition-colors duration-300">
-                <svg class="w-4 h-4 text-text-primary group-hover:text-white transition-colors duration-300" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25" /></svg>
+                <IconArrowUpRight class="w-4 h-4 text-text-primary group-hover:text-white transition-colors duration-300" />
               </div>
             </a>
           );

@@ -6,6 +6,7 @@
  */
 import Layout from '../layouts/Layout.astro';
 import ContactForm from '../components/ContactForm.astro';
+import IconArrowUpRight from '../components/IconArrowUpRight.astro';
 import { SITE } from '../data/site';
 import { graph, contactPageSchema, breadcrumbSchema } from '../lib/seo';
 import type { Locale } from '../i18n';
@@ -159,15 +160,21 @@ const contactMethods = [
           <ContactForm locale={locale} />
         </div>
         <div class="flex items-center justify-center order-first lg:order-none">
-          <img
-            src="/images/kontakt--formular-foto--prsten.webp"
-            width="800" height="1067"
-            alt={t.ringAlt}
-            loading="lazy"
-            decoding="async"
-            data-anim="ring-reveal"
-            class="w-full max-w-[220px] sm:max-w-xs lg:max-w-md h-auto object-contain will-change-transform"
-          />
+          <picture>
+            <source
+              type="image/avif"
+              srcset="/images/kontakt--formular-foto--prsten.avif"
+            />
+            <img
+              src="/images/kontakt--formular-foto--prsten.webp"
+              width="800" height="1067"
+              alt={t.ringAlt}
+              loading="lazy"
+              decoding="async"
+              data-anim="ring-reveal"
+              class="w-full max-w-[220px] sm:max-w-xs lg:max-w-md h-auto object-contain will-change-transform"
+            />
+          </picture>
         </div>
       </div>
     </div>
@@ -213,7 +220,7 @@ const contactMethods = [
             class="inline-flex items-center gap-2 mt-4 text-[clamp(0.6875rem,0.6rem+0.15vw,0.8125rem)] text-text-secondary uppercase tracking-[0.2em] font-sans font-medium hover:text-gold-deep transition-colors duration-300"
           >
             {t.navigate}
-            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25" /></svg>
+            <IconArrowUpRight class="w-3.5 h-3.5" />
           </a>
         </div>
       </div>
