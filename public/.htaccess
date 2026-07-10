@@ -15,14 +15,17 @@ DirectoryIndex index.html
 <IfModule mod_rewrite.c>
   RewriteEngine On
 
-  # 1a) HTTP → HTTPS (X-Forwarded-Proto kvůli LiteSpeed/CDN proxy)
+  # 1a) HTTP → HTTPS na AKTUÁLNÍM hostu (X-Forwarded-Proto kvůli LiteSpeed/CDN
+  # proxy). Cíl přes %{HTTP_HOST}, ne hardcoded doménu — jinak staging
+  # (web.vilim.sbs) přesměruje na produkci a nejde zkontrolovat.
   RewriteCond %{HTTPS} off [OR]
   RewriteCond %{HTTP:X-Forwarded-Proto} =http
-  RewriteRule ^ https://www.zlatnik-martin.cz%{REQUEST_URI} [L,R=301,NE]
+  RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301,NE]
 
-  # 1b) apex/jiný host → www.zlatnik-martin.cz
-  RewriteCond %{HTTP_HOST} !^www\.zlatnik-martin\.cz$ [NC]
-  RewriteCond %{HTTP_HOST} !^$
+  # 1b) POUZE apex zlatnik-martin.cz → www varianta. Záměrně ne catch-all na
+  # cizí hosty: stejný build běží i na stagingu (vilim.sbs) a ten musí zůstat
+  # na svém hostu.
+  RewriteCond %{HTTP_HOST} ^zlatnik-martin\.cz$ [NC]
   RewriteRule ^ https://www.zlatnik-martin.cz%{REQUEST_URI} [L,R=301,NE]
 
   # 1c) Strip trailing /index.html → /
@@ -32,6 +35,13 @@ DirectoryIndex index.html
 
 # --- 2) Security headers (OWASP 2026) --------------------------------------
 <IfModule mod_headers.c>
+  # Staging guard — build běžící na jiném hostu než produkce (vilim.sbs) se
+  # nesmí indexovat (duplicitní obsah vůči www.zlatnik-martin.cz).
+  <IfModule mod_setenvif.c>
+    SetEnvIfNoCase Host "(^|\.)zlatnik-martin\.cz$" IS_PROD
+    Header always set X-Robots-Tag "noindex, nofollow" env=!IS_PROD
+  </IfModule>
+
   # HSTS — HTTPS-only po 1 rok. Pro HSTS preload list později zvýšit max-age=63072000 a doplnit "preload".
   Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
 

@@ -11,7 +11,12 @@ declare(strict_types=1);
 const RECIPIENT      = 'zlatnikmartin@email.cz';
 const SENDER_FROM    = 'formular@zlatnik-martin.cz'; // viz POZNÁMKA v CLAUDE.md — musí existovat na doméně
 const SENDER_NAME    = 'Web zlatnik-martin.cz';
-const ALLOWED_ORIGIN = 'https://www.zlatnik-martin.cz';
+// Produkce + staging (stejný build běží na obou). Prohlížeč Origin nezfalšuje,
+// honeypot + rate-limit platí vždy.
+const ALLOWED_ORIGINS = [
+    'https://www.zlatnik-martin.cz',
+    'https://web.vilim.sbs',
+];
 const RATE_LIMIT_SEC = 30;
 const MAX_NAME       = 120;
 const MAX_EMAIL      = 200;
@@ -73,8 +78,14 @@ $origin  = $_SERVER['HTTP_ORIGIN']  ?? '';
 $referer = $_SERVER['HTTP_REFERER'] ?? '';
 // Origin = přesná shoda (jen schéma+host, bez cesty). Referer = hranice hostu
 // (koncové '/'), aby prefixová shoda nepropustila `…zlatnik-martin.cz.attacker.com`.
-$valid = ($origin !== '' && $origin === ALLOWED_ORIGIN)
-      || ($referer !== '' && str_starts_with($referer, ALLOWED_ORIGIN . '/'));
+$valid = false;
+foreach (ALLOWED_ORIGINS as $allowed) {
+    if (($origin !== '' && $origin === $allowed)
+     || ($referer !== '' && str_starts_with($referer, $allowed . '/'))) {
+        $valid = true;
+        break;
+    }
+}
 if (!$valid) {
     respond(false, $M['invalid_origin'], 403);
 }
