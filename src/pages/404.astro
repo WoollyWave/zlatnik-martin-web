@@ -4,9 +4,10 @@ import Button from '../components/Button.astro';
 ---
 
 <Layout
-  title="Stránka nenalezena — 404 | Martin Ševr — Zlatnická dílna Praha"
+  title="Stránka nenalezena (404) | Martin Ševr, Zlatnická dílna Praha"
   description="Tato stránka neexistuje nebo byla přesunuta. Vraťte se na úvod nebo mi napište."
   navOverlay
+  noindex
 >
 
   <!-- ====== 404 HERO ====== -->
@@ -22,12 +23,12 @@ import Button from '../components/Button.astro';
         </h1>
 
         <p class="mt-6 text-text-secondary body-lg max-w-2xl">
-          Buď byla přesunuta, nebo se odkaz, kterým jste se sem dostali, někde rozpadl. Vraťte se na úvod, nebo mi rovnou napište — pomůžu vám najít, co hledáte.
+          Buď byla přesunuta, nebo se odkaz, kterým jste se sem dostali, někde rozpadl. Vraťte se na úvod, nebo mi rovnou napište, pomůžu vám najít, co hledáte.
         </p>
 
         <div class="mt-10 flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
           <Button href="/" variant="primary">Zpět na úvod</Button>
-          <Button href="/kontakt" variant="secondary">Napsat mi</Button>
+          <Button href="/kontakt/" variant="secondary">Napsat mi</Button>
         </div>
 
       </div>

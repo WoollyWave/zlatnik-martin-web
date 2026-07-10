@@ -79,11 +79,11 @@ const jsonLd = graph(
 <Layout
   title="Opravy šperků Praha | Zlatnická dílna Pod Kesnerkou, Martin Ševr"
   ogImage="/images/og/og-opravy.jpg"
-  description="Opravy a úpravy šperků v Praze 5 na Smíchově. Zmenšení prstenu, výměna kamenu, oprava řetízku, rytí, čištění. 20+ let praxe. Pošlete poštou nebo přineste osobně."
+  description="Opravy a úpravy šperků v Praze 5 na Smíchově: zmenšení prstenu, výměna kamenu, oprava řetízku, rytí, čištění. 20+ let praxe. Pošlete poštou i osobně."
   jsonLd={jsonLd}
   navOverlay
-  lcpImageDesktop="/images/opravy--hero--martin-portret.webp"
-  lcpImageDesktop2x="/images/opravy--hero--martin-portret@2x.webp"
+  lcpImageDesktop="/images/opravy--hero--martin-portret.avif"
+  lcpImageDesktop2x="/images/opravy--hero--martin-portret@2x.avif"
   ctaHeading="Máte šperk, který potřebuje <em>opravit</em>?"
   ctaSubtitle="Přineste ho do dílny v Praze 5 nebo pošlete pojištěnou poštou. Většinu oprav hotovou do 5 pracovních dnů."
   ctaPrimaryLabel="Domluvit opravu"
@@ -106,21 +106,27 @@ const jsonLd = graph(
           </p>
           <div class="mt-10 flex flex-col sm:flex-row gap-4">
             <Button href={SITE.phoneHref} variant="primary">Zavolat zlatníkovi</Button>
-            <Button href="/kontakt" variant="secondary">Napsat e-mail</Button>
+            <Button href="/kontakt/" variant="secondary">Napsat e-mail</Button>
           </div>
         </div>
 
         <!-- Photo -->
         <div class="relative">
-          <img
-            src="/images/opravy--hero--martin-portret.webp"
-            srcset="/images/opravy--hero--martin-portret.webp 1x, /images/opravy--hero--martin-portret@2x.webp 2x"
-            width="1000" height="1000"
-            alt="Martin Ševr v zlatnické dílně s lupínkovou pilkou v rukou, Pod Kesnerkou 46, Praha 5"
-            fetchpriority="high"
-            decoding="async"
-            class="w-full h-auto object-cover aspect-square max-w-[560px] mx-auto"
-          />
+          <picture>
+            <source
+              type="image/avif"
+              srcset="/images/opravy--hero--martin-portret.avif 1x, /images/opravy--hero--martin-portret@2x.avif 2x"
+            />
+            <img
+              src="/images/opravy--hero--martin-portret.webp"
+              srcset="/images/opravy--hero--martin-portret.webp 1x, /images/opravy--hero--martin-portret@2x.webp 2x"
+              width="1000" height="1000"
+              alt="Martin Ševr v zlatnické dílně s lupínkovou pilkou v rukou, Pod Kesnerkou 46, Praha 5"
+              fetchpriority="high"
+              decoding="async"
+              class="w-full h-auto object-cover aspect-square max-w-[560px] mx-auto"
+            />
+          </picture>
         </div>
 
       </div>

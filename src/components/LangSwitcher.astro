@@ -9,8 +9,7 @@
  * - Active state styled visibly (not just color)
  */
 import { getLocaleFromUrl, getAlternateUrl, type Locale } from '../i18n';
-import { products } from '../data/products';
-import { portfolioCases } from '../data/portfolio';
+import { buildSlugMaps } from '../lib/slug-maps';
 
 interface Props {
   /** Tailwind classes for outer wrapper (positioning). */
@@ -21,22 +20,8 @@ const { class: className = '' } = Astro.props;
 
 const currentLocale: Locale = getLocaleFromUrl(Astro.url);
 
-// Buduji mapy slug ↔ slug pro produkty a portfolio (oba směry).
-const productSlugMap = new Map<string, string>();
-for (const p of products) {
-  if (p.slugEn) {
-    productSlugMap.set(p.slug, p.slugEn);
-    productSlugMap.set(p.slugEn, p.slug);
-  }
-}
-
-const portfolioSlugMap = new Map<string, string>();
-for (const c of portfolioCases) {
-  if (c.slugEn) {
-    portfolioSlugMap.set(c.slug, c.slugEn);
-    portfolioSlugMap.set(c.slugEn, c.slug);
-  }
-}
+// Mapy slug ↔ slug (oba směry) — sdílené s Layoutem.
+const { productSlugMap, portfolioSlugMap } = buildSlugMaps();
 
 const csUrl = currentLocale === 'cs'
   ? Astro.url.pathname

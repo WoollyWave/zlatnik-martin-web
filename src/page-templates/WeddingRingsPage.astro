@@ -20,7 +20,7 @@ const isEn = locale === 'en';
 const t = isEn
   ? {
       title: 'Custom wedding rings Prague | Handcrafted in gold, Martin Ševr',
-      description: 'Custom wedding and engagement rings in Prague. Yellow, white and rose gold, 14k/18k. Handcrafted in my own workshop. Ready in 4–8 weeks. 20+ years of experience.',
+      description: 'Custom wedding and engagement rings in Prague. Yellow, white and rose gold, 14k/18k. Handcrafted in my workshop. Ready in 4–8 weeks. 20+ years experience.',
       breadcrumb: [
         { name: 'Home', url: '/en/' },
         { name: 'Custom wedding rings', url: '/en/wedding-rings/' },
@@ -66,7 +66,7 @@ const t = isEn
       heroHeadingEm: 'vyrobené ručně',
       heroHeadingPost: '.',
       heroCopy: 'Vyrobím vám snubní nebo zásnubní prsten na míru. Žluté, bílé i růžové zlato 14k a 18k. Ruční výroba ve vlastní dílně Pod Kesnerkou, od první skici po předání. 20+ let praxe.',
-      heroPrimaryHref: '/kontakt',
+      heroPrimaryHref: '/kontakt/',
       heroPrimaryLabel: 'Domluvit konzultaci',
       heroSecondaryLabel: 'Zavolat rovnou',
       heroAlt: 'Pár snubních prstenů z bílého zlata: matný satén, drobné diamanty',
@@ -281,8 +281,8 @@ const jsonLd = graph(
   description={t.description}
   jsonLd={jsonLd}
   navOverlay
-  lcpImageDesktop="/images/portfolio--snubaky--hero.webp"
-  lcpImageDesktop2x="/images/portfolio--snubaky--hero@2x.webp"
+  lcpImageDesktop="/images/portfolio--snubaky--hero.avif"
+  lcpImageDesktop2x="/images/portfolio--snubaky--hero@2x.avif"
   ctaHeading={t.ctaHeading}
   ctaSubtitle={t.ctaSubtitle}
   ctaPrimaryLabel={t.ctaPrimaryLabel}
@@ -311,15 +311,21 @@ const jsonLd = graph(
 
         <!-- Photo -->
         <div class="relative">
-          <img
-            src="/images/portfolio--snubaky--hero.webp"
-            srcset="/images/portfolio--snubaky--hero.webp 1x, /images/portfolio--snubaky--hero@2x.webp 2x"
-            width="1000" height="1000"
-            alt={t.heroAlt}
-            fetchpriority="high"
-            decoding="async"
-            class="w-full h-auto object-contain max-w-[560px] mx-auto"
-          />
+          <picture>
+            <source
+              type="image/avif"
+              srcset="/images/portfolio--snubaky--hero.avif 1x, /images/portfolio--snubaky--hero@2x.avif 2x"
+            />
+            <img
+              src="/images/portfolio--snubaky--hero.webp"
+              srcset="/images/portfolio--snubaky--hero.webp 1x, /images/portfolio--snubaky--hero@2x.webp 2x"
+              width="1000" height="1000"
+              alt={t.heroAlt}
+              fetchpriority="high"
+              decoding="async"
+              class="w-full h-auto object-contain max-w-[560px] mx-auto"
+            />
+          </picture>
         </div>
 
       </div>

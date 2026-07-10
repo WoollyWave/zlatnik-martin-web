@@ -53,8 +53,8 @@ const jsonLd = isEn
       productSchema(product),
       breadcrumbSchema([
         { name: 'Domů', url: '/' },
-        { name: 'Skladem', url: '/skladem' },
-        { name: product.title, url: `/sperky/${product.slug}` },
+        { name: 'Skladem', url: '/skladem/' },
+        { name: product.title, url: `/sperky/${product.slug}/` },
       ]),
     );
 
@@ -98,7 +98,7 @@ const t = isEn
     }
   : {
       titleTail: 'Martin Ševr, Zlatnická dílna',
-      backHref: '/skladem',
+      backHref: '/skladem/',
       backLabel: 'Zpět na Skladem',
       originalBadge: '✦ Jediný originální kus',
       sizeLabel: 'Velikost',
@@ -118,7 +118,7 @@ const t = isEn
       goldPriceNote: 'Cena zlaté varianty je orientační, platná k 12. 5. 2026. Finální cenu stanovuji v den objednávky.',
       reviewsLabel: 'Hodnocení zákazníků',
       reviewsOutOf: 'z 5',
-      ctaHref: '/kontakt',
+      ctaHref: '/kontakt/',
       ctaPrimary: 'Chci tento šperk',
       ctaWhatsapp: 'Napsat na WhatsApp',
       pickupNote: 'Osobní vyzvednutí v dílně nebo pojištěná zásilka po celé ČR.',
@@ -127,7 +127,7 @@ const t = isEn
       otherLabel: 'Další šperky',
       otherHeading: 'Mohlo by se vám',
       otherHeadingEm: 'líbit',
-      allHref: '/skladem',
+      allHref: '/skladem/',
       allLabel: 'Všechny šperky',
     };
 
@@ -145,7 +145,7 @@ const reviewDateFmt = new Intl.DateTimeFormat(isEn ? 'en-GB' : 'cs-CZ', { year: 
   locale={locale}
   title={`${title} | ${t.titleTail}`}
   description={description}
-  ogImage={product.image}
+  ogImage="/images/og/og-skladem.jpg"
   jsonLd={jsonLd}
   navOverlay
 >
@@ -223,7 +223,7 @@ const reviewDateFmt = new Intl.DateTimeFormat(isEn ? 'en-GB' : 'cs-CZ', { year: 
           </div>
 
           {priceGold && (
-            <p class="mt-4 body-md text-text-muted">
+            <p class="mt-4 body-md text-text-secondary">
               {t.goldPriceNote}
             </p>
           )}
@@ -270,7 +270,7 @@ const reviewDateFmt = new Intl.DateTimeFormat(isEn ? 'en-GB' : 'cs-CZ', { year: 
             <Button href={SITE.whatsapp} variant="secondary">{t.ctaWhatsapp}</Button>
           </div>
 
-          <p class="mt-4 body-md text-text-muted">
+          <p class="mt-4 body-md text-text-secondary">
             {t.pickupNote}
           </p>
         </div>
@@ -279,16 +279,21 @@ const reviewDateFmt = new Intl.DateTimeFormat(isEn ? 'en-GB' : 'cs-CZ', { year: 
         <div class="relative order-first lg:order-none lg:sticky lg:top-28 lg:self-start">
           {product.image && (
             <div class="relative overflow-hidden aspect-square max-w-[560px] mx-auto" data-anim="scale">
-              <img
-                src={product.image}
-                width="1000" height="1000"
-                sizes="(min-width: 1024px) 560px, 100vw"
-                alt={alt}
-                loading="eager"
-                fetchpriority="high"
-                decoding="async"
-                class="absolute inset-0 w-full h-full object-contain"
-              />
+              <picture>
+                {product.image.endsWith('.webp') && (
+                  <source type="image/avif" srcset={product.image.replace(/\.webp$/, '.avif')} />
+                )}
+                <img
+                  src={product.image}
+                  width="1000" height="1000"
+                  sizes="(min-width: 1024px) 560px, 100vw"
+                  alt={alt}
+                  loading="eager"
+                  fetchpriority="high"
+                  decoding="async"
+                  class="absolute inset-0 w-full h-full object-contain"
+                />
+              </picture>
               <div class="absolute inset-3 border border-white/12 pointer-events-none"></div>
             </div>
           )}
@@ -302,8 +307,9 @@ const reviewDateFmt = new Intl.DateTimeFormat(isEn ? 'en-GB' : 'cs-CZ', { year: 
   {product.detailImages && product.detailImages.length > 0 && (
     <section class="relative bg-bg-primary border-b border-border section-md">
       <div class="max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-14">
+        <h2 class="sr-only">{t.detailsLabel}</h2>
         <span class="label-dot" data-anim="fade">{t.detailsLabel}</span>
-        <p class="body-md text-text-muted leading-relaxed mt-4 max-w-xs">
+        <p class="body-md text-text-secondary leading-relaxed mt-4 max-w-xs">
           {t.detailsLead}
         </p>
 
@@ -357,7 +363,7 @@ const reviewDateFmt = new Intl.DateTimeFormat(isEn ? 'en-GB' : 'cs-CZ', { year: 
               priceSilver={isEn ? p.priceSilverEn || p.priceSilver : p.priceSilver}
               priceGold={isEn ? p.priceGoldEn || p.priceGold : p.priceGold}
               goldNote={isEn ? p.goldNoteEn || p.goldNote : p.goldNote}
-              href={isEn ? `/en/jewelry/${p.slugEn || p.slug}/` : `/sperky/${p.slug}`}
+              href={isEn ? `/en/jewelry/${p.slugEn || p.slug}/` : `/sperky/${p.slug}/`}
               category={p.category}
               image={p.imageCard || p.image}
               alt={isEn ? p.altEn || p.alt : p.alt}

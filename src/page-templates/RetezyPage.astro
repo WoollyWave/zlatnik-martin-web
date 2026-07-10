@@ -20,7 +20,7 @@ const isEn = locale === 'en';
 const t = isEn
   ? {
       title: 'Handmade royal (Byzantine) gold chains Prague | Martin Ševr',
-      description: 'Royal (Byzantine) chains woven by hand from 14k gold, in yellow, white and rose, single colour or tricolour. Bracelet and necklace, made to your length. Prague 5 workshop.',
+      description: 'Royal Byzantine chains hand-woven from 14k gold: yellow, white, rose, single or tricolour. Bracelet and necklace, made to your length. Prague 5 workshop.',
       breadcrumb: [
         { name: 'Home', url: '/en/' },
         { name: 'Royal chains', url: '/en/chains/' },
@@ -51,7 +51,7 @@ const t = isEn
     }
   : {
       title: 'Královské řetězy ze zlata, ruční pletení | Zlatnictví Praha 5',
-      description: 'Královský (byzantský) řetěz pletený ručně ze 14k zlata, ve žluté, bílé i růžové, jednobarevně nebo tříbarevně. Náramek i náhrdelník na míru vaší délce. Dílna Praha 5.',
+      description: 'Královský byzantský řetěz pletený ručně ze 14k zlata: žlutá, bílá i růžová, jedno- i tříbarevně. Náramek i náhrdelník na míru. Dílna Praha 5.',
       breadcrumb: [
         { name: 'Domů', url: '/' },
         { name: 'Královské řetězy', url: '/retezy/' },
@@ -157,10 +157,17 @@ const faqItems = isEn
       },
     ];
 
+// Made-to-order řetěz s viditelným ceníkem → Product + AggregateOffer (rozpětí
+// odpovídá zobrazeným cenám). Merchant pole (shipping/return) se na AggregateOffer
+// nevztahují — Google je vyžaduje jen u single Offer (merchant listing); tady jde
+// o product-snippet treatment. @id váže uzel do @graph.
+const pageUrl = `${SITE.url}${isEn ? '/en/chains/' : '/retezy/'}`;
 const productLd = {
   '@type': 'Product',
+  '@id': `${pageUrl}#product`,
   name: isEn ? 'Handmade royal (Byzantine) gold chain' : 'Královský řetěz na míru, ruční pletení',
   description: t.description,
+  url: pageUrl,
   image: `${SITE.url}/images/retezy--nahrdelnik-zlute@2x.webp`,
   brand: { '@type': 'Brand', name: 'Martin Ševr' },
   category: isEn ? 'Gold chains' : 'Zlaté řetězy',
@@ -184,12 +191,12 @@ const jsonLd = graph(
 <Layout
   locale={locale}
   title={t.title}
-  ogImage="/images/retezy--nahrdelnik-zlute@2x.webp"
+  ogImage="/images/og/og-retezy.jpg"
   description={t.description}
   jsonLd={jsonLd}
   navOverlay
-  lcpImageDesktop="/images/retezy--naramek-tricolor-ruka.webp"
-  lcpImageDesktop2x="/images/retezy--naramek-tricolor-ruka@2x.webp"
+  lcpImageDesktop="/images/retezy--naramek-tricolor-ruka.avif"
+  lcpImageDesktop2x="/images/retezy--naramek-tricolor-ruka@2x.avif"
   ctaHeading={t.ctaHeading}
   ctaSubtitle={t.ctaSubtitle}
   ctaPrimaryLabel={t.ctaPrimaryLabel}
@@ -211,22 +218,28 @@ const jsonLd = graph(
             {t.heroCopy}
           </p>
           <div class="mt-10 flex flex-col sm:flex-row gap-4">
-            <Button href={isEn ? '/en/contact/' : '/kontakt'} variant="primary">{t.heroPrimaryLabel}</Button>
+            <Button href={isEn ? '/en/contact/' : '/kontakt/'} variant="primary">{t.heroPrimaryLabel}</Button>
             <Button href={SITE.phoneHref} variant="secondary">{t.heroSecondaryLabel}</Button>
           </div>
         </div>
 
         <!-- Photo -->
         <div class="relative">
-          <img
-            src="/images/retezy--naramek-tricolor-ruka.webp"
-            srcset="/images/retezy--naramek-tricolor-ruka.webp 1x, /images/retezy--naramek-tricolor-ruka@2x.webp 2x"
-            width="800" height="800"
-            alt={t.heroAlt}
-            fetchpriority="high"
-            decoding="async"
-            class="w-full h-auto object-contain max-w-[560px] mx-auto"
-          />
+          <picture>
+            <source
+              type="image/avif"
+              srcset="/images/retezy--naramek-tricolor-ruka.avif 1x, /images/retezy--naramek-tricolor-ruka@2x.avif 2x"
+            />
+            <img
+              src="/images/retezy--naramek-tricolor-ruka.webp"
+              srcset="/images/retezy--naramek-tricolor-ruka.webp 1x, /images/retezy--naramek-tricolor-ruka@2x.webp 2x"
+              width="800" height="800"
+              alt={t.heroAlt}
+              fetchpriority="high"
+              decoding="async"
+              class="w-full h-auto object-contain max-w-[560px] mx-auto"
+            />
+          </picture>
         </div>
 
       </div>
@@ -303,7 +316,7 @@ const jsonLd = graph(
         ))}
       </div>
 
-      <p class="mt-12 max-w-3xl font-serif italic text-[15px] text-text-muted leading-[1.7]" data-anim="up">
+      <p class="mt-12 max-w-3xl font-serif italic text-[15px] text-text-secondary leading-[1.7]" data-anim="up">
         {t.priceDisclaimer} <a href={SITE.phoneHref} class="not-italic font-sans text-gold-on-light hover:text-gold-deep transition-colors font-medium whitespace-nowrap">{SITE.phoneDisplay}</a>.
       </p>
     </div>

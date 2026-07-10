@@ -9,6 +9,10 @@ import tailwindcss from '@tailwindcss/vite';
 export default defineConfig({
   output: 'static',
   site: 'https://www.zlatnik-martin.cz',
+  // Kanonické URL, sitemap i hreflang používají koncové lomítko (adresářový build).
+  // 'always' drží interní odkazy v souladu a v dev serveru odhalí případný odkaz
+  // bez lomítka (404), takže se 301 redirect hopy nevrátí zpět do kódu.
+  trailingSlash: 'always',
   // Dev server respektuje $PORT env (kvůli preview tool autoPort). Default 4321.
   server: {
     port: Number(process.env.PORT) || 4321,

@@ -8,6 +8,7 @@ import Layout from '../layouts/Layout.astro';
 import PhotoFrame from '../components/PhotoFrame.astro';
 import { portfolioCases } from '../data/portfolio';
 import { graph, portfolioItemList, breadcrumbSchema } from '../lib/seo';
+import { materialTags } from '../lib/text';
 import type { Locale } from '../i18n';
 
 interface Props {
@@ -51,7 +52,7 @@ const t = isEn
       ctaHeading: 'Líbí se vám něco? <em>Vyrobím vám podobné.</em>',
       ctaSubtitle: 'Vezmu si vaši inspiraci a vyrobím šperk, který bude jen váš. Konzultace v dílně je zdarma.',
       ctaPrimaryLabel: 'Domluvit konzultaci',
-      ctaPrimaryHref: '/kontakt',
+      ctaPrimaryHref: '/kontakt/',
       breadcrumb: [
         { name: 'Domů', url: '/' },
         { name: 'Portfolio', url: '/portfolio/' },
@@ -73,14 +74,6 @@ const t = isEn
       galleryHeadingEm: 'dílny',
       galleryLead: 'Nejsou na prodej, ale rád vám podle nich vyrobím na míru něco vašeho.',
     };
-
-function materialTags(material: string): string[] {
-  return material
-    .split(/[,·]/)
-    .map((t) => t.trim())
-    .filter(Boolean)
-    .slice(0, 2);
-}
 
 const galleryItems = isEn
   ? [
@@ -137,7 +130,7 @@ const jsonLd = graph(
           const num = String(i + 1).padStart(2, '0');
           const materialForTags = isEn ? (c.materialEn || c.material) : c.material;
           const tags = [...materialTags(materialForTags), t.categoryTypeLabels[c.category] || t.categoryFallback];
-          const href = isEn ? `/en/work/${c.slugEn || c.slug}/` : `/tvorba/${c.slug}`;
+          const href = isEn ? `/en/work/${c.slugEn || c.slug}/` : `/tvorba/${c.slug}/`;
           const cardTitle = isEn ? (c.titleEn || c.title) : c.title;
           const cardLead = isEn ? (c.cardLeadEn || c.cardLead) : c.cardLead;
           const cardAlt = isEn ? (c.cardAltEn || c.cardAlt) : c.cardAlt;
@@ -149,16 +142,25 @@ const jsonLd = graph(
 
                 <!-- Photo -->
                 <div class="relative aspect-[3/2] overflow-hidden">
-                  <img
-                    src={c.cardImage}
-                    srcset={`${c.cardImage} 1x, ${c.cardImage2x} 2x`}
-                    width="800" height="600"
-                    sizes="(min-width: 768px) 30vw, 100vw"
-                    alt={cardAlt}
-                    loading={i < 2 ? 'eager' : 'lazy'}
-                    decoding="async"
-                    class="absolute inset-0 w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-700"
-                  />
+                  <picture>
+                    {c.cardImage.endsWith('.webp') && c.cardImage2x.endsWith('.webp') && (
+                      <source
+                        type="image/avif"
+                        srcset={`${c.cardImage.replace(/\.webp$/, '.avif')} 1x, ${c.cardImage2x.replace(/\.webp$/, '.avif')} 2x`}
+                        sizes="(min-width: 768px) 30vw, 100vw"
+                      />
+                    )}
+                    <img
+                      src={c.cardImage}
+                      srcset={`${c.cardImage} 1x, ${c.cardImage2x} 2x`}
+                      width="800" height="600"
+                      sizes="(min-width: 768px) 30vw, 100vw"
+                      alt={cardAlt}
+                      loading={i < 2 ? 'eager' : 'lazy'}
+                      decoding="async"
+                      class="absolute inset-0 w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-700"
+                    />
+                  </picture>
                   <PhotoFrame />
                   <div class="absolute bottom-4 left-4 bg-bg-primary/90 backdrop-blur-md px-4 py-2.5 shadow-soft">
                     <span class="text-[11px] uppercase tracking-[0.15em] font-medium text-gold-on-light font-sans">{`${t.caseLabel} ${num}`}</span>
@@ -211,16 +213,23 @@ const jsonLd = graph(
         {galleryItems.map((item) => (
           <div data-anim-child>
             <div class="border border-border aspect-square overflow-hidden flex items-center justify-center p-5 bg-bg-primary">
-              <img
-                src={`/images/${item.base}.webp`}
-                srcset={`/images/${item.base}.webp 1x, /images/${item.base}@2x.webp 2x`}
-                width="700" height="700"
-                sizes="(min-width: 768px) 30vw, 45vw"
-                alt={item.alt}
-                loading="lazy"
-                decoding="async"
-                class="w-full h-full object-contain"
-              />
+              <picture>
+                <source
+                  type="image/avif"
+                  srcset={`/images/${item.base}.avif 1x, /images/${item.base}@2x.avif 2x`}
+                  sizes="(min-width: 768px) 30vw, 45vw"
+                />
+                <img
+                  src={`/images/${item.base}.webp`}
+                  srcset={`/images/${item.base}.webp 1x, /images/${item.base}@2x.webp 2x`}
+                  width="700" height="700"
+                  sizes="(min-width: 768px) 30vw, 45vw"
+                  alt={item.alt}
+                  loading="lazy"
+                  decoding="async"
+                  class="w-full h-full object-contain"
+                />
+              </picture>
             </div>
             <p class="mt-3 body-md text-text-secondary font-sans">{item.title}</p>
           </div>

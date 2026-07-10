@@ -69,9 +69,9 @@ const t = isEn
       h1Line1: 'Šperky vyrobené <em>ručně</em>.',
       h1Line2: 'Ne anonymně v sérii.',
       heroSubtitle: 'Zakázková tvorba ze zlata, stříbra a přírodních kamenů v pražské dílně. Každý kus s certifikátem pravosti a doživotní zárukou na zpracování.',
-      heroCtaPrimaryHref: '/zakazkova-tvorba',
+      heroCtaPrimaryHref: '/zakazkova-tvorba/',
       heroCtaPrimaryLabel: 'Chci šperk na míru',
-      heroCtaSecondaryHref: '/skladem',
+      heroCtaSecondaryHref: '/skladem/',
       heroCtaSecondaryLabel: 'Hotové šperky',
       heroStatus: 'Přijímám zakázky',
       metaLocationLabel: 'Lokace',
@@ -83,7 +83,7 @@ const t = isEn
       heroImgAlt: 'Přívěsek s vltavínem a růženínem, zakázková tvorba',
       worksLabel: 'Vybran&eacute; pr&aacute;ce',
       worksHeading: 'Co vzniklo v dílně <em>Pod Kesnerkou</em>',
-      portfolioHref: '/portfolio',
+      portfolioHref: '/portfolio/',
       worksViewLabel: 'Zobrazit portfolio',
       worksCtaLabel: 'Celé portfolio',
       philosophyLabel: 'Filozofie d&iacute;lny',
@@ -100,12 +100,12 @@ const t = isEn
       methodHeading: 'Od nápadu ke šperku v <em>třech</em> krocích.',
       stockLabel: 'Skladem',
       stockHeading: 'Hotové šperky, <em>ihned k odnesení</em>',
-      stockHref: '/skladem',
+      stockHref: '/skladem/',
       stockViewLabel: 'Zobrazit sklad',
       stockCtaLabel: 'Celý sklad',
     };
 
-const jsonLd = homeGraph();
+const jsonLd = homeGraph(locale);
 
 const portfolioItems = portfolioCases.slice(0, 3).map((c, i) =>
   isEn
@@ -123,7 +123,7 @@ const portfolioItems = portfolioCases.slice(0, 3).map((c, i) =>
         title: c.title,
         tags: [c.material],
         description: c.cardLead,
-        href: `/tvorba/${c.slug}`,
+        href: `/tvorba/${c.slug}/`,
         label: `Příběh 0${i + 1}`,
         image: c.cardImage,
         image2x: c.cardImage2x,
@@ -147,7 +147,7 @@ const skladem = products.slice(0, 3).map((p, i) =>
         title: p.title,
         tags: [p.material, `Stříbro · ${p.priceSilver}`],
         description: p.description,
-        href: `/sperky/${p.slug}`,
+        href: `/sperky/${p.slug}/`,
         label: `Skladem 0${i + 1}`,
         image: p.imageCard || p.image,
         image2x: p.imageCard || p.image,
@@ -208,45 +208,6 @@ const processSteps = isEn
         alt: 'Předání hotového šperku s certifikátem',
       },
     ];
-
-// Testimonial sekce existovala pouze v CS zdroji jako zakomentovaný blok
-// (skryto, dokud nebude napojené na reálné reference) — zachováno jen pro CS výstup.
-const testimonialComment = `<!-- ====== TESTIMONIAL — Quote + image (skryto, dokud nebude napojené na reálné reference) ======
-  <section class="bg-bg-primary border-b border-border section-lg">
-    <div class="max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-14">
-
-      <div class="grid lg:grid-cols-[1fr_0.6fr] gap-12 lg:gap-16 items-center">
-
-        <div data-anim="up">
-          <span class="label-dot mb-8 block">Reference</span>
-          <blockquote>
-            <p class="font-serif italic display-quote text-text-primary font-normal">
-              &bdquo;Řekla jsem mu jen nápad a barvu kamene. Zbytek nechal na mě překvapit. Když jsem prsten poprvé viděla, věděla jsem, že přesně takhle jsem si ho představovala.&ldquo;
-            </p>
-            <footer class="mt-8 pt-6 border-t border-border">
-              <cite class="not-italic">
-                <span class="font-sans font-medium text-text-primary block">Helena Novotná</span>
-                <span class="body-md text-text-muted mt-1 font-sans block">Sběratelka šperků, Praha</span>
-              </cite>
-            </footer>
-          </blockquote>
-        </div>
-
-        <div class="relative overflow-hidden aspect-[3/4]" data-anim="up">
-          <ResponsivePicture
-            base="homepage--hero--ametystovy-cluster-na-ruce"
-            width="800" height="1067"
-            alt="Prsten s diamantem na ruce — zakázková tvorba"
-            loading="lazy"
-            class="absolute inset-0 w-full h-full object-cover"
-          />
-        </div>
-
-      </div>
-
-    </div>
-  </section>
-  -->`;
 ---
 
 <Layout
@@ -255,10 +216,10 @@ const testimonialComment = `<!-- ====== TESTIMONIAL — Quote + image (skryto, d
   description={t.description}
   jsonLd={jsonLd}
   navOverlay
-  lcpImageMobile="/images/homepage--hero--vltavin-privesek-mobile.webp"
-  lcpImageMobile2x="/images/homepage--hero--vltavin-privesek-mobile@2x.webp"
-  lcpImageDesktop="/images/homepage--hero--vltavin-privesek.webp"
-  lcpImageDesktop2x="/images/homepage--hero--vltavin-privesek@2x.webp"
+  lcpImageMobile="/images/homepage--hero--vltavin-privesek-mobile.avif"
+  lcpImageMobile2x="/images/homepage--hero--vltavin-privesek-mobile@2x.avif"
+  lcpImageDesktop="/images/homepage--hero--vltavin-privesek.avif"
+  lcpImageDesktop2x="/images/homepage--hero--vltavin-privesek@2x.avif"
 >
 
   <!-- ====== HERO ====== -->
@@ -313,11 +274,25 @@ const testimonialComment = `<!-- ====== TESTIMONIAL — Quote + image (skryto, d
           <picture>
             <source
               media="(min-width: 1024px)"
+              type="image/avif"
+              srcset="/images/homepage--hero--vltavin-privesek.avif 1x, /images/homepage--hero--vltavin-privesek@2x.avif 2x"
+              width="1200" height="900"
+            />
+            <source
+              media="(min-width: 1024px)"
+              type="image/webp"
               srcset="/images/homepage--hero--vltavin-privesek.webp 1x, /images/homepage--hero--vltavin-privesek@2x.webp 2x"
               width="1200" height="900"
             />
             <source
               media="(max-width: 1023px)"
+              type="image/avif"
+              srcset="/images/homepage--hero--vltavin-privesek-mobile.avif 1x, /images/homepage--hero--vltavin-privesek-mobile@2x.avif 2x"
+              width="800" height="600"
+            />
+            <source
+              media="(max-width: 1023px)"
+              type="image/webp"
               srcset="/images/homepage--hero--vltavin-privesek-mobile.webp 1x, /images/homepage--hero--vltavin-privesek-mobile@2x.webp 2x"
               width="800" height="600"
             />
@@ -393,6 +368,7 @@ const testimonialComment = `<!-- ====== TESTIMONIAL — Quote + image (skryto, d
         <!-- Left rail -->
         <div class="lg:border-r lg:border-border lg:pr-10">
           <div class="lg:sticky lg:top-32">
+            <h2 class="sr-only" set:html={t.philosophyLabel} />
             <span class="label-dot" data-anim="fade" set:html={t.philosophyLabel} />
             <p class="body-md text-text-secondary leading-relaxed mt-5 max-w-[260px] font-sans">
               {t.philosophyIntro}
@@ -502,8 +478,6 @@ const testimonialComment = `<!-- ====== TESTIMONIAL — Quote + image (skryto, d
 
     </div>
   </section>
-
-  {locale === 'cs' && <Fragment set:html={testimonialComment} />}
 
   <!-- ====== SKLADEM — Vertical list (stejný vzhled jako Selected Works) ====== -->
   <section class="bg-bg-primary border-b border-border section-lg">

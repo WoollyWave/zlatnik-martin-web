@@ -87,7 +87,7 @@ export const portfolioCases: PortfolioCase[] = [
     ],
 
     ctaText: 'Chcete podobný kus na vašem kameni? Domluvíme se.',
-    ctaHref: '/kontakt',
+    ctaHref: '/kontakt/',
 
     slugEn: 'one-of-a-kind-moldavite-ring',
     titleEn: 'Moldavite, one of a kind',
@@ -137,7 +137,7 @@ export const portfolioCases: PortfolioCase[] = [
     ],
 
     ctaText: 'Plánujete snubní prsteny? Mám vzorky v dílně k vyzkoušení.',
-    ctaHref: '/kontakt',
+    ctaHref: '/kontakt/',
 
     slugEn: 'matte-white-gold-wedding-bands',
     titleEn: 'White gold wedding bands',
@@ -188,7 +188,7 @@ export const portfolioCases: PortfolioCase[] = [
     ],
 
     ctaText: 'Plánujete zásnuby? Domluvíme si konzultaci, ukážu kameny.',
-    ctaHref: '/kontakt',
+    ctaHref: '/kontakt/',
 
     slugEn: 'pink-sapphire-halo-engagement-ring',
     titleEn: 'Pink sapphire in a halo setting',
@@ -239,7 +239,7 @@ export const portfolioCases: PortfolioCase[] = [
     ],
 
     ctaText: 'Chcete vlastní gravírovaný kus? Napište mi, co má znamenat.',
-    ctaHref: '/kontakt',
+    ctaHref: '/kontakt/',
 
     slugEn: 'engraved-locket-vera',
     titleEn: 'Locket for Vera',

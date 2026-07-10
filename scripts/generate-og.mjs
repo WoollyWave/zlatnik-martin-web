@@ -28,6 +28,7 @@ const PAGES = {
   'og-kontakt': { src: 'o-dilne--portret--martin-hero-u-ponku@2x', position: 'centre' },
   'og-snubni-prsteny': { src: 'portfolio--snubaky--hero@2x' },
   'og-opravy': { src: 'opravy--hero--martin-portret@2x' },
+  'og-retezy': { src: 'retezy--nahrdelnik-zlute@2x' },
 };
 
 await mkdir(OUT, { recursive: true });

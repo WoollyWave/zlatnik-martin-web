@@ -5,8 +5,7 @@ import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
 import CookieBanner from '../components/CookieBanner.astro';
 import { getLocaleFromUrl, getAlternatePathStrict, useTranslations, type Locale } from '../i18n';
-import { products } from '../data/products';
-import { portfolioCases } from '../data/portfolio';
+import { buildSlugMaps } from '../lib/slug-maps';
 
 interface Props {
   title: string;
@@ -31,6 +30,8 @@ interface Props {
   ctaPrimaryHref?: string;
   /** Explicit locale override — jinak se detekuje z URL. */
   locale?: Locale;
+  /** `true` = `<meta name="robots" content="noindex, follow">` (thin/utility stránky, 404). */
+  noindex?: boolean;
 }
 
 const {
@@ -51,6 +52,7 @@ const {
   ctaPrimaryLabel,
   ctaPrimaryHref,
   locale,
+  noindex = false,
 } = Astro.props;
 
 const siteUrl = Astro.site?.toString().replace(/\/$/, '') || 'https://www.zlatnik-martin.cz';
@@ -59,21 +61,8 @@ const canonicalUrl = canonical || new URL(Astro.url.pathname, siteUrl).toString(
 const currentLocale: Locale = locale ?? getLocaleFromUrl(Astro.url);
 const t = useTranslations(currentLocale);
 
-// Slug mapy pro hreflang alternates u detailových stránek.
-const productSlugMap = new Map<string, string>();
-for (const p of products) {
-  if (p.slugEn) {
-    productSlugMap.set(p.slug, p.slugEn);
-    productSlugMap.set(p.slugEn, p.slug);
-  }
-}
-const portfolioSlugMap = new Map<string, string>();
-for (const c of portfolioCases) {
-  if (c.slugEn) {
-    portfolioSlugMap.set(c.slug, c.slugEn);
-    portfolioSlugMap.set(c.slugEn, c.slug);
-  }
-}
+// Slug mapy pro hreflang alternates u detailových stránek (sdílené s LangSwitcher).
+const { productSlugMap, portfolioSlugMap } = buildSlugMaps();
 
 // hreflang URLs — pár + x-default (CS) JEN pokud druhá jazyková verze reálně
 // existuje. CS-only stránky (opravy) hreflang nedeklarují vůbec.
@@ -91,6 +80,11 @@ const enUrl = enPath ? `${siteUrl}${enPath}` : null;
 
 const htmlLang = t('locale.full');
 const ogLocale = t('locale.ogLocale');
+
+// MIME type preloadu LCP obrázku. U AVIF nutný: prohlížeč bez podpory preload
+// přeskočí (a stáhne WebP fallback z <picture>), s podporou nedojde k double-fetchi.
+const imgType = (url?: string) =>
+  url?.endsWith('.avif') ? 'image/avif' : url?.endsWith('.webp') ? 'image/webp' : undefined;
 ---
 
 <!doctype html>
@@ -102,6 +96,7 @@ const ogLocale = t('locale.ogLocale');
     <!-- SEO -->
     <title>{title}</title>
     <meta name="description" content={description} />
+    <meta name="robots" content={noindex ? 'noindex, follow' : 'index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1'} />
     <meta name="author" content="Martin Ševr" />
     <meta name="theme-color" content="#F1EEE5" />
     <meta name="google-site-verification" content="w_cLfqqzCP8FOZsrvN0fd6bWNChseWl2mlkZJxR3QoE" />
@@ -145,15 +140,13 @@ const ogLocale = t('locale.ogLocale');
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=2" />
     <link rel="manifest" href="/site.webmanifest" />
 
-    <!-- Fonts — Astro 6 Fonts API (self-hosted, metric-compatible fallbacky, preload) -->
-    <Font cssVariable="--font-general-sans" preload />
-    <Font cssVariable="--font-playfair" preload />
-
-    <!-- LCP image preload — kritické pro FCP/LCP performance -->
+    <!-- LCP image preload — PŘED font preloady, aby hero fotka dostala pásmo
+         jako první (preloady stejné priority se požadují v pořadí v dokumentu). -->
     {lcpImageMobile && (
       <link
         rel="preload"
         as="image"
+        type={imgType(lcpImageMobile)}
         href={lcpImageMobile}
         imagesrcset={lcpImageMobile2x ? `${lcpImageMobile} 1x, ${lcpImageMobile2x} 2x` : undefined}
         media="(max-width: 1023px)"
@@ -164,12 +157,19 @@ const ogLocale = t('locale.ogLocale');
       <link
         rel="preload"
         as="image"
+        type={imgType(lcpImageDesktop)}
         href={lcpImageDesktop}
         imagesrcset={lcpImageDesktop2x ? `${lcpImageDesktop} 1x, ${lcpImageDesktop2x} 2x` : undefined}
-        media="(min-width: 1024px)"
+        media={lcpImageMobile ? '(min-width: 1024px)' : undefined}
         fetchpriority="high"
       />
     )}
+
+    <!-- Fonts — Astro 6 Fonts API (self-hosted, metric-compatible fallbacky, preload).
+         Preload všech 5 řezů je záměr: italic (h1 em) i medium (nav CTA) jsou
+         above-fold na většině stránek; LCP obrázek má přednost pořadím výše. -->
+    <Font cssVariable="--font-general-sans" preload />
+    <Font cssVariable="--font-playfair" preload />
 
     <!-- Preconnect na Google Tag Manager (gtag.js se načte deferred po user interaction) -->
     <link rel="preconnect" href="https://www.googletagmanager.com" crossorigin />
@@ -277,11 +277,21 @@ const ogLocale = t('locale.ogLocale');
 
     <script>
       // Core Web Vitals → GA4. Lazy-load až po idle — nesmí konkurovat LCP/INP měření samému.
-      const loadVitals = () => import('../scripts/web-vitals.ts');
-      if ('requestIdleCallback' in window) {
-        requestIdleCallback(loadVitals, { timeout: 4000 });
-      } else {
-        setTimeout(loadVitals, 1500);
+      // Gate na souhlas: web-vitals posílá eventy přes gtag, které bez souhlasu stejně
+      // neodejdou — bez consentu tedy 6 KB JS vůbec nestahujeme.
+      let vitalsConsent: string | null = null;
+      try {
+        vitalsConsent = localStorage.getItem('cookie-consent');
+      } catch {
+        /* private mode bez localStorage — bez souhlasu, vitals se nenačtou */
+      }
+      if (vitalsConsent === 'granted') {
+        const loadVitals = () => import('../scripts/web-vitals.ts');
+        if ('requestIdleCallback' in window) {
+          requestIdleCallback(loadVitals, { timeout: 4000 });
+        } else {
+          setTimeout(loadVitals, 1500);
+        }
       }
     </script>
   </body>

@@ -169,7 +169,7 @@ const t = isEn
     }
   : {
       title: 'Šperky na zakázku Praha | Zakázková výroba ze zlata a stříbra',
-      description: 'Šperky na zakázku v Praze. Zakázková výroba ve zlatnické dílně na Smíchově. Snubní i zásnubní prsteny, autorské kusy na míru. Zlato 14/18 karátů, stříbro 925. Konzultace zdarma.',
+      description: 'Šperky na zakázku ve zlatnické dílně v Praze 5 na Smíchově. Snubní i zásnubní prsteny, autorské kusy na míru. Zlato 14/18k, stříbro 925. Konzultace zdarma.',
       ctaHeading: 'Řekněte mi, co máte <em>na mysli</em>.',
       ctaSubtitle: 'Stačí krátký telefonát nebo zpráva. Probereme materiály, rozpočet, časový rámec. Bez závazků a bez tlaku.',
       breadcrumb: [
@@ -293,7 +293,7 @@ const t = isEn
       secondLifeP2: 'Pokud máte vlastní materiál, můžete ho přinést a použiju ho. U párů stačí jeden zachovaný kus, podle kterého se bude dotvářet.',
       secondLifeImgAlt: 'Martin Ševr při ruční práci s hořákem v dílně',
       secondLifeBadge: 'Ruční oprava',
-      contactHref: '/kontakt',
+      contactHref: '/kontakt/',
       secondLifeCta: 'Domluvit konzultaci',
       whatsappCta: 'Napsat na WhatsApp',
       pricingLabel: 'Ceník',
@@ -523,6 +523,7 @@ const jsonLd = graph(
         <!-- Left rail -->
         <div class="lg:border-r lg:border-border lg:pr-10">
           <div class="lg:sticky lg:top-32">
+            <h2 class="sr-only">{t.secondLifeLabel}</h2>
             <span class="label-dot" data-anim="fade">{t.secondLifeLabel}</span>
             <p class="body-md text-text-secondary leading-relaxed mt-5 max-w-[260px] font-sans">
               {t.secondLifeIntro}
@@ -616,13 +617,13 @@ const jsonLd = graph(
               </div>
             ))}
           </div>
-          <p class="mt-4 body-md text-text-muted">{t.goldNote}</p>
+          <p class="mt-4 body-md text-text-secondary">{t.goldNote}</p>
         </div>
       </div>
 
       <!-- Disclaimer ceny zlata -->
-      <p class="mt-12 max-w-3xl font-serif italic text-[15px] text-text-muted leading-[1.7]" data-anim="up">
-        {t.disclaimerBefore}{new Date().toLocaleDateString(t.dateLocale, { day: 'numeric', month: 'long', year: 'numeric' })}{t.disclaimerAfter}<a href={SITE.phoneHref} class="not-italic font-sans text-gold-on-light hover:text-gold-deep transition-colors font-medium whitespace-nowrap">{SITE.phone}</a>.
+      <p class="mt-12 max-w-3xl font-serif italic text-[15px] text-text-secondary leading-[1.7]" data-anim="up">
+        {t.disclaimerBefore}{new Date(`${SITE.pricesAsOf}T12:00:00`).toLocaleDateString(t.dateLocale, { day: 'numeric', month: 'long', year: 'numeric' })}{t.disclaimerAfter}<a href={SITE.phoneHref} class="not-italic font-sans text-gold-on-light hover:text-gold-deep transition-colors font-medium whitespace-nowrap">{SITE.phone}</a>.
       </p>
     </div>
   </section>
@@ -630,28 +631,36 @@ const jsonLd = graph(
   <!-- ====== EXPRESS ====== -->
   <section id="express" class="relative bg-bg-primary border-b border-border section-md">
     <div class="max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-14">
-      <div class="grid lg:grid-cols-[1fr_0.5fr] gap-12 lg:gap-16 items-center" data-anim="up">
-        <div>
-          <span class="label-dot">{t.expressLabel}</span>
-          <h2 class="mt-5" set:html={t.expressHeading} />
-          <p class="mt-4 text-text-secondary body-lg max-w-xl">
-            {t.expressBody}
-          </p>
-          <div class="mt-8 flex flex-col sm:flex-row gap-4">
-            <Button href={SITE.phoneHref} variant="primary">{t.expressCta1}</Button>
-            <Button href={SITE.whatsapp} variant="secondary">{t.whatsappCta}</Button>
+      {/* Framed CTA panel — sladěno s Footer CTA panelem (border + bg-button-text/60 + backdrop-blur),
+          ať jsou CTA bloky napříč webem vizuálně stejné. */}
+      <div data-anim="up" class="relative border border-border bg-button-text/60 backdrop-blur-sm px-6 sm:px-8 lg:px-12 py-12 sm:py-14 lg:py-20 overflow-hidden">
+
+        <!-- Subtle gold radial glow behind photo -->
+        <div class="hidden lg:block absolute right-[8%] top-1/2 -translate-y-1/2 w-[420px] h-[420px] bg-[radial-gradient(circle,rgba(198,168,90,0.06)_0%,transparent_65%)] pointer-events-none"></div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-[1fr_0.55fr] gap-8 lg:gap-12 items-center relative">
+          <div>
+            <span class="label-dot">{t.expressLabel}</span>
+            <h2 class="mt-5" set:html={t.expressHeading} />
+            <p class="mt-5 body-md text-text-secondary max-w-xl leading-relaxed font-sans">
+              {t.expressBody}
+            </p>
+            <div class="mt-8 flex flex-col sm:flex-row gap-4">
+              <Button href={SITE.phoneHref} variant="primary">{t.expressCta1}</Button>
+              <Button href={SITE.whatsapp} variant="secondary">{t.whatsappCta}</Button>
+            </div>
           </div>
-        </div>
-        <div class="hidden lg:block" data-anim="scale">
-          <img
-            src="/images/zakazkova--express--prsten-safir.webp"
-            srcset="/images/zakazkova--express--prsten-safir.webp 1x, /images/zakazkova--express--prsten-safir@2x.webp 2x"
-            width="600" height="600"
-            alt={t.expressImgAlt}
-            loading="lazy"
-            decoding="async"
-            class="w-full h-auto object-cover"
-          />
+          <div class="hidden lg:flex items-center justify-center relative" data-anim="scale">
+            <img
+              src="/images/zakazkova--express--prsten-safir.webp"
+              srcset="/images/zakazkova--express--prsten-safir.webp 1x, /images/zakazkova--express--prsten-safir@2x.webp 2x"
+              width="600" height="600"
+              alt={t.expressImgAlt}
+              loading="lazy"
+              decoding="async"
+              class="w-full max-w-[300px] h-auto object-cover relative z-10"
+            />
+          </div>
         </div>
       </div>
     </div>

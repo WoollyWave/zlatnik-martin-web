@@ -9,6 +9,7 @@ import Button from '../components/Button.astro';
 import PhotoFrame from '../components/PhotoFrame.astro';
 import { portfolioCases, type PortfolioCase } from '../data/portfolio';
 import { breadcrumbSchema, graph } from '../lib/seo';
+import { materialTags } from '../lib/text';
 import { SITE } from '../data/site';
 import type { Locale } from '../i18n';
 
@@ -64,10 +65,10 @@ const t = isEn
   : {
       fallbackType: 'Zakázka',
       backToPortfolio: 'Zpět na portfolio',
-      portfolioHref: '/portfolio',
+      portfolioHref: '/portfolio/',
       materialLabel: 'Materiál',
       typeLabel: 'Typ',
-      ctaPrimaryHref: '/kontakt',
+      ctaPrimaryHref: '/kontakt/',
       ctaPrimary: 'Chci podobný šperk',
       ctaSecondary: 'Napsat na WhatsApp',
       processLabel: 'Proces',
@@ -88,13 +89,6 @@ const t = isEn
       detailsLink: 'Podrobnosti',
     };
 
-function materialTags(material: string): string[] {
-  return material
-    .split(/[,·]/)
-    .map((t) => t.trim())
-    .filter(Boolean)
-    .slice(0, 2);
-}
 
 const title = isEn ? caseStudy.titleEn || caseStudy.title : caseStudy.title;
 const material = isEn ? caseStudy.materialEn || caseStudy.material : caseStudy.material;
@@ -119,8 +113,8 @@ const breadcrumb = isEn
     ]
   : [
       { name: 'Domů', url: '/' },
-      { name: 'Portfolio', url: '/portfolio' },
-      { name: title, url: `/tvorba/${caseStudy.slug}` },
+      { name: 'Portfolio', url: '/portfolio/' },
+      { name: title, url: `/tvorba/${caseStudy.slug}/` },
     ];
 
 const jsonLd = graph(
@@ -132,7 +126,7 @@ const jsonLd = graph(
     creator: {
       '@type': 'Person',
       name: 'Martin Ševr',
-      url: isEn ? `${SITE.url}/en/about/` : `${SITE.url}/o-dilne`,
+      url: isEn ? `${SITE.url}/en/about/` : `${SITE.url}/o-dilne/`,
     },
     material,
     ...(isEn ? { inLanguage: 'en-GB' } : {}),
@@ -145,7 +139,7 @@ const jsonLd = graph(
   locale={locale}
   title={`${title} | Portfolio | Martin Ševr`}
   description={intro.slice(0, 160)}
-  ogImage={caseStudy.cardImage}
+  ogImage="/images/og/og-portfolio.jpg"
   jsonLd={jsonLd}
   navOverlay
 >
@@ -197,17 +191,25 @@ const jsonLd = graph(
         <!-- Right — hero photo -->
         <div class="relative order-first lg:order-none lg:sticky lg:top-28 lg:self-start">
           <div class="relative overflow-hidden aspect-square max-w-[640px] mx-auto" data-anim="scale">
-            <img
-              src={caseStudy.heroImage}
-              srcset={`${caseStudy.heroImage} 1x, ${caseStudy.heroImage2x} 2x`}
-              width="1280" height="1280"
-              sizes="(min-width: 1024px) 640px, 100vw"
-              alt={heroAlt}
-              loading="eager"
-              fetchpriority="high"
-              decoding="async"
-              class="absolute inset-0 w-full h-full object-cover"
-            />
+            <picture>
+              {caseStudy.heroImage.endsWith('.webp') && caseStudy.heroImage2x.endsWith('.webp') && (
+                <source
+                  type="image/avif"
+                  srcset={`${caseStudy.heroImage.replace(/\.webp$/, '.avif')} 1x, ${caseStudy.heroImage2x.replace(/\.webp$/, '.avif')} 2x`}
+                />
+              )}
+              <img
+                src={caseStudy.heroImage}
+                srcset={`${caseStudy.heroImage} 1x, ${caseStudy.heroImage2x} 2x`}
+                width="1280" height="1280"
+                sizes="(min-width: 1024px) 640px, 100vw"
+                alt={heroAlt}
+                loading="eager"
+                fetchpriority="high"
+                decoding="async"
+                class="absolute inset-0 w-full h-full object-cover"
+              />
+            </picture>
             <PhotoFrame />
           </div>
         </div>
@@ -341,7 +343,7 @@ const jsonLd = graph(
           const cLead = isEn ? c.cardLeadEn || c.cardLead : c.cardLead;
           const cMat = isEn ? c.materialEn || c.material : c.material;
           const cAlt = isEn ? c.cardAltEn || c.cardAlt : c.cardAlt;
-          const cHref = isEn ? `/en/work/${c.slugEn || c.slug}/` : `/tvorba/${c.slug}`;
+          const cHref = isEn ? `/en/work/${c.slugEn || c.slug}/` : `/tvorba/${c.slug}/`;
           const relTags = [...materialTags(cMat), categoryTypeLabels[c.category] || t.fallbackType];
           return (
             <a href={cHref}

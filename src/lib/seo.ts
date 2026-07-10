@@ -144,14 +144,14 @@ export function jewelryStoreSchema() {
 /** Zpětná kompatibilita — některé komponenty mohou stále importovat localBusinessSchema. */
 export const localBusinessSchema = jewelryStoreSchema;
 
-export function websiteSchema() {
+export function websiteSchema(locale: 'cs' | 'en' = 'cs') {
   return {
     '@type': 'WebSite',
     '@id': `${SITE.url}#website`,
     name: SITE.name,
     url: SITE.url,
     publisher: { '@id': `${SITE.url}#business` },
-    inLanguage: 'cs-CZ',
+    inLanguage: locale === 'en' ? 'en-GB' : 'cs-CZ',
     // speakable = AEO signál pro Google Assistant / Siri / Alexa. Vybírá nadpisy + leady.
     speakable: {
       '@type': 'SpeakableSpecification',
@@ -209,10 +209,10 @@ function shippingDetailsCZ() {
   };
 }
 
-export function homeGraph() {
+export function homeGraph(locale: 'cs' | 'en' = 'cs') {
   return {
     '@context': 'https://schema.org',
-    '@graph': [jewelryStoreSchema(), personSchema(), websiteSchema()],
+    '@graph': [jewelryStoreSchema(), personSchema(), websiteSchema(locale)],
   };
 }
 
