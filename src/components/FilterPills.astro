@@ -1,13 +1,21 @@
 ---
+// Filtr = { label (lokalizovaný text) + value (jazykově neutrální klíč) }.
+// value musí odpovídat `data-category` na kartách ('all' | klíč kategorie | 'prodano'),
+// aby filtrování fungovalo i na EN — proto se NEODVOZUJE z labelu.
+interface FilterItem {
+  label: string;
+  value: string;
+}
 interface Props {
-  items: string[];
+  items: FilterItem[];
   activeIndex?: number;
+  ariaLabel?: string;
 }
 
-const { items, activeIndex = 0 } = Astro.props;
+const { items, activeIndex = 0, ariaLabel = 'Filtrovat šperky' } = Astro.props;
 ---
 
-<div class="flex flex-wrap gap-3 mb-14" id="filter-pills" role="group" aria-label="Filtrovat šperky">
+<div class="flex flex-wrap gap-3 mb-14" id="filter-pills" role="group" aria-label={ariaLabel}>
   {items.map((item, i) => (
     <button
       class={`filter-pill text-[clamp(0.6875rem,0.6rem+0.15vw,0.8125rem)] font-sans font-medium uppercase tracking-[0.15em] px-5 py-2.5 transition-all duration-200 cursor-pointer ${
@@ -15,10 +23,10 @@ const { items, activeIndex = 0 } = Astro.props;
           ? 'bg-text-primary active btn-text-light'
           : 'bg-transparent border border-border text-text-secondary hover:border-text-muted hover:text-text-primary'
       }`}
-      data-filter={item === 'Vše' ? 'all' : item.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')}
+      data-filter={item.value}
       aria-pressed={i === activeIndex ? 'true' : 'false'}
     >
-      {item}
+      {item.label}
     </button>
   ))}
 </div>

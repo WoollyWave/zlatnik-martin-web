@@ -22,6 +22,7 @@ export const cs = {
   'nav.status': 'Přijímám zakázky',
   'nav.consultationCta': 'Konzultace',
   'nav.openMenu': 'Otevřít menu',
+  'nav.closeMenu': 'Zavřít menu',
   'nav.brandHomeAria': 'Martin Ševr, Domů',
   'nav.langSwitchAria': 'Přepnout na English',
   'nav.callCta': 'Zavolat',

@@ -8,6 +8,7 @@ import Layout from '../layouts/Layout.astro';
 import ProductCard from '../components/ProductCard.astro';
 import FilterPills from '../components/FilterPills.astro';
 import { products } from '../data/products';
+import { SITE } from '../data/site';
 import { graph, productItemList, breadcrumbSchema } from '../lib/seo';
 import type { Locale } from '../i18n';
 
@@ -29,6 +30,7 @@ const t = isEn
       ctaSubtitle: "Come see the piece at the workshop Pod Kesnerkou, or I'll ship it insured anywhere in Europe.",
       filterAll: 'All',
       filterSold: 'Sold',
+      filterAria: 'Filter jewellery',
       categoryMap: {
         'prsteny': 'Rings',
         'nausnice': 'Earrings',
@@ -51,7 +53,7 @@ const t = isEn
     }
   : {
       title: 'Stříbrné šperky a prsteny s vltavínem skladem | Zlatnictví Praha 5',
-      description: 'Hotové stříbrné šperky s přírodními kameny: ametyst, vltavín, opál, turmalín. K vyzvednutí ve zlatnické dílně Praha 5 nebo zaslání poštou. Variantu ve zlatě vyrobím do 3 týdnů.',
+      description: 'Hotové stříbrné šperky s přírodními kameny: ametyst, vltavín, opál, turmalín. K vyzvednutí v dílně Praha 5 nebo poštou. Zlatou variantu vyrobím do 3 týdnů.',
       breadcrumb: [
         { name: 'Domů', url: '/' },
         { name: 'Skladem', url: '/skladem/' },
@@ -60,6 +62,7 @@ const t = isEn
       ctaSubtitle: 'Šperk si můžete přijít prohlédnout v dílně Pod Kesnerkou, nebo ho pošlu pojištěnou zásilkou kamkoli po Česku.',
       filterAll: 'Vše',
       filterSold: 'Prodáno',
+      filterAria: 'Filtrovat šperky',
       categoryMap: {
         'prsteny': 'Prsteny',
         'nausnice': 'Náušnice',
@@ -83,14 +86,19 @@ const t = isEn
 
 const categories = [...new Set(products.filter(p => !p.sold).map(p => p.category))];
 const hasSold = products.some(p => p.sold);
-const filterLabels = [t.filterAll, ...categories.map(c => t.categoryMap[c] || c), ...(hasSold ? [t.filterSold] : [])];
+// value = jazykově neutrální klíč shodný s `data-category` na kartách ('prodano' = SOLD_FILTERS).
+const filterItems = [
+  { label: t.filterAll, value: 'all' },
+  ...categories.map(c => ({ label: t.categoryMap[c] || c, value: c })),
+  ...(hasSold ? [{ label: t.filterSold, value: 'prodano' }] : []),
+];
 
 const jsonLd = graph(
   productItemList(products),
   breadcrumbSchema(t.breadcrumb),
 );
 
-const priceDate = new Date().toLocaleDateString(t.dateLocale, { day: 'numeric', month: 'long', year: 'numeric' });
+const priceDate = new Date(`${SITE.pricesAsOf}T12:00:00`).toLocaleDateString(t.dateLocale, { day: 'numeric', month: 'long', year: 'numeric' });
 ---
 
 <Layout
@@ -125,7 +133,7 @@ const priceDate = new Date().toLocaleDateString(t.dateLocale, { day: 'numeric', 
     <div class="radial-overlay"></div>
     <div class="relative max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-14">
 
-      <FilterPills items={filterLabels} activeIndex={0} />
+      <FilterPills items={filterItems} activeIndex={0} ariaLabel={t.filterAria} />
 
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-10" id="products-grid">
         {products.map((product) => (
@@ -136,7 +144,7 @@ const priceDate = new Date().toLocaleDateString(t.dateLocale, { day: 'numeric', 
             priceSilver={isEn ? (product.priceSilverEn || product.priceSilver) : product.priceSilver}
             priceGold={isEn ? (product.priceGoldEn || product.priceGold) : product.priceGold}
             goldNote={isEn ? (product.goldNoteEn || product.goldNote) : product.goldNote}
-            href={isEn ? `/en/jewelry/${product.slugEn || product.slug}/` : `/sperky/${product.slug}`}
+            href={isEn ? `/en/jewelry/${product.slugEn || product.slug}/` : `/sperky/${product.slug}/`}
             category={product.category}
             image={product.imageCard || product.image}
             alt={isEn ? (product.altEn || product.alt) : product.alt}
@@ -174,7 +182,7 @@ const priceDate = new Date().toLocaleDateString(t.dateLocale, { day: 'numeric', 
         </div>
       </a>
 
-      <p class="mt-12 max-w-3xl font-serif italic text-[15px] text-text-muted leading-[1.7]" data-anim="up">
+      <p class="mt-12 max-w-3xl font-serif italic text-[15px] text-text-secondary leading-[1.7]" data-anim="up">
         {t.noteBefore} {priceDate}{t.noteAfter} <a href="tel:+420774598181" class="not-italic font-sans text-gold-on-light hover:text-gold-deep transition-colors font-medium whitespace-nowrap">+420 774 598 181</a>.
       </p>
 

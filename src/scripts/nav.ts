@@ -8,6 +8,11 @@ const footer = document.querySelector('footer');
 
 const FOCUSABLE = 'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
+// Lokalizované aria-labely přicházejí z data-atributů (i18n), ne natvrdo — jinak
+// by čtečka na /en/ po interakci hlásila česky.
+const LABEL_OPEN = toggle?.dataset.labelOpen || 'Otevřít menu';
+const LABEL_CLOSE = toggle?.dataset.labelClose || 'Zavřít menu';
+
 function getMenuFocusables(): HTMLElement[] {
   if (!menu) return [];
   return Array.from(menu.querySelectorAll<HTMLElement>(FOCUSABLE));
@@ -16,7 +21,7 @@ function getMenuFocusables(): HTMLElement[] {
 function openMenu() {
   menu?.classList.remove('hidden');
   toggle?.setAttribute('aria-expanded', 'true');
-  toggle?.setAttribute('aria-label', 'Zavřít menu');
+  toggle?.setAttribute('aria-label', LABEL_CLOSE);
   document.body.style.overflow = 'hidden';
   // Inert background — assistive tech + sighted Tab nemůže ven z menu.
   main?.setAttribute('inert', '');
@@ -33,7 +38,7 @@ function openMenu() {
 function closeMenu() {
   menu?.classList.add('hidden');
   toggle?.setAttribute('aria-expanded', 'false');
-  toggle?.setAttribute('aria-label', 'Otevřít menu');
+  toggle?.setAttribute('aria-label', LABEL_OPEN);
   document.body.style.overflow = '';
   main?.removeAttribute('inert');
   footer?.removeAttribute('inert');

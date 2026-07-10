@@ -3,7 +3,7 @@
  * Jediný zdroj pravdy — když se cokoli změní, mění se tady a propaguje se napříč webem.
  */
 export const SITE = {
-  name: 'Martin Ševr — Zlatnická dílna',
+  name: 'Martin Ševr, Zlatnická dílna',
   shortName: 'Martin Ševr',
   description: 'Zlatnictví a zlatnická dílna v Praze 5 na Smíchově. Ruční výroba šperků ze zlata, stříbra a přírodních kamenů na zakázku. Každý kus originál.',
   url: 'https://www.zlatnik-martin.cz',
@@ -15,6 +15,10 @@ export const SITE = {
   email: 'zlatnikmartin@email.cz',
   emailHref: 'mailto:zlatnikmartin@email.cz',
   ico: '87639114',
+
+  // Datum platnosti orientačních cen zlata (jeden zdroj pravdy — listing i zakázka
+  // ho zobrazují, ať nedrží build-time datum rozporné s goldNote produktů). ISO.
+  pricesAsOf: '2026-05-12',
 
   address: {
     street: 'Pod Kesnerkou 46',

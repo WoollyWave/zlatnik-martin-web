@@ -23,6 +23,7 @@ export const en = {
   'nav.status': 'Taking commissions',
   'nav.consultationCta': 'Consultation',
   'nav.openMenu': 'Open menu',
+  'nav.closeMenu': 'Close menu',
   'nav.brandHomeAria': 'Martin Ševr, Home',
   'nav.langSwitchAria': 'Switch to Czech',
   'nav.callCta': 'Call',

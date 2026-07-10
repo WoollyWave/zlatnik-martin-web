@@ -20,7 +20,7 @@ const t = locale === 'en'
       heading: 'Cookies a měření návštěvnosti',
       body: 'Pro zlepšování webu používám Google Analytics: anonymní statistiky o tom, jak se na stránce pohybujete. Žádné reklamní cookies. Více v',
       privacyLabel: 'ochraně osobních údajů',
-      privacyHref: '/ochrana-osobnich-udaju',
+      privacyHref: '/ochrana-osobnich-udaju/',
       decline: 'Odmítnout',
       accept: 'Souhlasím',
     };
@@ -69,15 +69,15 @@ const t = locale === 'en'
   if (!banner) {
     // Banner missing — fail silently
   } else {
+    // Banner překrývá (fixed) — NEměníme výšku dokumentu (body padding), jinak by
+    // pozdní zobrazení po 600 ms způsobilo layout shift (CLS) na krátkých stránkách.
     const show = () => {
       banner.classList.remove('invisible', 'opacity-0', 'translate-y-4');
       banner.setAttribute('aria-hidden', 'false');
-      document.body.style.paddingBottom = `${banner.offsetHeight + 16}px`;
     };
     const hide = () => {
       banner.classList.add('invisible', 'opacity-0', 'translate-y-4');
       banner.setAttribute('aria-hidden', 'true');
-      document.body.style.paddingBottom = '';
     };
 
     let decided: string | null = null;

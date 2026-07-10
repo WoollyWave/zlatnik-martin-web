@@ -5,6 +5,7 @@ declare(strict_types=1);
 // Contact form handler — zlatnik-martin.cz (Hostinger / LiteSpeed / PHP 8+)
 //   POST → odešle e-mail na RECIPIENT a vrátí JSON.
 //   Bezpečnost: Origin/Referer check, honeypot, rate-limit, header-injection guard.
+//   Hlášky lokalizované podle skrytého pole `locale` (cs/en) z formuláře.
 // ============================================================================
 
 const RECIPIENT      = 'zlatnikmartin@email.cz';
@@ -20,6 +21,38 @@ const MAX_MESSAGE    = 5000;
 header('Content-Type: application/json; charset=utf-8');
 header('X-Content-Type-Options: nosniff');
 header('Cache-Control: no-store');
+
+// Lokalizace odpovědí — jazyk z formuláře (fallback cs). %s v send_failed = RECIPIENT.
+$locale = (($_POST['locale'] ?? 'cs') === 'en') ? 'en' : 'cs';
+$MESSAGES = [
+    'cs' => [
+        'invalid_origin' => 'Neplatný původ požadavku.',
+        'sent'           => 'Děkuji, zpráva byla odeslána.',
+        'rate_limit'     => 'Zpráva byla nedávno odeslána. Zkuste to prosím za chvíli.',
+        'name_required'  => 'Vyplňte prosím své jméno.',
+        'email_invalid'  => 'Zadejte platnou e-mailovou adresu.',
+        'phone_long'     => 'Telefonní číslo je příliš dlouhé.',
+        'message_long'   => 'Zpráva je příliš dlouhá.',
+        'gdpr_required'  => 'Pro odeslání je nutné odsouhlasit zpracování osobních údajů.',
+        'invalid_input'  => 'Neplatný formát vstupu.',
+        'send_failed'    => 'Zprávu se nepodařilo odeslat. Napište prosím přímo na %s.',
+        'success'        => 'Děkuji, ozvu se vám co nejdříve.',
+    ],
+    'en' => [
+        'invalid_origin' => 'Invalid request origin.',
+        'sent'           => 'Thank you, your message has been sent.',
+        'rate_limit'     => 'A message was sent recently. Please try again in a moment.',
+        'name_required'  => 'Please enter your name.',
+        'email_invalid'  => 'Please enter a valid email address.',
+        'phone_long'     => 'The phone number is too long.',
+        'message_long'   => 'The message is too long.',
+        'gdpr_required'  => 'Please agree to the processing of personal data.',
+        'invalid_input'  => 'Invalid input format.',
+        'send_failed'    => 'The message could not be sent. Please write directly to %s.',
+        'success'        => 'Thank you, I will get back to you as soon as possible.',
+    ],
+];
+$M = $MESSAGES[$locale];
 
 function respond(bool $ok, string $msg, int $code = 200): never {
     http_response_code($code);
@@ -38,22 +71,24 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') {
 // --- 2) Origin / Referer (basic CSRF) --------------------------------------
 $origin  = $_SERVER['HTTP_ORIGIN']  ?? '';
 $referer = $_SERVER['HTTP_REFERER'] ?? '';
-$valid = (str_starts_with($origin,  ALLOWED_ORIGIN))
-      || (str_starts_with($referer, ALLOWED_ORIGIN));
+// Origin = přesná shoda (jen schéma+host, bez cesty). Referer = hranice hostu
+// (koncové '/'), aby prefixová shoda nepropustila `…zlatnik-martin.cz.attacker.com`.
+$valid = ($origin !== '' && $origin === ALLOWED_ORIGIN)
+      || ($referer !== '' && str_starts_with($referer, ALLOWED_ORIGIN . '/'));
 if (!$valid) {
-    respond(false, 'Neplatný původ požadavku.', 403);
+    respond(false, $M['invalid_origin'], 403);
 }
 
 // --- 3) Honeypot — tichý úspěch pro boty -----------------------------------
 if (trim((string)($_POST['website'] ?? '')) !== '') {
-    respond(true, 'Děkuji, zpráva byla odeslána.');
+    respond(true, $M['sent']);
 }
 
 // --- 4) Rate-limit (file-based, per IP) ------------------------------------
 $ip       = $_SERVER['REMOTE_ADDR'] ?? '0.0.0.0';
 $rateFile = sys_get_temp_dir() . '/zm_form_' . md5($ip) . '.lock';
 if (file_exists($rateFile) && (time() - filemtime($rateFile)) < RATE_LIMIT_SEC) {
-    respond(false, 'Zpráva byla nedávno odeslána. Zkuste to prosím za chvíli.', 429);
+    respond(false, $M['rate_limit'], 429);
 }
 @touch($rateFile);
 
@@ -65,30 +100,30 @@ $message = trim((string)($_POST['message'] ?? ''));
 $gdpr    = isset($_POST['gdpr']);
 
 if ($name === '' || mb_strlen($name) > MAX_NAME) {
-    respond(false, 'Vyplňte prosím své jméno.', 422);
+    respond(false, $M['name_required'], 422);
 }
 if ($email === '' || mb_strlen($email) > MAX_EMAIL || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
-    respond(false, 'Zadejte platnou e-mailovou adresu.', 422);
+    respond(false, $M['email_invalid'], 422);
 }
 if (mb_strlen($phone) > MAX_PHONE) {
-    respond(false, 'Telefonní číslo je příliš dlouhé.', 422);
+    respond(false, $M['phone_long'], 422);
 }
 if ($message !== '' && mb_strlen($message) > MAX_MESSAGE) {
-    respond(false, 'Zpráva je příliš dlouhá.', 422);
+    respond(false, $M['message_long'], 422);
 }
 if (!$gdpr) {
-    respond(false, 'Pro odeslání je nutné odsouhlasit zpracování osobních údajů.', 422);
+    respond(false, $M['gdpr_required'], 422);
 }
 
 // --- 6) Header-injection guard (CR/LF v polích jdoucích do hlaviček) -------
 foreach ([$name, $email, $phone] as $v) {
     if (preg_match('/[\r\n]/', $v)) {
-        respond(false, 'Neplatný formát vstupu.', 400);
+        respond(false, $M['invalid_input'], 400);
     }
 }
 
 // --- 7) Sestavení e-mailu --------------------------------------------------
-$subject = '=?UTF-8?B?' . base64_encode('Poptávka z webu — ' . $name) . '?=';
+$subject = '=?UTF-8?B?' . base64_encode('Poptávka z webu: ' . $name) . '?=';
 
 $body  = "Nová zpráva z kontaktního formuláře na zlatnik-martin.cz\n";
 $body .= str_repeat('-', 60) . "\n\n";
@@ -115,7 +150,7 @@ $headers .= "Content-Transfer-Encoding: 8bit\r\n";
 $sent = @mail(RECIPIENT, $subject, $body, $headers);
 
 if (!$sent) {
-    respond(false, 'Zprávu se nepodařilo odeslat. Napište prosím přímo na ' . RECIPIENT . '.', 500);
+    respond(false, sprintf($M['send_failed'], RECIPIENT), 500);
 }
 
-respond(true, 'Děkuji, ozvu se vám co nejdříve.');
+respond(true, $M['success']);

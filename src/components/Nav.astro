@@ -90,6 +90,8 @@ function isActive(match: string[]) {
         {navLinks.map((link) => {
           const active = isActive(link.match);
           const hasChildren = link.children && link.children.length > 0;
+          // Overview link je aktivní jen na samotné landing page sekce, ne na sub-stránkách.
+          const overviewActive = currentPath === link.href || currentPath + '/' === link.href;
           return (
             <li class={hasChildren ? 'relative group' : ''}>
               {/* Bez aria-haspopup — sliboval by ARIA menu widget (šipky, Esc), který
@@ -109,7 +111,19 @@ function isActive(match: string[]) {
               {hasChildren && (
                 <div
                   class="nav-dropdown absolute top-full left-1/2 -translate-x-1/2 pt-3 invisible opacity-0 transition-[opacity,visibility] duration-200 ease-out group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
-                  <div class="min-w-[240px] rounded-2xl border border-border/80 bg-bg-primary shadow-medium py-3">
+                  <div class="min-w-[240px] rounded-2xl border border-border/80 bg-bg-primary shadow-medium py-2.5">
+                    {/* Overview link — samotná stránka sekce, aby "nezmizela" pod dropdownem (NN/g overview-link pattern). */}
+                    <a href={link.href}
+                      aria-current={overviewActive ? 'page' : undefined}
+                      class={`group/ov flex items-center justify-between gap-4 px-5 py-2.5 text-[0.9375rem] font-sans font-medium transition-colors duration-200 whitespace-nowrap ${
+                        overviewActive
+                          ? 'text-gold-deep'
+                          : 'text-text-primary hover:text-gold-deep hover:bg-bg-secondary'
+                      }`}>
+                      <span>{link.label}</span>
+                      <svg class="w-3.5 h-3.5 shrink-0 opacity-55 transition-transform duration-200 group-hover/ov:translate-x-0.5" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" /></svg>
+                    </a>
+                    <div class="my-1.5 mx-5 border-t border-divider"></div>
                     {link.children!.map((child) => {
                       const childActive = isActive(child.match);
                       return (
@@ -145,7 +159,7 @@ function isActive(match: string[]) {
       <!-- Mobile toggle -->
       <div class="xl:hidden flex items-center gap-2">
         <LangSwitcher />
-        <button id="mobile-menu-toggle" class="flex flex-col justify-center items-center w-11 h-11 gap-2" aria-label={t('nav.openMenu')} aria-expanded="false" aria-controls="mobile-menu">
+        <button id="mobile-menu-toggle" class="flex flex-col justify-center items-center w-11 h-11 gap-2" aria-label={t('nav.openMenu')} data-label-open={t('nav.openMenu')} data-label-close={t('nav.closeMenu')} aria-expanded="false" aria-controls="mobile-menu">
           <span class="menu-line w-5 h-[1.5px] bg-text-primary transition-all duration-300 origin-center"></span>
           <span class="menu-line w-5 h-[1.5px] bg-text-primary transition-all duration-300 origin-center"></span>
         </button>
