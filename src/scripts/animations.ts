@@ -9,6 +9,21 @@ const DUR = 1.3;
 const SCROLL_START = 'top 88%'; // trigger těsně před vstupem do viewportu
 const DESKTOP_MQ = '(min-width: 1024px)';
 
+// GSAP se načítá až na idle — tedy PO prvním paintu. Když init přijde pozdě
+// (pomalé připojení), obsah už uživatel vidí; re-skrýt ho a přehrát reveal by byl
+// viditelný záblesk. Čerstvý init (< 1,5 s od navigace) přehraje entrance, jak
+// byla navržena; pozdější init nechá prvky už viditelné ve viewportu statické
+// a animuje jen obsah pod foldem.
+const FRESH_INIT_MS = 1500;
+const isFreshInit = performance.now() < FRESH_INIT_MS;
+
+/** Prvek je už (aspoň zčásti) ve viewportu — pozdní reveal by ho zablikal. */
+function alreadyVisible(el: Element): boolean {
+  if (isFreshInit) return false;
+  const r = el.getBoundingClientRect();
+  return r.top < window.innerHeight * 0.88 && r.bottom > 0;
+}
+
 /** Vrátí selektor jen pokud na stránce existuje — GSAP jinak loguje "target not found". */
 function ifExists(selector: string): string | null {
   return document.querySelector(selector) ? selector : null;
@@ -18,15 +33,18 @@ function delayOf(el: HTMLElement): number {
   return parseFloat(el.dataset.delay || '0');
 }
 
-// 1. Navigation float-in
+// 1. Navigation float-in — jen při čerstvém initu (jinak by nav zablikala).
 function animateNav() {
+  if (!isFreshInit) return;
   const nav = document.getElementById('main-nav');
   if (!nav) return;
   gsap.from(nav, { y: -24, opacity: 0, duration: 1.5, ease: EASE, delay: 0.1 });
 }
 
 // 2. Hero orchestrated timeline — přesně v DOM pořadí: label → H1 → copy → buttons → status → meta.
+//    Hero je z definice above-fold → entrance jen při čerstvém initu.
 function animateHero() {
+  if (!isFreshInit) return;
   // [selektor, pozice v timeline, vlastní tween props]
   const steps: Array<[string, number, gsap.TweenVars]> = [
     ['.hero-label > .label-dot', 0, { opacity: 0, y: 12 }],
@@ -87,11 +105,13 @@ function animateScrollReveals() {
 
   for (const [name, vars] of Object.entries(variants)) {
     gsap.utils.toArray<HTMLElement>(`[data-anim="${name}"]`).forEach((el) => {
+      if (alreadyVisible(el)) return;
       gsap.from(el, { scrollTrigger: scrollConfig(el), ...vars(el) });
     });
   }
 
   gsap.utils.toArray<HTMLElement>('[data-anim="stagger"]').forEach((parent) => {
+    if (alreadyVisible(parent)) return;
     const children = parent.querySelectorAll('[data-anim-child]');
     if (children.length === 0) return;
     gsap.from(children, {
@@ -126,6 +146,7 @@ function animateRingReveal() {
         },
       );
     } else {
+      if (alreadyVisible(el)) return;
       gsap.set(el, { opacity: 0, scale: 0.94, rotate: -6 });
       gsap.to(el, {
         opacity: 1,
@@ -139,15 +160,18 @@ function animateRingReveal() {
   });
 }
 
-// 6. Floating prvky (scattered galerie) — fade-in + scroll-linked drift
+// 6. Floating prvky (scattered galerie) — fade-in + scroll-linked drift.
+//    Fade-in jen při čerstvém initu (scattered hero je above-fold); drift vždy.
 function animateFloats() {
   document.querySelectorAll<HTMLElement>('[data-float]').forEach((el, i) => {
     const speed = parseFloat(el.getAttribute('data-float') || '0.5');
-    gsap.fromTo(
-      el,
-      { opacity: 0, y: 20 },
-      { opacity: 1, y: 0, duration: 1.2, delay: 0.3 + i * 0.1, ease: 'power2.out' },
-    );
+    if (!alreadyVisible(el)) {
+      gsap.fromTo(
+        el,
+        { opacity: 0, y: 20 },
+        { opacity: 1, y: 0, duration: 1.2, delay: 0.3 + i * 0.1, ease: 'power2.out' },
+      );
+    }
     gsap.to(el, {
       y: speed * -80,
       ease: 'none',
