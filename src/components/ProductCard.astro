@@ -14,6 +14,7 @@ interface Props {
   alt?: string;
   description?: string;
   stockBadge?: 'jediny-originalni-kus' | null;
+  sold?: boolean;
   /** `h2` na stránkách bez nadřazeného section h2, jinak `h3`. Default `h3`. */
   headingLevel?: 'h2' | 'h3';
   locale?: Locale;
@@ -47,6 +48,7 @@ const {
   alt,
   description,
   stockBadge,
+  sold,
   headingLevel = 'h3',
   locale = 'cs',
 } = Astro.props;
@@ -56,11 +58,11 @@ const defaultLabel = locale === 'en' ? 'In stock' : 'Skladem';
 const categoryLabel = category ? categoryMap[category] || category : defaultLabel;
 
 const labels = locale === 'en'
-  ? { unique: '✦ One of a kind', silver: 'Silver', gold: 'Gold', details: 'Details' }
-  : { unique: '✦ Jediný kus',    silver: 'Stříbro', gold: 'Zlato', details: 'Podrobnosti' };
+  ? { unique: '✦ One of a kind', silver: 'Silver', gold: 'Gold', details: 'Details', sold: 'Sold' }
+  : { unique: '✦ Jediný kus',    silver: 'Stříbro', gold: 'Zlato', details: 'Podrobnosti', sold: 'Prodáno' };
 ---
 
-<a href={href} class="group flex flex-col h-full border border-border hover:border-text-muted/30 transition-all duration-300" data-category={category}>
+<a href={href} class="group flex flex-col h-full border border-border hover:border-text-muted/30 transition-all duration-300" data-category={category} data-sold={sold ? 'true' : undefined}>
 
   <!-- Photo -->
   <div class="relative aspect-[3/2] overflow-hidden">
@@ -83,7 +85,11 @@ const labels = locale === 'en'
     )}
     <PhotoFrame />
 
-    {stockBadge === 'jediny-originalni-kus' && (
+    {sold ? (
+      <div class="absolute top-4 left-4 bg-text-primary/90 text-button-text px-3 py-1.5 text-[10px] uppercase tracking-[0.15em] font-medium font-sans shadow-soft">
+        {labels.sold}
+      </div>
+    ) : stockBadge === 'jediny-originalni-kus' && (
       <div class="absolute top-4 left-4 bg-gold-deep text-button-text px-3 py-1.5 text-[10px] uppercase tracking-[0.15em] font-medium font-sans shadow-soft">
         {labels.unique}
       </div>

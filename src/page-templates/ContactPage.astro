@@ -18,7 +18,7 @@ const isEn = locale === 'en';
 
 const t = isEn
   ? {
-      title: 'Contact | Martin Ševr — Goldsmith workshop in Prague',
+      title: 'Contact | Martin Ševr, Goldsmith workshop in Prague',
       description: "Get in touch directly. Phone, WhatsApp, email. I'll reply within 24 hours. Pod Kesnerkou 46, Prague 5.",
       breadcrumb: [
         { name: 'Home', url: '/en/' },
@@ -28,6 +28,7 @@ const t = isEn
       phoneDesc: `Mon–Fri ${SITE.hours.weekdays}`,
       whatsappValue: 'Send a message',
       whatsappDesc: "I'll reply within 24 hours",
+      methodsLead: 'Before you drop by, please call ahead so I am at the workshop. I am not there all the time and I would hate for you to come by for nothing.',
       emailLabel: 'Email',
       emailDesc: 'For longer enquiries',
       heroLabel: 'Contact',
@@ -35,21 +36,21 @@ const t = isEn
       heroHeadingEm: 'within 24 hours',
       formLabel: 'Write to me',
       formHeading: 'Write to me',
-      ringAlt: 'Handmade ring — Martin Ševr goldsmith workshop',
+      ringAlt: 'Handmade ring, Martin Ševr goldsmith workshop',
       mapLabel: 'Where to find me',
-      addressName: 'Martin Ševr — Goldsmith workshop',
+      addressName: 'Martin Ševr, Goldsmith workshop',
       addressCity: 'Prague 5, 150 00',
       hoursWeekdaysLabel: 'Mon–Fri',
       hoursWeekendsLabel: 'Weekends',
       hoursWeekendsValue: 'by appointment',
       icoLabel: 'Reg. no.:',
-      mapTitle: 'Map — Pod Kesnerkou 46, Prague 5',
-      mapAria: 'Map of the workshop location — Pod Kesnerkou 46, Prague 5',
+      mapTitle: 'Map: Pod Kesnerkou 46, Prague 5',
+      mapAria: 'Map of the workshop location: Pod Kesnerkou 46, Prague 5',
       navigate: 'Navigate',
     }
   : {
       title: 'Kontakt na zlatnickou dílnu | Pod Kesnerkou 46, Praha 5',
-      description: 'Zlatnická dílna Pod Kesnerkou 46, Praha 5 — Smíchov. Telefon +420 774 598 181, WhatsApp, e-mail. Po–Pá 9:00–17:00. Odpovím do 24 hodin.',
+      description: 'Zlatnická dílna Pod Kesnerkou 46, Praha 5, Smíchov. Telefon +420 774 598 181, WhatsApp, e-mail. Po–Pá 9:00–17:00. Odpovím do 24 hodin.',
       breadcrumb: [
         { name: 'Domů', url: '/' },
         { name: 'Kontakt', url: '/kontakt/' },
@@ -58,6 +59,7 @@ const t = isEn
       phoneDesc: `Po–Pá ${SITE.hours.weekdays}`,
       whatsappValue: 'Napsat zprávu',
       whatsappDesc: 'Odpovím do 24 hodin',
+      methodsLead: 'Než se u mě stavíte, zavolejte mi prosím předem, ať jsem v dílně. Nejsem tam pořád a nerad bych, abyste přišli zbytečně.',
       emailLabel: 'E-mail',
       emailDesc: 'Pro obsáhlejší dotazy',
       heroLabel: 'Kontakt',
@@ -65,16 +67,16 @@ const t = isEn
       heroHeadingEm: 'do 24 hodin',
       formLabel: 'Napište mi',
       formHeading: 'Napište mi',
-      ringAlt: 'Ručně vyrobený prsten — zlatnická dílna Martin Ševr',
+      ringAlt: 'Ručně vyrobený prsten, zlatnická dílna Martin Ševr',
       mapLabel: 'Kde mě najdete',
-      addressName: 'Martin Ševr — Zlatnická dílna',
+      addressName: 'Martin Ševr, Zlatnická dílna',
       addressCity: 'Praha 5, 150 00',
       hoursWeekdaysLabel: 'Po–Pá',
       hoursWeekendsLabel: 'Víkendy',
       hoursWeekendsValue: 'po domluvě',
       icoLabel: 'IČO:',
-      mapTitle: 'Mapa — Pod Kesnerkou 46, Praha 5',
-      mapAria: 'Mapa polohy dílny — Pod Kesnerkou 46, Praha 5',
+      mapTitle: 'Mapa: Pod Kesnerkou 46, Praha 5',
+      mapAria: 'Mapa polohy dílny: Pod Kesnerkou 46, Praha 5',
       navigate: 'Navigovat',
     };
 
@@ -127,6 +129,7 @@ const contactMethods = [
   <!-- ====== CONTACT METHODS — 3 cards ====== -->
   <section class="relative bg-bg-primary border-b border-border section-sm">
     <div class="max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-14">
+      <p class="body-md text-text-secondary max-w-2xl mb-8" data-anim="up">{t.methodsLead}</p>
       <div class="grid md:grid-cols-3 gap-6" data-anim="stagger">
         {contactMethods.map((method) => (
           <a

@@ -169,7 +169,11 @@ export function websiteSchema() {
 // shippingDetails (in offers)"). Inline je 100% kompatibilní.
 
 /** Vratky do 14 dní (česká legislativa § 1829 OZ — odstoupení od smlouvy do 14 dní).
- *  Zákazník hradí poštovné při vrácení. */
+ *  Zákazník si vrácení zařizuje a hradí sám (vlastní podání Českou poštou / Zásilkovnou) →
+ *  returnFees = ReturnFeesCustomerResponsibility. POZOR: NEpoužívat ReturnShippingFees —
+ *  to Google chápe jako fixní poplatek účtovaný PRODEJCEM a vyžaduje returnShippingFeesAmount
+ *  (= GSC warning "Missing field returnShippingFeesAmount"). U CustomerResponsibility se
+ *  částka záměrně NEuvádí (149 Kč je odchozí poštovné, ne prodejcem účtovaný vratkový poplatek). */
 function merchantReturnPolicy() {
   return {
     '@type': 'MerchantReturnPolicy',
@@ -177,7 +181,10 @@ function merchantReturnPolicy() {
     returnPolicyCategory: 'https://schema.org/MerchantReturnFiniteReturnWindow',
     merchantReturnDays: 14,
     returnMethod: 'https://schema.org/ReturnByMail',
-    returnFees: 'https://schema.org/ReturnShippingFees',
+    returnFees: 'https://schema.org/ReturnFeesCustomerResponsibility',
+    returnLabelSource: 'https://schema.org/ReturnLabelCustomerResponsibility',
+    refundType: 'https://schema.org/FullRefund',
+    itemCondition: 'https://schema.org/NewCondition',
   };
 }
 
@@ -312,6 +319,7 @@ export function productSchema(product: Product, locale: ProductLocale = 'cs') {
       itemCondition: 'https://schema.org/NewCondition',
       url: `${SITE.url}${detailUrlPath}`,
       seller: { '@id': `${SITE.url}#business` },
+      priceValidUntil: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
       deliveryLeadTime: { '@type': 'QuantitativeValue', value: 3, unitText: 'weeks' },
       hasMerchantReturnPolicy: merchantReturnPolicy(),
       shippingDetails: shippingDetailsCZ(),
@@ -403,7 +411,7 @@ export function contactPageSchema() {
   return {
     '@type': 'ContactPage',
     '@id': `${SITE.url}/kontakt/#page`,
-    name: 'Kontakt — ' + SITE.shortName,
+    name: 'Kontakt: ' + SITE.shortName,
     url: `${SITE.url}/kontakt/`,
     inLanguage: 'cs-CZ',
     isPartOf: { '@id': `${SITE.url}#website` },
@@ -415,7 +423,7 @@ export function aboutPageSchema() {
   return {
     '@type': 'AboutPage',
     '@id': `${SITE.url}/o-dilne/#page`,
-    name: 'O dílně — ' + SITE.shortName,
+    name: 'O dílně: ' + SITE.shortName,
     url: `${SITE.url}/o-dilne/`,
     inLanguage: 'cs-CZ',
     isPartOf: { '@id': `${SITE.url}#website` },
@@ -453,7 +461,7 @@ export function jewelryRepairServiceSchema() {
     '@type': 'Service',
     '@id': `${SITE.url}/opravy-sperku-praha/#service`,
     serviceType: 'Opravy a úpravy šperků',
-    name: 'Opravy šperků Praha — zlatnická dílna Pod Kesnerkou',
+    name: 'Opravy šperků Praha, zlatnická dílna Pod Kesnerkou',
     description: 'Opravy a úpravy šperků v Praze 5. Zmenšení a zvětšení prstenu, výměna kamenu, rytí, oprava ulomených částí, čištění. 20+ let praxe.',
     provider: { '@id': `${SITE.url}#business` },
     areaServed: [
@@ -486,8 +494,8 @@ export function weddingRingsServiceSchema(locale: 'cs' | 'en' = 'cs') {
       ? 'Custom-made wedding and engagement rings'
       : 'Zakázková výroba snubních a zásnubních prstenů',
     name: isEn
-      ? 'Custom wedding rings Prague — handcrafted'
-      : 'Snubní prsteny na míru Praha — ruční výroba',
+      ? 'Custom wedding rings Prague, handcrafted'
+      : 'Snubní prsteny na míru Praha, ruční výroba',
     description: isEn
       ? 'Custom wedding and engagement rings in yellow, white or rose gold, 585/1000 and 750/1000. Handcrafted in my own workshop at Pod Kesnerkou, Prague 5.'
       : 'Snubní a zásnubní prsteny na míru z žlutého, bílého nebo růžového zlata 585/1000 a 750/1000. Ruční výroba ve vlastní dílně Pod Kesnerkou v Praze 5.',
@@ -554,7 +562,7 @@ export function productItemList(products: Product[]) {
   return collectionPageWithItems({
     pageUrl: '/skladem/',
     pageName: 'Hotové šperky skladem',
-    pageDescription: 'Stříbrné šperky s přírodními kameny — k vyzvednutí v dílně nebo poštou.',
+    pageDescription: 'Stříbrné šperky s přírodními kameny, k vyzvednutí v dílně nebo poštou.',
     items: products.map((p) => ({
       url: `/sperky/${p.slug}/`,
       name: p.title,
@@ -567,8 +575,8 @@ export function productItemList(products: Product[]) {
 export function portfolioItemList(cases: PortfolioCase[]) {
   return collectionPageWithItems({
     pageUrl: '/portfolio/',
-    pageName: 'Portfolio — realizace z dílny',
-    pageDescription: 'Příběhy z dílny Martina Ševra — autorská tvorba, snubní a zásnubní prsteny, personalizované kusy.',
+    pageName: 'Portfolio: realizace z dílny',
+    pageDescription: 'Příběhy z dílny Martina Ševra: autorská tvorba, snubní a zásnubní prsteny, personalizované kusy.',
     items: cases.map((c) => ({
       url: `/tvorba/${c.slug}/`,
       name: c.title,

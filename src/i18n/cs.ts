@@ -22,13 +22,13 @@ export const cs = {
   'nav.status': 'Přijímám zakázky',
   'nav.consultationCta': 'Konzultace',
   'nav.openMenu': 'Otevřít menu',
-  'nav.brandHomeAria': 'Martin Ševr — Domů',
+  'nav.brandHomeAria': 'Martin Ševr, Domů',
   'nav.langSwitchAria': 'Přepnout na English',
   'nav.callCta': 'Zavolat',
 
   // --- Footer ---
   'footer.ctaHeadingDefault': 'Pojďme vytvořit šperk, který krásně <em>zestárne.</em>',
-  'footer.ctaSubtitleDefault': 'Zavolejte nebo napište na WhatsApp — ozvu se do 24 hodin. Konzultace v dílně je zdarma a bez závazků.',
+  'footer.ctaSubtitleDefault': 'Zavolejte nebo napište na WhatsApp. Ozvu se do 24 hodin. Konzultace v dílně je zdarma a bez závazků.',
   'footer.ctaPrimaryDefault': 'Zavolat',
   'footer.ctaWhatsApp': 'Napsat na WhatsApp',
   'footer.ctaWhatsAppAria': 'Napsat na WhatsApp',
@@ -66,7 +66,7 @@ export const cs = {
 
   // --- Listing pages headers ---
   'inStock.title': 'Hotové šperky',
-  'inStock.subtitle': 'Stříbrné šperky s přírodními kameny — k vyzvednutí v dílně nebo poštou. Většinu modelů vyrobím i ve zlatě do 3 týdnů.',
+  'inStock.subtitle': 'Stříbrné šperky s přírodními kameny. K vyzvednutí v dílně nebo poštou. Většinu modelů vyrobím i ve zlatě do 3 týdnů.',
   'inStock.filterAll': 'Vše',
   'inStock.filterRings': 'Prsteny',
   'inStock.filterEarrings': 'Náušnice',
@@ -83,7 +83,7 @@ export const cs = {
 
   // --- Portfolio ---
   'portfolio.title': 'Šperky z duše',
-  'portfolio.subtitle': 'Čtyři příběhy z dílny. Každý kus má vlastní cestu — od první konzultace po předání.',
+  'portfolio.subtitle': 'Čtyři příběhy z dílny. Každý kus má vlastní cestu, od první konzultace po předání.',
   'portfolio.processHeading': 'Jak vznikal',
   'portfolio.materialLabel': 'Materiál',
   'portfolio.priceLabel': 'Cena',

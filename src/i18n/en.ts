@@ -23,13 +23,13 @@ export const en = {
   'nav.status': 'Taking commissions',
   'nav.consultationCta': 'Consultation',
   'nav.openMenu': 'Open menu',
-  'nav.brandHomeAria': 'Martin Ševr — Home',
+  'nav.brandHomeAria': 'Martin Ševr, Home',
   'nav.langSwitchAria': 'Switch to Czech',
   'nav.callCta': 'Call',
 
   // --- Footer ---
   'footer.ctaHeadingDefault': "Let's make a piece that <em>ages beautifully.</em>",
-  'footer.ctaSubtitleDefault': "Call me or message on WhatsApp — I'll get back within 24 hours. Workshop consultation is free and no obligation.",
+  'footer.ctaSubtitleDefault': "Call me or message on WhatsApp. I'll get back within 24 hours. Workshop consultation is free and no obligation.",
   'footer.ctaPrimaryDefault': 'Call',
   'footer.ctaWhatsApp': 'Message on WhatsApp',
   'footer.ctaWhatsAppAria': 'Message on WhatsApp',
@@ -67,7 +67,7 @@ export const en = {
 
   // --- Listing pages headers ---
   'inStock.title': 'Finished pieces',
-  'inStock.subtitle': 'Silver pieces with natural stones — pick up in the workshop or ship anywhere. Most models I can also make in gold within three weeks.',
+  'inStock.subtitle': 'Silver pieces with natural stones, ready to pick up in the workshop or ship anywhere. Most models I can also make in gold within three weeks.',
   'inStock.filterAll': 'All',
   'inStock.filterRings': 'Rings',
   'inStock.filterEarrings': 'Earrings',
@@ -84,7 +84,7 @@ export const en = {
 
   // --- Portfolio ---
   'portfolio.title': 'Pieces with a story',
-  'portfolio.subtitle': "Four stories from the workshop. Each piece has its own path — from the first conversation to handover.",
+  'portfolio.subtitle': "Four stories from the workshop. Each piece has its own path, from the first conversation to handover.",
   'portfolio.processHeading': 'How it came to be',
   'portfolio.materialLabel': 'Material',
   'portfolio.priceLabel': 'Price',

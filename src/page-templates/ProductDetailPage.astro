@@ -59,23 +59,27 @@ const jsonLd = isEn
     );
 
 const isOriginal = product.stockBadge === 'jediny-originalni-kus';
+const isSold = product.sold === true;
 
 const t = isEn
   ? {
-      titleTail: 'Martin Ševr — Goldsmith workshop',
+      titleTail: 'Martin Ševr, Goldsmith workshop',
       backHref: '/en/in-stock/',
       backLabel: 'Back to In stock',
       originalBadge: '✦ One of a kind',
       sizeLabel: 'Size',
       materialLabel: 'Material',
       availabilityLabel: 'Availability',
-      availabilityOriginal: 'One of a kind — collect at the workshop',
-      availabilityStock: 'In stock — collect at the workshop or shipped',
+      availabilityOriginal: 'One of a kind, collect at the workshop',
+      availabilityStock: 'In stock, collect at the workshop or shipped',
+      availabilitySold: 'Sold. I can make a new one to order.',
+      silverSold: 'Sold',
+      ctaSoldPrimary: 'I want a new one made',
       silverHeading: 'Silver 925/1000',
       silverOriginal: 'One of a kind',
       silverStock: 'In stock',
       goldHeading: 'Gold 585/1000',
-      goldLead: 'Made to order — within 3 weeks',
+      goldLead: 'Made to order, within 3 weeks',
       weightLabel: 'Weight:',
       goldPriceNote: 'The gold price is indicative, valid as of 12 May 2026. I confirm the final price on the day of the order.',
       reviewsLabel: 'Customer reviews',
@@ -93,20 +97,23 @@ const t = isEn
       allLabel: 'All pieces',
     }
   : {
-      titleTail: 'Martin Ševr — Zlatnická dílna',
+      titleTail: 'Martin Ševr, Zlatnická dílna',
       backHref: '/skladem',
       backLabel: 'Zpět na Skladem',
       originalBadge: '✦ Jediný originální kus',
       sizeLabel: 'Velikost',
       materialLabel: 'Materiál',
       availabilityLabel: 'Dostupnost',
-      availabilityOriginal: 'Jediný originální kus — k vyzvednutí v dílně',
-      availabilityStock: 'Skladem — k vyzvednutí v dílně nebo poštou',
+      availabilityOriginal: 'Jediný originální kus, k vyzvednutí v dílně',
+      availabilityStock: 'Skladem, k vyzvednutí v dílně nebo poštou',
+      availabilitySold: 'Prodáno. Na objednávku vyrobím nový.',
+      silverSold: 'Prodáno',
+      ctaSoldPrimary: 'Chci nový na zakázku',
       silverHeading: 'Stříbro 925/1000',
       silverOriginal: 'Originální kus',
       silverStock: 'Skladem',
       goldHeading: 'Zlato 585/1000',
-      goldLead: 'Na zakázku — do 3 týdnů',
+      goldLead: 'Na zakázku, do 3 týdnů',
       weightLabel: 'Váha:',
       goldPriceNote: 'Cena zlaté varianty je orientační, platná k 12. 5. 2026. Finální cenu stanovuji v den objednávky.',
       reviewsLabel: 'Hodnocení zákazníků',
@@ -183,8 +190,8 @@ const reviewDateFmt = new Intl.DateTimeFormat(isEn ? 'en-GB' : 'cs-CZ', { year: 
             <div class={size ? 'col-span-2' : ''}>
               <span class="text-[11px] uppercase tracking-[0.15em] font-medium text-text-muted font-sans">{t.availabilityLabel}</span>
               <p class="text-[13px] sm:text-[14px] text-text-primary mt-1 font-sans leading-snug flex items-center gap-2">
-                <span class="w-1.5 h-1.5 rounded-full bg-success"></span>
-                {availabilityLabel}
+                <span class={`w-1.5 h-1.5 rounded-full ${isSold ? 'bg-text-muted' : 'bg-success'}`}></span>
+                {isSold ? t.availabilitySold : availabilityLabel}
               </p>
             </div>
           </div>
@@ -194,7 +201,7 @@ const reviewDateFmt = new Intl.DateTimeFormat(isEn ? 'en-GB' : 'cs-CZ', { year: 
             <!-- Stříbro -->
             <div class="border border-border bg-bg-primary/60 p-5">
               <span class="text-[10px] uppercase tracking-[0.2em] font-medium text-gold-on-light font-sans">{t.silverHeading}</span>
-              <p class="mt-2 text-[11px] text-text-muted font-sans">{isOriginal ? t.silverOriginal : t.silverStock}</p>
+              <p class="mt-2 text-[11px] text-text-muted font-sans">{isSold ? t.silverSold : isOriginal ? t.silverOriginal : t.silverStock}</p>
               <p class="mt-4 font-serif text-[1.5rem] text-gold-deep tracking-tight">{priceSilver}</p>
               <p class="mt-2 text-[12px] text-text-secondary font-sans">{t.weightLabel} {product.weightSilver}</p>
             </div>
@@ -259,7 +266,7 @@ const reviewDateFmt = new Intl.DateTimeFormat(isEn ? 'en-GB' : 'cs-CZ', { year: 
 
           <!-- CTA -->
           <div class="mt-8 flex flex-col sm:flex-row gap-4">
-            <Button href={t.ctaHref} variant="primary">{t.ctaPrimary}</Button>
+            <Button href={t.ctaHref} variant="primary">{isSold ? t.ctaSoldPrimary : t.ctaPrimary}</Button>
             <Button href={SITE.whatsapp} variant="secondary">{t.ctaWhatsapp}</Button>
           </div>
 

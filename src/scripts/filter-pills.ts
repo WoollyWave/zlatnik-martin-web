@@ -18,12 +18,19 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   };
 
+  // Prodané kusy ([data-sold]) se zobrazí jen pod filtrem „Prodáno" a zmizí z „Vše" i z kategorií.
+  const SOLD_FILTERS = ['prodano', 'sold'];
+
   // Třída `.is-filter-hidden` řízena přes CSS (definováno v global.css) — single layout pass,
   // žádný inline-style thrash. INP-friendly.
   const applyFilter = (filter: string) => {
+    const soldView = SOLD_FILTERS.includes(filter);
     cards.forEach((card) => {
       const category = card.getAttribute('data-category') || '';
-      const visible = filter === 'all' || category === filter;
+      const isSold = card.getAttribute('data-sold') === 'true';
+      const visible = soldView
+        ? isSold
+        : !isSold && (filter === 'all' || category === filter);
       card.classList.toggle('is-filter-hidden', !visible);
     });
   };
@@ -34,4 +41,10 @@ document.addEventListener('DOMContentLoaded', () => {
       applyFilter(pill.getAttribute('data-filter') || 'all');
     });
   });
+
+  // Výchozí stav: prodané kusy skryj už při načtení (default filtr „Vše").
+  if (pills.length) {
+    const active = document.querySelector<HTMLButtonElement>('.filter-pill[aria-pressed="true"]') || pills[0];
+    applyFilter(active.getAttribute('data-filter') || 'all');
+  }
 });
