@@ -1,0 +1,322 @@
+---
+/**
+ * Sdílená šablona Královské řetězy (CS /retezy/ + EN /en/chains/).
+ * Ruční byzantský (královský) vzor ze 14k zlata. Ceny z ručně psaného ceníku.
+ * Voice: první osoba, klidná jistota, žádné vykřičníky, žádné em-pomlčky.
+ */
+import Layout from '../layouts/Layout.astro';
+import Button from '../components/Button.astro';
+import FAQ from '../components/FAQ.astro';
+import { SITE } from '../data/site';
+import { graph, faqPageSchema, breadcrumbSchema } from '../lib/seo';
+import type { Locale } from '../i18n';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const isEn = locale === 'en';
+
+const t = isEn
+  ? {
+      title: 'Handmade royal (Byzantine) gold chains Prague | Martin Ševr',
+      description: 'Royal (Byzantine) chains woven by hand from 14k gold, in yellow, white and rose, single colour or tricolour. Bracelet and necklace, made to your length. Prague 5 workshop.',
+      breadcrumb: [
+        { name: 'Home', url: '/en/' },
+        { name: 'Royal chains', url: '/en/chains/' },
+      ],
+      ctaHeading: 'Want a <em>royal chain</em> of your own?',
+      ctaSubtitle: 'Tell me the length and the colour and I will prepare a quote. A call or a message is enough, no obligation.',
+      ctaPrimaryLabel: 'Enquire about a chain',
+      heroLabel: 'Royal chains, Prague',
+      heroHeadingPre: 'A royal chain,',
+      heroHeadingEm: 'woven by hand',
+      heroHeadingPost: '. Link by link.',
+      heroCopy: 'A signature royal (Byzantine) weave that I assemble by hand, link by link, from 14k gold. Yellow, white or rose, single colour or all three woven together. Bracelet and necklace, made to your length.',
+      heroPrimaryLabel: 'Enquire about a chain',
+      heroSecondaryLabel: 'Call me directly',
+      heroAlt: 'A tricolour royal chain bracelet on a wrist, hand-woven from 14k gold',
+      colorsLabel: 'Gold colours',
+      colorsHeadingPre: 'Yellow, white,',
+      colorsHeadingEm: 'rose',
+      colorsIntro: 'I weave every chain from 14k gold (585/1000). Pick a single colour, or let all three weave together into a tricolour chain.',
+      priceLabel: 'Price list',
+      priceHeadingPre: 'What a chain',
+      priceHeadingEm: 'costs',
+      priceIntro: 'Prices below are for a standard bracelet (20.5 cm) and necklace (60 cm). I adjust the length and the weight to you, so the final price follows the actual grams of gold.',
+      priceLenLabel: 'length',
+      priceDisclaimer: 'Prices are indicative and follow the daily gold rate. I confirm the final price when you order. For your exact length I am happy to give you the current figure over the phone:',
+      faqLabel: 'Frequently asked questions',
+      faqHeading: 'Frequently asked questions',
+    }
+  : {
+      title: 'Královské řetězy ze zlata, ruční pletení | Zlatnictví Praha 5',
+      description: 'Královský (byzantský) řetěz pletený ručně ze 14k zlata, ve žluté, bílé i růžové, jednobarevně nebo tříbarevně. Náramek i náhrdelník na míru vaší délce. Dílna Praha 5.',
+      breadcrumb: [
+        { name: 'Domů', url: '/' },
+        { name: 'Královské řetězy', url: '/retezy/' },
+      ],
+      ctaHeading: 'Chcete <em>královský řetěz</em> na míru?',
+      ctaSubtitle: 'Řekněte mi délku a barvu a připravím cenu. Stačí zavolat nebo napsat, bez závazku.',
+      ctaPrimaryLabel: 'Poptat řetěz',
+      heroLabel: 'Královské řetězy, Praha',
+      heroHeadingPre: 'Královský řetěz,',
+      heroHeadingEm: 'pletený ručně',
+      heroHeadingPost: '. Oko po oku.',
+      heroCopy: 'Autorský královský (byzantský) vzor, který skládám ručně oko po oku ze 14karátového zlata. Ve žluté, bílé i růžové, jednobarevně nebo všechny tři barvy propletené dohromady. Náramek i náhrdelník na míru vaší délce.',
+      heroPrimaryLabel: 'Poptat řetěz',
+      heroSecondaryLabel: 'Zavolat rovnou',
+      heroAlt: 'Tříbarevný královský náramek na zápěstí, ručně pletený ze 14k zlata',
+      colorsLabel: 'Barvy zlata',
+      colorsHeadingPre: 'Žluté, bílé,',
+      colorsHeadingEm: 'růžové',
+      colorsIntro: 'Každý řetěz pletu ze 14karátového zlata (585/1000). Vyberte si jednu barvu, nebo je nechte proplést dohromady do tříbarevného.',
+      priceLabel: 'Ceník',
+      priceHeadingPre: 'Kolik řetěz',
+      priceHeadingEm: 'stojí',
+      priceIntro: 'Ceny níže jsou pro standardní náramek (20,5 cm) a náhrdelník (60 cm). Délku i gramáž přizpůsobím vám, takže finální cena odpovídá skutečné váze zlata.',
+      priceLenLabel: 'délka',
+      priceDisclaimer: 'Ceny jsou orientační a řídí se denní cenou zlata. Finální cenu potvrdím při objednávce. Pro vaši přesnou délku vám aktuální částku rád řeknu po telefonu:',
+      faqLabel: 'Časté otázky',
+      faqHeading: 'Časté otázky',
+    };
+
+const colors = isEn
+  ? [
+      { name: 'Yellow gold', note: 'Classic yellow gold 585/1000.', image: '/images/retezy--nahrdelnik-zlute', alt: 'Royal chain necklace in yellow gold, hand-woven' },
+      { name: 'White gold',  note: 'A cooler tone, white gold 585/1000.', image: '/images/retezy--nahrdelnik-bile', alt: 'Royal chain necklace in white gold, hand-woven' },
+      { name: 'Rose gold',   note: 'A warm rose hue, rose gold 585/1000.', image: '/images/retezy--nahrdelnik-ruzove', alt: 'Royal chain necklace in rose gold, hand-woven' },
+    ]
+  : [
+      { name: 'Žluté zlato',  note: 'Klasické žluté zlato 585/1000.', image: '/images/retezy--nahrdelnik-zlute', alt: 'Královský řetěz, náhrdelník ze žlutého zlata, ručně pletený' },
+      { name: 'Bílé zlato',   note: 'Chladnější tón, bílé zlato 585/1000.', image: '/images/retezy--nahrdelnik-bile', alt: 'Královský řetěz, náhrdelník z bílého zlata, ručně pletený' },
+      { name: 'Růžové zlato', note: 'Teplý růžový nádech, růžové zlato 585/1000.', image: '/images/retezy--nahrdelnik-ruzove', alt: 'Královský řetěz, náhrdelník z růžového zlata, ručně pletený' },
+    ];
+
+const priceGroups = isEn
+  ? [
+      {
+        title: 'Tricolour', sub: 'yellow, white and rose, 14k',
+        rows: [
+          { item: 'Bracelet', len: '20.5 cm', weight: '18.60 g', price: 'CZK 65,100' },
+          { item: 'Necklace', len: '60 cm',   weight: '55 g',    price: 'CZK 192,500' },
+        ],
+      },
+      {
+        title: 'Single colour', sub: '14k gold 585/1000',
+        rows: [
+          { item: 'Bracelet', len: '20.5 cm', weight: '18.60 g', price: 'CZK 59,500' },
+          { item: 'Necklace', len: '60 cm',   weight: '55 g',    price: 'CZK 176,000' },
+        ],
+      },
+    ]
+  : [
+      {
+        title: 'Tříbarevný', sub: 'žluté, bílé a růžové, 14k',
+        rows: [
+          { item: 'Náramek',    len: '20,5 cm', weight: '18,60 g', price: '65 100 Kč' },
+          { item: 'Náhrdelník', len: '60 cm',   weight: '55 g',    price: '192 500 Kč' },
+        ],
+      },
+      {
+        title: 'Jednobarevný', sub: 'zlato 585/1000 (14k)',
+        rows: [
+          { item: 'Náramek',    len: '20,5 cm', weight: '18,60 g', price: '59 500 Kč' },
+          { item: 'Náhrdelník', len: '60 cm',   weight: '55 g',    price: '176 000 Kč' },
+        ],
+      },
+    ];
+
+const faqItems = isEn
+  ? [
+      {
+        question: 'Can you make the chain in a different length?',
+        answer: 'Yes. The prices shown are for a 20.5 cm bracelet and a 60 cm necklace, but I adjust the length to you. The weight of gold, and so the price, follows the length you choose.',
+      },
+      {
+        question: 'What gold do you weave the chain from?',
+        answer: 'From 14k gold (585/1000), in yellow, white or rose. In a single colour, or all three woven together into a tricolour chain.',
+      },
+      {
+        question: 'Is the chain really made by hand?',
+        answer: 'Yes. The royal (Byzantine) weave is assembled link by link by hand. It is slow work, which is why a chain is a substantial piece rather than a mass-produced one.',
+      },
+    ]
+  : [
+      {
+        question: 'Dá se řetěz vyrobit v jiné délce?',
+        answer: 'Ano. Ceny v ceníku jsou pro náramek 20,5 cm a náhrdelník 60 cm, ale délku přizpůsobím vám. Váha zlata, a tím i cena, se odvíjí od zvolené délky.',
+      },
+      {
+        question: 'Z jakého zlata řetěz pletete?',
+        answer: 'Ze 14karátového zlata (585/1000), ve žluté, bílé nebo růžové. Jednobarevně, nebo všechny tři barvy propletené dohromady do tříbarevného řetězu.',
+      },
+      {
+        question: 'Je řetěz opravdu ruční práce?',
+        answer: 'Ano. Královský (byzantský) vzor skládám oko po oku ručně. Je to pomalá práce, a právě proto je řetěz masivní kus, ne sériové zboží.',
+      },
+    ];
+
+const productLd = {
+  '@type': 'Product',
+  name: isEn ? 'Handmade royal (Byzantine) gold chain' : 'Královský řetěz na míru, ruční pletení',
+  description: t.description,
+  image: `${SITE.url}/images/retezy--nahrdelnik-zlute@2x.webp`,
+  brand: { '@type': 'Brand', name: 'Martin Ševr' },
+  category: isEn ? 'Gold chains' : 'Zlaté řetězy',
+  offers: {
+    '@type': 'AggregateOffer',
+    priceCurrency: 'CZK',
+    lowPrice: 59500,
+    highPrice: 192500,
+    offerCount: 4,
+    availability: 'https://schema.org/InStock',
+  },
+};
+
+const jsonLd = graph(
+  productLd,
+  faqPageSchema(faqItems),
+  breadcrumbSchema(t.breadcrumb),
+);
+---
+
+<Layout
+  locale={locale}
+  title={t.title}
+  ogImage="/images/retezy--nahrdelnik-zlute@2x.webp"
+  description={t.description}
+  jsonLd={jsonLd}
+  navOverlay
+  lcpImageDesktop="/images/retezy--naramek-tricolor-ruka.webp"
+  lcpImageDesktop2x="/images/retezy--naramek-tricolor-ruka@2x.webp"
+  ctaHeading={t.ctaHeading}
+  ctaSubtitle={t.ctaSubtitle}
+  ctaPrimaryLabel={t.ctaPrimaryLabel}
+>
+
+  <!-- ====== HERO — split layout ====== -->
+  <section class="relative bg-bg-primary border-b border-border overflow-hidden">
+    <div class="radial-overlay"></div>
+    <div class="relative max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-14">
+      <div class="grid lg:grid-cols-2 gap-10 sm:gap-12 lg:gap-20 items-center min-h-[80vh] lg:min-h-dvh section-hero">
+
+        <!-- Text -->
+        <div data-anim="up">
+          <span class="label-dot">{t.heroLabel}</span>
+          <h1 class="mt-6">
+            {t.heroHeadingPre} <em>{t.heroHeadingEm}</em>{t.heroHeadingPost}
+          </h1>
+          <p class="mt-6 text-text-secondary body-lg max-w-xl">
+            {t.heroCopy}
+          </p>
+          <div class="mt-10 flex flex-col sm:flex-row gap-4">
+            <Button href={isEn ? '/en/contact/' : '/kontakt'} variant="primary">{t.heroPrimaryLabel}</Button>
+            <Button href={SITE.phoneHref} variant="secondary">{t.heroSecondaryLabel}</Button>
+          </div>
+        </div>
+
+        <!-- Photo -->
+        <div class="relative">
+          <img
+            src="/images/retezy--naramek-tricolor-ruka.webp"
+            srcset="/images/retezy--naramek-tricolor-ruka.webp 1x, /images/retezy--naramek-tricolor-ruka@2x.webp 2x"
+            width="800" height="800"
+            alt={t.heroAlt}
+            fetchpriority="high"
+            decoding="async"
+            class="w-full h-auto object-contain max-w-[560px] mx-auto"
+          />
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== BARVY ZLATA / COLOURS ====== -->
+  <section class="relative bg-bg-primary border-b border-border section-lg overflow-hidden">
+    <div class="radial-overlay"></div>
+    <div class="relative max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-14">
+
+      <div class="max-w-3xl mb-14" data-anim="up">
+        <span class="label-dot">{t.colorsLabel}</span>
+        <h2 class="mt-5">
+          {t.colorsHeadingPre} <em>{t.colorsHeadingEm}</em>
+        </h2>
+        <p class="mt-6 body-md text-text-secondary leading-relaxed font-sans max-w-2xl">
+          {t.colorsIntro}
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-10" data-anim="stagger">
+        {colors.map((c) => (
+          <div data-anim-child class="flex flex-col">
+            <div class="relative overflow-hidden aspect-video bg-bg-secondary">
+              <img
+                src={`${c.image}.webp`}
+                srcset={`${c.image}.webp 1x, ${c.image}@2x.webp 2x`}
+                width="1000" height="563"
+                sizes="(min-width: 768px) 33vw, 100vw"
+                alt={c.alt}
+                loading="lazy"
+                decoding="async"
+                class="absolute inset-0 w-full h-full object-cover"
+              />
+            </div>
+            <div class="pt-5">
+              <h3>{c.name}</h3>
+              <p class="body-md text-text-secondary leading-relaxed mt-2 font-sans">{c.note}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== CENÍK / PRICE LIST ====== -->
+  <section id={isEn ? 'price' : 'cenik'} class="relative bg-bg-primary border-b border-border section-md overflow-hidden">
+    <div class="radial-overlay"></div>
+    <div class="relative max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-14">
+      <div class="max-w-3xl mb-12" data-anim="up">
+        <span class="label-dot">{t.priceLabel}</span>
+        <h2 class="mt-5">{t.priceHeadingPre} <em>{t.priceHeadingEm}</em></h2>
+        <p class="mt-6 body-md text-text-secondary leading-relaxed font-sans max-w-2xl">{t.priceIntro}</p>
+      </div>
+
+      <div class="grid lg:grid-cols-2 gap-12 lg:gap-16" data-anim="up">
+        {priceGroups.map((group) => (
+          <div>
+            <h3 class="mb-1">{group.title}</h3>
+            <p class="text-[13px] text-text-muted font-sans mb-6">{group.sub}</p>
+            <div class="border-t border-border">
+              {group.rows.map((row) => (
+                <div class="flex items-baseline justify-between gap-4 py-4 border-b border-border">
+                  <span class="text-text-primary">
+                    {row.item}
+                    <span class="text-text-muted text-[13px] font-sans"> · {row.len} · {row.weight}</span>
+                  </span>
+                  <span class="text-text-secondary font-medium whitespace-nowrap">{row.price}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <p class="mt-12 max-w-3xl font-serif italic text-[15px] text-text-muted leading-[1.7]" data-anim="up">
+        {t.priceDisclaimer} <a href={SITE.phoneHref} class="not-italic font-sans text-gold-on-light hover:text-gold-deep transition-colors font-medium whitespace-nowrap">{SITE.phoneDisplay}</a>.
+      </p>
+    </div>
+  </section>
+
+  <!-- ====== FAQ ====== -->
+  <section class="relative bg-bg-primary section-md overflow-hidden">
+    <div class="radial-overlay"></div>
+    <div class="relative max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-14">
+      <span class="label-dot" data-anim="fade">{t.faqLabel}</span>
+      <h2 class="mt-5 mb-12" data-anim="up">{t.faqHeading}</h2>
+      <FAQ items={faqItems} />
+    </div>
+  </section>
+
+</Layout>

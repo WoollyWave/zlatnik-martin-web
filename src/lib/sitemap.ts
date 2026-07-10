@@ -56,6 +56,7 @@ export function buildSitemapEntries(): SitemapEntry[] {
     ['/',                          '/en/'],
     ['/zakazkova-tvorba/',         '/en/custom-jewelry/'],
     ['/snubni-prsteny-na-miru/',   '/en/wedding-rings/'],
+    ['/retezy/',                   '/en/chains/'],
     ['/skladem/',                  '/en/in-stock/'],
     ['/portfolio/',                '/en/portfolio/'],
     ['/o-dilne/',                  '/en/about/'],

@@ -35,6 +35,7 @@ export const PATH_MAP: Record<string, { cs: string; en: string }> = {
   home: { cs: '/', en: '/en/' },
   customJewelry: { cs: '/zakazkova-tvorba/', en: '/en/custom-jewelry/' },
   weddingRings: { cs: '/snubni-prsteny-na-miru/', en: '/en/wedding-rings/' },
+  chains: { cs: '/retezy/', en: '/en/chains/' },
   inStock: { cs: '/skladem/', en: '/en/in-stock/' },
   portfolio: { cs: '/portfolio/', en: '/en/portfolio/' },
   about: { cs: '/o-dilne/', en: '/en/about/' },
