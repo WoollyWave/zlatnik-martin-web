@@ -40,6 +40,10 @@ const t = isEn
       heroLead: "Wedding bands, engagement rings, signature pieces. For each one you'll find the materials, the process, and the client's story. If something catches your eye, we can use it as inspiration for your own commission.",
       caseLabel: 'Commission',
       details: 'Details',
+      galleryLabel: 'From the workshop',
+      galleryHeadingPre: 'A few more pieces from the',
+      galleryHeadingEm: 'bench',
+      galleryLead: 'Not for sale, but I will gladly make you something similar to order.',
     }
   : {
       title: 'Portfolio realizací | Snubní prsteny a autorské šperky na zakázku Praha',
@@ -64,6 +68,10 @@ const t = isEn
       heroLead: 'Snubáky, zásnubní prsteny, autorské kusy. U každého najdete materiál, postup výroby a příběh klienta. Pokud vás něco zaujme, můžeme se inspirovat při vaší zakázce.',
       caseLabel: 'Zakázka',
       details: 'Podrobnosti',
+      galleryLabel: 'Z dílny',
+      galleryHeadingPre: 'Ještě pár kusů z',
+      galleryHeadingEm: 'dílny',
+      galleryLead: 'Nejsou na prodej, ale rád vám podle nich vyrobím na míru něco vašeho.',
     };
 
 function materialTags(material: string): string[] {
@@ -73,6 +81,18 @@ function materialTags(material: string): string[] {
     .filter(Boolean)
     .slice(0, 2);
 }
+
+const galleryItems = isEn
+  ? [
+      { title: 'Acorn pendant', base: 'portfolio--ukazka-zalud', alt: 'Gold acorn pendant on a chain' },
+      { title: 'Pisces pendant', base: 'portfolio--ukazka-ryby', alt: 'Two-tone gold Pisces zodiac pendant with two fish' },
+      { title: 'Bar pendant', base: 'portfolio--ukazka-tycka', alt: 'White gold vertical bar pendant on a chain' },
+    ]
+  : [
+      { title: 'Přívěsek žalud', base: 'portfolio--ukazka-zalud', alt: 'Zlatý přívěsek ve tvaru žaludu na řetízku' },
+      { title: 'Přívěsek Ryby', base: 'portfolio--ukazka-ryby', alt: 'Dvoubarevný zlatý přívěsek znamení Ryby se dvěma rybami' },
+      { title: 'Přívěsek tyčka', base: 'portfolio--ukazka-tycka', alt: 'Přívěsek z bílého zlata ve tvaru svislé tyčky na řetízku' },
+    ];
 
 const jsonLd = graph(
   portfolioItemList(portfolioCases),
@@ -175,6 +195,37 @@ const jsonLd = graph(
         <div class="border-t border-border"></div>
       </div>
 
+    </div>
+  </section>
+
+  <!-- ====== GALERIE UKÁZEK / SHOWCASE ====== -->
+  <section class="relative bg-bg-primary border-t border-border section-md overflow-hidden">
+    <div class="radial-overlay"></div>
+    <div class="relative max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-14">
+      <div class="max-w-3xl mb-14" data-anim="up">
+        <span class="label-dot">{t.galleryLabel}</span>
+        <h2 class="mt-5">{t.galleryHeadingPre} <em>{t.galleryHeadingEm}</em></h2>
+        <p class="mt-6 body-md text-text-secondary leading-relaxed font-sans max-w-2xl">{t.galleryLead}</p>
+      </div>
+      <div class="grid grid-cols-2 md:grid-cols-3 gap-6 lg:gap-8" data-anim="stagger">
+        {galleryItems.map((item) => (
+          <div data-anim-child>
+            <div class="border border-border aspect-square overflow-hidden flex items-center justify-center p-5 bg-bg-primary">
+              <img
+                src={`/images/${item.base}.webp`}
+                srcset={`/images/${item.base}.webp 1x, /images/${item.base}@2x.webp 2x`}
+                width="700" height="700"
+                sizes="(min-width: 768px) 30vw, 45vw"
+                alt={item.alt}
+                loading="lazy"
+                decoding="async"
+                class="w-full h-full object-contain"
+              />
+            </div>
+            <p class="mt-3 body-md text-text-secondary font-sans">{item.title}</p>
+          </div>
+        ))}
+      </div>
     </div>
   </section>
 

@@ -46,6 +46,10 @@ const t = isEn
       processIntro: 'The whole process, from the first consultation to handing over the finished rings, takes 4–8 weeks depending on complexity. Plan with a margin, ideally 3 months before the wedding.',
       faqLabel: 'Frequently asked questions',
       faqHeading: 'Frequently asked questions',
+      galleryLabel: 'From the workshop',
+      galleryHeadingPre: 'Rings I have',
+      galleryHeadingEm: 'made',
+      galleryLead: 'These pieces are not for sale, but I will happily make you something similar to order.',
     }
   : {
       title: 'Snubní prsteny na míru Praha | Ruční výroba ze zlata, Martin Ševr',
@@ -75,6 +79,10 @@ const t = isEn
       processIntro: 'Celý proces od první konzultace po předání hotových prstenů trvá 4–8 týdnů podle složitosti. Plánujte s rezervou, ideálně 3 měsíce před svatbou.',
       faqLabel: 'Časté otázky',
       faqHeading: 'Časté otázky',
+      galleryLabel: 'Z dílny',
+      galleryHeadingPre: 'Prsteny, které jsem',
+      galleryHeadingEm: 'vyrobil',
+      galleryLead: 'Tyhle kusy nejsou na prodej, ale rád vám podle nich vyrobím na míru něco vašeho.',
     };
 
 const ringStyles = isEn
@@ -239,6 +247,26 @@ const faqItems = isEn
       },
     ];
 
+const galleryItems = isEn
+  ? [
+      { title: 'Engagement ring, yellow gold', base: 'snubni--ukazka-zasnubni-zlute', alt: 'Yellow gold engagement ring with a round diamond in an ornate crown setting' },
+      { title: 'Engagement ring, white gold', base: 'snubni--ukazka-zasnubni-bile-pave', alt: 'White gold engagement ring with a solitaire and a pavé band' },
+      { title: 'Ring with a heart sapphire', base: 'snubni--ukazka-srdcovy-safir', alt: 'White gold ring with a heart-cut pink sapphire and engraved shoulders' },
+      { title: 'Wedding pair, white gold', base: 'snubni--ukazka-par-kovany', alt: 'A pair of white gold wedding rings, one hammered and one set with stones' },
+      { title: 'Wedding pair, two-tone gold', base: 'snubni--ukazka-par-dvoubarevny', alt: 'A pair of two-tone white and yellow gold wedding rings' },
+      { title: 'Wave ring', base: 'snubni--ukazka-vlnka', alt: 'Yellow gold ring with a wave bypass band and a small square diamond' },
+      { title: 'Pavé leaf ring', base: 'snubni--ukazka-listek', alt: 'Yellow gold leaf-shaped ring set with a pavé of small diamonds' },
+    ]
+  : [
+      { title: 'Zásnubní prsten, žluté zlato', base: 'snubni--ukazka-zasnubni-zlute', alt: 'Zásnubní prsten ze žlutého zlata s kulatým briliantem v ozdobném košíku' },
+      { title: 'Zásnubní prsten, bílé zlato', base: 'snubni--ukazka-zasnubni-bile-pave', alt: 'Zásnubní prsten z bílého zlata se solitérem a pavé obroučkou' },
+      { title: 'Prsten se srdcovým safírem', base: 'snubni--ukazka-srdcovy-safir', alt: 'Prsten z bílého zlata se srdcovým růžovým safírem a rytou obroučkou' },
+      { title: 'Snubní pár, bílé zlato', base: 'snubni--ukazka-par-kovany', alt: 'Pár snubních prstenů z bílého zlata, jeden kovaný a jeden s kamínky' },
+      { title: 'Snubní pár, dvoubarevné zlato', base: 'snubni--ukazka-par-dvoubarevny', alt: 'Pár snubních prstenů z dvoubarevného bílého a žlutého zlata' },
+      { title: 'Prsten s vlnkou', base: 'snubni--ukazka-vlnka', alt: 'Prsten ze žlutého zlata s vlnkovou obroučkou a malým čtvercovým diamantem' },
+      { title: 'Prsten s pavé', base: 'snubni--ukazka-listek', alt: 'Prsten ze žlutého zlata ve tvaru lístku s pavé z malých diamantů' },
+    ];
+
 const jsonLd = graph(
   weddingRingsServiceSchema(locale),
   faqPageSchema(faqItems),
@@ -329,6 +357,37 @@ const jsonLd = graph(
               <h3 class="mt-3">{item.title}</h3>
               <p class="body-md text-text-secondary leading-relaxed mt-3 font-sans">{item.description}</p>
             </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== GALERIE UKÁZEK / SHOWCASE ====== -->
+  <section class="relative bg-bg-primary border-b border-border section-lg overflow-hidden">
+    <div class="radial-overlay"></div>
+    <div class="relative max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-14">
+      <div class="max-w-3xl mb-14" data-anim="up">
+        <span class="label-dot">{t.galleryLabel}</span>
+        <h2 class="mt-5">{t.galleryHeadingPre} <em>{t.galleryHeadingEm}</em></h2>
+        <p class="mt-6 body-md text-text-secondary leading-relaxed font-sans max-w-2xl">{t.galleryLead}</p>
+      </div>
+      <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 lg:gap-8" data-anim="stagger">
+        {galleryItems.map((item) => (
+          <div data-anim-child>
+            <div class="border border-border aspect-square overflow-hidden flex items-center justify-center p-5 bg-bg-primary">
+              <img
+                src={`/images/${item.base}.webp`}
+                srcset={`/images/${item.base}.webp 1x, /images/${item.base}@2x.webp 2x`}
+                width="700" height="700"
+                sizes="(min-width: 1024px) 22vw, (min-width: 768px) 30vw, 45vw"
+                alt={item.alt}
+                loading="lazy"
+                decoding="async"
+                class="w-full h-full object-contain"
+              />
+            </div>
+            <p class="mt-3 body-md text-text-secondary font-sans">{item.title}</p>
           </div>
         ))}
       </div>
