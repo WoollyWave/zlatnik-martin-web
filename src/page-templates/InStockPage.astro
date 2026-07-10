@@ -43,6 +43,11 @@ const t = isEn
       noteBefore: 'Prices of gold versions are indicative and valid as of',
       noteAfter: ". The gold price changes daily. I'll be happy to give you the current rate over the phone:",
       dateLocale: 'en-GB',
+      chainsLabel: 'Royal chains',
+      chainsHeading: 'A royal chain, made to measure',
+      chainsText: 'A hand-woven Byzantine pattern in 14k gold, yellow, white or rose. Bracelet and necklace, made to your length. From CZK 59,500.',
+      chainsCta: 'See the chains',
+      chainsHref: '/en/chains/',
     }
   : {
       title: 'Stříbrné šperky a prsteny s vltavínem skladem | Zlatnictví Praha 5',
@@ -69,6 +74,11 @@ const t = isEn
       noteBefore: 'Ceny zlatých variant jsou orientační a platné k',
       noteAfter: '. Cena zlata se denně mění. Aktuální vám rád řeknu po telefonu:',
       dateLocale: 'cs-CZ',
+      chainsLabel: 'Královské řetězy',
+      chainsHeading: 'Královský řetěz na míru',
+      chainsText: 'Ruční byzantský vzor ze 14k zlata, ve žluté, bílé i růžové. Náramek i náhrdelník na míru vaší délce. Od 59 500 Kč.',
+      chainsCta: 'Prohlédnout řetězy',
+      chainsHref: '/retezy/',
     };
 
 const categories = [...new Set(products.filter(p => !p.sold).map(p => p.category))];
@@ -137,6 +147,32 @@ const priceDate = new Date().toLocaleDateString(t.dateLocale, { day: 'numeric', 
           />
         ))}
       </div>
+
+      <!-- Cross-link na dedikovanou stránku Královské řetězy (mimo filtrovanou mřížku). -->
+      <a href={t.chainsHref} class="group block mt-12 border border-border hover:border-text-muted/30 transition-colors duration-300 overflow-hidden" data-anim="up">
+        <div class="grid sm:grid-cols-[1.1fr_2fr] items-center">
+          <div class="relative overflow-hidden bg-bg-secondary">
+            <img
+              src="/images/retezy--naramek-tricolor-ruka-detail.webp"
+              srcset="/images/retezy--naramek-tricolor-ruka-detail.webp 1x, /images/retezy--naramek-tricolor-ruka-detail@2x.webp 2x"
+              width="800" height="600"
+              alt={t.chainsHeading}
+              loading="lazy"
+              decoding="async"
+              class="w-full h-auto object-cover"
+            />
+          </div>
+          <div class="p-6 sm:p-8 lg:p-10">
+            <span class="label-dot">{t.chainsLabel}</span>
+            <h2 class="mt-3">{t.chainsHeading}</h2>
+            <p class="mt-3 body-md text-text-secondary leading-relaxed max-w-xl">{t.chainsText}</p>
+            <span class="inline-flex items-center gap-2 mt-5 text-[clamp(0.6875rem,0.6rem+0.15vw,0.8125rem)] uppercase tracking-[0.2em] font-sans font-medium text-gold-on-light group-hover:text-gold-deep transition-colors duration-300">
+              {t.chainsCta}
+              <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25" /></svg>
+            </span>
+          </div>
+        </div>
+      </a>
 
       <p class="mt-12 max-w-3xl font-serif italic text-[15px] text-text-muted leading-[1.7]" data-anim="up">
         {t.noteBefore} {priceDate}{t.noteAfter} <a href="tel:+420774598181" class="not-italic font-sans text-gold-on-light hover:text-gold-deep transition-colors font-medium whitespace-nowrap">+420 774 598 181</a>.
