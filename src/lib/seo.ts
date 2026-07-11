@@ -64,9 +64,9 @@ export function jewelryStoreSchema() {
       latitude: 50.058644,
       longitude: 14.403715,
     },
-    // hasMap — souřadnicová Maps URL. Po založení Google Business Profile nahradit
-    // kanonickou place/CID URL profilu (stejnou pak dát i do sameAs).
-    hasMap: 'https://www.google.com/maps?q=50.058644,14.403715',
+    // hasMap — oficiální share odkaz na Google Business Profile (Zlatnická dílna
+    // Martin Ševr) → mapa místa dílny.
+    hasMap: 'https://share.google/Nx1Cggph206p7w5Iq',
     priceRange: '$$-$$$',
     // Google preferuje ImageObject s rozměry — víc info = lepší Knowledge Panel render.
     image: {
@@ -96,10 +96,12 @@ export function jewelryStoreSchema() {
     ],
     keywords: 'zlatnictví Praha 5, zlatník Smíchov, šperky na zakázku Praha, snubní prsteny na míru, opravy šperků Praha, prsten s vltavínem',
     // sameAs propojuje s autoritativními profily — Knowledge Graph entity confidence boost.
+    // Google Business Profile přes kgmid (stabilní Knowledge Graph entity ID
+    // „Zlatnická dílna Martin Ševr") — sváže webovou entitu s GBP entitou.
     sameAs: [
       SITE.social.instagram,
       SITE.social.facebook,
-      'https://www.google.com/maps/search/?api=1&query=Martin+%C5%A0evr+Zlatnick%C3%A1+d%C3%ADlna+Praha',
+      'https://www.google.com/search?kgmid=/g/11y_qvjx4l',
     ],
     openingHoursSpecification: [
       {
