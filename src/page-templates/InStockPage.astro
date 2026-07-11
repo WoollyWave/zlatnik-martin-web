@@ -8,9 +8,10 @@ import Layout from '../layouts/Layout.astro';
 import ProductCard from '../components/ProductCard.astro';
 import FilterPills from '../components/FilterPills.astro';
 import IconArrowUpRight from '../components/IconArrowUpRight.astro';
+import FAQ from '../components/FAQ.astro';
 import { products } from '../data/products';
 import { SITE } from '../data/site';
-import { graph, productItemList, breadcrumbSchema } from '../lib/seo';
+import { graph, productItemList, breadcrumbSchema, faqPageSchema } from '../lib/seo';
 import type { Locale } from '../i18n';
 
 interface Props {
@@ -85,6 +86,23 @@ const t = isEn
       chainsHref: '/retezy/',
     };
 
+// Časté nákupní dotazy — odpovědi vycházejí z reálných podmínek dílny (zlatá
+// varianta do 3 týdnů, doprava po ČR, osobní vyzvednutí). FAQPage schema = AEO.
+const faqItems = isEn
+  ? [
+      { question: 'Can a stock piece be made in gold too?', answer: 'Yes, most models can also be made in 585/1000 gold, usually within three weeks. The gold price is shown on each piece.' },
+      { question: 'Do you ship across Czechia?', answer: 'Yes, I ship as an insured parcel anywhere in Czechia, usually within two business days. Or collect the piece in person at the workshop, Pod Kesnerkou 46, Prague 5 – Smíchov.' },
+      { question: 'Can the ring size be adjusted?', answer: 'Yes, I adjust the ring to your size. Just tell me which piece you like and the size you need.' },
+      { question: 'Can I see a piece in person before buying?', answer: 'Of course. Come to the workshop at Pod Kesnerkou 46, Prague 5, ideally after arranging a time by phone at +420 774 598 181.' },
+    ]
+  : [
+      { question: 'Lze hotový šperk vyrobit i ve zlatě?', answer: 'Ano, většinu modelů vyrobím i ve zlatě 585/1000, obvykle do 3 týdnů. Cena zlaté varianty je uvedená u každého šperku.' },
+      { question: 'Posíláte šperky poštou po celé ČR?', answer: 'Ano, posílám pojištěnou zásilkou po celém Česku, obvykle do 2 pracovních dnů. Nebo si šperk vyzvednete osobně v dílně Pod Kesnerkou 46, Praha 5 – Smíchov.' },
+      { question: 'Jde upravit velikost prstenu?', answer: 'Ano, velikost prstenu přizpůsobím vaší míře. Stačí napsat, o který kus máte zájem a jakou velikost potřebujete.' },
+      { question: 'Můžu si šperk přijít prohlédnout osobně?', answer: 'Určitě. Přijďte do dílny Pod Kesnerkou 46, Praha 5, ideálně po předchozí domluvě telefonem na +420 774 598 181.' },
+    ];
+const faqTitle = isEn ? { label: 'FAQ', heading: 'Frequently asked questions' } : { label: 'Časté otázky', heading: 'Časté dotazy ke šperkům skladem' };
+
 const categories = [...new Set(products.filter(p => !p.sold).map(p => p.category))];
 const hasSold = products.some(p => p.sold);
 // value = jazykově neutrální klíč shodný s `data-category` na kartách ('prodano' = SOLD_FILTERS).
@@ -96,6 +114,7 @@ const filterItems = [
 
 const jsonLd = graph(
   productItemList(products),
+  faqPageSchema(faqItems),
   breadcrumbSchema(t.breadcrumb),
 );
 
@@ -193,6 +212,17 @@ const priceDate = new Date(`${SITE.pricesAsOf}T12:00:00`).toLocaleDateString(t.d
         {t.noteBefore} {priceDate}{t.noteAfter} <a href="tel:+420774598181" class="not-italic font-sans text-gold-on-light hover:text-gold-deep transition-colors font-medium whitespace-nowrap">+420 774 598 181</a>.
       </p>
 
+    </div>
+  </section>
+
+  <!-- ====== FAQ ====== -->
+  <section class="relative bg-bg-secondary section-md overflow-hidden">
+    <div class="relative max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-14">
+      <div class="max-w-3xl" data-anim="up">
+        <span class="label-dot">{faqTitle.label}</span>
+        <h2 class="mt-5 mb-12">{faqTitle.heading}</h2>
+        <FAQ items={faqItems} />
+      </div>
     </div>
   </section>
 

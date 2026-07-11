@@ -64,11 +64,25 @@ export function buildSitemapEntries(): SitemapEntry[] {
     ['/ochrana-osobnich-udaju/',   '/en/privacy/'],
   ];
 
+  // Galerijní/showcase obrázky, které žijí jen jako <img> v mřížce (nemají vlastní
+  // URL). Připoj je k listing stránce, ať je najde Google Images. DRŽET V SYNC
+  // s galleryItems ve WeddingRingsPage.astro a PortfolioPage.astro (base názvy).
+  const listingGalleryImages: Record<string, string[]> = {
+    '/snubni-prsteny-na-miru/': [
+      'zasnubni-zlute', 'zasnubni-bile-pave', 'srdcovy-safir', 'par-kovany', 'par-dvoubarevny',
+      'vlnka', 'listek', 'soliter-korunka', 'soliter-tenka',
+    ].map((b) => `/images/snubni--ukazka-${b}.webp`)
+      .concat(['01--klasicky', '02--spletany', '03--pave-diamanty', '04--origami'].map((b) => `/images/snubni--styly-${b}.webp`)),
+    '/portfolio/': ['zalud', 'ryby', 'tycka'].map((b) => `/images/portfolio--ukazka-${b}.webp`),
+  };
+
   const staticEntries: SitemapEntry[] = topLevelPairs.flatMap(([csPath, enPath]) => {
     const alternates = altPair(csPath, enPath);
+    const gallery = listingGalleryImages[csPath];
+    const images = gallery ? gallery.map((loc) => ({ loc: abs(loc) })) : undefined;
     return [
-      { loc: abs(csPath), lastmod: BUILD_DATE, alternates },
-      { loc: abs(enPath), lastmod: BUILD_DATE, alternates },
+      { loc: abs(csPath), lastmod: BUILD_DATE, alternates, ...(images ? { images } : {}) },
+      { loc: abs(enPath), lastmod: BUILD_DATE, alternates, ...(images ? { images } : {}) },
     ];
   });
 
@@ -78,18 +92,23 @@ export function buildSitemapEntries(): SitemapEntry[] {
     loc: abs(path), lastmod: BUILD_DATE,
   }));
 
+  // <image:caption> je deprecated — podporovaný zůstal jen <image:loc>.
+  // Pošli VŠECHNY fotky URL (hlavní + detailní / galerie), ne jen jednu —
+  // víc obrázků v image-sitemapě = víc příležitostí v Google Images / Discover.
+  const uniqueImages = (paths: string[]): { loc: string }[] =>
+    [...new Set(paths.filter(Boolean))].map((p) => ({ loc: abs(p) }));
+
   // --- Product detail pages (CS + EN) ---
   const productEntries: SitemapEntry[] = products.flatMap((p) => {
     const csPath = `/sperky/${p.slug}/`;
     const enPath = `/en/jewelry/${p.slugEn || p.slug}/`;
     const alternates = p.slugEn ? altPair(csPath, enPath) : undefined;
-    // <image:caption> je deprecated — podporovaný zůstal jen <image:loc>.
-    const image = { loc: abs(p.image) };
+    const images = uniqueImages([p.image, ...(p.detailImages?.map((d) => d.src) ?? [])]);
     const entries: SitemapEntry[] = [
-      { loc: abs(csPath), lastmod: BUILD_DATE, images: [image], alternates },
+      { loc: abs(csPath), lastmod: BUILD_DATE, images, alternates },
     ];
     if (p.slugEn) {
-      entries.push({ loc: abs(enPath), lastmod: BUILD_DATE, images: [image], alternates });
+      entries.push({ loc: abs(enPath), lastmod: BUILD_DATE, images, alternates });
     }
     return entries;
   });
@@ -99,12 +118,12 @@ export function buildSitemapEntries(): SitemapEntry[] {
     const csPath = `/tvorba/${c.slug}/`;
     const enPath = `/en/work/${c.slugEn || c.slug}/`;
     const alternates = c.slugEn ? altPair(csPath, enPath) : undefined;
-    const image = { loc: abs(c.heroImage || c.cardImage) };
+    const images = uniqueImages([c.heroImage || c.cardImage, ...(c.gallery?.map((g) => g.src) ?? [])]);
     const entries: SitemapEntry[] = [
-      { loc: abs(csPath), lastmod: BUILD_DATE, images: [image], alternates },
+      { loc: abs(csPath), lastmod: BUILD_DATE, images, alternates },
     ];
     if (c.slugEn) {
-      entries.push({ loc: abs(enPath), lastmod: BUILD_DATE, images: [image], alternates });
+      entries.push({ loc: abs(enPath), lastmod: BUILD_DATE, images, alternates });
     }
     return entries;
   });

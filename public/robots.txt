@@ -56,6 +56,10 @@ Allow: /
 User-agent: PerplexityBot
 Allow: /
 
+# Perplexity-User — user-initiated fetch (rozklik odkazu v odpovědi), jiný agent než crawler PerplexityBot.
+User-agent: Perplexity-User
+Allow: /
+
 User-agent: Google-Extended
 Allow: /
 

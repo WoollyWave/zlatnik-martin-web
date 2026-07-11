@@ -9,7 +9,7 @@ import Button from '../components/Button.astro';
 import PhotoFrame from '../components/PhotoFrame.astro';
 import IconArrowUpRight from '../components/IconArrowUpRight.astro';
 import { portfolioCases, type PortfolioCase } from '../data/portfolio';
-import { breadcrumbSchema, graph } from '../lib/seo';
+import { breadcrumbSchema, graph, siteEntities } from '../lib/seo';
 import { materialTags } from '../lib/text';
 import { SITE } from '../data/site';
 import type { Locale } from '../i18n';
@@ -118,20 +118,28 @@ const breadcrumb = isEn
       { name: title, url: `/tvorba/${caseStudy.slug}/` },
     ];
 
+const detailPath = isEn ? `/en/work/${caseStudy.slugEn!}/` : `/tvorba/${caseStudy.slug}/`;
+// Kontextový odkaz na odpovídající „peněžní" službu podle kategorie — udržuje
+// topical cluster (case study → služba, na kterou navazuje poptávka).
+const serviceLink = caseStudy.category === 'snubni-prsteny' || caseStudy.category === 'zasnubni-prsteny'
+  ? { href: isEn ? '/en/wedding-rings/' : '/snubni-prsteny-na-miru/', label: isEn ? 'Wedding & engagement rings on request' : 'Snubní a zásnubní prsteny na míru' }
+  : { href: isEn ? '/en/custom-jewelry/' : '/zakazkova-tvorba/', label: isEn ? 'Custom jewellery to order' : 'Zakázková tvorba na míru' };
+
 const jsonLd = graph(
   {
     '@type': 'CreativeWork',
+    '@id': `${SITE.url}${detailPath}#work`,
     name: title,
     description: intro.slice(0, 200),
-    image: `${SITE.url}${caseStudy.cardImage}`,
-    creator: {
-      '@type': 'Person',
-      name: 'Martin Ševr',
-      url: isEn ? `${SITE.url}/en/about/` : `${SITE.url}/o-dilne/`,
-    },
+    // Pole = hero + všechny galerijní fotky (ne jen karta) → bohatší podklad pro AI i Images.
+    image: [...new Set([caseStudy.heroImage || caseStudy.cardImage, ...(caseStudy.gallery?.map((g) => g.src) ?? [])])].map((src) => `${SITE.url}${src}`),
+    creator: { '@id': `${SITE.url}#person` },
     material,
+    keywords: materialTags(material).join(', '),
+    mainEntityOfPage: `${SITE.url}${detailPath}`,
     ...(isEn ? { inLanguage: 'en-GB' } : {}),
   },
+  ...siteEntities(locale),
   breadcrumbSchema(breadcrumb),
 );
 ---
@@ -187,6 +195,11 @@ const jsonLd = graph(
             <Button href={t.ctaPrimaryHref} variant="primary">{t.ctaPrimary}</Button>
             <Button href={SITE.whatsapp} variant="secondary">{t.ctaSecondary}</Button>
           </div>
+          <!-- Kontextový odkaz na navazující službu (topical cluster). -->
+          <a href={serviceLink.href} class="group inline-flex items-center gap-2 mt-6 text-[clamp(0.6875rem,0.6rem+0.15vw,0.8125rem)] uppercase tracking-[0.2em] font-sans font-medium text-gold-on-light hover:text-gold-deep transition-colors duration-300">
+            {serviceLink.label}
+            <IconArrowUpRight class="w-3.5 h-3.5" />
+          </a>
         </div>
 
         <!-- Right — hero photo -->

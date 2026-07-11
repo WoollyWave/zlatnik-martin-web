@@ -6,6 +6,7 @@ import Footer from '../components/Footer.astro';
 import CookieBanner from '../components/CookieBanner.astro';
 import { getLocaleFromUrl, getAlternatePathStrict, useTranslations, type Locale } from '../i18n';
 import { buildSlugMaps } from '../lib/slug-maps';
+import { SITE } from '../data/site';
 
 interface Props {
   title: string;
@@ -121,7 +122,7 @@ const imgType = (url?: string) =>
     <meta property="og:url" content={canonicalUrl} />
     <meta property="og:locale" content={ogLocale} />
     <meta property="og:locale:alternate" content={currentLocale === 'cs' ? 'en_GB' : 'cs_CZ'} />
-    <meta property="og:site_name" content="Martin Ševr, Zlatnická dílna Praha" />
+    <meta property="og:site_name" content={SITE.name} />
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />

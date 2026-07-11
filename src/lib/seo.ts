@@ -64,6 +64,9 @@ export function jewelryStoreSchema() {
       latitude: 50.058644,
       longitude: 14.403715,
     },
+    // hasMap — souřadnicová Maps URL. Po založení Google Business Profile nahradit
+    // kanonickou place/CID URL profilu (stejnou pak dát i do sameAs).
+    hasMap: 'https://www.google.com/maps?q=50.058644,14.403715',
     priceRange: '$$-$$$',
     // Google preferuje ImageObject s rozměry — víc info = lepší Knowledge Panel render.
     image: {
@@ -217,6 +220,18 @@ export function homeGraph(locale: 'cs' | 'en' = 'cs') {
 }
 
 /**
+ * Entity uzly (business + person + website) k přidání do @graph KAŽDÉ stránky,
+ * jejíž Service/Product/ContactPage odkazuje přes @id na #business/#person/#website.
+ * AI answer engines i Google čtou každou URL samostatně — cross-page @id merge
+ * není zaručený, takže bez těchto uzlů visí reference „provider/mainEntity" naprázdno
+ * a lokální/AEO signál (adresa, geo, otevírací doba) na dané stránce chybí.
+ * Použití: `graph(serviceSchema(), ...siteEntities(locale), faqPageSchema(...), breadcrumbSchema(...))`.
+ */
+export function siteEntities(locale: 'cs' | 'en' = 'cs') {
+  return [jewelryStoreSchema(), personSchema(), websiteSchema(locale)];
+}
+
+/**
  * Graph pro Product detail stránky — Product + Breadcrumb + business/person.
  * MerchantReturnPolicy a OfferShippingDetails jsou inline v každém offeru
  * (Googlův Merchant Listing parser nedereferencuje @id spolehlivě).
@@ -350,7 +365,12 @@ export function productSchema(product: Product, locale: ProductLocale = 'cs') {
     sku: product.slug,
     mpn: product.slug,
     description,
-    image: `${SITE.url}${product.image}`,
+    // Pole = hlavní fotka + detailní záběry. Víc obrázků = bohatší Product rich
+    // result i lepší podklad pro AI (Google preferuje 1:1, 4:3, 16:9 varianty).
+    image: [
+      `${SITE.url}${product.image}`,
+      ...(product.detailImages?.map((d) => `${SITE.url}${d.src}`) ?? []),
+    ],
     offers,
     material,
     category: categoryLabelLocalized,
@@ -441,7 +461,11 @@ export function customJewelryServiceSchema() {
     name: 'Zakázková tvorba šperků na míru',
     description: 'Ruční výroba šperků na míru ze zlata 585/1000 a 750/1000 a stříbra 925/1000. Konzultace, návrh, schválení, výroba. Expresní výroba do 5 pracovních dnů u jednodušších kusů.',
     provider: { '@id': `${SITE.url}#business` },
-    areaServed: { '@type': 'Country', name: 'Česká republika' },
+    areaServed: [
+      { '@type': 'City', name: 'Praha' },
+      { '@type': 'Place', name: 'Smíchov, Praha 5' },
+      { '@type': 'Country', name: 'Česká republika' },
+    ],
     url: `${SITE.url}/zakazkova-tvorba/`,
     offers: {
       '@type': 'Offer',
@@ -449,7 +473,8 @@ export function customJewelryServiceSchema() {
       priceSpecification: {
         '@type': 'PriceSpecification',
         priceCurrency: 'CZK',
-        description: 'Cena závisí na materiálu, kameni a složitosti. Konzultace zdarma.',
+        minPrice: 2500,
+        description: 'Stříbro od 2 500 Kč, zlato od 8 000 Kč. Cena závisí na materiálu, kameni a složitosti. Konzultace zdarma.',
       },
     },
   };
@@ -466,9 +491,20 @@ export function jewelryRepairServiceSchema() {
     provider: { '@id': `${SITE.url}#business` },
     areaServed: [
       { '@type': 'City', name: 'Praha' },
+      { '@type': 'Place', name: 'Smíchov, Praha 5' },
       { '@type': 'Country', name: 'Česká republika' },
     ],
     url: `${SITE.url}/opravy-sperku-praha/`,
+    offers: {
+      '@type': 'Offer',
+      priceCurrency: 'CZK',
+      priceSpecification: {
+        '@type': 'PriceSpecification',
+        priceCurrency: 'CZK',
+        minPrice: 300,
+        description: 'Oprava řetízku od 300 Kč, zmenšení nebo zvětšení prstenu 400–900 Kč, výměna kamenu od 600 Kč. Přesná cena po prohlídce. Většina oprav do 5 pracovních dnů.',
+      },
+    },
     hasOfferCatalog: {
       '@type': 'OfferCatalog',
       name: 'Druhy oprav šperků',
@@ -500,8 +536,24 @@ export function weddingRingsServiceSchema(locale: 'cs' | 'en' = 'cs') {
       ? 'Custom wedding and engagement rings in yellow, white or rose gold, 585/1000 and 750/1000. Handcrafted in my own workshop at Pod Kesnerkou, Prague 5.'
       : 'Snubní a zásnubní prsteny na míru z žlutého, bílého nebo růžového zlata 585/1000 a 750/1000. Ruční výroba ve vlastní dílně Pod Kesnerkou v Praze 5.',
     provider: { '@id': `${SITE.url}#business` },
-    areaServed: { '@type': 'Country', name: isEn ? 'Czechia' : 'Česká republika' },
+    areaServed: [
+      { '@type': 'City', name: isEn ? 'Prague' : 'Praha' },
+      { '@type': 'Place', name: isEn ? 'Smíchov, Prague 5' : 'Smíchov, Praha 5' },
+      { '@type': 'Country', name: isEn ? 'Czechia' : 'Česká republika' },
+    ],
     url: pageUrl,
+    offers: {
+      '@type': 'Offer',
+      priceCurrency: 'CZK',
+      priceSpecification: {
+        '@type': 'PriceSpecification',
+        priceCurrency: 'CZK',
+        minPrice: 18000,
+        description: isEn
+          ? 'Wedding bands from CZK 18,000 per pair (585/1000 gold). Delivery 4–8 weeks.'
+          : 'Snubní prsteny od 18 000 Kč za pár (zlato 585/1000). Termín výroby 4–8 týdnů.',
+      },
+    },
     hasOfferCatalog: {
       '@type': 'OfferCatalog',
       name: isEn ? 'Wedding and engagement rings' : 'Snubní a zásnubní prsteny',
