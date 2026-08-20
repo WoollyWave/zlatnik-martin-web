@@ -146,7 +146,14 @@ h1 em, h2 em, h3 em { font-style: italic; color: var(--color-gold-deep); }
 3. **Portfolio preview** — horizontal cards (photo left, text right), 3 items with tags + "Zobrazit detail →"
 4. **Process** — "Jak se rodí váš šperk", 3 steps: Konzultace s vámi / Ruční výroba ve zlatnické dílně / Váš šperk je hotov
 5. **Express** — "Expresní výroba" label, "Šperk na poslední chvíli? Zvládnu to." + description + 2 buttons
-6. **Testimonial** — 5 stars + quote + "Helena Novotná, Sběratelka šperků, Praha"
+6. ~~**Testimonial**~~ — ODSTRANĚNO. Původní citace „Helena Novotná, Sběratelka
+   šperků" byla vymyšlená; smyšlené reference porušují pravidla Google pro
+   strukturovaná data a na webu řemeslníka jsou navíc kontraproduktivní.
+   **Web dnes nemá žádný sociální důkaz**, přestože Google Business Profile
+   nese 4,9 ★ z 27 recenzí. Infrastruktura pro recenze je v `src/data/products.ts`
+   (typ `Review`) a `src/lib/seo.ts` — čeká jen na skutečná hodnocení od Martina.
+   Pozor: `aggregateRating` v `LocalBusiness` Google od 2019 ignoruje jako
+   self-serving, takže hodnota je v konverzi pro lidi, ne v rich snippetu.
 7. **O dílně preview** — icon + heading + paragraph + "O dílně" button + photo right
 8. **CTA** — centered: "Máte zájem / o zakázkový šperk?" + subtitle + Zavolat + Napsat na WhatsApp
 9. **Footer** — global
