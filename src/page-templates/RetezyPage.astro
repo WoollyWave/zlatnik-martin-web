@@ -7,8 +7,9 @@
 import Layout from '../layouts/Layout.astro';
 import Button from '../components/Button.astro';
 import FAQ from '../components/FAQ.astro';
+import PhotoFrame from '../components/PhotoFrame.astro';
 import { SITE } from '../data/site';
-import { graph, faqPageSchema, breadcrumbSchema } from '../lib/seo';
+import { graph, faqPageSchema, breadcrumbSchema, siteEntities } from '../lib/seo';
 import type { Locale } from '../i18n';
 
 interface Props {
@@ -130,6 +131,10 @@ const priceGroups = isEn
 const faqItems = isEn
   ? [
       {
+        question: 'How much does a royal chain cost?',
+        answer: 'A 14k gold bracelet starts at CZK 59,500 (tricolour CZK 65,100) and a 60 cm necklace at CZK 176,000 (tricolour CZK 192,500). The price follows the weight of gold, and so the length you choose. I will quote the exact price for your measurements.',
+      },
+      {
         question: 'Can you make the chain in a different length?',
         answer: 'Yes. The prices shown are for a 20.5 cm bracelet and a 60 cm necklace, but I adjust the length to you. The weight of gold, and so the price, follows the length you choose.',
       },
@@ -143,6 +148,10 @@ const faqItems = isEn
       },
     ]
   : [
+      {
+        question: 'Kolik stojí královský řetěz?',
+        answer: 'Náramek ze 14k zlata od 59 500 Kč (tříbarevný 65 100 Kč), náhrdelník 60 cm od 176 000 Kč (tříbarevný 192 500 Kč). Cena se odvíjí od váhy zlata, tedy od zvolené délky. Přesnou cenu spočítám podle vaší míry.',
+      },
       {
         question: 'Dá se řetěz vyrobit v jiné délce?',
         answer: 'Ano. Ceny v ceníku jsou pro náramek 20,5 cm a náhrdelník 60 cm, ale délku přizpůsobím vám. Váha zlata, a tím i cena, se odvíjí od zvolené délky.',
@@ -171,6 +180,7 @@ const productLd = {
   image: `${SITE.url}/images/retezy--nahrdelnik-zlute@2x.webp`,
   brand: { '@type': 'Brand', name: 'Martin Ševr' },
   category: isEn ? 'Gold chains' : 'Zlaté řetězy',
+  inLanguage: isEn ? 'en-GB' : 'cs-CZ',
   offers: {
     '@type': 'AggregateOffer',
     priceCurrency: 'CZK',
@@ -183,6 +193,7 @@ const productLd = {
 
 const jsonLd = graph(
   productLd,
+  ...siteEntities(locale),
   faqPageSchema(faqItems),
   breadcrumbSchema(t.breadcrumb),
 );
@@ -195,6 +206,7 @@ const jsonLd = graph(
   description={t.description}
   jsonLd={jsonLd}
   navOverlay
+  lcpImageMobile="/images/retezy--naramek-tricolor-ruka.avif"
   lcpImageDesktop="/images/retezy--naramek-tricolor-ruka.avif"
   lcpImageDesktop2x="/images/retezy--naramek-tricolor-ruka@2x.avif"
   ctaHeading={t.ctaHeading}
@@ -223,23 +235,32 @@ const jsonLd = graph(
           </div>
         </div>
 
-        <!-- Photo -->
-        <div class="relative">
-          <picture>
-            <source
-              type="image/avif"
-              srcset="/images/retezy--naramek-tricolor-ruka.avif 1x, /images/retezy--naramek-tricolor-ruka@2x.avif 2x"
-            />
-            <img
-              src="/images/retezy--naramek-tricolor-ruka.webp"
-              srcset="/images/retezy--naramek-tricolor-ruka.webp 1x, /images/retezy--naramek-tricolor-ruka@2x.webp 2x"
-              width="800" height="800"
-              alt={t.heroAlt}
-              fetchpriority="high"
-              decoding="async"
-              class="w-full h-auto object-contain max-w-[560px] mx-auto"
-            />
-          </picture>
+        <!-- Photo — orámováno (border-border) jako fotorámy jinde na webu; světlé studiové
+             pozadí fotky by se jinak slilo s krémovým pozadím stránky a nemělo definovanou hranu. -->
+        <div class="relative max-w-[560px] mx-auto">
+          <div class="relative overflow-hidden border border-border bg-bg-secondary/40">
+            <picture>
+              {/* Mobil (<1024px): jen základní 800px kandidát — density srcset tam
+                  posílal @2x (1600px) do ~400px slotu, zbytečně velký LCP. */}
+              <source media="(max-width: 1023px)" type="image/avif" srcset="/images/retezy--naramek-tricolor-ruka.avif" />
+              <source media="(max-width: 1023px)" srcset="/images/retezy--naramek-tricolor-ruka.webp" />
+              <source
+                type="image/avif"
+                srcset="/images/retezy--naramek-tricolor-ruka.avif 1x, /images/retezy--naramek-tricolor-ruka@2x.avif 2x"
+              />
+              <img
+                src="/images/retezy--naramek-tricolor-ruka.webp"
+                srcset="/images/retezy--naramek-tricolor-ruka.webp 1x, /images/retezy--naramek-tricolor-ruka@2x.webp 2x"
+                width="800" height="800"
+                alt={t.heroAlt}
+                fetchpriority="high"
+                decoding="async"
+                class="w-full h-auto object-contain"
+              />
+            </picture>
+            {/* Vnitřní lemování — shodné s fotorámy na homepage / O dílně. */}
+            <PhotoFrame />
+          </div>
         </div>
 
       </div>

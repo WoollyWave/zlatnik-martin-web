@@ -10,7 +10,7 @@ import FAQ from '../components/FAQ.astro';
 import PhotoFrame from '../components/PhotoFrame.astro';
 import ResponsivePicture from '../components/ResponsivePicture.astro';
 import { SITE } from '../data/site';
-import { graph, faqPageSchema, customJewelryServiceSchema, breadcrumbSchema } from '../lib/seo';
+import { graph, faqPageSchema, customJewelryServiceSchema, breadcrumbSchema, siteEntities } from '../lib/seo';
 import type { Locale } from '../i18n';
 
 interface Props {
@@ -37,7 +37,7 @@ const t = isEn
         },
         {
           title: 'Design',
-          description: "I prepare a design for your piece. For more complex pieces I make a 3D model or a wax prototype. Nothing is made until you've agreed.",
+          description: "I prepare a design for your piece, and for more complex pieces a 3D model or a wax prototype. <strong class=\"font-medium text-text-primary\">The design carries a 500 CZK deposit</strong>, which I deduct from the price of the piece. Nothing is made until you've agreed.",
           alt: 'Detailed drawing of a piece',
         },
         {
@@ -118,13 +118,21 @@ const t = isEn
           answer: "Call or message on WhatsApp. We can meet at the workshop in Prague 5, or do everything remotely, by phone, email or video call.",
         },
         {
+          question: 'Can you make a piece from my own gold?',
+          answer: 'Yes. I melt down old gold and make a new piece from it. I need at least 8 grams of the original gold at the same karat, otherwise the material cannot be worked reliably. You then pay for the work, not the material. Bring the gold to the workshop in Prague 5, we will weigh it and talk about what it can realistically become.',
+        },
+        {
+          question: 'Is there a charge for the design?',
+          answer: "The consultation is free and without obligation, and you can ask me anything. Once I am to draw something up for you, the design carries a deposit of 500 CZK. If you order the piece, I deduct it from the price. Drawing a design is work like any other, and it has happened that I did it and the piece was then made elsewhere. This keeps it fair on both sides.",
+        },
+        {
           question: 'Do you offer a warranty on your pieces?',
           answer: "Every piece carries a lifetime warranty on material and workmanship defects. Normal wear (scratches, patina) isn't covered, but I'm happy to help with maintenance.",
         },
       ],
       heroLabel: 'Custom jewellery',
       heroH1: 'A piece <em>made for you</em>. You approve the design before anything is made.',
-      heroSubtitle: "Tell me your idea. Together we'll pick the material, the stone and the timing. The consultation is free and without obligation. You only pay once the design is approved.",
+      heroSubtitle: "Tell me your idea. Together we'll pick the material, the stone and the timing. The consultation is free and without obligation.",
       heroCta1: 'Request a piece',
       heroCta2: 'Price guide',
       pricingAnchor: '#pricing',
@@ -134,6 +142,26 @@ const t = isEn
       processHeading: 'How your piece comes together, step by step',
       processSub: 'From the first word to the finished piece. You take part in every stage, it is not a finished thing from a display case.',
       processGradientFrom: 'from-[rgba(30,27,24,0.25)]',
+      handmadeLabel: 'Handmade',
+      handmadeHeading: 'What <em>handmade</em> actually means',
+      handmadeIntro: 'Most jewellery in shops is cast: one mould is made and hundreds of identical pieces come out of it. I build a piece from scratch, from sheet and wire, with a saw and a torch. It takes longer and costs more, but the material ends up denser and the piece holds the shape we worked out together, not the one that came out of the mould.',
+      handmadeItems: [
+        {
+          number: '01',
+          title: 'Handmade silver jewellery',
+          description: '925/1000 sterling silver. Rings, earrings, pendants and chains. The hours of work are the same in silver as in gold, only the price of the metal differs, so this is the cheapest way to own a one-off piece made for you. Most designs I can later make in gold as well.',
+        },
+        {
+          number: '02',
+          title: 'Handmade gold jewellery',
+          description: '585/1000 (14 kt) and 750/1000 (18 kt) gold, in yellow, white or rose. Every piece hallmarked. With gold it pays to discuss the weight up front: the width and thickness of a band move the price more than the karat does.',
+        },
+        {
+          number: '03',
+          title: 'Made from your own gold',
+          description: 'Do you have gold at home that nobody wears? I will melt it down and make a new piece from it. I need at least 8 grams of the original gold at the same karat. You then pay for the work, not the material, and the new piece carries metal that has already served your family.',
+        },
+      ],
       materialsLabel: 'Materials',
       materialsHeading: 'Certified metals, hand-picked stones',
       materialsSub: "I know where every material comes from, and why I'm using it.",
@@ -151,7 +179,7 @@ const t = isEn
       whatsappCta: 'Message on WhatsApp',
       pricingLabel: 'Price guide',
       pricingHeading: 'A guide to where it starts',
-      pricingSub: 'Prices depend on the complexity, material and stones. I prepare a precise quote after the consultation, free and without obligation.',
+      pricingSub: 'Prices depend on the complexity, material and stones. I prepare a precise quote after the consultation, free and without obligation. <strong class="font-medium text-text-primary">Drawing up a design carries a deposit of 500 CZK</strong>, which I deduct from the price of the piece.',
       pricingWorkNote: 'A custom piece is hand-assembled from sheets and wire to your wish, so you are not paying only for the metal, but for hours of craft. And because handwork takes just as long in silver as in gold, even a silver piece is not a cheap affair. Consider which material you want those hours of work to go into.',
       silverHeading: 'Silver 925/1000',
       goldHeading: 'Gold 585/1000',
@@ -184,7 +212,7 @@ const t = isEn
         },
         {
           title: 'Návrh',
-          description: 'Připravím návrh vašeho šperku. U složitějších kusů vytvořím 3D model nebo voskový prototyp. Nic nevznikne, dokud nebudete souhlasit.',
+          description: 'Připravím návrh vašeho šperku, u složitějších kusů 3D model nebo voskový prototyp. <strong class="font-medium text-text-primary">Za návrh beru zálohu 500 Kč</strong>, kterou vám odečtu z ceny šperku. Nic nevznikne, dokud nebudete souhlasit.',
           alt: 'Detailní výkres šperku',
         },
         {
@@ -265,13 +293,21 @@ const t = isEn
           answer: 'Zavolejte nebo napište na WhatsApp. Můžeme se potkat v dílně v Praze 5, nebo vše probereme na dálku, telefonem, emailem či videohovorem.',
         },
         {
+          question: 'Vyrobíte šperk z mého vlastního zlata?',
+          answer: 'Ano. Staré zlato přetavím a vyrobím z něj nový kus. Potřebuju alespoň 8 gramů původního zlata stejné ryzosti, jinak se s materiálem nedá spolehlivě pracovat. Platíte pak jen práci, ne materiál. Přineste zlato do dílny v Praze 5, zvážíme ho a řekneme si, co z něj reálně půjde.',
+        },
+        {
+          question: 'Stojí něco návrh šperku?',
+          answer: 'Konzultace je zdarma a bez závazků, ptát se můžete na cokoli. Ve chvíli, kdy pro vás mám něco nakreslit, beru na návrh zálohu 500 Kč. Když si šperk objednáte, odečtu vám ji z ceny. Kreslení návrhu je práce jako každá jiná a stalo se mi, že jsem ji odvedl a šperk pak vznikl jinde. Tohle je způsob, jak to udržet férové pro obě strany.',
+        },
+        {
           question: 'Poskytuji záruku na své šperky?',
           answer: 'Každý šperk má doživotní záruku na vadu materiálu a zpracování. Běžné opotřebení (poškrábání, patina) není zárukou kryto, ale rád pomůžu s údržbou.',
         },
       ],
       heroLabel: 'Zakázková tvorba',
       heroH1: 'Šperk <em>na míru</em>. Návrh schválíte před tím, než cokoli vznikne.',
-      heroSubtitle: 'Řekněte mi svůj nápad. Společně vybereme materiál, kámen i termín. Konzultace je zdarma a bez závazků. Platí se až po schválení návrhu.',
+      heroSubtitle: 'Řekněte mi svůj nápad. Společně vybereme materiál, kámen i termín. Konzultace je zdarma a bez závazků.',
       heroCta1: 'Poptat šperk',
       heroCta2: 'Orientační ceník',
       pricingAnchor: '#cenik',
@@ -281,6 +317,29 @@ const t = isEn
       processHeading: 'Jak vzniká váš šperk, krok za krokem',
       processSub: 'Od prvního slova k hotovému kusu. Podílíte se na každé fázi, není to hotová věc z vitríny.',
       processGradientFrom: 'from-text-primary/25',
+      // Sekce cílí na dotazy „ruční výroba šperků" / „výroba stříbrných / zlatých
+      // šperků" / „výroba šperků z vlastního zlata" — v GSC 7/2026 přes 500 zobrazení
+      // na pozicích 11–22, tj. poptávka, na kterou stránka slovníkem nedosáhla.
+      handmadeLabel: 'Ruční výroba',
+      handmadeHeading: 'Co znamená <em>ruční výroba</em> šperku',
+      handmadeIntro: 'Většina šperků v obchodech vzniká odléváním: vyrobí se jedna forma a z ní stovky stejných kusů. Já šperk stavím od nuly, z plechu a drátu, pilkou a pájkou. Trvá to déle a je to dražší, ale výsledek má hutnější materiál a drží tvar, který jsme si spolu vymysleli, ne ten, co vyšel z formy.',
+      handmadeItems: [
+        {
+          number: '01',
+          title: 'Ruční výroba stříbrných šperků',
+          description: 'Stříbro 925/1000. Prsteny, náušnice, přívěsky i řetízky. Hodiny práce jsou ve stříbře stejné jako ve zlatě, liší se jen cena kovu, takže je to nejlevnější způsob, jak mít autorský kus na míru. Většinu modelů umím později vyrobit i ve zlatě.',
+        },
+        {
+          number: '02',
+          title: 'Ruční výroba zlatých šperků',
+          description: 'Zlato 585/1000 (14k) i 750/1000 (18k), ve žluté, bílé i růžové. Každý kus puncovaný. U zlata se vyplatí probrat gramáž předem: šířka a síla obroučky s cenou hýbou víc než samotná ryzost.',
+        },
+        {
+          number: '03',
+          title: 'Výroba z vašeho vlastního zlata',
+          description: 'Máte doma zlato, které nikdo nenosí? Přetavím ho a vyrobím z něj nový kus. Potřebuju alespoň 8 gramů původního zlata stejné ryzosti. Platíte pak jen práci, ne materiál, a v novém šperku máte kov, který v rodině už něco odsloužil.',
+        },
+      ],
       materialsLabel: 'Materiály',
       materialsHeading: 'Certifikované kovy, ručně vybrané kameny',
       materialsSub: 'Vím, odkud každý materiál pochází a proč ho používám.',
@@ -298,7 +357,7 @@ const t = isEn
       whatsappCta: 'Napsat na WhatsApp',
       pricingLabel: 'Ceník',
       pricingHeading: 'Orientační ceník, od čeho se začíná',
-      pricingSub: 'Ceny závisí na složitosti, materiálu a kamenech. Přesnou kalkulaci udělám po konzultaci, zdarma a bez závazku.',
+      pricingSub: 'Ceny závisí na složitosti, materiálu a kamenech. Přesnou kalkulaci udělám po konzultaci, zdarma a bez závazku. <strong class="font-medium text-text-primary">Za nakreslení návrhu beru zálohu 500 Kč</strong>, kterou vám odečtu z ceny šperku.',
       pricingWorkNote: 'Zakázkový šperk vzniká ruční montáží plechů a drátů podle vašeho přání, neplatíte tedy jen cenu kovu, ale hodiny řemesla. A protože ruční práce trvá ve stříbře stejně dlouho jako ve zlatě, ani stříbrný kus není levná záležitost. Zvažte, do jakého materiálu chcete ty hodiny práce vložit.',
       silverHeading: 'Stříbro 925/1000',
       goldHeading: 'Zlato 585/1000',
@@ -369,8 +428,9 @@ const scatteredGallery = [
 // vyšší než viewport (sekce pak končí těsně pod tlačítky).
 
 const jsonLd = graph(
+  customJewelryServiceSchema(locale),
+  ...siteEntities(locale),
   faqPageSchema(faqItems),
-  customJewelryServiceSchema(),
   breadcrumbSchema(t.breadcrumb),
 );
 ---
@@ -493,8 +553,29 @@ const jsonLd = graph(
             <!-- Info below -->
             <div class="pt-5 pb-5 border-b border-border">
               <h3>{step.title}</h3>
-              <p class="mt-2 text-[15px] leading-relaxed text-text-secondary font-sans">{step.description}</p>
+              <p class="mt-2 text-[15px] leading-relaxed text-text-secondary font-sans" set:html={step.description} />
             </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== RUČNÍ VÝROBA — 3 cards grid (vzor: opravy/čištění) ====== -->
+  <section id="rucni-vyroba" class="relative bg-bg-secondary border-b border-border section-md overflow-hidden">
+    <div class="relative max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-14">
+      <div class="max-w-3xl mb-14">
+        <span class="label-dot" data-anim="fade">{t.handmadeLabel}</span>
+        <h2 class="mt-5" data-anim="up" set:html={t.handmadeHeading} />
+        <p class="mt-6 text-text-secondary body-lg" data-anim="up">{t.handmadeIntro}</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-10" data-anim="stagger">
+        {t.handmadeItems.map((item) => (
+          <div data-anim-child class="border-b border-border pb-8">
+            <span class="font-sans text-[11px] font-medium uppercase tracking-[0.2em] text-gold-on-light">{item.number}</span>
+            <h3 class="mt-3">{item.title}</h3>
+            <p class="body-md text-text-secondary leading-relaxed mt-3 font-sans">{item.description}</p>
           </div>
         ))}
       </div>
@@ -621,7 +702,7 @@ const jsonLd = graph(
     <div class="max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-14">
       <span class="label-dot" data-anim="fade">{t.pricingLabel}</span>
       <h2 class="mt-5" data-anim="up">{t.pricingHeading}</h2>
-      <p class="mt-4 text-text-secondary max-w-xl" data-anim="up">{t.pricingSub}</p>
+      <p class="mt-4 text-text-secondary max-w-xl" data-anim="up" set:html={t.pricingSub} />
       <p class="mt-4 text-text-secondary max-w-xl body-md leading-relaxed" data-anim="up">{t.pricingWorkNote}</p>
 
       <div class="grid lg:grid-cols-2 gap-12 lg:gap-16 mt-14" data-anim="up">
@@ -683,14 +764,16 @@ const jsonLd = graph(
             </div>
           </div>
           <div class="hidden lg:flex items-center justify-center relative" data-anim="scale">
+            <!-- Jediný kandidát: soubor má 1388px na slot max. 300px, takže pokrývá
+                 i retinu. Density srcset tu byl jen zdánlivý, @2x byl bit po bitu
+                 stejný soubor jako 1x. -->
             <picture>
               <source
                 type="image/avif"
-                srcset="/images/zakazkova--express--prsten-safir.avif 1x, /images/zakazkova--express--prsten-safir@2x.avif 2x"
+                srcset="/images/zakazkova--express--prsten-safir.avif"
               />
               <img
                 src="/images/zakazkova--express--prsten-safir.webp"
-                srcset="/images/zakazkova--express--prsten-safir.webp 1x, /images/zakazkova--express--prsten-safir@2x.webp 2x"
                 width="600" height="600"
                 alt={t.expressImgAlt}
                 loading="lazy"

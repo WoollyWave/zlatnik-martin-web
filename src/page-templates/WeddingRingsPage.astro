@@ -7,8 +7,9 @@
 import Layout from '../layouts/Layout.astro';
 import Button from '../components/Button.astro';
 import FAQ from '../components/FAQ.astro';
+import PhotoFrame from '../components/PhotoFrame.astro';
 import { SITE } from '../data/site';
-import { graph, weddingRingsServiceSchema, faqPageSchema, breadcrumbSchema } from '../lib/seo';
+import { graph, weddingRingsServiceSchema, faqPageSchema, breadcrumbSchema, siteEntities } from '../lib/seo';
 import type { Locale } from '../i18n';
 
 interface Props {
@@ -52,7 +53,7 @@ const t = isEn
       galleryLead: 'These pieces are not for sale, but I will happily make you something similar to order.',
     }
   : {
-      title: 'Snubní prsteny na míru Praha | Ruční výroba ze zlata, Martin Ševr',
+      title: 'Snubní prsteny na míru Praha | Ruční výroba, Martin Ševr',
       description: 'Snubní a zásnubní prsteny na míru v Praze. Žluté, bílé, růžové zlato 14k/18k. Ruční výroba ve vlastní dílně. Termín 4–8 týdnů. 20+ let praxe.',
       breadcrumb: [
         { name: 'Domů', url: '/' },
@@ -114,7 +115,7 @@ const ringStyles = isEn
       {
         number: '04',
         title: 'Original shapes',
-        description: "Something out of the ordinary: origami facets, irregularly placed stones, hammered texture. We start from a sketch or your inspiration. I will make a ring unlike anyone else's.",
+        description: 'Something you will not find in a shop: facets folded like origami, stones set off the line, a hammered texture. We start from a sketch, or from whatever caught your eye. The result is a ring no one else has.',
         image: '/images/snubni--styly-04--origami.webp',
         image2x: '/images/snubni--styly-04--origami@2x.webp',
         alt: 'Original wedding ring with origami facets, structural design',
@@ -148,7 +149,7 @@ const ringStyles = isEn
       {
         number: '04',
         title: 'Autorské tvary',
-        description: 'Něco nestandardního: origami fasety, kameny v nepravidelném rozmístění, kovaná textura. Začneme od skicy nebo vaší inspirace. Vyrobím prsten, který se podobá nikomu jinému.',
+        description: 'Něco, co se nikde nekoupí: fasety lámané jako origami, kameny rozesazené mimo řadu, kovaná textura. Vyjdeme ze skici nebo z toho, co se vám líbí. Výsledkem je prsten, jaký nikdo jiný nemá.',
         image: '/images/snubni--styly-04--origami.webp',
         image2x: '/images/snubni--styly-04--origami@2x.webp',
         alt: 'Autorský snubní prsten s origami fasetami, strukturální design',
@@ -165,7 +166,7 @@ const processSteps = isEn
       {
         number: '02',
         title: 'Design and 3D model',
-        description: 'I prepare a sketch, and for more complex shapes a 3D model or wax prototype. We fine-tune the details: width, profile, finish, stone. You approve everything; nothing is made before that.',
+        description: 'I prepare a sketch, and for more complex shapes a 3D model or wax prototype. We fine-tune the details: width, profile, finish, stone. <strong class="font-medium text-text-primary">The design carries a 500 CZK deposit</strong>, which I deduct from the price of the rings. You approve everything; nothing is made before that.',
       },
       {
         number: '03',
@@ -187,7 +188,7 @@ const processSteps = isEn
       {
         number: '02',
         title: 'Návrh a 3D model',
-        description: 'Připravím skicu, u složitějších tvarů 3D model nebo voskový prototyp. Doladíme detaily: šířku, profil, povrch, kámen. Schvalujete vy, nic nevznikne dřív.',
+        description: 'Připravím skicu, u složitějších tvarů 3D model nebo voskový prototyp. Doladíme detaily: šířku, profil, povrch, kámen. <strong class="font-medium text-text-primary">Za návrh beru zálohu 500 Kč</strong>, kterou odečtu z ceny prstenů. Schvalujete vy, nic nevznikne dřív.',
       },
       {
         number: '03',
@@ -206,6 +207,10 @@ const faqItems = isEn
       {
         question: 'How much do custom wedding rings cost?',
         answer: 'A pair of simple 14k gold wedding rings starts at CZK 18,000. The final price depends on the weight of the gold, the chosen purity (14k vs 18k) and any stones. I will prepare a specific quote after the first consultation, based on your preferences.',
+      },
+      {
+        question: 'Is there a charge for the design?',
+        answer: 'The consultation is free and without obligation. Once I am to draw a design for you, it carries a deposit of 500 CZK. If you order the rings, I deduct it from the price. A design is work done, and it has happened that rings were then made from it by someone else. This keeps it fair on both sides.',
       },
       {
         question: 'How much time do you need?',
@@ -228,6 +233,10 @@ const faqItems = isEn
       {
         question: 'Kolik stojí snubní prsteny na míru?',
         answer: 'Pár jednoduchých snubních prstenů ze 14k zlata začíná na 18 000 Kč. Cena finální závisí na váze (gramáži zlata), zvolené ryzosti (14k vs 18k) a případných kamenech. Konkrétní kalkulaci připravím po první konzultaci, podle vašich preferencí.',
+      },
+      {
+        question: 'Platí se něco za návrh prstenů?',
+        answer: 'Konzultace je zdarma a bez závazků. Jakmile pro vás mám návrh nakreslit, beru na něj zálohu 500 Kč. Když si prsteny objednáte, odečtu vám ji z ceny. Návrh je odvedená práce a stalo se mi, že podle něj prsteny vznikly u někoho jiného. Takhle to zůstává férové pro obě strany.',
       },
       {
         question: 'Kolik času potřebujete na výrobu?',
@@ -256,6 +265,8 @@ const galleryItems = isEn
       { title: 'Wedding pair, two-tone gold', base: 'snubni--ukazka-par-dvoubarevny', alt: 'A pair of two-tone white and yellow gold wedding rings' },
       { title: 'Wave ring', base: 'snubni--ukazka-vlnka', alt: 'Yellow gold ring with a wave bypass band and a small square diamond' },
       { title: 'Pavé leaf ring', base: 'snubni--ukazka-listek', alt: 'Yellow gold leaf-shaped ring set with a pavé of small diamonds' },
+      { title: 'Solitaire, crown setting', base: 'snubni--ukazka-soliter-korunka', alt: 'Yellow gold engagement solitaire with a round diamond in a six-prong crown setting' },
+      { title: 'Solitaire, slim band', base: 'snubni--ukazka-soliter-tenka', alt: 'Yellow gold engagement solitaire with a round diamond on a slim polished band' },
     ]
   : [
       { title: 'Zásnubní prsten, žluté zlato', base: 'snubni--ukazka-zasnubni-zlute', alt: 'Zásnubní prsten ze žlutého zlata s kulatým briliantem v ozdobném košíku' },
@@ -265,10 +276,13 @@ const galleryItems = isEn
       { title: 'Snubní pár, dvoubarevné zlato', base: 'snubni--ukazka-par-dvoubarevny', alt: 'Pár snubních prstenů z dvoubarevného bílého a žlutého zlata' },
       { title: 'Prsten s vlnkou', base: 'snubni--ukazka-vlnka', alt: 'Prsten ze žlutého zlata s vlnkovou obroučkou a malým čtvercovým diamantem' },
       { title: 'Prsten s pavé', base: 'snubni--ukazka-listek', alt: 'Prsten ze žlutého zlata ve tvaru lístku s pavé z malých diamantů' },
+      { title: 'Solitér v korunkovém kotlíku', base: 'snubni--ukazka-soliter-korunka', alt: 'Zásnubní solitér ze žlutého zlata s kulatým briliantem v korunkovém šestizubovém kotlíku' },
+      { title: 'Solitér na tenké obroučce', base: 'snubni--ukazka-soliter-tenka', alt: 'Zásnubní solitér ze žlutého zlata s kulatým briliantem na tenké lesklé obroučce' },
     ];
 
 const jsonLd = graph(
   weddingRingsServiceSchema(locale),
+  ...siteEntities(locale),
   faqPageSchema(faqItems),
   breadcrumbSchema(t.breadcrumb),
 );
@@ -281,6 +295,7 @@ const jsonLd = graph(
   description={t.description}
   jsonLd={jsonLd}
   navOverlay
+  lcpImageMobile="/images/portfolio--snubaky--hero.avif"
   lcpImageDesktop="/images/portfolio--snubaky--hero.avif"
   lcpImageDesktop2x="/images/portfolio--snubaky--hero@2x.avif"
   ctaHeading={t.ctaHeading}
@@ -309,23 +324,32 @@ const jsonLd = graph(
           </div>
         </div>
 
-        <!-- Photo -->
-        <div class="relative">
-          <picture>
-            <source
-              type="image/avif"
-              srcset="/images/portfolio--snubaky--hero.avif 1x, /images/portfolio--snubaky--hero@2x.avif 2x"
-            />
-            <img
-              src="/images/portfolio--snubaky--hero.webp"
-              srcset="/images/portfolio--snubaky--hero.webp 1x, /images/portfolio--snubaky--hero@2x.webp 2x"
-              width="1000" height="1000"
-              alt={t.heroAlt}
-              fetchpriority="high"
-              decoding="async"
-              class="w-full h-auto object-contain max-w-[560px] mx-auto"
-            />
-          </picture>
+        <!-- Photo — orámováno (border-border) shodně s hero fotkou na Řetězech; světlé studiové
+             pozadí fotky by se jinak slilo s krémovým pozadím stránky a nemělo definovanou hranu. -->
+        <div class="relative max-w-[560px] mx-auto">
+          <div class="relative overflow-hidden border border-border bg-bg-secondary/40">
+            <picture>
+              {/* Mobil (<1024px): jen základní 1000px kandidát — density srcset tam
+                  posílal @2x (2000px) do ~400px slotu, 4-5× předimenzovaný LCP. */}
+              <source media="(max-width: 1023px)" type="image/avif" srcset="/images/portfolio--snubaky--hero.avif" />
+              <source media="(max-width: 1023px)" srcset="/images/portfolio--snubaky--hero.webp" />
+              <source
+                type="image/avif"
+                srcset="/images/portfolio--snubaky--hero.avif 1x, /images/portfolio--snubaky--hero@2x.avif 2x"
+              />
+              <img
+                src="/images/portfolio--snubaky--hero.webp"
+                srcset="/images/portfolio--snubaky--hero.webp 1x, /images/portfolio--snubaky--hero@2x.webp 2x"
+                width="1000" height="1000"
+                alt={t.heroAlt}
+                fetchpriority="high"
+                decoding="async"
+                class="w-full h-auto object-contain"
+              />
+            </picture>
+            {/* Vnitřní lemování — shodné s fotorámy na homepage / O dílně. */}
+            <PhotoFrame />
+          </div>
         </div>
 
       </div>
@@ -432,7 +456,7 @@ const jsonLd = graph(
             <div data-anim-child class="border-b border-border pb-8">
               <span class="font-sans text-[11px] font-medium uppercase tracking-[0.2em] text-gold-on-light">{step.number}</span>
               <h3 class="mt-3">{step.title}</h3>
-              <p class="body-md text-text-secondary leading-relaxed mt-3 font-sans max-w-2xl">{step.description}</p>
+              <p class="body-md text-text-secondary leading-relaxed mt-3 font-sans max-w-2xl" set:html={step.description} />
             </div>
           ))}
         </div>

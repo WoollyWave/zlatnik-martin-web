@@ -1,6 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Button from '../components/Button.astro';
+import { SITE } from '../data/site';
 ---
 
 <Layout
@@ -8,13 +9,15 @@ import Button from '../components/Button.astro';
   description="Tato stránka neexistuje nebo byla přesunuta. Vraťte se na úvod nebo mi napište."
   navOverlay
   noindex
+  noAnimations
+  canonical={`${SITE.url}/`}
 >
 
   <!-- ====== 404 HERO ====== -->
   <section class="relative bg-bg-primary border-b border-border section-hero overflow-hidden min-h-[70vh] flex items-center">
     <div class="radial-overlay"></div>
     <div class="relative w-full max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-14">
-      <div class="flex flex-col items-start text-left md:items-center md:text-center" data-anim="up">
+      <div class="flex flex-col items-start text-left md:items-center md:text-center">
 
         <span class="label-dot">Chyba 404</span>
 

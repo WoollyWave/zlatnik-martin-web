@@ -10,7 +10,7 @@ import PhotoFrame from '../components/PhotoFrame.astro';
 import IconArrowUpRight from '../components/IconArrowUpRight.astro';
 import { portfolioCases, type PortfolioCase } from '../data/portfolio';
 import { breadcrumbSchema, graph, siteEntities } from '../lib/seo';
-import { materialTags } from '../lib/text';
+import { materialTags, truncateAtWord } from '../lib/text';
 import { SITE } from '../data/site';
 import type { Locale } from '../i18n';
 
@@ -130,14 +130,14 @@ const jsonLd = graph(
     '@type': 'CreativeWork',
     '@id': `${SITE.url}${detailPath}#work`,
     name: title,
-    description: intro.slice(0, 200),
+    description: truncateAtWord(intro, 200),
     // Pole = hero + všechny galerijní fotky (ne jen karta) → bohatší podklad pro AI i Images.
     image: [...new Set([caseStudy.heroImage || caseStudy.cardImage, ...(caseStudy.gallery?.map((g) => g.src) ?? [])])].map((src) => `${SITE.url}${src}`),
     creator: { '@id': `${SITE.url}#person` },
     material,
     keywords: materialTags(material).join(', '),
     mainEntityOfPage: `${SITE.url}${detailPath}`,
-    ...(isEn ? { inLanguage: 'en-GB' } : {}),
+    inLanguage: isEn ? 'en-GB' : 'cs-CZ',
   },
   ...siteEntities(locale),
   breadcrumbSchema(breadcrumb),
@@ -147,8 +147,10 @@ const jsonLd = graph(
 <Layout
   locale={locale}
   title={`${title} | Portfolio | Martin Ševr`}
-  description={intro.slice(0, 160)}
-  ogImage="/images/og/og-portfolio.jpg"
+  description={truncateAtWord(intro, 155)}
+  ogImage={caseStudy.cardImage2x}
+  ogImageWidth={1800}
+  ogImageHeight={1200}
   jsonLd={jsonLd}
   navOverlay
 >

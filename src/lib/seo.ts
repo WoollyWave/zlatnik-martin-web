@@ -103,14 +103,11 @@ export function jewelryStoreSchema() {
       SITE.social.facebook,
       'https://www.google.com/search?kgmid=/g/11y_qvjx4l',
     ],
-    openingHoursSpecification: [
-      {
-        '@type': 'OpeningHoursSpecification',
-        dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
-        opens: '09:00',
-        closes: '17:00',
-      },
-    ],
+    /* `openingHoursSpecification` schválně chybí: dílna nemá pevnou otevírací
+       dobu, otevírá se po telefonické dohodě (20. 8. 2026). Schema.org pro
+       „jen po domluvě" nemá hodnotu a vymyšlené hodiny jsou horší než žádné —
+       Google by je ukazoval ve výsledcích jako závazné. Zdrojem pravdy o
+       dostupnosti je Google Business Profile, na který míří `sameAs`. */
     hasOfferCatalog: {
       '@type': 'OfferCatalog',
       name: 'Zlatnické služby',
@@ -149,14 +146,23 @@ export function jewelryStoreSchema() {
 /** Zpětná kompatibilita — některé komponenty mohou stále importovat localBusinessSchema. */
 export const localBusinessSchema = jewelryStoreSchema;
 
+/**
+ * @id uzlu WebSite podle jazyka. EN mutace má vlastní uzel (/en/#website) —
+ * jeden sdílený @id se dvěma inLanguage by v Knowledge Graphu tvrdil rozpor.
+ */
+export function websiteId(locale: 'cs' | 'en' = 'cs'): string {
+  return locale === 'en' ? `${SITE.url}/en/#website` : `${SITE.url}#website`;
+}
+
 export function websiteSchema(locale: 'cs' | 'en' = 'cs') {
+  const isEn = locale === 'en';
   return {
     '@type': 'WebSite',
-    '@id': `${SITE.url}#website`,
+    '@id': websiteId(locale),
     name: SITE.name,
-    url: SITE.url,
+    url: isEn ? `${SITE.url}/en/` : SITE.url,
     publisher: { '@id': `${SITE.url}#business` },
-    inLanguage: locale === 'en' ? 'en-GB' : 'cs-CZ',
+    inLanguage: isEn ? 'en-GB' : 'cs-CZ',
     // speakable = AEO signál pro Google Assistant / Siri / Alexa. Vybírá nadpisy + leady.
     speakable: {
       '@type': 'SpeakableSpecification',
@@ -274,7 +280,32 @@ const categoryLabels: Record<Product['category'], string> = {
 
 /** Klíčová slova z materiálu — "Stříbro 925/1000, ametyst" → ["Stříbro 925/1000", "ametyst"]. */
 function materialKeywords(material: string): string[] {
-  return material.split(/[,·]/).map((s) => s.trim()).filter(Boolean);
+  // Materiál se láme na klíčová slova po čárkách/tečkách, ale dvě čárky dělicí
+  // NEJSOU: desetinná („briliant 0,50 ct", „⌀ 12,8 mm") a čárka uvnitř závorky
+  // („(čistota SI1, barva E)") — jinak vzniknou nesmyslné keywords typu
+  // „briliant 0" + „50 ct (čistota SI1".
+  const parts: string[] = [];
+  let current = '';
+  let depth = 0;
+
+  for (let i = 0; i < material.length; i++) {
+    const ch = material[i];
+    if (ch === '(') depth++;
+    else if (ch === ')') depth = Math.max(0, depth - 1);
+
+    const isDecimal =
+      ch === ',' && /\d/.test(material[i - 1] ?? '') && /\d/.test(material[i + 1] ?? '');
+
+    if ((ch === ',' || ch === '·') && depth === 0 && !isDecimal) {
+      parts.push(current);
+      current = '';
+      continue;
+    }
+    current += ch;
+  }
+  parts.push(current);
+
+  return parts.map((s) => s.trim()).filter(Boolean);
 }
 
 type ProductLocale = 'cs' | 'en';
@@ -312,8 +343,17 @@ export function productSchema(product: Product, locale: ProductLocale = 'cs') {
     ? 'https://schema.org/SoldOut'
     : 'https://schema.org/InStock';
 
-  const offers: Record<string, unknown>[] = [
-    {
+  // Kus vyrobený jen ve zlatě: zlato NENÍ varianta „na zakázku do 3 týdnů",
+  // ale ten konkrétní kus skladem → InStock místo PreOrder a bez leadTime.
+  const goldOnly = !priceSilverDisplay && !!priceGoldDisplay;
+  const defaultValidUntil = new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+  // Akční cena s koncem platnosti (products.ts `priceValidUntil`) přebíjí default.
+  const priceValidUntil = product.priceValidUntil || defaultValidUntil;
+
+  const offers: Record<string, unknown>[] = [];
+
+  if (priceSilverDisplay) {
+    offers.push({
       '@type': 'Offer',
       price: parsePrice(priceSilverDisplay),
       priceCurrency: 'CZK',
@@ -321,29 +361,29 @@ export function productSchema(product: Product, locale: ProductLocale = 'cs') {
       itemCondition: 'https://schema.org/NewCondition',
       url: `${SITE.url}${detailUrlPath}`,
       seller: { '@id': `${SITE.url}#business` },
-      priceValidUntil: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+      priceValidUntil,
       hasMerchantReturnPolicy: merchantReturnPolicy(),
       shippingDetails: shippingDetailsCZ(),
-    },
-  ];
+    });
+  }
 
   if (priceGoldDisplay) {
     offers.push({
       '@type': 'Offer',
       price: parsePrice(priceGoldDisplay),
       priceCurrency: 'CZK',
-      availability: 'https://schema.org/PreOrder',
+      availability: goldOnly ? silverAvailability : 'https://schema.org/PreOrder',
       itemCondition: 'https://schema.org/NewCondition',
       url: `${SITE.url}${detailUrlPath}`,
       seller: { '@id': `${SITE.url}#business` },
-      priceValidUntil: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-      deliveryLeadTime: { '@type': 'QuantitativeValue', value: 3, unitText: 'weeks' },
+      priceValidUntil,
+      ...(goldOnly ? {} : { deliveryLeadTime: { '@type': 'QuantitativeValue', value: 3, unitText: 'weeks' } }),
       hasMerchantReturnPolicy: merchantReturnPolicy(),
       shippingDetails: shippingDetailsCZ(),
     });
   }
 
-  const silverWeight = parseWeightGrams(product.weightSilver);
+  const silverWeight = parseWeightGrams(product.weightSilver ?? product.weightGold);
   const keywords = [
     categoryLabelLocalized,
     ...materialKeywords(material),
@@ -429,46 +469,55 @@ export function productSchema(product: Product, locale: ProductLocale = 'cs') {
 
 // --- Stránky -----------------------------------------------------------------
 
-export function contactPageSchema() {
+export function contactPageSchema(locale: 'cs' | 'en' = 'cs') {
+  const isEn = locale === 'en';
+  const pageUrl = isEn ? `${SITE.url}/en/contact/` : `${SITE.url}/kontakt/`;
   return {
     '@type': 'ContactPage',
-    '@id': `${SITE.url}/kontakt/#page`,
-    name: 'Kontakt: ' + SITE.shortName,
-    url: `${SITE.url}/kontakt/`,
-    inLanguage: 'cs-CZ',
-    isPartOf: { '@id': `${SITE.url}#website` },
+    '@id': `${pageUrl}#page`,
+    name: (isEn ? 'Contact: ' : 'Kontakt: ') + SITE.shortName,
+    url: pageUrl,
+    inLanguage: isEn ? 'en-GB' : 'cs-CZ',
+    isPartOf: { '@id': websiteId(locale) },
     mainEntity: { '@id': `${SITE.url}#business` },
   };
 }
 
-export function aboutPageSchema() {
+export function aboutPageSchema(locale: 'cs' | 'en' = 'cs') {
+  const isEn = locale === 'en';
+  const pageUrl = isEn ? `${SITE.url}/en/about/` : `${SITE.url}/o-dilne/`;
   return {
     '@type': 'AboutPage',
-    '@id': `${SITE.url}/o-dilne/#page`,
-    name: 'O dílně: ' + SITE.shortName,
-    url: `${SITE.url}/o-dilne/`,
-    inLanguage: 'cs-CZ',
-    isPartOf: { '@id': `${SITE.url}#website` },
+    '@id': `${pageUrl}#page`,
+    name: (isEn ? 'About the workshop: ' : 'O dílně: ') + SITE.shortName,
+    url: pageUrl,
+    inLanguage: isEn ? 'en-GB' : 'cs-CZ',
+    isPartOf: { '@id': websiteId(locale) },
     about: { '@id': `${SITE.url}#person` },
     mainEntity: { '@id': `${SITE.url}#person` },
   };
 }
 
-/** Service schema pro zakázkovou tvorbu. */
-export function customJewelryServiceSchema() {
+/** Service schema pro zakázkovou tvorbu (CS i EN varianta stránky). */
+export function customJewelryServiceSchema(locale: 'cs' | 'en' = 'cs') {
+  const isEn = locale === 'en';
+  const pageUrl = isEn ? `${SITE.url}/en/custom-jewelry/` : `${SITE.url}/zakazkova-tvorba/`;
   return {
     '@type': 'Service',
-    '@id': `${SITE.url}/zakazkova-tvorba/#service`,
-    serviceType: 'Zakázková výroba šperků',
-    name: 'Zakázková tvorba šperků na míru',
-    description: 'Ruční výroba šperků na míru ze zlata 585/1000 a 750/1000 a stříbra 925/1000. Konzultace, návrh, schválení, výroba. Expresní výroba do 5 pracovních dnů u jednodušších kusů.',
+    '@id': `${pageUrl}#service`,
+    serviceType: isEn ? 'Custom jewellery making' : 'Zakázková výroba šperků',
+    name: isEn ? 'Custom jewellery made to order' : 'Zakázková tvorba šperků na míru',
+    description: isEn
+      ? 'Handcrafted jewellery made to order from 585/1000 and 750/1000 gold and 925/1000 silver. Consultation, design, approval, making. Express making within 5 business days for simpler pieces.'
+      : 'Ruční výroba šperků na míru ze zlata 585/1000 a 750/1000 a stříbra 925/1000. Konzultace, návrh, schválení, výroba. Expresní výroba do 5 pracovních dnů u jednodušších kusů.',
     provider: { '@id': `${SITE.url}#business` },
     areaServed: [
-      { '@type': 'City', name: 'Praha' },
-      { '@type': 'Place', name: 'Smíchov, Praha 5' },
-      { '@type': 'Country', name: 'Česká republika' },
+      { '@type': 'City', name: isEn ? 'Prague' : 'Praha' },
+      { '@type': 'Place', name: isEn ? 'Smíchov, Prague 5' : 'Smíchov, Praha 5' },
+      { '@type': 'Country', name: isEn ? 'Czechia' : 'Česká republika' },
     ],
-    url: `${SITE.url}/zakazkova-tvorba/`,
+    url: pageUrl,
+    inLanguage: isEn ? 'en-GB' : 'cs-CZ',
     offers: {
       '@type': 'Offer',
       priceCurrency: 'CZK',
@@ -476,27 +525,36 @@ export function customJewelryServiceSchema() {
         '@type': 'PriceSpecification',
         priceCurrency: 'CZK',
         minPrice: 2500,
-        description: 'Stříbro od 2 500 Kč, zlato od 8 000 Kč. Cena závisí na materiálu, kameni a složitosti. Konzultace zdarma.',
+        description: isEn
+          ? 'Silver from CZK 2,500, gold from CZK 8,000. The price depends on the material, the stone and complexity. Consultation is free.'
+          : 'Stříbro od 2 500 Kč, zlato od 8 000 Kč. Cena závisí na materiálu, kameni a složitosti. Konzultace zdarma.',
       },
     },
   };
 }
 
-/** Service schema pro opravy šperků — cílí na „opravy šperků praha", „oprava prstenu". */
-export function jewelryRepairServiceSchema() {
+/** Service schema pro opravy šperků — cílí na „opravy šperků praha", „oprava prstenu" / „jewelry repair prague". */
+export function jewelryRepairServiceSchema(locale: 'cs' | 'en' = 'cs') {
+  const isEn = locale === 'en';
+  const pageUrl = isEn ? `${SITE.url}/en/jewelry-repair/` : `${SITE.url}/opravy-sperku-praha/`;
   return {
     '@type': 'Service',
-    '@id': `${SITE.url}/opravy-sperku-praha/#service`,
-    serviceType: 'Opravy a úpravy šperků',
-    name: 'Opravy šperků Praha, zlatnická dílna Pod Kesnerkou',
-    description: 'Opravy a úpravy šperků v Praze 5. Zmenšení a zvětšení prstenu, výměna kamenu, rytí, oprava ulomených částí, čištění. 20+ let praxe.',
+    '@id': `${pageUrl}#service`,
+    serviceType: isEn ? 'Jewellery repair and alteration' : 'Opravy a úpravy šperků',
+    name: isEn
+      ? 'Jewellery repair Prague, goldsmith workshop Pod Kesnerkou'
+      : 'Opravy šperků Praha, zlatnická dílna Pod Kesnerkou',
+    description: isEn
+      ? 'Jewellery repairs and alterations in Prague 5. Ring resizing up or down, stone replacement, engraving, repair of broken parts, cleaning. 20+ years of practice.'
+      : 'Opravy a úpravy šperků v Praze 5. Zmenšení a zvětšení prstenu, výměna kamenu, rytí, oprava ulomených částí, čištění. 20+ let praxe.',
     provider: { '@id': `${SITE.url}#business` },
     areaServed: [
-      { '@type': 'City', name: 'Praha' },
-      { '@type': 'Place', name: 'Smíchov, Praha 5' },
-      { '@type': 'Country', name: 'Česká republika' },
+      { '@type': 'City', name: isEn ? 'Prague' : 'Praha' },
+      { '@type': 'Place', name: isEn ? 'Smíchov, Prague 5' : 'Smíchov, Praha 5' },
+      { '@type': 'Country', name: isEn ? 'Czechia' : 'Česká republika' },
     ],
-    url: `${SITE.url}/opravy-sperku-praha/`,
+    url: pageUrl,
+    inLanguage: isEn ? 'en-GB' : 'cs-CZ',
     offers: {
       '@type': 'Offer',
       priceCurrency: 'CZK',
@@ -504,19 +562,77 @@ export function jewelryRepairServiceSchema() {
         '@type': 'PriceSpecification',
         priceCurrency: 'CZK',
         minPrice: 300,
-        description: 'Oprava řetízku od 300 Kč, zmenšení nebo zvětšení prstenu 400–900 Kč, výměna kamenu od 600 Kč. Přesná cena po prohlídce. Většina oprav do 5 pracovních dnů.',
+        description: isEn
+          ? 'Chain repair from CZK 300, ring resizing CZK 400–900, stone replacement from CZK 600. Exact price after inspection. Most repairs within 5 working days.'
+          : 'Oprava řetízku od 300 Kč, zmenšení nebo zvětšení prstenu 400–900 Kč, výměna kamenu od 600 Kč. Přesná cena po prohlídce. Většina oprav do 5 pracovních dnů.',
       },
     },
     hasOfferCatalog: {
       '@type': 'OfferCatalog',
       name: 'Druhy oprav šperků',
-      itemListElement: [
-        { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Zmenšení nebo zvětšení velikosti prstenu' } },
-        { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Výměna kamenu v prstenu' } },
-        { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Oprava ulomených částí (řetízek, zapínání)' } },
-        { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Rytí a personalizace' } },
-        { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Profesionální čištění šperků' } },
-      ],
+      itemListElement: (isEn
+        ? [
+            'Ring resizing, up or down',
+            'Stone replacement in a ring',
+            'Repair of broken parts (chain, clasp)',
+            'Engraving and personalisation',
+            'Professional jewellery cleaning',
+          ]
+        : [
+            'Zmenšení nebo zvětšení velikosti prstenu',
+            'Výměna kamenu v prstenu',
+            'Oprava ulomených částí (řetízek, zapínání)',
+            'Rytí a personalizace',
+            'Profesionální čištění šperků',
+          ]
+      ).map((name) => ({ '@type': 'Offer', itemOffered: { '@type': 'Service', name } })),
+    },
+  };
+}
+
+/**
+ * Service schema pro čištění a leštění šperků (CS i EN varianta stránky).
+ * Samostatný uzel, ne součást #service u oprav — čištění je vlastní vyhledávací
+ * intent („čištění šperků" 227 zobrazení/měsíc) a potřebuje vlastní @id.
+ */
+export function jewelryCleaningServiceSchema(locale: 'cs' | 'en' = 'cs') {
+  const isEn = locale === 'en';
+  const pageUrl = isEn ? `${SITE.url}/en/jewelry-cleaning/` : `${SITE.url}/cisteni-sperku/`;
+  return {
+    '@type': 'Service',
+    '@id': `${pageUrl}#service`,
+    serviceType: isEn ? 'Jewellery cleaning and polishing' : 'Čištění a leštění šperků',
+    name: isEn
+      ? 'Professional jewellery cleaning Prague, goldsmith workshop Pod Kesnerkou'
+      : 'Profesionální čištění šperků Praha, zlatnická dílna Pod Kesnerkou',
+    description: isEn
+      ? 'Ultrasonic cleaning and polishing of gold and silver jewellery in Prague 5, Smíchov. Deposits under stones, tarnished silver, dull surfaces. Usually while you wait.'
+      : 'Ultrazvukové čištění a leštění zlatých i stříbrných šperků v Praze 5 na Smíchově. Usazeniny pod kameny, zčernalé stříbro, matný povrch. Většinou na počkání.',
+    provider: { '@id': `${SITE.url}#business` },
+    areaServed: [
+      { '@type': 'City', name: isEn ? 'Prague' : 'Praha' },
+      { '@type': 'Place', name: isEn ? 'Smíchov, Prague 5' : 'Smíchov, Praha 5' },
+      { '@type': 'Country', name: isEn ? 'Czechia' : 'Česká republika' },
+    ],
+    url: pageUrl,
+    inLanguage: isEn ? 'en-GB' : 'cs-CZ',
+    hasOfferCatalog: {
+      '@type': 'OfferCatalog',
+      name: isEn ? 'Jewellery cleaning and care' : 'Čištění a údržba šperků',
+      itemListElement: (isEn
+        ? [
+            'Ultrasonic jewellery cleaning',
+            'Gold and silver polishing',
+            'Removing tarnish from silver',
+            'Checking stone settings',
+          ]
+        : [
+            'Ultrazvukové čištění šperků',
+            'Leštění zlata a stříbra',
+            'Odstranění zčernalého stříbra',
+            'Kontrola uchycení kamenů',
+          ]
+      ).map((name) => ({ '@type': 'Offer', itemOffered: { '@type': 'Service', name } })),
     },
   };
 }
@@ -544,6 +660,7 @@ export function weddingRingsServiceSchema(locale: 'cs' | 'en' = 'cs') {
       { '@type': 'Country', name: isEn ? 'Czechia' : 'Česká republika' },
     ],
     url: pageUrl,
+    inLanguage: isEn ? 'en-GB' : 'cs-CZ',
     offers: {
       '@type': 'Offer',
       priceCurrency: 'CZK',
@@ -588,15 +705,17 @@ export function collectionPageWithItems(opts: {
   pageName: string;
   pageDescription: string;
   items: { url: string; name: string; image?: string }[];
+  locale?: 'cs' | 'en';
 }) {
+  const locale = opts.locale ?? 'cs';
   return {
     '@type': 'CollectionPage',
     '@id': `${SITE.url}${opts.pageUrl}#page`,
     name: opts.pageName,
     description: opts.pageDescription,
     url: `${SITE.url}${opts.pageUrl}`,
-    inLanguage: 'cs-CZ',
-    isPartOf: { '@id': `${SITE.url}#website` },
+    inLanguage: locale === 'en' ? 'en-GB' : 'cs-CZ',
+    isPartOf: { '@id': websiteId(locale) },
     mainEntity: {
       '@type': 'ItemList',
       numberOfItems: opts.items.length,
@@ -611,29 +730,37 @@ export function collectionPageWithItems(opts: {
   };
 }
 
-/** Convenience: ItemList z products[]. */
-export function productItemList(products: Product[]) {
+/** Convenience: ItemList z products[] (CS /skladem/ i EN /en/in-stock/). */
+export function productItemList(products: Product[], locale: 'cs' | 'en' = 'cs') {
+  const isEn = locale === 'en';
   return collectionPageWithItems({
-    pageUrl: '/skladem/',
-    pageName: 'Hotové šperky skladem',
-    pageDescription: 'Stříbrné šperky s přírodními kameny, k vyzvednutí v dílně nebo poštou.',
+    locale,
+    pageUrl: isEn ? '/en/in-stock/' : '/skladem/',
+    pageName: isEn ? 'Jewellery in stock' : 'Hotové šperky skladem',
+    pageDescription: isEn
+      ? 'Silver jewellery with natural stones, ready to collect at the workshop or shipped.'
+      : 'Stříbrné šperky s přírodními kameny, k vyzvednutí v dílně nebo poštou.',
     items: products.map((p) => ({
-      url: `/sperky/${p.slug}/`,
-      name: p.title,
+      url: isEn ? `/en/jewelry/${p.slugEn || p.slug}/` : `/sperky/${p.slug}/`,
+      name: isEn ? p.titleEn || p.title : p.title,
       image: p.image,
     })),
   });
 }
 
-/** Convenience: ItemList z portfolioCases[]. */
-export function portfolioItemList(cases: PortfolioCase[]) {
+/** Convenience: ItemList z portfolioCases[] (CS /portfolio/ i EN /en/portfolio/). */
+export function portfolioItemList(cases: PortfolioCase[], locale: 'cs' | 'en' = 'cs') {
+  const isEn = locale === 'en';
   return collectionPageWithItems({
-    pageUrl: '/portfolio/',
-    pageName: 'Portfolio: realizace z dílny',
-    pageDescription: 'Příběhy z dílny Martina Ševra: autorská tvorba, snubní a zásnubní prsteny, personalizované kusy.',
+    locale,
+    pageUrl: isEn ? '/en/portfolio/' : '/portfolio/',
+    pageName: isEn ? 'Portfolio: commissions from the workshop' : 'Portfolio: realizace z dílny',
+    pageDescription: isEn
+      ? "Stories from Martin Ševr's workshop: signature pieces, wedding and engagement rings, personalised commissions."
+      : 'Příběhy z dílny Martina Ševra: autorská tvorba, snubní a zásnubní prsteny, personalizované kusy.',
     items: cases.map((c) => ({
-      url: `/tvorba/${c.slug}/`,
-      name: c.title,
+      url: isEn ? `/en/work/${c.slugEn || c.slug}/` : `/tvorba/${c.slug}/`,
+      name: isEn ? c.titleEn || c.title : c.title,
       image: c.cardImage,
     })),
   });

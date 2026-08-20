@@ -6,7 +6,7 @@
  */
 import Layout from '../layouts/Layout.astro';
 import PhotoFrame from '../components/PhotoFrame.astro';
-import { graph, aboutPageSchema, personSchema, jewelryStoreSchema, breadcrumbSchema } from '../lib/seo';
+import { graph, aboutPageSchema, siteEntities, breadcrumbSchema } from '../lib/seo';
 import type { Locale } from '../i18n';
 
 interface Props {
@@ -63,10 +63,10 @@ const t = isEn
       certHeading: 'Hallmarked and certified',
       certAlt: 'Czech hallmarks, metal quality certification',
       certP1: 'All my pieces are made from certified materials and stamped with the Czech state hallmark. I work in line with Czech precious-metal regulations.',
-      certP2: 'Every piece comes with a certificate of authenticity. Stones are supplied with a gemmological report.',
+      certP2: 'Every piece comes with a certificate of authenticity.',
     }
   : {
-      title: 'O zlatnické dílně Praha 5 | Martin Ševr, zlatník s 20+ lety praxe',
+      title: 'O zlatnické dílně Praha 5 | Martin Ševr, zlatník',
       description: 'Zlatnická dílna v Praze 5 na Smíchově, Pod Kesnerkou 46. Martin Ševr, zlatník s 20+ lety praxe v ruční výrobě šperků. Příběh dílny a certifikáty.',
       ctaHeading: 'Pojďte se zastavit do <em>dílny</em>.',
       ctaSubtitle: 'Pod Kesnerkou 46, Praha 5. Stačí předem zavolat, rád vám otevřu a ukážu, jak šperky vznikají.',
@@ -112,13 +112,12 @@ const t = isEn
       certHeading: 'Puncované a certifikované',
       certAlt: 'České puncovní značky, certifikát kvality kovů',
       certP1: 'Všechny moje šperky jsou vyrobeny z certifikovaných materiálů a opatřeny státním puncem. Pracuji v souladu s českou legislativou.',
-      certP2: 'Každý kus doprovázím certifikátem pravosti. Kameny dodávám s gemologickým posudkem.',
+      certP2: 'Každý kus doprovázím certifikátem pravosti.',
     };
 
 const jsonLd = graph(
-  aboutPageSchema(),
-  personSchema(),
-  jewelryStoreSchema(),
+  aboutPageSchema(locale),
+  ...siteEntities(locale),
   breadcrumbSchema(t.breadcrumb),
 );
 ---
@@ -251,16 +250,17 @@ const jsonLd = graph(
     <div class="max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-14">
       <h2 class="sr-only">{t.galleryLabel}</h2>
       <span class="label-dot mb-10 block" data-anim="fade">{t.galleryLabel}</span>
+      <!-- Fotky mají 1280px na slot ~410px, takže pokrývají retinu jedním souborem.
+           Density srcset tu byl jen zdánlivý, @2x byl bit po bitu stejný soubor jako 1x. -->
       <div class="grid md:grid-cols-3 gap-4 lg:gap-6" data-anim="stagger">
         <div data-anim-child class="relative overflow-hidden">
           <picture>
             <source
               type="image/avif"
-              srcset="/images/o-dilne--galerie-1--ruka-retizek-stroj.avif 1x, /images/o-dilne--galerie-1--ruka-retizek-stroj@2x.avif 2x"
+              srcset="/images/o-dilne--galerie-1--ruka-retizek-stroj.avif"
             />
             <img
               src="/images/o-dilne--galerie-1--ruka-retizek-stroj.webp"
-              srcset="/images/o-dilne--galerie-1--ruka-retizek-stroj.webp 1x, /images/o-dilne--galerie-1--ruka-retizek-stroj@2x.webp 2x"
               width="800" height="1000" alt={t.g1Alt} loading="lazy" decoding="async"
               class="w-full aspect-[4/5] object-cover grayscale-[15%] sepia-[10%]"
             />
@@ -271,11 +271,10 @@ const jsonLd = graph(
           <picture>
             <source
               type="image/avif"
-              srcset="/images/o-dilne--galerie-2--erbovni-pecet-zlato.avif 1x, /images/o-dilne--galerie-2--erbovni-pecet-zlato@2x.avif 2x"
+              srcset="/images/o-dilne--galerie-2--erbovni-pecet-zlato.avif"
             />
             <img
               src="/images/o-dilne--galerie-2--erbovni-pecet-zlato.webp"
-              srcset="/images/o-dilne--galerie-2--erbovni-pecet-zlato.webp 1x, /images/o-dilne--galerie-2--erbovni-pecet-zlato@2x.webp 2x"
               width="800" height="1000" alt={t.g2Alt} loading="lazy" decoding="async"
               class="w-full aspect-[4/5] object-cover grayscale-[15%] sepia-[10%]"
             />
@@ -286,11 +285,10 @@ const jsonLd = graph(
           <picture>
             <source
               type="image/avif"
-              srcset="/images/o-dilne--galerie-3--snubaky-na-dreve-stul.avif 1x, /images/o-dilne--galerie-3--snubaky-na-dreve-stul@2x.avif 2x"
+              srcset="/images/o-dilne--galerie-3--snubaky-na-dreve-stul.avif"
             />
             <img
               src="/images/o-dilne--galerie-3--snubaky-na-dreve-stul.webp"
-              srcset="/images/o-dilne--galerie-3--snubaky-na-dreve-stul.webp 1x, /images/o-dilne--galerie-3--snubaky-na-dreve-stul@2x.webp 2x"
               width="800" height="1000" alt={t.g3Alt} loading="lazy" decoding="async"
               class="w-full aspect-[4/5] object-cover grayscale-[15%] sepia-[10%]"
             />

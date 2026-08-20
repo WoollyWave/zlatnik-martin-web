@@ -8,7 +8,7 @@ import Layout from '../layouts/Layout.astro';
 import PhotoFrame from '../components/PhotoFrame.astro';
 import IconArrowUpRight from '../components/IconArrowUpRight.astro';
 import { portfolioCases } from '../data/portfolio';
-import { graph, portfolioItemList, breadcrumbSchema } from '../lib/seo';
+import { graph, portfolioItemList, breadcrumbSchema, siteEntities } from '../lib/seo';
 import { materialTags } from '../lib/text';
 import type { Locale } from '../i18n';
 
@@ -48,7 +48,7 @@ const t = isEn
       galleryLead: 'Not for sale, but I will gladly make you something similar to order.',
     }
   : {
-      title: 'Portfolio realizací | Snubní prsteny a autorské šperky na zakázku Praha',
+      title: 'Portfolio | Snubní prsteny a šperky na zakázku Praha',
       description: 'Příběhy z dílny Martina Ševra: snubní a zásnubní prsteny na míru, autorská tvorba, personalizované kusy. Realizace zakázek v Praze.',
       ctaHeading: 'Líbí se vám něco? <em>Vyrobím vám podobné.</em>',
       ctaSubtitle: 'Vezmu si vaši inspiraci a vyrobím šperk, který bude jen váš. Konzultace v dílně je zdarma.',
@@ -89,7 +89,8 @@ const galleryItems = isEn
     ];
 
 const jsonLd = graph(
-  portfolioItemList(portfolioCases),
+  portfolioItemList(portfolioCases, locale),
+  ...siteEntities(locale),
   breadcrumbSchema(t.breadcrumb),
 );
 ---

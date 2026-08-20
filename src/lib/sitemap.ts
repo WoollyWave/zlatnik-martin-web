@@ -9,11 +9,37 @@
  * BUILD_DATE = frozen timestamp z buildu — `new Date()` per request by Googlu
  * tvrdil „vše se změnilo dnes" při každém crawlu a snižoval crawl trust.
  */
+import { execSync } from 'node:child_process';
 import { SITE } from '../data/site';
 import { products } from '../data/products';
 import { portfolioCases } from '../data/portfolio';
 
-const BUILD_DATE = new Date().toISOString().split('T')[0];
+const FALLBACK_DATE = new Date().toISOString().split('T')[0];
+
+/**
+ * lastmod z gitu: datum posledního commitu, který se dotkl zdrojů dané stránky.
+ * Uniformní BUILD_DATE tvrdil „vše se změnilo dnes" při každém deployi a nesl
+ * nulový diferenciální signál. Fallback na datum buildu při buildu mimo git.
+ * Memoizováno per cesta — spouští se jednou při buildu, ne per URL.
+ */
+const lastmodCache = new Map<string, string>();
+function gitLastmod(...paths: string[]): string {
+  const key = paths.join('|');
+  const cached = lastmodCache.get(key);
+  if (cached) return cached;
+  let date = FALLBACK_DATE;
+  try {
+    const out = execSync(
+      `git log -1 --format=%cI -- ${paths.map((p) => `'${p}'`).join(' ')}`,
+      { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] },
+    ).trim();
+    if (out) date = out.split('T')[0];
+  } catch {
+    /* build mimo git repo — zůstává datum buildu */
+  }
+  lastmodCache.set(key, date);
+  return date;
+}
 
 interface Alternate {
   hreflang: string;
@@ -52,16 +78,19 @@ export function buildSitemapEntries(): SitemapEntry[] {
   // --- Top-level CS pages with EN alternates ---
   // <priority>/<changefreq> záměrně neuvádíme — Google je dle vlastní dokumentace
   // ignoruje („Google ignores <priority> and <changefreq> values").
-  const topLevelPairs: Array<[csPath: string, enPath: string]> = [
-    ['/',                          '/en/'],
-    ['/zakazkova-tvorba/',         '/en/custom-jewelry/'],
-    ['/snubni-prsteny-na-miru/',   '/en/wedding-rings/'],
-    ['/retezy/',                   '/en/chains/'],
-    ['/skladem/',                  '/en/in-stock/'],
-    ['/portfolio/',                '/en/portfolio/'],
-    ['/o-dilne/',                  '/en/about/'],
-    ['/kontakt/',                  '/en/contact/'],
-    ['/ochrana-osobnich-udaju/',   '/en/privacy/'],
+  // Třetí prvek = zdrojové soubory stránky pro git lastmod.
+  // Privacy stránky tu nejsou záměrně: jsou noindex, do sitemapy nepatří.
+  const topLevelPairs: Array<[csPath: string, enPath: string, sources: string[]]> = [
+    ['/',                          '/en/',                ['src/page-templates/HomePage.astro']],
+    ['/zakazkova-tvorba/',         '/en/custom-jewelry/', ['src/page-templates/CustomJewelryPage.astro']],
+    ['/snubni-prsteny-na-miru/',   '/en/wedding-rings/',  ['src/page-templates/WeddingRingsPage.astro']],
+    ['/retezy/',                   '/en/chains/',         ['src/page-templates/RetezyPage.astro']],
+    ['/opravy-sperku-praha/',      '/en/jewelry-repair/', ['src/page-templates/RepairsPage.astro']],
+    ['/cisteni-sperku/',           '/en/jewelry-cleaning/', ['src/page-templates/CleaningPage.astro']],
+    ['/skladem/',                  '/en/in-stock/',       ['src/page-templates/InStockPage.astro', 'src/data/products.ts']],
+    ['/portfolio/',                '/en/portfolio/',      ['src/page-templates/PortfolioPage.astro', 'src/data/portfolio.ts']],
+    ['/o-dilne/',                  '/en/about/',          ['src/page-templates/AboutPage.astro']],
+    ['/kontakt/',                  '/en/contact/',        ['src/page-templates/ContactPage.astro']],
   ];
 
   // Galerijní/showcase obrázky, které žijí jen jako <img> v mřížce (nemají vlastní
@@ -76,21 +105,20 @@ export function buildSitemapEntries(): SitemapEntry[] {
     '/portfolio/': ['zalud', 'ryby', 'tycka'].map((b) => `/images/portfolio--ukazka-${b}.webp`),
   };
 
-  const staticEntries: SitemapEntry[] = topLevelPairs.flatMap(([csPath, enPath]) => {
+  const staticEntries: SitemapEntry[] = topLevelPairs.flatMap(([csPath, enPath, sources]) => {
+    const lastmod = gitLastmod(...sources);
     const alternates = altPair(csPath, enPath);
     const gallery = listingGalleryImages[csPath];
     const images = gallery ? gallery.map((loc) => ({ loc: abs(loc) })) : undefined;
     return [
-      { loc: abs(csPath), lastmod: BUILD_DATE, alternates, ...(images ? { images } : {}) },
-      { loc: abs(enPath), lastmod: BUILD_DATE, alternates, ...(images ? { images } : {}) },
+      { loc: abs(csPath), lastmod, alternates, ...(images ? { images } : {}) },
+      { loc: abs(enPath), lastmod, alternates, ...(images ? { images } : {}) },
     ];
   });
 
   // --- CS-only landing pages (žádné EN ekvivalenty) ---
-  const csOnlyPages: string[] = ['/opravy-sperku-praha/'];
-  const csOnlyEntries: SitemapEntry[] = csOnlyPages.map((path) => ({
-    loc: abs(path), lastmod: BUILD_DATE,
-  }));
+  // Prázdné: opravy i čištění dostaly EN mutaci a přesunuly se do topLevelPairs.
+  const csOnlyEntries: SitemapEntry[] = [];
 
   // <image:caption> je deprecated — podporovaný zůstal jen <image:loc>.
   // Pošli VŠECHNY fotky URL (hlavní + detailní / galerie), ne jen jednu —
@@ -99,31 +127,33 @@ export function buildSitemapEntries(): SitemapEntry[] {
     [...new Set(paths.filter(Boolean))].map((p) => ({ loc: abs(p) }));
 
   // --- Product detail pages (CS + EN) ---
+  const productsLastmod = gitLastmod('src/data/products.ts', 'src/page-templates/ProductDetailPage.astro');
   const productEntries: SitemapEntry[] = products.flatMap((p) => {
     const csPath = `/sperky/${p.slug}/`;
     const enPath = `/en/jewelry/${p.slugEn || p.slug}/`;
     const alternates = p.slugEn ? altPair(csPath, enPath) : undefined;
     const images = uniqueImages([p.image, ...(p.detailImages?.map((d) => d.src) ?? [])]);
     const entries: SitemapEntry[] = [
-      { loc: abs(csPath), lastmod: BUILD_DATE, images, alternates },
+      { loc: abs(csPath), lastmod: productsLastmod, images, alternates },
     ];
     if (p.slugEn) {
-      entries.push({ loc: abs(enPath), lastmod: BUILD_DATE, images, alternates });
+      entries.push({ loc: abs(enPath), lastmod: productsLastmod, images, alternates });
     }
     return entries;
   });
 
   // --- Portfolio detail pages (CS + EN) ---
+  const portfolioLastmod = gitLastmod('src/data/portfolio.ts', 'src/page-templates/CaseStudyPage.astro');
   const portfolioEntries: SitemapEntry[] = portfolioCases.flatMap((c) => {
     const csPath = `/tvorba/${c.slug}/`;
     const enPath = `/en/work/${c.slugEn || c.slug}/`;
     const alternates = c.slugEn ? altPair(csPath, enPath) : undefined;
     const images = uniqueImages([c.heroImage || c.cardImage, ...(c.gallery?.map((g) => g.src) ?? [])]);
     const entries: SitemapEntry[] = [
-      { loc: abs(csPath), lastmod: BUILD_DATE, images, alternates },
+      { loc: abs(csPath), lastmod: portfolioLastmod, images, alternates },
     ];
     if (c.slugEn) {
-      entries.push({ loc: abs(enPath), lastmod: BUILD_DATE, images, alternates });
+      entries.push({ loc: abs(enPath), lastmod: portfolioLastmod, images, alternates });
     }
     return entries;
   });
