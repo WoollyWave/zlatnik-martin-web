@@ -151,7 +151,7 @@ h1 em, h2 em, h3 em { font-style: italic; color: var(--color-gold-deep); }
    strukturovaná data a na webu řemeslníka jsou navíc kontraproduktivní.
    **Web dnes nemá žádný sociální důkaz**, přestože Google Business Profile
    nese 4,9 ★ z 27 recenzí. Infrastruktura pro recenze je v `src/data/products.ts`
-   (typ `Review`) a `src/lib/seo.ts` — čeká jen na skutečná hodnocení od Martina.
+   (typ `ProductReview` — pro recenze PRODUKTU; recenze firmy potřebují vlastní strukturu) a `src/lib/seo.ts` — čeká jen na skutečná hodnocení od Martina.
    Pozor: `aggregateRating` v `LocalBusiness` Google od 2019 ignoruje jako
    self-serving, takže hodnota je v konverzi pro lidi, ne v rich snippetu.
 7. **O dílně preview** — icon + heading + paragraph + "O dílně" button + photo right
