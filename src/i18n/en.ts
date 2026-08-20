@@ -42,7 +42,7 @@ export const en = {
   'footer.copyright': '© {year} Martin Ševr · Goldsmith workshop, Prague',
   'footer.designedBy': 'Web: Vilim.One',
   'footer.businessId': 'Reg. no.',
-  'footer.hours': 'Mon–Fri 9:00–17:00, weekends by appointment',
+  'footer.hours': 'By phone appointment',
   'footer.followAria': 'Follow on Instagram',
   'footer.facebookAria': 'Follow on Facebook',
 
@@ -100,7 +100,7 @@ export const en = {
   'contact.hours': 'Opening hours',
   'contact.whatsappValue': 'Send a message',
   'contact.replyTime': "I'll reply within 24 hours",
-  'contact.weekdaysShort': 'Mon–Fri 9–17',
+  'contact.weekdaysShort': 'By phone appointment',
   'contact.formHeading': 'Write to me',
   'contact.formName': 'Name',
   'contact.formEmail': 'Email',

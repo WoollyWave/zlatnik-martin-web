@@ -41,7 +41,7 @@ export const cs = {
   'footer.copyright': '© {year} Martin Ševr · Zlatnická dílna Praha',
   'footer.designedBy': 'Web: Vilim.One',
   'footer.businessId': 'IČO',
-  'footer.hours': 'Po–Pá 9:00–17:00, víkendy po domluvě',
+  'footer.hours': 'Po telefonické dohodě',
   'footer.followAria': 'Sledovat na Instagramu',
   'footer.facebookAria': 'Sledovat na Facebooku',
 
@@ -99,7 +99,7 @@ export const cs = {
   'contact.hours': 'Otvírací doba',
   'contact.whatsappValue': 'Napsat zprávu',
   'contact.replyTime': 'Odpovím do 24 hodin',
-  'contact.weekdaysShort': 'Po–Pá 9–17',
+  'contact.weekdaysShort': 'Po telefonické dohodě',
   'contact.formHeading': 'Napište mi',
   'contact.formName': 'Jméno',
   'contact.formEmail': 'E-mail',

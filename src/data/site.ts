@@ -33,8 +33,11 @@ export const SITE = {
     facebook: 'https://www.facebook.com/MartinSevr',
   },
 
+  /* Pevná otevírací doba zrušena 20. 8. 2026 na přání Martina — zákazníci
+     chodili bez objednání ve chvílích, kdy nebyl v dílně. Web, LocalBusiness
+     schema i Google Business Profile teď shodně uvádějí dohodu předem. */
   hours: {
-    weekdays: '9:00–17:00',
-    weekends: 'po domluvě',
+    cs: 'Po telefonické dohodě',
+    en: 'By phone appointment',
   },
 } as const;

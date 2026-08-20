@@ -7,8 +7,9 @@
 import Layout from '../layouts/Layout.astro';
 import ContactForm from '../components/ContactForm.astro';
 import IconArrowUpRight from '../components/IconArrowUpRight.astro';
+import FAQ from '../components/FAQ.astro';
 import { SITE } from '../data/site';
-import { graph, contactPageSchema, breadcrumbSchema } from '../lib/seo';
+import { graph, contactPageSchema, breadcrumbSchema, siteEntities, faqPageSchema } from '../lib/seo';
 import type { Locale } from '../i18n';
 
 interface Props {
@@ -20,16 +21,16 @@ const isEn = locale === 'en';
 const t = isEn
   ? {
       title: 'Contact | Martin Ševr, Goldsmith workshop in Prague',
-      description: "Get in touch directly. Phone, WhatsApp, email. I'll reply within 24 hours. Pod Kesnerkou 46, Prague 5.",
+      description: "Get in touch directly. Phone, WhatsApp, email. The workshop opens by phone appointment. I'll reply within 24 hours. Pod Kesnerkou 46, Prague 5.",
       breadcrumb: [
         { name: 'Home', url: '/en/' },
         { name: 'Contact', url: '/en/contact/' },
       ],
       phoneLabel: 'Phone',
-      phoneDesc: `Mon–Fri ${SITE.hours.weekdays}`,
+      phoneDesc: SITE.hours.en,
       whatsappValue: 'Send a message',
       whatsappDesc: "I'll reply within 24 hours",
-      methodsLead: 'Before you drop by, please call ahead so I am at the workshop. I am not there all the time and I would hate for you to come by for nothing.',
+      methodsLead: 'Before you drop by, please call ahead so I am at the workshop. I am not there all the time, and I would not want to keep you waiting.',
       emailLabel: 'Email',
       emailDesc: 'For longer enquiries',
       heroLabel: 'Contact',
@@ -41,9 +42,9 @@ const t = isEn
       mapLabel: 'Where to find me',
       addressName: 'Martin Ševr, Goldsmith workshop',
       addressCity: 'Prague 5, 150 00',
-      hoursWeekdaysLabel: 'Mon–Fri',
-      hoursWeekendsLabel: 'Weekends',
-      hoursWeekendsValue: 'by appointment',
+      hoursLabel: 'Opening hours',
+      hoursValue: SITE.hours.en,
+      hoursNote: 'Call and we will arrange a time.',
       icoLabel: 'Reg. no.:',
       mapTitle: 'Map: Pod Kesnerkou 46, Prague 5',
       mapAria: 'Map of the workshop location: Pod Kesnerkou 46, Prague 5',
@@ -51,16 +52,16 @@ const t = isEn
     }
   : {
       title: 'Kontakt na zlatnickou dílnu | Pod Kesnerkou 46, Praha 5',
-      description: 'Zlatnická dílna Pod Kesnerkou 46, Praha 5, Smíchov. Telefon +420 774 598 181, WhatsApp, e-mail. Po–Pá 9:00–17:00. Odpovím do 24 hodin.',
+      description: 'Zlatnická dílna Pod Kesnerkou 46, Praha 5, Smíchov. Telefon +420 774 598 181, WhatsApp, e-mail. Otevřeno po telefonické dohodě. Odpovím do 24 hodin.',
       breadcrumb: [
         { name: 'Domů', url: '/' },
         { name: 'Kontakt', url: '/kontakt/' },
       ],
       phoneLabel: 'Telefon',
-      phoneDesc: `Po–Pá ${SITE.hours.weekdays}`,
+      phoneDesc: SITE.hours.cs,
       whatsappValue: 'Napsat zprávu',
       whatsappDesc: 'Odpovím do 24 hodin',
-      methodsLead: 'Než se u mě stavíte, zavolejte mi prosím předem, ať jsem v dílně. Nejsem tam pořád a nerad bych, abyste přišli zbytečně.',
+      methodsLead: 'Než se u mě stavíte, zavolejte mi prosím předem, ať jsem v dílně. Nejsem tam pořád a nerad bych vás nechal čekat.',
       emailLabel: 'E-mail',
       emailDesc: 'Pro obsáhlejší dotazy',
       heroLabel: 'Kontakt',
@@ -72,16 +73,33 @@ const t = isEn
       mapLabel: 'Kde mě najdete',
       addressName: 'Martin Ševr, Zlatnická dílna',
       addressCity: 'Praha 5, 150 00',
-      hoursWeekdaysLabel: 'Po–Pá',
-      hoursWeekendsLabel: 'Víkendy',
-      hoursWeekendsValue: 'po domluvě',
+      hoursLabel: 'Otvírací doba',
+      hoursValue: SITE.hours.cs,
+      hoursNote: 'Zavolejte a domluvíme se na termínu.',
       icoLabel: 'IČO:',
       mapTitle: 'Mapa: Pod Kesnerkou 46, Praha 5',
       mapAria: 'Mapa polohy dílny: Pod Kesnerkou 46, Praha 5',
       navigate: 'Navigovat',
     };
 
-const jsonLd = graph(contactPageSchema(), breadcrumbSchema(t.breadcrumb));
+// Lokální FAQ — odpovědi z reálné otevírací doby a adresy dílny. Kontakt je
+// hlavní GEO surface ('zlatnictví Praha 5 objednání / otevírací doba').
+const faqItems = isEn
+  ? [
+      { question: 'Do I need to book in advance?', answer: 'Yes — the workshop opens by phone appointment. Call +420 774 598 181 and we will arrange a time that suits you, so I can give you my full attention.' },
+      { question: 'Where is the workshop?', answer: 'The workshop is at Pod Kesnerkou 46, Prague 5 – Smíchov. Write or call and we will arrange a time.' },
+      { question: 'What are the opening hours?', answer: 'There are no fixed opening hours. I open the workshop by phone appointment — call +420 774 598 181 and we will agree on a time.' },
+      { question: 'How soon will you reply?', answer: 'I usually reply to calls and WhatsApp the same day, and to email within 24 hours.' },
+    ]
+  : [
+      { question: 'Musím se předem objednat?', answer: 'Ano — dílnu otevírám po telefonické dohodě. Zavolejte na +420 774 598 181 a domluvíme se na termínu, který vám vyhovuje, ať se vám můžu naplno věnovat.' },
+      { question: 'Kde dílnu najdu?', answer: 'Dílna je Pod Kesnerkou 46, Praha 5 – Smíchov. Napište nebo zavolejte a domluvíme čas.' },
+      { question: 'Jaká je otevírací doba?', answer: 'Pevnou otevírací dobu nemám. Dílnu otevírám po telefonické dohodě — zavolejte na +420 774 598 181 a domluvíme se na termínu.' },
+      { question: 'Za jak dlouho se ozvete?', answer: 'Na telefon i WhatsApp reaguji obvykle týž den, na e-mail do 24 hodin.' },
+    ];
+const faqTitle = isEn ? { label: 'FAQ', heading: 'Before you visit' } : { label: 'Časté otázky', heading: 'Než se stavíte' };
+
+const jsonLd = graph(contactPageSchema(locale), ...siteEntities(locale), faqPageSchema(faqItems), breadcrumbSchema(t.breadcrumb));
 
 const contactMethods = [
   {
@@ -192,11 +210,9 @@ const contactMethods = [
             <p class="mt-2">{SITE.address.street}</p>
             <p>{t.addressCity}</p>
             <p class="mt-4">
-              <span class="font-medium text-text-primary">{t.hoursWeekdaysLabel}</span> {SITE.hours.weekdays}
+              <span class="font-medium text-text-primary">{t.hoursLabel}</span> {t.hoursValue}
             </p>
-            <p>
-              <span class="font-medium text-text-primary">{t.hoursWeekendsLabel}</span> {t.hoursWeekendsValue}
-            </p>
+            <p class="text-text-muted">{t.hoursNote}</p>
             <p class="mt-4 body-md text-text-muted">{t.icoLabel} {SITE.ico}</p>
           </address>
         </div>
@@ -223,6 +239,17 @@ const contactMethods = [
             <IconArrowUpRight class="w-3.5 h-3.5" />
           </a>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== FAQ ====== -->
+  <section class="relative bg-bg-secondary section-md overflow-hidden">
+    <div class="relative max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-14">
+      <div class="max-w-3xl" data-anim="up">
+        <span class="label-dot">{faqTitle.label}</span>
+        <h2 class="mt-5 mb-12">{faqTitle.heading}</h2>
+        <FAQ items={faqItems} />
       </div>
     </div>
   </section>
