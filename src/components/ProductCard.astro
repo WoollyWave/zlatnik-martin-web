@@ -130,7 +130,9 @@ const labels = locale === 'en'
             <span class="font-sans text-[clamp(0.875rem,0.75rem+0.3vw,1rem)] text-text-secondary tracking-tight">{priceGold}</span>
           </div>
         )}
-        {goldNote && priceSilver && priceGold && (
+        {/* U gold-only kusu nese goldNote obchodní informaci (akční cena,
+            platnost), ne jen datum kurzu zlata — zahodit ji nesmíme. */}
+        {goldNote && (priceSilver || priceGold) && (
           <p class="mt-1 text-[10px] text-text-muted font-sans">({goldNote})</p>
         )}
       </div>

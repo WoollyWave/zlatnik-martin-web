@@ -738,8 +738,8 @@ export function productItemList(products: Product[], locale: 'cs' | 'en' = 'cs')
     pageUrl: isEn ? '/en/in-stock/' : '/skladem/',
     pageName: isEn ? 'Jewellery in stock' : 'Hotové šperky skladem',
     pageDescription: isEn
-      ? 'Silver jewellery with natural stones, ready to collect at the workshop or shipped.'
-      : 'Stříbrné šperky s přírodními kameny, k vyzvednutí v dílně nebo poštou.',
+      ? 'Handmade silver and gold jewellery with natural stones, ready to collect at the workshop or shipped.'
+      : 'Hotové stříbrné i zlaté šperky s přírodními kameny, k vyzvednutí v dílně nebo poštou.',
     items: products.map((p) => ({
       url: isEn ? `/en/jewelry/${p.slugEn || p.slug}/` : `/sperky/${p.slug}/`,
       name: isEn ? p.titleEn || p.title : p.title,

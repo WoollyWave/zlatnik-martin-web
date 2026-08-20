@@ -40,7 +40,12 @@ const notes = isEn ? product.notesEn || product.notes : product.notes;
  */
 const goldOnly = !priceSilver && !!priceGold;
 const primaryPrice = goldOnly ? priceGold : priceSilver;
-const primaryWeight = goldOnly ? product.weightGold : product.weightSilver;
+/* Hmotnosti jsou v datech psané česky („2,50 g"). Anglický čtenář čte čárku
+   jako oddělovač tisíců, a to hned pod cenou formátovanou jako „CZK 19,200".
+   Desetinný oddělovač proto pro EN překlápíme na tečku. */
+const localizeWeight = (w?: string) => (isEn && w ? w.replace(/(\d),(\d)/g, '$1.$2') : w);
+const primaryWeight = localizeWeight(goldOnly ? product.weightGold : product.weightSilver);
+const secondaryWeight = localizeWeight(product.weightGold);
 
 const currentIndex = products.findIndex((p) => p.slug === product.slug);
 const rotatedProducts = [
@@ -234,8 +239,8 @@ const primaryHeading = goldOnly ? t.goldHeading : t.silverHeading;
                 <span class="text-[10px] uppercase tracking-[0.2em] font-medium text-gold-on-light font-sans">{t.goldHeading}</span>
                 <p class="mt-2 text-[11px] text-text-muted font-sans">{t.goldLead}</p>
                 <p class="mt-4 font-serif text-[1.5rem] text-text-primary tracking-tight">{priceGold}</p>
-                {product.weightGold && (
-                  <p class="mt-2 text-[12px] text-text-secondary font-sans">{t.weightLabel} {product.weightGold}</p>
+                {secondaryWeight && (
+                  <p class="mt-2 text-[12px] text-text-secondary font-sans">{t.weightLabel} {secondaryWeight}</p>
                 )}
                 {goldNote && (
                   <p class="mt-1 text-[11px] text-text-muted font-sans">({goldNote})</p>

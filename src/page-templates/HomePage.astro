@@ -131,7 +131,10 @@ const portfolioItems = portfolioCases.slice(0, 3).map((c, i) =>
       }
 );
 
-const skladem = products.slice(0, 3).map((p, i) => {
+/* Filtrovat prodané: po products.reverse() jsou na začátku nejnovější kusy,
+   tedy právě ta část katalogu, kde se `sold` objeví nejdřív. Karta na homepage
+   nemá badge „Prodáno", takže bez filtru by web nabízel prodaný kus. */
+const skladem = products.filter((p) => !p.sold).slice(0, 3).map((p, i) => {
   // Hlavní cena = stříbro; u kusů jen ve zlatě zaujme hlavní slot zlato.
   // Stejné pravidlo jako v ProductCard.astro — bez něj se u goldOnly kusu
   // vypsalo `Stříbro · undefined`.

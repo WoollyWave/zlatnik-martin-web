@@ -421,6 +421,8 @@ const productsChronological: Product[] = [
     size: '60',
     weightSilver: '12,30 g',
     priceSilver: '13 000 Kč',
+    // BEZ priceSilverEn se na EN stránkách propíše česky formátovaná cena.
+    priceSilverEn: 'CZK 13,000',
     description: 'Autorský prsten s surovým vltavínem v ručně tepaném stříbře. Voskový model a následně odlitý. Jediný originální kus.',
     image: '/skladem/14.webp',
     imageCard: '/skladem/karta/14.webp',
