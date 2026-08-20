@@ -161,3 +161,74 @@ Tailwind v4 přes `@tailwindcss/vite` + CSS-first `@theme {}` už projekt měl (
 - **Adaptivní hustota:** lg = 2 rohové fotky; xl = +4 boční; středové akcenty (nad/pod textem) jen při `min-width:1280px AND min-height:780px` (arbitrary media variant) — na nízkých oknech by narazily do obsahu vertikálně.
 - **Ověřeno měřením kolizí v DOM + screenshoty:** 375×812, 768×1024, 1024×768, 1280×700, 1440×900, 1920×1080 — 0 kolizí, 0 horizontal overflow. Sdílená šablona = oprava platí i pro /en/custom-jewelry/.
 - **Iterace po feedbacku z produkce (2 kola):** ① kotvení ke středu stahovalo fotky na širokých monitorech k textu; ② kotvení k okrajům viewportu zase kompozici roztrhalo (fotky daleko a malé). **Finální řešení: centrované plátno `max-w-[1600px]`** — kompozice se nad 1600 px přestane roztahovat a drží pohromadě jako původní návrh; pod 1600 px je plátno rovno viewportu a kolizím brání strop šířky `min(%, maxPx, calc(Nvw − 400px))`. Ověřeno 2D kolizním měřením (1280×800: 0 kolizí, šířky fotek 150–266 px) a vizuálně na 1920×1080.
+
+---
+
+## Krok 12 — Červencová vlna zacommitována + otevírací doba (20. 8. 2026)
+
+**Výchozí stav:** poslední commit byl z 11. 7., ale práce z 27.–29. 7. (stránky
+Čištění šperků CZ+EN, EN mutace Oprav, přepis `src/lib/seo.ts`, lastmod z gitu,
+produkt #20) byla tři týdny nasazená na produkci **bez commitu**. Ověřeno
+porovnáním všech 70 stránek: produkce byla byte-identická s necommitnutým
+`src/`, lišila se jen v build-date polích.
+
+### Co to způsobovalo
+- **Sitemapa lhala.** `gitLastmod()` bere datum posledního commitu dotýkajícího
+  se zdrojů stránky. Bez commitu hlásilo 64 z 68 URL datum 10.–11. 7., přestože
+  obsah vznikl 27.–29. 7. Google se o změnách nikdy nedozvěděl.
+- Tři týdny práce existovaly na jednom disku, `origin` měl jen `main` z 25. 3.
+
+### Opravené chyby
+- **`Stříbro · undefined` na CZ i EN homepage.** `HomePage.astro` skládal cenový
+  tag natvrdo jako `Stříbro · ${priceSilver}`; produkt #20 je jen ve zlatě a po
+  `products.reverse()` spadl do `slice(0, 3)`. Bylo živé na produkci.
+- **`send.php`** razítkoval rate-limit před validací — zákazník s překlepem
+  v e-mailu dostal 422 a jeho oprava do 30 s narazila na 429. Ztracená poptávka.
+  Nově se razítkuje až za úspěšným `mail()`.
+- **`.htaccess`** hostová podmínka nepočítala s portem v hlavičce `Host`; stejná
+  třída chyby, jaká v 7/2026 poslala `X-Robots-Tag: noindex` na produkci.
+
+### Otevírací doba → po telefonické dohodě
+Na přání Martina: zákazníci chodili bez objednání ve chvílích, kdy nebyl
+v dílně. Web navíc uváděl Po–Pá 9:00–17:00, zatímco Google Business Profile
+Po–Pá 10:00–18:00 — dva zdroje si odporovaly.
+
+- `SITE.hours` je nově `{ cs, en }`, jediný zdroj pravdy
+- `openingHoursSpecification` **vypuštěno** z `LocalBusiness`. Schema.org pro
+  „jen po domluvě" nemá hodnotu a vymyšlené hodiny Google ukazuje jako závazné.
+  Nevracet zpět.
+- GBP přepnut na „Otevřeno (bez hlavní otevírací doby)", důvod v popisu firmy
+
+### Adversariální kontrola vlastních změn
+32 nálezů → 26 nezávisle ověřeno → 9 potvrzeno. Opraveno:
+- `prsten-s-vltavinem-original` neměl `priceSilverEn` → na EN stránkách svítilo
+  „13 000 Kč" mezi devatenácti kartami ve formátu „CZK 13,200"
+- `goldNote` se u gold-only kusu zahazovalo → karta #20 ukazovala 50 000 Kč bez
+  zmínky, že jde o akci; detail ji přitom zobrazoval
+- homepage nefiltrovala `sold` → po `reverse()` bere nejnovější kusy, tedy tu
+  část katalogu, kde se „prodáno" objeví nejdřív, a karta badge nemá
+- hmotnosti se vypisovaly česky i anglicky („Weight: 2,50 g" pod „CZK 19,200")
+- FAQ na `/skladem/` říkalo „ideálně po předchozí domluvě" — po zrušení pevné
+  doby je to podmínka, ne doporučení
+- `/skladem/` se popisovalo jako stříbrný katalog, přestože nejdražší kus je zlatý
+
+### Drobnosti
+- `send.php` označuje zprávy ze stagingu v předmětu i těle; do patičky přibyl host
+- `ContactForm` nastavuje `novalidate` až z JS — bez JS platí nativní validace
+  prohlížeče, takže se neodešle nekompletní formulář a vyplněná data se neztratí
+- akční cena #20 prodloužena z 23. 8. na **30. 9. 2026** (`goldNote`, `goldNoteEn`
+  i `priceValidUntil` musí zůstat v souladu)
+- `git gc` — repo z 105 na 97 MB, 2 960 loose objektů zabaleno
+- dokumentace srovnána se skutečností: README (byl defaultní Astro šablona),
+  IA v CLAUDE.md (13 CZ/EN párů místo 8 osiřelých CZ cest), sitemap sekce
+  v ASTRO-PATTERNS (odkazovala na nepoužívaný `@astrojs/sitemap`)
+
+### Ověření po nasazení
+70/70 stránek byte-identických s buildem, 345/345 assetů 200, sitemapy a
+`llms.txt` shodné, legacy 301 (`/retizky`, `/puncovni-znacky`) funkční.
+
+### Zůstává otevřené
+- ceny zlata `pricesAsOf: '2026-05-12'` — přes tři měsíce staré na 18 produktech
+- GSC za 29. 7. – 20. 8. nikdo neviděl; dnešní změny chtějí kontrolu za ~14 dní
+- `aggregateRating` čeká na recenze, 12 stříbrných vzorků snubáků na datový soubor
+- staging `web.vilim.sbs` běží na buildu z 10. 7. se starým `.htaccess`

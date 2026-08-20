@@ -19,7 +19,7 @@ Build a luxury jewelry workshop presentation website. Static, no CMS, no e-comme
 - **Self-hosted WOFF2 fonty** — Playfair Display (variable) + General Sans (Fontshare)
 
 ## Build Order (do in this sequence)
-1. **Design system** — tailwind.config.mjs with colors, fonts, spacing
+1. **Design system** — `src/styles/global.css` → `@theme {}` (Tailwind v4 je CSS-first, žádný `tailwind.config.mjs`)
 2. **Base layout** — Layout.astro with head, fonts, meta
 3. **Components** — Nav.astro, Footer.astro, CTA.astro, Button.astro
 4. **Homepage** — section by section
@@ -42,16 +42,32 @@ Build a luxury jewelry workshop presentation website. Static, no CMS, no e-comme
 - **Photographer**: Betty
 
 ## Information Architecture
+Každá CZ stránka má anglické zrcadlo pod `/en/`, spárované přes `PATH_MAP`
+v `src/components/LangSwitcher.astro` a hreflang v `src/lib/seo.ts`.
+Nová stránka musí přibýt na OBOU stranách, jinak se rozejde jazykový přepínač.
+
 ```
-/ — Domů (Homepage)
-/zakazkova-tvorba — Zakázková tvorba
-/skladem — Skladem (listing page)
-/portfolio — Portfolio (listing page)
-/o-dilne — O dílně
-/kontakt — Kontakt
-/sperky/[slug] — Detail hotového šperku
-/tvorba/[slug] — Detail portfolia
+/                          /en/                      Domů
+/zakazkova-tvorba          /en/custom-jewelry        Zakázková tvorba
+/snubni-prsteny-na-miru    /en/wedding-rings         Snubní prsteny
+/retezy                    /en/chains                Královské řetězy
+/opravy-sperku-praha       /en/jewelry-repair        Opravy šperků
+/cisteni-sperku            /en/jewelry-cleaning      Čištění šperků
+/skladem                   /en/in-stock              Skladem (listing)
+/portfolio                 /en/portfolio             Portfolio (listing)
+/o-dilne                   /en/about                 O dílně
+/kontakt                   /en/contact               Kontakt
+/ochrana-osobnich-udaju    /en/privacy               Ochrana osobních údajů
+/sperky/[slug]             /en/jewelry/[slug]        Detail hotového šperku
+/tvorba/[slug]             /en/work/[slug]           Detail portfolia
+/404                                                 Nenalezeno
 ```
+
+Sitemapy: `/sitemap.xml` (vše, s hreflang alternates) a `/sitemap-en.xml`
+(jen EN podmnožina, kvůli samostatnému monitoringu indexace v GSC).
+
+**Legacy 301** v `public/.htaccess`: `/retizky` → `/retezy/`,
+`/puncovni-znacky` → `/o-dilne/` — obě adresy vracely 404, ale pořád rankovaly.
 
 ## Color Palette (LOCKED — defined in `src/styles/global.css` `@theme {}`)
 ```css
@@ -255,7 +271,7 @@ Include these stabilizers:
 │   │   ├── Footer.astro             # CTA panel + sitemap + social
 │   │   ├── Button.astro             # variants: primary | secondary | text
 │   │   ├── CTA.astro                # pre-footer CTA block
-│   │   ├── ContactForm.astro        # mailto fallback (TODO migrace na Web3Forms)
+│   │   ├── ContactForm.astro        # POST → public/send.php (+ no-JS fallback přes 303)
 │   │   ├── ProductCard.astro
 │   │   ├── PortfolioListCard.astro  # vertical list card pro homepage/portfolio/tvorba
 │   │   ├── PhotoFrame.astro         # dekorativní vnitřní lemování
@@ -286,26 +302,42 @@ Include these stabilizers:
 
 ## Deploy
 ```bash
-npm run build               # → dist/
-# FTP upload dist/* → Hostinger public_html/
+pnpm build                  # → dist/
+# obsah dist/ → FTP → Hostinger public_html/
 ```
 
+**Pořadí je vždy commit → build → upload.** `src/lib/sitemap.ts` bere `<lastmod>`
+z data posledního commitu, který se dotkl zdrojů stránky. Build z necommitnutého
+stromu proto hlásí Googlu datum staršího commitu a změna se tváří, že se nestala
+(stalo se 7/2026: 64 z 68 URL hlásilo tři týdny staré datum).
+
+**`.htaccess` je skrytý soubor** — FTP klienti ho defaultně nezobrazují a tiše
+vynechají. Nese redirecty, CSP, cache i staging guard. FileZilla: *Server →
+Vynutit zobrazení skrytých souborů*.
+
+**Stav se ověřuje proti ostré doméně, ne proti gitu** — nasazuje se ručně,
+takže produkce může být napřed i pozadu.
+
 ## astro.config.mjs (aktuální)
+Sitemap NENÍ přes `@astrojs/sitemap` — řeší ji vlastní endpointy
+`src/pages/sitemap.xml.ts` a `sitemap-en.xml.ts` (jeden soubor místo
+sitemap-index, s `lastmod` z gitu, `image:` tagy a hreflang alternates).
+
 ```js
-import { defineConfig } from 'astro/config';
+import { defineConfig, fontProviders } from 'astro/config';
 import tailwindcss from '@tailwindcss/vite';
-import sitemap from '@astrojs/sitemap';
 
 export default defineConfig({
-  integrations: [sitemap()],
   output: 'static',
-  site: 'https://zlatnik-martin.cz',
-  build: {
-    inlineStylesheets: 'always',   // CSS inlined do HTML — žádný render-blocking <link>
+  site: 'https://www.zlatnik-martin.cz',   // www je kanonické, apex 301 → www
+  trailingSlash: 'always',                 // kanonické URL, sitemap i hreflang
+  i18n: {
+    defaultLocale: 'cs',                   // čeština bez prefixu, EN pod /en/
+    locales: ['cs', 'en'],
+    routing: { prefixDefaultLocale: false, redirectToDefaultLocale: false },
   },
-  vite: {
-    plugins: [tailwindcss()],
-  },
+  build: { inlineStylesheets: 'always' },  // žádný render-blocking <link>
+  vite: { plugins: [tailwindcss()] },
 });
 ```
 

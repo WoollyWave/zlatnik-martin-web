@@ -28,7 +28,6 @@ Stack: Astro 6 + Tailwind CSS v4 (CSS-first) + GSAP + Sharp + self-hosted WOFF2 
 {
   "dependencies": {
     "astro": "^6.0.0",
-    "@astrojs/sitemap": "latest",
     "@tailwindcss/vite": "^4.0.0",
     "gsap": "^3.12.0",
     "tailwindcss": "^4.0.0"
@@ -49,10 +48,8 @@ Stack: Astro 6 + Tailwind CSS v4 (CSS-first) + GSAP + Sharp + self-hosted WOFF2 
 ```js
 import { defineConfig } from 'astro/config';
 import tailwindcss from '@tailwindcss/vite';
-import sitemap from '@astrojs/sitemap';
 
 export default defineConfig({
-  integrations: [sitemap()],
   output: 'static',
   site: 'https://example.com',
   build: {
@@ -767,15 +764,26 @@ Viz `src/pages/ochrana-osobnich-udaju.astro` v tomto projektu — 9 sekcí dle �
 
 ## 13. SEO
 
-### Astro sitemap integration
-```js
-// astro.config.mjs
-import sitemap from '@astrojs/sitemap';
-export default defineConfig({
-  integrations: [sitemap()],
-  site: 'https://example.com',  // KRITICKÉ pro sitemap generation
-});
+### Sitemap vlastním endpointem (ne @astrojs/sitemap)
+Integrace `@astrojs/sitemap` se v tomhle projektu **nepoužívá** — neumí
+`lastmod` per stránku, `image:` tagy ani hreflang alternates v jednom souboru
+a vyrábí zbytečný sitemap-index. Sitemapu proto skládá `src/lib/sitemap.ts`
+a servírují ji endpointy `src/pages/sitemap.xml.ts` a `sitemap-en.xml.ts`.
+
+```ts
+// src/pages/sitemap.xml.ts
+import type { APIRoute } from 'astro';
+import { buildSitemap } from '../lib/sitemap';
+
+export const GET: APIRoute = () =>
+  new Response(buildSitemap(), {
+    headers: { 'Content-Type': 'application/xml; charset=utf-8' },
+  });
 ```
+
+`lastmod` se bere z `git log -1 --format=%cI -- <zdroje stránky>`, ne z data
+buildu — uniformní datum tvrdí „vše se změnilo dnes" a nenese žádný signál.
+**Důsledek:** nikdy nebuildovat pro produkci z necommitnutého stromu.
 
 ### JSON-LD schemas v src/lib/seo.ts
 ```ts
@@ -1105,7 +1113,7 @@ Hostinger CDN (hcdn) může degradovat HTTP/3 negociaci. Doporučeno **vypnout**
 
 - [ ] `git init` + `git remote add`
 - [ ] `npm create astro@latest` → static template
-- [ ] Přidat `@tailwindcss/vite` + `@astrojs/sitemap`
+- [ ] Přidat `@tailwindcss/vite` (sitemapu řeší vlastní endpoint, viz § 13)
 - [ ] `tsconfig.json` → `extends: astro/tsconfigs/strict`
 - [ ] `astro.config.mjs` → site URL + inlineStylesheets + tailwind plugin
 - [ ] `src/styles/global.css` → `@import tailwindcss; @theme { ... }`
