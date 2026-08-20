@@ -11,10 +11,12 @@
  * 1. Text se přebírá DOSLOVA, včetně překlepů a interpunkce. Zkracovat lze jen
  *    výpustkou `[…]` bez změny významu. Úprava znění recenze je podle přílohy
  *    č. 1 písm. z) zákona č. 634/1992 Sb. vždy klamavá obchodní praktika.
- * 2. Jméno se uvádí zkráceně (`Tereza S.`), pokud recenzent nedal výslovný
- *    souhlas s uvedením celého jména — `consent: 'explicit'`. Google Brand
- *    Resource Center: „You must get consent from the reviewer if you want to
- *    use customer reviews on your website."
+ * 2. Jméno se uvádí VŽDY zkráceně (`Tereza S.`), i když recenzent svolil
+ *    s celým — jednotný tvar napříč blokem a méně osobních údajů, než je
+ *    nutné. `consent: 'explicit'` eviduje získaný souhlas pro případ, že by
+ *    se celé jméno někdy zobrazovat mělo. Google Brand Resource Center:
+ *    „You must get consent from the reviewer if you want to use customer
+ *    reviews on your website."
  * 3. Žádné `aggregateRating` ani `review` v JSON-LD. Google od 2019 ignoruje
  *    self-serving recenze o vlastní firmě v LocalBusiness/Organization markupu
  *    a od 7/2026 to má v pokynech explicitně. Přínos nula, riziko nenulové.
@@ -26,7 +28,7 @@
  * („před 9 týdny"), přesný den z ní nevyčteme a předstírat přesnost nebudeme.
  */
 export interface BusinessReview {
-  /** Jméno tak, jak se zobrazí. Celé jen při `consent: 'explicit'`. */
+  /** Jméno tak, jak se zobrazí. Jednotně křestní + iniciála. */
   author: string;
   /** Hodnocení 1–5. Všechny přebrané jsou 5, na profilu jsou i nižší. */
   rating: 1 | 2 | 3 | 4 | 5;
@@ -38,7 +40,8 @@ export interface BusinessReview {
   date: string;
   /** Služba, které se recenze týká — řídí, na které stránce se zobrazí. */
   service: 'snubni-prsteny' | 'zakazkova-tvorba' | 'oprava' | 'cisteni' | 'expres';
-  /** `explicit` = recenzent výslovně svolil s celým jménem. */
+  /** `explicit` = recenzent výslovně svolil s celým jménem (eviduje se, i když
+   *  se dnes zobrazuje zkrácené — viz pravidlo 2 v hlavičce). */
   consent: 'explicit' | 'none';
   /** Výběr na homepage a kontakt. */
   featured?: boolean;
@@ -46,8 +49,10 @@ export interface BusinessReview {
 
 export const reviews: BusinessReview[] = [
   {
-    // Souhlas s uvedením celého jména získán 20. 8. 2026.
-    author: 'David Soukup',
+    // Souhlas s uvedením celého jména získán 20. 8. 2026. Zobrazuje se přesto
+    // zkráceně — jednotný tvar napříč blokem. `consent` ten souhlas eviduje,
+    // takže se dá kdykoli přepnout na celé jméno bez dohledávání.
+    author: 'David S.',
     rating: 5,
     text:
       'Nechávali jsme si zde vyrábět snubní prsteny i pečetní prsteny na zakázku s vlastním rodovým znakem a s výsledkem jsme maximálně spokojeni. Od první komunikace, přes návrhy a konzultace až po samotnou výrobu proběhlo vše naprosto profesionálně. Oceňujeme ochotu, precizní zpracování detailů a individuální přístup během celého procesu.',

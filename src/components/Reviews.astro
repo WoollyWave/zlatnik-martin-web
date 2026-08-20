@@ -39,7 +39,7 @@ const t = isEn
       quoteClose: '\u201D',
       summary: `${reviewSummary.ratingValue.toString().replace('.', '.')} out of 5 from ${reviewSummary.reviewCount} ratings on Google`,
       disclosure:
-        'Reviews are taken from the Google Business Profile with the authors’ knowledge and shortened to initials unless the author agreed to their full name. This is a selection, not every rating. I do not verify them beyond the checks Google itself performs.',
+        'Reviews are taken from my Google Business Profile and quoted verbatim; names are shortened to an initial. This is a selection, not every rating. I do not verify them beyond the checks Google itself performs.',
     }
   : {
       label: 'Recenze',
@@ -52,7 +52,7 @@ const t = isEn
       quoteClose: '\u201C',
       summary: `${reviewSummary.ratingValue.toString().replace('.', ',')} z 5 z ${reviewSummary.reviewCount} hodnocení na Googlu`,
       disclosure:
-        'Recenze přebírám z Firemního profilu Google. Jméno uvádím zkráceně, pokud autor nesouhlasil s uvedením celého. Jde o výběr, nikoli o všechna hodnocení. Neověřuji je nad rámec ověření, které provádí Google.',
+        'Recenze přebírám ze svého Firemního profilu Google a cituji doslova; jména zkracuji na iniciálu. Jde o výběr, nikoli o všechna hodnocení. Neověřuji je nad rámec ověření, které provádí Google.',
     };
 
 const dateFmt = new Intl.DateTimeFormat(isEn ? 'en-GB' : 'cs-CZ', {
