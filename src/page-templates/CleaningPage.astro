@@ -1,0 +1,436 @@
+---
+/**
+ * Sdílená šablona Čištění šperků (CS /cisteni-sperku/ + EN /en/jewelry-cleaning/).
+ * Cíl CS: „čištění šperků" (227 zobrazení, poz. 4,1, nula prokliků — informační
+ * dotaz, na který web neměl odpověď). Cíl EN: silver polishing, jewelry cleaning.
+ * Voice: první osoba j. č., klidná jistota, žádné vykřičníky.
+ */
+import Layout from '../layouts/Layout.astro';
+import Button from '../components/Button.astro';
+import FAQ from '../components/FAQ.astro';
+import { SITE } from '../data/site';
+import { graph, jewelryCleaningServiceSchema, faqPageSchema, breadcrumbSchema, siteEntities } from '../lib/seo';
+import type { Locale } from '../i18n';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const isEn = locale === 'en';
+
+const t = isEn
+  ? {
+      title: 'Jewellery cleaning: how to do it at home and when to bring it in',
+      description:
+        'How to clean gold, silver, pearls and stone-set jewellery at home, what to avoid, and when to leave it to a goldsmith. Professional cleaning and polishing in Prague 5, usually while you wait.',
+      breadcrumb: [
+        { name: 'Home', url: '/en/' },
+        { name: 'Jewellery cleaning', url: '/en/jewelry-cleaning/' },
+      ],
+      ctaHeading: 'A piece you <em>cannot manage</em> at home?',
+      ctaSubtitle: 'Bring it to the workshop in Prague 5. Cleaning and polishing is usually done while you wait, and I check the stone settings at the same time.',
+      ctaPrimaryLabel: 'Arrange a cleaning',
+      heroLabel: 'Jewellery cleaning and care',
+      heroHeadingPre: 'Most jewellery you can',
+      heroHeadingEm: 'clean',
+      heroHeadingPost: ' yourself.',
+      heroCopy:
+        'Lukewarm water, a drop of washing-up liquid and a soft brush will do it. Below you will find what to do for each material, and then four things that would ruin the piece instead. If something is badly tarnished, just come by the workshop; at home you will not get any further with it.',
+      heroPrimary: 'Call the goldsmith',
+      heroSecondary: 'Jewellery repairs',
+      heroSecondaryHref: '/en/jewelry-repair/',
+      heroAlt: "A goldsmith's hand holding a gold chain at the polishing motor in the workshop",
+      guideLabel: 'At home',
+      guideHeading: 'How to clean a piece, by what it is made of',
+      guideSub: 'Gold takes more than a pearl does. Before you reach for a cloth, look at what you are actually holding.',
+      dontLabel: 'What to avoid',
+      dontHeadingPre: 'Four things that',
+      dontHeadingEm: 'damage',
+      dontHeadingPost: ' jewellery',
+      workshopLabel: 'In the workshop',
+      workshopHeadingPre: 'When to',
+      workshopHeadingEm: 'leave it to me',
+      workshopHeadingPost: '.',
+      workshopP: [
+        'At home you remove what sits on the surface. Deposits under a stone, in the gaps between claws and inside the links of a chain stay put, and those are exactly what takes the shine away. For those I have an ultrasonic bath and a polishing motor, two things that do not belong in a bathroom.',
+        'A scratched surface is not a cleaning job but a polishing one. It takes off a very thin layer of metal, so it is not done every month, but afterwards the piece looks the way it did on the day it was made.',
+        'Always bring a piece in when a stone feels loose. Cleaning it at home could be the thing that finishes it off. With every cleaning I go over the stone settings and the clasp and tell you what needs tightening before it gets lost.',
+        'Please call ahead so I am at the workshop. Cleaning and polishing is usually done while you wait, and I quote the price once I have seen the piece. Pieces I made myself I clean once a year free of charge, for as long as they last.',
+      ],
+      faqLabel: 'Common questions',
+      faqHeading: 'Common questions about cleaning jewellery',
+      guide: [
+        {
+          number: '01',
+          title: 'Gold without stones',
+          description:
+            'Lukewarm water and a drop of washing-up liquid. Go over the piece with a soft toothbrush, rinse it and dry it with a microfibre cloth. That handles most of what settles on gold: soap, hand cream, skin oil.',
+        },
+        {
+          number: '02',
+          title: 'Tarnished silver',
+          description:
+            'That black layer is not dirt but silver sulphide, the metal reacting with the air. On smooth surfaces a silver polishing cloth from a jeweller takes it off. On detailed pieces polish only the raised parts: the patina in the recesses is what keeps the relief readable, and without it the piece goes flat. And once silver has sat in a drawer for years, a cloth will not do it. Bring it in, most of it I handle while you wait. Only sets of silver tableware and cutlery take longer.',
+        },
+        {
+          number: '03',
+          title: 'Hard stones',
+          description:
+            'Diamond, sapphire, ruby, amethyst, garnet and tourmaline take the same treatment as bare gold. Run the brush underneath as well, below the stone: that is where most of it collects, and that is why a stone goes dull over time. Do not scrub around the claws, just pass between them.',
+        },
+        {
+          number: '04',
+          title: 'Pearls and soft stones',
+          description:
+            'Pearl, opal, turquoise, amber, malachite and moldavite are porous or soft. No soaking, no detergent. Wipe them with a damp cloth and let them dry. Put pearls on after your perfume and cream, not before.',
+        },
+      ],
+      dont: [
+        {
+          title: 'Toothpaste',
+          description:
+            'The most widely repeated tip on the internet and the fastest way to a scratched piece. Toothpaste contains an abrasive. Gold and silver are soft metals and go dull the first time you use it.',
+        },
+        {
+          title: 'Baking soda and foil',
+          description:
+            'It works on silver, but it takes everything at once, including the patina that belongs in an engraving. On pieces with glued stones or pearls do not use a hot bath at all.',
+        },
+        {
+          title: 'Swimming pools and chlorine',
+          description:
+            'Chlorine attacks gold alloys at the soldered joints. It is not about dulling but about brittleness: a ring worn in a pool for years cracks at the joint. Take it off.',
+        },
+        {
+          title: 'Ultrasonic cleaners at home',
+          description:
+            'A cheap ultrasonic cleaner is fine for glasses. On a piece with a hair crack in the stone (emerald, opal) it will open the crack, and with a loose stone it will wash it into your sink.',
+        },
+      ],
+      faq: [
+        {
+          question: 'How much does professional jewellery cleaning cost?',
+          answer:
+            'Pieces I made myself I clean once a year free of charge, for as long as they last. Just get in touch and we will arrange a time. For pieces from elsewhere I quote the price once I have seen them, because there is a difference between an ultrasonic clean with a polish and a case where the stone settings need tightening. Most of it I handle while you wait.',
+        },
+        {
+          question: 'How do I clean a gold piece at home?',
+          answer:
+            'Lukewarm water with a drop of washing-up liquid, a soft toothbrush, then rinse and dry with a microfibre cloth. On a stone-set piece run the brush underneath as well, below the stone, where most of it collects. Avoid toothpaste and any abrasive.',
+        },
+        {
+          question: 'What removes tarnish from silver?',
+          answer:
+            'A silver polishing cloth. The black layer is silver sulphide, that is oxidation, not dirt. On detailed pieces polish only the raised surfaces and leave the patina in the recesses, otherwise the relief loses its depth. After years without wear a cloth is no longer enough and it is better to bring the piece to the workshop; most of it I clean while you wait. Sets of tableware and cutlery are the exception, those take longer.',
+        },
+        {
+          question: 'Can I use toothpaste or baking soda on jewellery?',
+          answer:
+            'Toothpaste, no. It contains an abrasive and both gold and silver go dull after it. Baking soda with foil does work on silver, but it also strips the patina out of engravings, and on pieces with pearls or glued stones it can do real damage. I would do neither on a good piece.',
+        },
+        {
+          question: 'How often should jewellery be professionally cleaned?',
+          answer:
+            'Once a year for a piece you wear daily. It is not only about shine: while cleaning I check the stone settings and the state of the clasp, which is the cheapest way not to lose a stone. Pieces I made myself I clean once a year free of charge, for as long as they last.',
+        },
+        {
+          question: 'When should I stop cleaning a piece myself?',
+          answer:
+            'When a stone feels loose, when there are deposits under a stone that a brush cannot reach, when the surface is scratched (that is polishing, not cleaning) or when it is a fine chain with small links. In those cases bring the piece to the workshop; I usually deal with it while you wait.',
+        },
+      ],
+    }
+  : {
+      title: 'Čištění šperků: jak na to doma a kdy raději k zlatníkovi',
+      description:
+        'Jak vyčistit zlato, stříbro, perly a šperky s kameny doma, čemu se vyhnout a kdy to nechat na zlatníkovi. Profesionální čištění a leštění v Praze 5, většinou na počkání.',
+      breadcrumb: [
+        { name: 'Domů', url: '/' },
+        { name: 'Čištění šperků', url: '/cisteni-sperku/' },
+      ],
+      ctaHeading: 'Šperk, na který doma <em>nestačíte</em>?',
+      ctaSubtitle: 'Přineste ho do dílny v Praze 5. Vyčištění a přeleštění obvykle stihnu na počkání a rovnou zkontroluju, jestli drží kameny.',
+      ctaPrimaryLabel: 'Domluvit čištění',
+      heroLabel: 'Čištění a údržba šperků',
+      heroHeadingPre: 'Většinu šperků si',
+      heroHeadingEm: 'vyčistíte',
+      heroHeadingPost: ' sami.',
+      heroCopy:
+        'Stačí vlažná voda, kapka saponátu a měkký kartáček. Níž najdete postup pro každý materiál a pak čtyři věci, kterými byste šperk naopak zničili. S hodně zašlým kusem se rovnou stavte v dílně, doma už s ním nic nesvedete.',
+      heroPrimary: 'Zavolat zlatníkovi',
+      heroSecondary: 'Opravy šperků',
+      heroSecondaryHref: '/opravy-sperku-praha/',
+      heroAlt: 'Ruka zlatníka přidržuje zlatý řetízek u leštícího stroje ve zlatnické dílně',
+      guideLabel: 'Doma',
+      guideHeading: 'Jak vyčistit šperk podle toho, z čeho je',
+      guideSub: 'Zlato snese víc než perla. Než sáhnete po hadříku, podívejte se, co v ruce vlastně držíte.',
+      dontLabel: 'Čemu se vyhnout',
+      dontHeadingPre: 'Čtyři věci, které šperku',
+      dontHeadingEm: 'uškodí',
+      dontHeadingPost: '',
+      workshopLabel: 'V dílně',
+      workshopHeadingPre: 'Kdy to raději',
+      workshopHeadingEm: 'nechte na mně',
+      workshopHeadingPost: '.',
+      workshopP: [
+        'Doma odstraníte, co je na povrchu. Usazeniny pod kamenem, ve spárách krapen a v článcích řetízku tam zůstanou, a právě ony berou šperku lesk. Na ty mám ultrazvukovou lázeň a leštičku, tedy dvě věci, které do koupelny nepatří.',
+        'Poškrábaný povrch není otázka čištění, ale leštění. Sundává se při něm tenoučká vrstva kovu, takže se to nedělá každý měsíc, zato po něm šperk vypadá jako v den, kdy vznikl.',
+        'Přineste mi šperk vždycky, když je kámen na dotek uvolněný. Doma byste ho čištěním mohli dorazit. Při každém čištění projdu uchycení kamenů i zapínání a řeknu vám, co je potřeba dotáhnout dřív, než se to ztratí.',
+        'Předem prosím zavolejte, ať jsem v dílně na místě. Čištění a přeleštění obvykle stihnu na počkání, cenu řeknu po prohlídce šperku. Šperkům, které jsem vyrobil, dělám roční čištění zdarma po celou dobu jejich životnosti.',
+      ],
+      faqLabel: 'Časté otázky',
+      faqHeading: 'Časté otázky o čištění šperků',
+      guide: [
+        {
+          number: '01',
+          title: 'Zlato bez kamenů',
+          description:
+            'Vlažná voda a kapka saponátu na nádobí. Šperk projeďte měkkým zubním kartáčkem, opláchněte a osušte utěrkou z mikrovlákna. Tohle zvládne většinu toho, co se na zlatě usadí: mýdlo, krém, kožní maz.',
+        },
+        {
+          number: '02',
+          title: 'Zčernalé stříbro',
+          description:
+            'Ta černá vrstva není špína, ale sulfid stříbrný, tedy reakce kovu se vzduchem. U hladkých ploch ji sundá leštící hadřík na stříbro ze zlatnictví. U členitých kusů leštěte jen vystouplé části: patina v prohlubních drží reliéf čitelný, bez ní šperk zplošťuje. A když stříbro leželo roky v šuplíku, hadřík už nestačí. Přineste ho, většinu zvládnu na počkání. Delší čas si vyžádají jen sady stříbrného nádobí a příborů.',
+        },
+        {
+          number: '03',
+          title: 'Šperky s tvrdými kameny',
+          description:
+            'Diamant, safír, rubín, ametyst, granát a turmalín snesou stejné ošetření jako holé zlato. Kartáčkem projeďte i zespodu, pod kamenem: právě tam se usazuje nejvíc a právě proto kámen po čase zhasne. Nedrhněte kolem krapen, jen jimi projeďte.',
+        },
+        {
+          number: '04',
+          title: 'Perly a měkké kameny',
+          description:
+            'Perla, opál, tyrkys, jantar, malachit a vltavín jsou porézní nebo měkké. Žádné máčení, žádný saponát. Otřete je vlhkým hadříkem a nechte doschnout. Perly nasazujte až po parfému a krému, ne před nimi.',
+        },
+      ],
+      dont: [
+        {
+          title: 'Zubní pasta',
+          description:
+            'Nejrozšířenější rada na internetu a nejrychlejší cesta k poškrábanému šperku. Pasta obsahuje brusivo. Zlato i stříbro jsou měkké kovy a zmatní po prvním použití.',
+        },
+        {
+          title: 'Soda s alobalem',
+          description:
+            'Na stříbro to funguje, ale bere všechno naráz, i patinu, která má v rytině zůstat. U šperků s lepenými kameny nebo perlami horkou lázeň nepoužívejte vůbec.',
+        },
+        {
+          title: 'Bazén a chlor',
+          description:
+            'Chlor napadá slitiny zlata v pájených spojích. Nejde o zmatnění, ale o křehnutí: prsten, který se v bazénu nosí roky, praská v místě spoje. Sundávejte ho.',
+        },
+        {
+          title: 'Domácí ultrazvuk',
+          description:
+            'Levná ultrazvuková čistička je fajn na brýle. U šperku s prasklinkou v kameni (smaragd, opál) prasklinu roztrhne a u uvolněného kamene vám ho vyplaví do vany.',
+        },
+      ],
+      faq: [
+        {
+          question: 'Kolik stojí profesionální čištění šperku?',
+          answer:
+            'Šperkům, které jsem vyrobil, čistím jednou ročně zdarma, po celou dobu jejich životnosti. Stačí se ozvat a domluvíme termín. U šperků odjinud řeknu cenu po prohlídce, protože je rozdíl mezi ultrazvukem s přeleštěním a případem, kdy je potřeba dotáhnout uchycení kamenů. Většinu z toho zvládnu na počkání.',
+        },
+        {
+          question: 'Jak vyčistit zlatý šperk doma?',
+          answer:
+            'Vlažná voda s kapkou saponátu na nádobí, projet měkkým zubním kartáčkem, opláchnout a osušit utěrkou z mikrovlákna. U šperku s kamenem kartáčkem projeďte i zespodu, pod kamenem, kde se usazuje nejvíc. Vyhněte se zubní pastě a jakémukoli brusivu.',
+        },
+        {
+          question: 'Čím vyčistit zčernalé stříbro?',
+          answer:
+            'Leštícím hadříkem na stříbro. Černá vrstva je sulfid stříbrný, tedy oxidace, ne špína. U členitých šperků leštěte jen vystouplé plochy a patinu v prohlubních nechte být, jinak reliéf ztratí hloubku. Po letech bez nošení už hadřík nestačí a je lepší šperk přinést do dílny, většinu vyčistím na počkání. Výjimkou jsou sady nádobí a příborů, ty zaberou víc času.',
+        },
+        {
+          question: 'Můžu na šperky použít zubní pastu nebo sodu?',
+          answer:
+            'Zubní pastu ne. Obsahuje brusivo a zlato i stříbro po ní zmatní. Soda s alobalem na stříbro funguje, ale odstraní i patinu z rytin, a u šperků s perlami nebo lepenými kameny může nadělat škodu. Ani jedno bych na dobrém šperku nedělal.',
+        },
+        {
+          question: 'Jak často nechat šperk profesionálně vyčistit?',
+          answer:
+            'U šperku, který nosíte denně, jednou ročně. Nejde jen o lesk: při čištění zkontroluju uchycení kamenů a stav zapínání, což je nejlevnější způsob, jak nepřijít o kámen. Šperkům, které jsem vyrobil, dělám roční čištění zdarma po celou dobu jejich životnosti.',
+        },
+        {
+          question: 'Kdy už si šperk doma čistit nemám?',
+          answer:
+            'Když je kámen cítit jako uvolněný, když jsou usazeniny pod kamenem, na které kartáček nedosáhne, když je povrch poškrábaný (to není čištění, ale leštění) nebo když jde o jemný řetízek s drobnými oky. V těch případech přineste šperk do dílny, obvykle to vyřídím na počkání.',
+        },
+      ],
+    };
+
+const jsonLd = graph(
+  jewelryCleaningServiceSchema(locale),
+  ...siteEntities(locale),
+  faqPageSchema(t.faq),
+  breadcrumbSchema(t.breadcrumb),
+);
+
+const HERO = '/images/o-dilne--galerie-1--ruka-retizek-stroj';
+---
+
+<Layout
+  locale={locale}
+  title={t.title}
+  ogImage="/images/og/og-opravy.jpg"
+  description={t.description}
+  jsonLd={jsonLd}
+  navOverlay
+  lcpImageDesktop={`${HERO}.avif`}
+  ctaHeading={t.ctaHeading}
+  ctaSubtitle={t.ctaSubtitle}
+  ctaPrimaryLabel={t.ctaPrimaryLabel}
+>
+
+  <!-- ====== HERO — split layout ====== -->
+  <section class="relative bg-bg-primary border-b border-border overflow-hidden">
+    <div class="radial-overlay"></div>
+    <div class="relative max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-14">
+      <div class="grid lg:grid-cols-2 gap-10 sm:gap-12 lg:gap-20 items-center min-h-[80vh] lg:min-h-dvh section-hero">
+
+        <!-- Text -->
+        <div data-anim="up">
+          <span class="label-dot">{t.heroLabel}</span>
+          <h1 class="mt-6">
+            {t.heroHeadingPre} <em>{t.heroHeadingEm}</em>{t.heroHeadingPost}
+          </h1>
+          <p class="mt-6 text-text-secondary body-lg max-w-xl">{t.heroCopy}</p>
+          <div class="mt-10 flex flex-col sm:flex-row gap-4">
+            <Button href={SITE.phoneHref} variant="primary">{t.heroPrimary}</Button>
+            <Button href={t.heroSecondaryHref} variant="secondary">{t.heroSecondary}</Button>
+          </div>
+        </div>
+
+        <!-- Photo -->
+        <div class="relative">
+          <!-- Jediný kandidát pro všechny viewporty: soubor má 1280px na slot max.
+               460px, takže pokrývá i retinu. Density srcset tu byl jen zdánlivý,
+               @2x byl bit po bitu stejný soubor jako 1x. -->
+          <picture>
+            <source type="image/avif" srcset={`${HERO}.avif`} />
+            <img
+              src={`${HERO}.webp`}
+              width="1280" height="1600"
+              alt={t.heroAlt}
+              fetchpriority="high"
+              decoding="async"
+              class="w-full h-auto object-cover aspect-[4/5] max-w-[460px] mx-auto"
+            />
+          </picture>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== NÁVOD PODLE MATERIÁLU ====== -->
+  <section class="relative bg-bg-primary border-b border-border section-lg overflow-hidden">
+    <div class="radial-overlay"></div>
+    <div class="relative max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-14">
+
+      <div class="max-w-3xl mb-14" data-anim="up">
+        <span class="label-dot">{t.guideLabel}</span>
+        <h2 class="mt-5">{t.guideHeading}</h2>
+        <p class="mt-6 text-text-secondary body-lg">{t.guideSub}</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-10" data-anim="stagger">
+        {t.guide.map((item) => (
+          <div data-anim-child class="border-b border-border pb-8">
+            <span class="font-sans text-[11px] font-medium uppercase tracking-[0.2em] text-gold-on-light">{item.number}</span>
+            <h3 class="mt-3">{item.title}</h3>
+            <p class="body-md text-text-secondary leading-relaxed mt-3 font-sans">{item.description}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== ČEHO SE VYVAROVAT ====== -->
+  <section class="relative bg-bg-secondary border-b border-border section-lg overflow-hidden">
+    <div class="relative max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-14">
+
+      <div class="max-w-3xl mb-14" data-anim="up">
+        <span class="label-dot">{t.dontLabel}</span>
+        <h2 class="mt-5">{t.dontHeadingPre} <em>{t.dontHeadingEm}</em>{t.dontHeadingPost}</h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-10" data-anim="stagger">
+        {t.dont.map((item) => (
+          <div data-anim-child class="border-b border-border pb-8">
+            <h3>{item.title}</h3>
+            <p class="body-md text-text-secondary leading-relaxed mt-3 font-sans">{item.description}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== PARALLAX BREATHER ====== -->
+  <section
+    class="relative border-y border-border overflow-hidden h-[56vh] min-h-[380px] max-h-[600px] sm:h-[48vh] sm:min-h-0 sm:max-h-[560px] lg:h-[58vh] lg:max-h-[680px]"
+    aria-hidden="true"
+  >
+    <picture class="absolute inset-0 block w-full h-full">
+      <source
+        type="image/avif"
+        media="(max-width: 640px)"
+        srcset="/images/opravy--parallax--brouseni-prstenu-vyska.avif 1x, /images/opravy--parallax--brouseni-prstenu-vyska@2x.avif 2x"
+      />
+      <source
+        media="(max-width: 640px)"
+        srcset="/images/opravy--parallax--brouseni-prstenu-vyska.webp 1x, /images/opravy--parallax--brouseni-prstenu-vyska@2x.webp 2x"
+      />
+      <source
+        type="image/avif"
+        media="(max-width: 1023px)"
+        srcset="/images/opravy--parallax--brouseni-prstenu.avif 1x, /images/opravy--parallax--brouseni-prstenu@2x.avif 2x"
+      />
+      <source
+        media="(max-width: 1023px)"
+        srcset="/images/opravy--parallax--brouseni-prstenu.webp 1x, /images/opravy--parallax--brouseni-prstenu@2x.webp 2x"
+      />
+      <source
+        type="image/avif"
+        srcset="/images/opravy--parallax--brouseni-prstenu-pano.avif 1x, /images/opravy--parallax--brouseni-prstenu-pano@2x.avif 2x"
+      />
+      <img
+        src="/images/opravy--parallax--brouseni-prstenu-pano.webp"
+        srcset="/images/opravy--parallax--brouseni-prstenu-pano.webp 1x, /images/opravy--parallax--brouseni-prstenu-pano@2x.webp 2x"
+        alt="" width="1920" height="817" loading="lazy" decoding="async"
+        data-anim="parallax"
+        class="absolute left-0 top-[-15%] w-full h-[130%] object-cover"
+      />
+    </picture>
+  </section>
+
+  <!-- ====== KDY DO DÍLNY ====== -->
+  <section class="relative bg-bg-primary border-b border-border section-md overflow-hidden">
+    <div class="radial-overlay"></div>
+    <div class="relative max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-14">
+      <div class="grid lg:grid-cols-[0.4fr_1fr] gap-10 lg:gap-20">
+        <div data-anim="up">
+          <span class="label-dot">{t.workshopLabel}</span>
+          <h2 class="mt-5">{t.workshopHeadingPre} <em>{t.workshopHeadingEm}</em>{t.workshopHeadingPost}</h2>
+        </div>
+        <div class="space-y-6 body-md text-text-secondary leading-relaxed font-sans max-w-2xl" data-anim="up">
+          {t.workshopP.map((p) => <p>{p}</p>)}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== FAQ ====== -->
+  <section class="relative bg-bg-primary section-md overflow-hidden">
+    <div class="radial-overlay"></div>
+    <div class="relative max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-14">
+      <span class="label-dot" data-anim="fade">{t.faqLabel}</span>
+      <h2 class="mt-5 mb-12">{t.faqHeading}</h2>
+      <FAQ items={t.faq} />
+    </div>
+  </section>
+
+</Layout>

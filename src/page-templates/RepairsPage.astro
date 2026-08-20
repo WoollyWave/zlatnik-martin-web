@@ -1,0 +1,382 @@
+---
+/**
+ * Sdílená šablona Opravy šperků (CS /opravy-sperku-praha/ + EN /en/jewelry-repair/).
+ * CS drží vyhrané pozice („oprava šperků praha 5" 2,64; „oprava zlatého řetízku" 2,21),
+ * takže se na titulek, H1 ani URL nesahá. EN cílí na jewelry repair (poz. 1,3),
+ * jewelry repair near me (1,0) a ring sizing (5,7), kde web rankuje bez anglické stránky.
+ * Voice: první osoba j. č., klidná jistota, žádné vykřičníky.
+ */
+import Layout from '../layouts/Layout.astro';
+import Button from '../components/Button.astro';
+import FAQ from '../components/FAQ.astro';
+import { SITE } from '../data/site';
+import { graph, jewelryRepairServiceSchema, faqPageSchema, breadcrumbSchema, siteEntities } from '../lib/seo';
+import type { Locale } from '../i18n';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const isEn = locale === 'en';
+
+const t = isEn
+  ? {
+      title: 'Jewellery repair Prague 5 | Goldsmith workshop Martin Ševr',
+      description:
+        'Jewellery repairs and alterations in Prague 5, Smíchov: ring resizing, stone replacement, chain repair, engraving, cleaning. 20+ years of practice. Bring it in or send it by post.',
+      breadcrumb: [
+        { name: 'Home', url: '/en/' },
+        { name: 'Jewellery repair', url: '/en/jewelry-repair/' },
+      ],
+      ctaHeading: 'Have a piece that needs <em>repairing</em>?',
+      ctaSubtitle: 'Bring it to the workshop in Prague 5 or send it by insured post. Most repairs are done within 5 working days.',
+      ctaPrimaryLabel: 'Arrange a repair',
+      heroLabel: 'Jewellery repair, Prague 5',
+      heroHeadingPre: 'I repair pieces that others',
+      heroHeadingEm: 'hand back',
+      heroHeadingPost: '.',
+      heroCopy:
+        'Ring resizing, stone replacement, chain repair, engraving, cleaning. In my own workshop at Pod Kesnerkou 46. Most repairs are done within 5 working days.',
+      heroPrimary: 'Call the goldsmith',
+      heroSecondary: 'Write an email',
+      heroSecondaryHref: '/en/contact/',
+      heroAlt: 'Martin Ševr in his goldsmith workshop holding a jeweller’s saw, Pod Kesnerkou 46, Prague 5',
+      typesLabel: 'What I repair',
+      typesHeading: 'What I can handle in my workshop',
+      howLabel: 'How it works',
+      howHeadingPre: 'Simply.',
+      howHeadingEm: 'No middlemen',
+      howHeadingPost: '.',
+      howP: [
+        'Before you set out, please call ahead so I am at the workshop. You then bring the piece to Prague 5 (Pod Kesnerkou 46), or send it by insured post. Once I have looked at it I call or write with a price and an expected date.',
+        'If you agree to the price, I get on with it. No deposits up front. You pay when you collect the finished piece.',
+        'When it is done I hand it over in person at the workshop, or send it back by insured post. Repairs going out by insured post anywhere in the country leave within 1 to 3 working days.',
+      ],
+      faqLabel: 'Common questions',
+      faqHeading: 'Common questions',
+      types: [
+        {
+          number: '01',
+          title: 'Ring resizing, up or down',
+          description: 'Changing a ring by 1 to 3 sizes. On 14k and 18k gold rings without any loss of strength. Usually done within 5 working days.',
+        },
+        {
+          number: '02',
+          title: 'Stone replacement',
+          description: 'Cracked stone in a ring? Lost a tourmaline out of an earring? I will replace the stone with one of the same quality, or help you pick an alternative.',
+        },
+        {
+          number: '03',
+          title: 'Broken parts',
+          description: 'A snapped chain, a broken clasp, a cracked bail on a pendant. I also repair pieces that other places hand back as beyond saving.',
+        },
+        {
+          number: '04',
+          title: 'Engraving and personalisation',
+          description: 'A wedding date, a name, a motif. Engraved inside a wedding band or on a pendant, by machine or by hand. Possible on older pieces too.',
+        },
+        {
+          number: '05',
+          title: 'Professional cleaning',
+          description: 'Ultrasonic cleaning and polishing. The piece comes back the way it was, without scratches or deposits. Usually done while you wait.',
+        },
+        {
+          number: '06',
+          title: 'Restoring old jewellery',
+          description: 'A piece from your grandmother that cannot be worn? I make a new band and keep the original stone. The character stays, the piece comes back to life.',
+        },
+        {
+          number: '07',
+          title: 'Checking fineness and stones',
+          description: 'Not sure whether what you have at home is real gold, and at what fineness? I check the fineness of the metal and whether the stone is genuine, right there in the workshop. It is not a valuation, but you will reliably know what you actually have.',
+        },
+      ],
+      faq: [
+        {
+          question: 'How much does a ring repair cost?',
+          answer:
+            'It depends on the type of repair. Resizing a ring up or down is usually 400 to 900 CZK depending on the material. Stone replacement from 600 CZK plus the price of the new stone. Chain repair from 300 CZK. I give you the exact price once I have seen the piece.',
+        },
+        {
+          question: 'How long does a repair take?',
+          answer:
+            'Most repairs (resizing a ring, fixing a clasp, cleaning) I manage within 5 working days. For more involved work, or when stones have to be ordered, 2 to 3 weeks. Express repairs we arrange individually.',
+        },
+        {
+          question: 'Do you repair jewellery you did not make?',
+          answer:
+            'Yes, I repair any gold, silver or platinum jewellery regardless of who made it. Come and have the condition assessed in person at the workshop, Pod Kesnerkou 46, Prague 5.',
+        },
+        {
+          question: 'Can I send you a piece by post?',
+          answer:
+            'Yes. Send the piece by insured post to the workshop address. Once I have looked at it I will call you with a price. I send the finished piece back insured as well.',
+        },
+        {
+          question: 'Do you speak English?',
+          answer:
+            'Yes. Write to me in English by email or on WhatsApp and we will sort the repair out that way. I am used to working with clients who live in Prague and do not speak Czech.',
+        },
+        {
+          question: 'Can you make a new piece from my old gold?',
+          answer:
+            'I do work with your own material: I melt the gold down and make a new piece from it. You just need at least 8 grams of the original gold at the same fineness. We can go through it at a consultation.',
+        },
+      ],
+    }
+  : {
+      title: 'Opravy šperků Praha 5 | Zlatnická dílna Martin Ševr',
+      description:
+        'Opravy a úpravy šperků v Praze 5 na Smíchově: zmenšení prstenu, výměna kamenu, oprava řetízku, rytí, čištění. 20+ let praxe. Pošlete poštou i osobně.',
+      breadcrumb: [
+        { name: 'Domů', url: '/' },
+        { name: 'Opravy šperků Praha', url: '/opravy-sperku-praha/' },
+      ],
+      ctaHeading: 'Máte šperk, který potřebuje <em>opravit</em>?',
+      ctaSubtitle: 'Přineste ho do dílny v Praze 5 nebo pošlete pojištěnou poštou. Většinu oprav hotovou do 5 pracovních dnů.',
+      ctaPrimaryLabel: 'Domluvit opravu',
+      heroLabel: 'Opravy šperků Praha 5',
+      heroHeadingPre: 'Opravím i šperky, které vám jinde',
+      heroHeadingEm: 'vrátí',
+      heroHeadingPost: '.',
+      heroCopy:
+        'Zmenšení prstenu, výměna kamenu, oprava řetízku, rytí, čištění. Ve vlastní dílně Pod Kesnerkou 46. Většinu oprav hotovou do 5 pracovních dnů.',
+      heroPrimary: 'Zavolat zlatníkovi',
+      heroSecondary: 'Napsat e-mail',
+      heroSecondaryHref: '/kontakt/',
+      heroAlt: 'Martin Ševr v zlatnické dílně s lupínkovou pilkou v rukou, Pod Kesnerkou 46, Praha 5',
+      typesLabel: 'Co opravuji',
+      typesHeading: 'Co všechno ve své dílně zvládnu',
+      howLabel: 'Jak to funguje',
+      howHeadingPre: 'Jednoduše.',
+      howHeadingEm: 'Bez prostředníků',
+      howHeadingPost: '.',
+      howP: [
+        'Než se vypravíte do dílny, zavolejte mi prosím předem, ať jsem na místě. Šperk pak přinesete do dílny v Praze 5 (Pod Kesnerkou 46), nebo ho pošlete pojištěnou zásilkou. Po prohlídce vám zavolám nebo napíšu s cenovým návrhem a předpokládaným termínem.',
+        'Pokud cenu odsouhlasíte, pustím se do opravy. Žádné zálohy předem. Platíte až při převzetí hotového šperku.',
+        'Po dokončení vám šperk předám osobně v dílně nebo zašlu pojištěnou zásilkou zpět. K opravám pojištěným poštou napříč ČR posílám během 1–3 pracovních dnů.',
+      ],
+      faqLabel: 'Časté otázky',
+      faqHeading: 'Časté otázky',
+      types: [
+        {
+          number: '01',
+          title: 'Zmenšení a zvětšení prstenu',
+          description: 'Změna velikosti prstenu o 1–3 čísla. U zlatých prstenů ze 14k i 18k zlata bez ztráty pevnosti. Hotovo obvykle do 5 pracovních dnů.',
+        },
+        {
+          number: '02',
+          title: 'Výměna a doplnění kamenu',
+          description: 'Praskl vám kámen v prstenu? Vypadl turmalín z náušnice? Vyměním kámen za nový stejné kvality nebo vám pomůžu vybrat alternativu.',
+        },
+        {
+          number: '03',
+          title: 'Oprava ulomených částí',
+          description: 'Přetržený řetízek, ulomené zapínání, prasklý kroužek u přívěsku. Opravím i šperky, které vám jinde vrátí jako „neopravitelné".',
+        },
+        {
+          number: '04',
+          title: 'Rytí a personalizace',
+          description: 'Datum svatby, jméno, motiv. Vyryjte si do vnitřku snubního prstenu nebo přívěsku, strojně i ručně. Možné i u starších kusů.',
+        },
+        {
+          number: '05',
+          title: 'Profesionální čištění',
+          description: 'Ultrazvukové čištění + leštění. Šperk se vrátí do původního stavu, bez škrábanců a usazenin. Hotovo na počkání.',
+        },
+        {
+          number: '06',
+          title: 'Renovace starých šperků',
+          description: 'Šperk po babičce, který se nedá nosit? Vyrobím nově obroučku, ponechám původní kámen. Charakter zůstane, šperk znovu ožije.',
+        },
+        {
+          number: '07',
+          title: 'Kontrola ryzosti a pravosti kamene',
+          description: 'Nevíte, jestli máte doma pravé zlato a jakou má ryzost? Zkontroluju ryzost kovu i pravost kamene přímo v dílně. Není to znalecký odhad ceny, ale spolehlivě poznáte, co doopravdy máte.',
+        },
+      ],
+      faq: [
+        {
+          question: 'Kolik stojí oprava prstenu?',
+          answer:
+            'Záleží na typu opravy. Zmenšení nebo zvětšení prstenu obvykle 400–900 Kč podle materiálu. Výměna kamenu od 600 Kč + cena nového kamene. Oprava řetízku od 300 Kč. Přesnou cenu řeknu po prohlídce šperku.',
+        },
+        {
+          question: 'Jak dlouho oprava trvá?',
+          answer:
+            'Většinu oprav (zmenšení prstenu, oprava zapínání, čištění) zvládnu do 5 pracovních dnů. U složitějších úprav nebo objednání kamenů 2–3 týdny. Expresní opravu domluvíme individuálně.',
+        },
+        {
+          question: 'Opravujete i šperky, které jste nevyrobil?',
+          answer:
+            'Ano, opravuji jakékoli zlaté, stříbrné nebo platinové šperky bez ohledu na to, kdo je vyrobil. Posuďte si stav osobně v dílně Pod Kesnerkou 46, Praha 5.',
+        },
+        {
+          question: 'Můžu vám šperk poslat poštou?',
+          answer:
+            'Ano. Pošlete šperk pojištěnou zásilkou na adresu dílny. Po prohlídce vám zavolám s cenovým návrhem. Hotový šperk zašlu zpět také pojištěně.',
+        },
+        {
+          question: 'Vyrobíte mi i nový šperk z mého starého zlata?',
+          answer:
+            'Pracuji i s vašim materiálem: zlato přetavím a vyrobím z něj nový kus. Jen je potřeba mít alespoň 8 gramů původního zlata stejné ryzosti. Probereme to při konzultaci.',
+        },
+      ],
+    };
+
+const jsonLd = graph(
+  jewelryRepairServiceSchema(locale),
+  ...siteEntities(locale),
+  faqPageSchema(t.faq),
+  breadcrumbSchema(t.breadcrumb),
+);
+
+const HERO = '/images/opravy--hero--martin-portret';
+---
+
+<Layout
+  locale={locale}
+  title={t.title}
+  ogImage="/images/og/og-opravy.jpg"
+  description={t.description}
+  jsonLd={jsonLd}
+  navOverlay
+  lcpImageMobile={`${HERO}.avif`}
+  lcpImageDesktop={`${HERO}.avif`}
+  lcpImageDesktop2x={`${HERO}@2x.avif`}
+  ctaHeading={t.ctaHeading}
+  ctaSubtitle={t.ctaSubtitle}
+  ctaPrimaryLabel={t.ctaPrimaryLabel}
+>
+
+  <!-- ====== HERO — split layout ====== -->
+  <section class="relative bg-bg-primary border-b border-border overflow-hidden">
+    <div class="radial-overlay"></div>
+    <div class="relative max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-14">
+      <div class="grid lg:grid-cols-2 gap-10 sm:gap-12 lg:gap-20 items-center min-h-[80vh] lg:min-h-dvh section-hero">
+
+        <!-- Text -->
+        <div data-anim="up">
+          <span class="label-dot">{t.heroLabel}</span>
+          <h1 class="mt-6">
+            {t.heroHeadingPre} <em>{t.heroHeadingEm}</em>{t.heroHeadingPost}
+          </h1>
+          <p class="mt-6 text-text-secondary body-lg max-w-xl">{t.heroCopy}</p>
+          <div class="mt-10 flex flex-col sm:flex-row gap-4">
+            <Button href={SITE.phoneHref} variant="primary">{t.heroPrimary}</Button>
+            <Button href={t.heroSecondaryHref} variant="secondary">{t.heroSecondary}</Button>
+          </div>
+        </div>
+
+        <!-- Photo -->
+        <div class="relative">
+          <picture>
+            <!-- Mobil (<1024px): jen základní 1000px kandidát — density srcset tam
+                 posílal @2x (2000px, 282 KB WebP) do ~400px slotu jako LCP. -->
+            <source media="(max-width: 1023px)" type="image/avif" srcset={`${HERO}.avif`} />
+            <source media="(max-width: 1023px)" srcset={`${HERO}.webp`} />
+            <source type="image/avif" srcset={`${HERO}.avif 1x, ${HERO}@2x.avif 2x`} />
+            <img
+              src={`${HERO}.webp`}
+              srcset={`${HERO}.webp 1x, ${HERO}@2x.webp 2x`}
+              width="1000" height="1000"
+              alt={t.heroAlt}
+              fetchpriority="high"
+              decoding="async"
+              class="w-full h-auto object-cover aspect-square max-w-[560px] mx-auto"
+            />
+          </picture>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== REPAIR TYPES ====== -->
+  <section class="relative bg-bg-primary border-b border-border section-lg overflow-hidden">
+    <div class="radial-overlay"></div>
+    <div class="relative max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-14">
+
+      <div class="max-w-3xl mb-14" data-anim="up">
+        <span class="label-dot">{t.typesLabel}</span>
+        <h2 class="mt-5">{t.typesHeading}</h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-10" data-anim="stagger">
+        {t.types.map((item) => (
+          <div data-anim-child class="border-b border-border pb-8">
+            <span class="font-sans text-[11px] font-medium uppercase tracking-[0.2em] text-gold-on-light">{item.number}</span>
+            <h3 class="mt-3">{item.title}</h3>
+            <p class="body-md text-text-secondary leading-relaxed mt-3 font-sans">{item.description}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== PARALLAX BREATHER ====== -->
+  <section
+    class="relative border-y border-border overflow-hidden h-[56vh] min-h-[380px] max-h-[600px] sm:h-[48vh] sm:min-h-0 sm:max-h-[560px] lg:h-[58vh] lg:max-h-[680px]"
+    aria-hidden="true"
+  >
+    <picture class="absolute inset-0 block w-full h-full">
+      <source
+        type="image/avif"
+        media="(max-width: 640px)"
+        srcset="/images/opravy--parallax--brouseni-prstenu-vyska.avif 1x, /images/opravy--parallax--brouseni-prstenu-vyska@2x.avif 2x"
+      />
+      <source
+        media="(max-width: 640px)"
+        srcset="/images/opravy--parallax--brouseni-prstenu-vyska.webp 1x, /images/opravy--parallax--brouseni-prstenu-vyska@2x.webp 2x"
+      />
+      <source
+        type="image/avif"
+        media="(max-width: 1023px)"
+        srcset="/images/opravy--parallax--brouseni-prstenu.avif 1x, /images/opravy--parallax--brouseni-prstenu@2x.avif 2x"
+      />
+      <source
+        media="(max-width: 1023px)"
+        srcset="/images/opravy--parallax--brouseni-prstenu.webp 1x, /images/opravy--parallax--brouseni-prstenu@2x.webp 2x"
+      />
+      <!-- Desktop (≥1024px): 2,35:1 z 3:2 masteru — přebytek výšky je dráha pro parallax -->
+      <source
+        type="image/avif"
+        srcset="/images/opravy--parallax--brouseni-prstenu-pano.avif 1x, /images/opravy--parallax--brouseni-prstenu-pano@2x.avif 2x"
+      />
+      <img
+        src="/images/opravy--parallax--brouseni-prstenu-pano.webp"
+        srcset="/images/opravy--parallax--brouseni-prstenu-pano.webp 1x, /images/opravy--parallax--brouseni-prstenu-pano@2x.webp 2x"
+        alt="" width="1920" height="817" loading="lazy" decoding="async"
+        data-anim="parallax"
+        class="absolute left-0 top-[-15%] w-full h-[130%] object-cover"
+      />
+    </picture>
+  </section>
+
+  <!-- ====== HOW IT WORKS ====== -->
+  <section class="relative bg-bg-primary border-b border-border section-md overflow-hidden">
+    <div class="radial-overlay"></div>
+    <div class="relative max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-14">
+      <div class="grid lg:grid-cols-[0.4fr_1fr] gap-10 lg:gap-20">
+        <div data-anim="up">
+          <span class="label-dot">{t.howLabel}</span>
+          <h2 class="mt-5">{t.howHeadingPre} <em>{t.howHeadingEm}</em>{t.howHeadingPost}</h2>
+        </div>
+        <div class="space-y-6 body-md text-text-secondary leading-relaxed font-sans max-w-2xl" data-anim="up">
+          {t.howP.map((p) => <p>{p}</p>)}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== FAQ ====== -->
+  <section class="relative bg-bg-primary section-md overflow-hidden">
+    <div class="radial-overlay"></div>
+    <div class="relative max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-14">
+      <span class="label-dot" data-anim="fade">{t.faqLabel}</span>
+      <h2 class="mt-5 mb-12" data-anim="up">{t.faqHeading}</h2>
+      <FAQ items={t.faq} />
+    </div>
+  </section>
+
+</Layout>

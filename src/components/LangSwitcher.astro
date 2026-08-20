@@ -23,12 +23,16 @@ const currentLocale: Locale = getLocaleFromUrl(Astro.url);
 // Mapy slug ↔ slug (oba směry) — sdílené s Layoutem.
 const { productSlugMap, portfolioSlugMap } = buildSlugMaps();
 
+// 404 nemá vlastní servírovanou URL (odkaz na /404/ by znovu spadl na chybu),
+// pill aktuálního jazyka proto na chybové stránce míří na jazykový kořen.
+const is404 = Astro.url.pathname.replace(/\/$/, '') === '/404';
+
 const csUrl = currentLocale === 'cs'
-  ? Astro.url.pathname
+  ? (is404 ? '/' : Astro.url.pathname)
   : getAlternateUrl(Astro.url.pathname, 'en', productSlugMap, portfolioSlugMap);
 
 const enUrl = currentLocale === 'en'
-  ? Astro.url.pathname
+  ? (is404 ? '/en/' : Astro.url.pathname)
   : getAlternateUrl(Astro.url.pathname, 'cs', productSlugMap, portfolioSlugMap);
 ---
 

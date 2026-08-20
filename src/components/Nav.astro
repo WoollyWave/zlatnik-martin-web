@@ -30,16 +30,19 @@ const navLinks: NavLink[] = [
     label: t('nav.customJewelry'),
     href: localizedPath('customJewelry', locale),
     match: locale === 'cs'
-      ? ['/zakazkova-tvorba', '/snubni-prsteny-na-miru', '/opravy-sperku-praha', '/retezy']
-      : ['/en/custom-jewelry', '/en/wedding-rings', '/en/chains'],
-    // Sub-kategorie pod Zakázkovou tvorbou — opravy jsou CS-only landing page.
+      ? ['/zakazkova-tvorba', '/snubni-prsteny-na-miru', '/opravy-sperku-praha', '/retezy', '/cisteni-sperku']
+      : ['/en/custom-jewelry', '/en/wedding-rings', '/en/chains', '/en/jewelry-repair', '/en/jewelry-cleaning'],
+    // Sub-kategorie pod Zakázkovou tvorbou — obojazyčné, viz PATH_MAP v i18n.
     children: locale === 'cs' ? [
       { label: 'Snubní prsteny na míru', href: '/snubni-prsteny-na-miru/', match: ['/snubni-prsteny-na-miru'] },
       { label: 'Královské řetězy', href: '/retezy/', match: ['/retezy'] },
       { label: 'Opravy šperků', href: '/opravy-sperku-praha/', match: ['/opravy-sperku-praha'] },
+      { label: 'Čištění šperků', href: '/cisteni-sperku/', match: ['/cisteni-sperku'] },
     ] : [
       { label: 'Wedding rings', href: '/en/wedding-rings/', match: ['/en/wedding-rings'] },
       { label: 'Royal chains', href: '/en/chains/', match: ['/en/chains'] },
+      { label: 'Jewellery repair', href: '/en/jewelry-repair/', match: ['/en/jewelry-repair'] },
+      { label: 'Jewellery cleaning', href: '/en/jewelry-cleaning/', match: ['/en/jewelry-cleaning'] },
     ],
   },
   {
