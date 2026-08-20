@@ -22,39 +22,61 @@ const postalAddress = {
 };
 
 /** Person — Martin Ševr. E-E-A-T signál pro Googlův Quality Rater algorithm. */
-export function personSchema() {
+/* Entita je jedna (sdílené `@id` napříč CZ i EN — viz AEO pravidlo „jedno @id
+   pro jednu entitu"), ale její POPIS má být v jazyce stránky. Bez `locale`
+   servírovala anglická mutace Googlu `jobTitle: 'Zlatník'` a český
+   `description` i `knowsAbout`.
+   Default 'cs' musí dávat bajtově identický výstup jako dřív, aby se nehnuly
+   stránky, které už rankují nahoře. */
+export function personSchema(locale: 'cs' | 'en' = 'cs') {
+  const isEn = locale === 'en';
   return {
     '@type': 'Person',
     '@id': `${SITE.url}#person`,
     name: SITE.shortName,
     givenName: 'Martin',
     familyName: 'Ševr',
-    jobTitle: 'Zlatník',
-    description: 'Pražský zlatník s více než 20 lety praxe v ruční výrobě šperků ze zlata, stříbra a přírodních kamenů.',
-    url: `${SITE.url}/o-dilne/`,
+    jobTitle: isEn ? 'Goldsmith' : 'Zlatník',
+    description: isEn
+      ? 'Prague goldsmith with over 20 years of experience handcrafting jewellery from gold, silver and natural stones.'
+      : 'Pražský zlatník s více než 20 lety praxe v ruční výrobě šperků ze zlata, stříbra a přírodních kamenů.',
+    url: isEn ? `${SITE.url}/en/about/` : `${SITE.url}/o-dilne/`,
     image: `${SITE.url}/images/og-default.jpg`,
     worksFor: { '@id': `${SITE.url}#business` },
-    knowsAbout: [
-      'Ruční výroba šperků',
-      'Zakázková zlatnická tvorba',
-      'Zlato 585/1000 a 750/1000',
-      'Stříbro 925/1000',
-      'Přírodní kameny',
-      'Snubní a zásnubní prsteny',
-      'Opravy a úpravy šperků',
-    ],
+    knowsAbout: isEn
+      ? [
+          'Handmade jewellery',
+          'Bespoke goldsmithing',
+          'Gold 585/1000 and 750/1000',
+          'Sterling silver 925/1000',
+          'Natural gemstones',
+          'Wedding and engagement rings',
+          'Jewellery repairs and alterations',
+        ]
+      : [
+          'Ruční výroba šperků',
+          'Zakázková zlatnická tvorba',
+          'Zlato 585/1000 a 750/1000',
+          'Stříbro 925/1000',
+          'Přírodní kameny',
+          'Snubní a zásnubní prsteny',
+          'Opravy a úpravy šperků',
+        ],
     sameAs: [SITE.social.instagram, SITE.social.facebook],
   };
 }
 
 /** JewelryStore — přesnější než LocalBusiness pro Googlový SERP. */
-export function jewelryStoreSchema() {
+export function jewelryStoreSchema(locale: 'cs' | 'en' = 'cs') {
+  const isEn = locale === 'en';
   return {
     '@type': ['JewelryStore', 'LocalBusiness'],
     '@id': `${SITE.url}#business`,
     name: SITE.name,
     legalName: 'Martin Ševr',
-    description: SITE.description,
+    description: isEn
+      ? 'Goldsmith workshop in Prague 5, Smíchov. Handmade bespoke jewellery in gold, silver and natural stones. Every piece an original.'
+      : SITE.description,
     url: SITE.url,
     telephone: SITE.phone,
     email: SITE.email,
@@ -89,12 +111,20 @@ export function jewelryStoreSchema() {
     vatID: 'CZ' + SITE.ico,
     // GEO: město + čtvrť explicitně — dílna sídlí na Smíchově (Praha 5),
     // lokální dotazy „zlatnictví praha 5 / smíchov" jsou primární akviziční kanál.
-    areaServed: [
-      { '@type': 'City', name: 'Praha' },
-      { '@type': 'Place', name: 'Smíchov, Praha 5' },
-      { '@type': 'Country', name: 'Česká republika' },
-    ],
-    keywords: 'zlatnictví Praha 5, zlatník Smíchov, šperky na zakázku Praha, snubní prsteny na míru, opravy šperků Praha, prsten s vltavínem',
+    areaServed: isEn
+      ? [
+          { '@type': 'City', name: 'Prague' },
+          { '@type': 'Place', name: 'Smíchov, Prague 5' },
+          { '@type': 'Country', name: 'Czech Republic' },
+        ]
+      : [
+          { '@type': 'City', name: 'Praha' },
+          { '@type': 'Place', name: 'Smíchov, Praha 5' },
+          { '@type': 'Country', name: 'Česká republika' },
+        ],
+    keywords: isEn
+      ? 'goldsmith Prague, jewellery workshop Prague 5, bespoke jewellery Prague, wedding rings Prague, jewellery repair Prague, moldavite ring'
+      : 'zlatnictví Praha 5, zlatník Smíchov, šperky na zakázku Praha, snubní prsteny na míru, opravy šperků Praha, prsten s vltavínem',
     // sameAs propojuje s autoritativními profily — Knowledge Graph entity confidence boost.
     // Google Business Profile přes kgmid (stabilní Knowledge Graph entity ID
     // „Zlatnická dílna Martin Ševr") — sváže webovou entitu s GBP entitou.
@@ -223,7 +253,7 @@ function shippingDetailsCZ() {
 export function homeGraph(locale: 'cs' | 'en' = 'cs') {
   return {
     '@context': 'https://schema.org',
-    '@graph': [jewelryStoreSchema(), personSchema(), websiteSchema(locale)],
+    '@graph': [jewelryStoreSchema(locale), personSchema(locale), websiteSchema(locale)],
   };
 }
 
@@ -236,7 +266,7 @@ export function homeGraph(locale: 'cs' | 'en' = 'cs') {
  * Použití: `graph(serviceSchema(), ...siteEntities(locale), faqPageSchema(...), breadcrumbSchema(...))`.
  */
 export function siteEntities(locale: 'cs' | 'en' = 'cs') {
-  return [jewelryStoreSchema(), personSchema(), websiteSchema(locale)];
+  return [jewelryStoreSchema(locale), personSchema(locale), websiteSchema(locale)];
 }
 
 /**
@@ -244,14 +274,18 @@ export function siteEntities(locale: 'cs' | 'en' = 'cs') {
  * MerchantReturnPolicy a OfferShippingDetails jsou inline v každém offeru
  * (Googlův Merchant Listing parser nedereferencuje @id spolehlivě).
  */
-export function productPageGraph(productNode: Record<string, unknown>, breadcrumb: Record<string, unknown>) {
+export function productPageGraph(
+  productNode: Record<string, unknown>,
+  breadcrumb: Record<string, unknown>,
+  locale: 'cs' | 'en' = 'cs',
+) {
   return {
     '@context': 'https://schema.org',
     '@graph': [
       productNode,
       breadcrumb,
-      jewelryStoreSchema(),
-      personSchema(),
+      jewelryStoreSchema(locale),
+      personSchema(locale),
     ],
   };
 }

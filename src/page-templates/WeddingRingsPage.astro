@@ -51,6 +51,11 @@ const t = isEn
       galleryHeadingPre: 'Rings I have',
       galleryHeadingEm: 'made',
       galleryLead: 'These pieces are not for sale, but I will happily make you something similar to order.',
+      galleryLinksPre: 'You can see how individual commissions came about in my',
+      galleryLinksPortfolio: 'portfolio',
+      galleryLinksMid: ', and what bespoke work involves on the',
+      galleryLinksCustom: 'bespoke jewellery',
+      galleryLinksPost: ' page.',   // vedoucí mezera — navazuje hned za </a>
     }
   : {
       title: 'Snubní prsteny na míru Praha | Ruční výroba, Martin Ševr',
@@ -84,6 +89,11 @@ const t = isEn
       galleryHeadingPre: 'Prsteny, které jsem',
       galleryHeadingEm: 'vyrobil',
       galleryLead: 'Tyhle kusy nejsou na prodej, ale rád vám podle nich vyrobím na míru něco vašeho.',
+      galleryLinksPre: 'Jak jednotlivé zakázky vznikaly, si můžete prohlédnout v',
+      galleryLinksPortfolio: 'portfoliu',
+      galleryLinksMid: ', a co zakázková výroba obnáší, popisuji na stránce',
+      galleryLinksCustom: 'zakázková tvorba',
+      galleryLinksPost: '.',
     };
 
 const ringStyles = isEn
@@ -409,6 +419,13 @@ const jsonLd = graph(
         <span class="label-dot">{t.galleryLabel}</span>
         <h2 class="mt-5">{t.galleryHeadingPre} <em>{t.galleryHeadingEm}</em></h2>
         <p class="mt-6 body-md text-text-secondary leading-relaxed font-sans max-w-2xl">{t.galleryLead}</p>
+        {/* Kontextové prolinky z těla stránky. Před nimi vedly z <main> ven jen
+            dva odkazy (kontakt + telefon) na 625 slov, takže sem z homepage
+            netekla žádná interní autorita. Anchor texty jsou přirozené, ne
+            klíčovkové. Odkazy schválně BEZ tříd — `p a` má globální styl
+            v global.css:110, takže se drží konvence webu a nepřibývá CSS
+            (inlineStylesheets: 'always' by ho nasypal do všech 70 stránek). */}
+        <p class="mt-4 body-md text-text-secondary leading-relaxed font-sans max-w-2xl">{t.galleryLinksPre} <a href={isEn ? '/en/portfolio/' : '/portfolio/'}>{t.galleryLinksPortfolio}</a>{t.galleryLinksMid} <a href={isEn ? '/en/custom-jewelry/' : '/zakazkova-tvorba/'}>{t.galleryLinksCustom}</a>{t.galleryLinksPost}</p>
       </div>
       <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 lg:gap-8" data-anim="stagger">
         {galleryItems.map((item) => (
