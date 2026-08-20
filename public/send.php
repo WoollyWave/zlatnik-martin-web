@@ -2,7 +2,8 @@
 declare(strict_types=1);
 
 // ============================================================================
-// Contact form handler — zlatnik-martin.cz (Hostinger / LiteSpeed / PHP 8+)
+// Contact form handler — zlatnik-martin.cz (Hostinger / LiteSpeed / PHP 8.1+,
+// vyžaduje `never` return type; na 8.0 by soubor skončil parse errorem)
 //   POST → odešle e-mail na RECIPIENT a vrátí JSON.
 //   Bezpečnost: Origin/Referer check, honeypot, rate-limit, header-injection guard.
 //   Hlášky lokalizované podle skrytého pole `locale` (cs/en) z formuláře.
@@ -23,12 +24,16 @@ const MAX_EMAIL      = 200;
 const MAX_PHONE      = 40;
 const MAX_MESSAGE    = 5000;
 
-header('Content-Type: application/json; charset=utf-8');
 header('X-Content-Type-Options: nosniff');
 header('Cache-Control: no-store');
 
 // Lokalizace odpovědí — jazyk z formuláře (fallback cs). %s v send_failed = RECIPIENT.
 $locale = (($_POST['locale'] ?? 'cs') === 'en') ? 'en' : 'cs';
+
+// AJAX fetch posílá `Accept: application/json`; nativní POST bez JS čeká HTML.
+// Bez téhle větve viděl návštěvník s vypnutým JS surové JSON místo poděkování.
+$wantsJson = str_contains($_SERVER['HTTP_ACCEPT'] ?? '', 'application/json');
+$formPage  = $locale === 'en' ? '/en/contact/' : '/kontakt/';
 $MESSAGES = [
     'cs' => [
         'invalid_origin' => 'Neplatný původ požadavku.',
@@ -60,6 +65,15 @@ $MESSAGES = [
 $M = $MESSAGES[$locale];
 
 function respond(bool $ok, string $msg, int $code = 200): never {
+    global $wantsJson, $formPage;
+    if (!$wantsJson) {
+        // 303 See Other → zpět na stránku formuláře; fragment zobrazí statickou
+        // hlášku přes CSS :target (viz ContactForm.astro), žádný JS není potřeba.
+        http_response_code(303);
+        header('Location: ' . $formPage . ($ok ? '#form-sent' : '#form-error'));
+        exit;
+    }
+    header('Content-Type: application/json; charset=utf-8');
     http_response_code($code);
     echo json_encode(
         $ok ? ['ok' => true, 'message' => $msg] : ['ok' => false, 'error' => $msg],
@@ -101,7 +115,10 @@ $rateFile = sys_get_temp_dir() . '/zm_form_' . md5($ip) . '.lock';
 if (file_exists($rateFile) && (time() - filemtime($rateFile)) < RATE_LIMIT_SEC) {
     respond(false, $M['rate_limit'], 429);
 }
-@touch($rateFile);
+// POZOR: `touch()` schválně AŽ za úspěšným mail() (konec souboru), ne tady.
+// Když se orazítkuje před validací, zákazník s překlepem v e-mailu dostane 422
+// a jeho oprava do 30 s narazí na 429 — ztracená poptávka. Boty odfiltruje
+// Origin check a honeypot výš, ty běží dřív.
 
 // --- 5) Validace -----------------------------------------------------------
 $name    = trim((string)($_POST['name']    ?? ''));
@@ -163,5 +180,8 @@ $sent = @mail(RECIPIENT, $subject, $body, $headers);
 if (!$sent) {
     respond(false, sprintf($M['send_failed'], RECIPIENT), 500);
 }
+
+// Rate-limit orazítkovat až tady — počítá se jen skutečně odeslaná zpráva.
+@touch($rateFile);
 
 respond(true, $M['success']);

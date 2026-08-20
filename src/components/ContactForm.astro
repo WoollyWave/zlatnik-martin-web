@@ -26,6 +26,8 @@ const t = locale === 'en'
       submit: 'Send message',
       sending: 'Sending…',
       errorFallback: 'Could not send the message. Please write directly to',
+      flashSuccess: 'Thank you, your message has been sent. I will get back to you as soon as possible.',
+      flashError: 'The message could not be sent. Please write to me directly at',
     }
   : {
       hpLabel: 'Website (nechte prázdné)',
@@ -42,8 +44,19 @@ const t = locale === 'en'
       submit: 'Odeslat zprávu',
       sending: 'Odesílám…',
       errorFallback: 'Zprávu se nepodařilo odeslat. Napište prosím přímo na',
+      flashSuccess: 'Děkuji, zpráva byla odeslána. Ozvu se vám co nejdříve.',
+      flashError: 'Zprávu se nepodařilo odeslat. Napište mi prosím přímo na',
     };
 ---
+
+{/* No-JS fallback: send.php přesměruje nativní POST zpět s #form-sent / #form-error
+    a blok se zobrazí čistě přes CSS :target. S JS vykresluje hlášku [data-form-status]. */}
+<div id="form-sent" class="form-flash text-success body-md" role="status">
+  {t.flashSuccess}
+</div>
+<div id="form-error" class="form-flash text-error body-md" role="alert">
+  {t.flashError} <a href={`mailto:${CONTACT_EMAIL}`} class="underline">{CONTACT_EMAIL}</a>.
+</div>
 
 <form
   class="space-y-6"
@@ -131,6 +144,20 @@ const t = locale === 'en'
 
   <Button type="submit" variant="primary">{t.submit}</Button>
 </form>
+
+<style>
+  .form-flash {
+    display: none;
+    margin-bottom: 1.5rem;
+    padding: 0.875rem 1.125rem;
+    border: 1px solid var(--color-border);
+    border-radius: 2px;
+    background: rgba(255, 255, 255, 0.8);
+  }
+  .form-flash:target {
+    display: block;
+  }
+</style>
 
 <script>
   const form = document.querySelector<HTMLFormElement>('[data-contact-form]');

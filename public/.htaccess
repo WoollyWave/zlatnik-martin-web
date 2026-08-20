@@ -21,9 +21,20 @@ DirectoryIndex index.html
   # 1a) apex zlatnik-martin.cz (http i https) → https://www JEDNÍM skokem.
   # Záměrně host-scoped, ne catch-all: stejný build běží i na stagingu
   # (web.vilim.sbs), který musí zůstat na svém hostu (indexaci mu zakazuje
-  # X-Robots-Tag guard v sekci 2).
-  RewriteCond %{HTTP_HOST} ^zlatnik-martin\.cz$ [NC]
+  # host-based robots.txt v pravidle 1d).
+  RewriteCond %{HTTP_HOST} ^zlatnik-martin\.cz(:[0-9]+)?$ [NC]
   RewriteRule ^ https://www.zlatnik-martin.cz%{REQUEST_URI} [L,R=301,NE]
+
+  # 1d) Staging guard — jiný host než *.zlatnik-martin.cz (např. web.vilim.sbs)
+  # dostane zakazující robots-staging.txt místo produkčního robots.txt.
+  # POZOR: řešit přes mod_rewrite, NE přes `Header ... env=` — LiteSpeed na
+  # Hostingeru env= podmínku nerespektuje a X-Robots-Tag noindex se posílal
+  # bezpodmínečně i na produkci (blokovaná indexace celého webu, 7/2026).
+  # `(:[0-9]+)?` — HTTP_HOST je syrová hlavička Host a smí obsahovat port.
+  # Bez toho by se `www.zlatnik-martin.cz:443` netrefil a produkce by servírovala
+  # zakazující robots-staging.txt.
+  RewriteCond %{HTTP_HOST} !(^|\.)zlatnik-martin\.cz(:[0-9]+)?$ [NC]
+  RewriteRule ^robots\.txt$ /robots-staging.txt [L]
 
   # 1b) HTTP → HTTPS na aktuálním hostu (produkční www i staging; apex už
   # odbavilo 1a). X-Forwarded-Proto kvůli LiteSpeed/CDN proxy.
@@ -34,17 +45,17 @@ DirectoryIndex index.html
   # 1c) Strip trailing /index.html → /
   RewriteCond %{THE_REQUEST} \s/+(.*)index\.html[\s?] [NC]
   RewriteRule ^ /%1 [L,R=301,NE]
+
+  # 1e) Legacy URL z předchozího webu → nové ekvivalenty.
+  # Obě adresy vracely 404, ale v GSC (7/2026) pořád rankovaly a nosily prokliky:
+  # /retizky poz. 6,5 (líp než nová /retezy/) a /puncovni-znacky poz. 5,2.
+  # Bez 301 se ta pozice zahodí. Volitelné trailing / kvůli oběma variantám v indexu.
+  RewriteRule ^retizky/?$        /retezy/  [L,R=301,NE]
+  RewriteRule ^puncovni-znacky/?$ /o-dilne/ [L,R=301,NE]
 </IfModule>
 
 # --- 2) Security headers (OWASP 2026) --------------------------------------
 <IfModule mod_headers.c>
-  # Staging guard — build běžící na jiném hostu než produkce (vilim.sbs) se
-  # nesmí indexovat (duplicitní obsah vůči www.zlatnik-martin.cz).
-  <IfModule mod_setenvif.c>
-    SetEnvIfNoCase Host "(^|\.)zlatnik-martin\.cz$" IS_PROD
-    Header always set X-Robots-Tag "noindex, nofollow" env=!IS_PROD
-  </IfModule>
-
   # HSTS — HTTPS-only po 1 rok. Pro HSTS preload list později zvýšit max-age=63072000 a doplnit "preload".
   Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
 
@@ -105,15 +116,16 @@ DirectoryIndex index.html
   ExpiresByType font/woff2                      "access plus 1 year"
   ExpiresByType font/woff                       "access plus 1 year"
 
-  # Obrázky — 6 měsíců (favicon update musí stihnout projít)
-  ExpiresByType image/webp                      "access plus 6 months"
-  ExpiresByType image/avif                      "access plus 6 months"
-  ExpiresByType image/svg+xml                   "access plus 6 months"
-  ExpiresByType image/png                       "access plus 6 months"
-  ExpiresByType image/jpeg                      "access plus 6 months"
-  ExpiresByType image/gif                       "access plus 6 months"
-  ExpiresByType image/x-icon                    "access plus 6 months"
-  ExpiresByType image/vnd.microsoft.icon        "access plus 6 months"
+  # Obrázky — 1 měsíc. Názvy fotek nejsou content-hashované (sémantické slugy),
+  # delší cache znamenala, že vyměněná fotka zůstala vracejícím se návštěvníkům stará.
+  ExpiresByType image/webp                      "access plus 1 month"
+  ExpiresByType image/avif                      "access plus 1 month"
+  ExpiresByType image/svg+xml                   "access plus 1 month"
+  ExpiresByType image/png                       "access plus 1 month"
+  ExpiresByType image/jpeg                      "access plus 1 month"
+  ExpiresByType image/gif                       "access plus 1 month"
+  ExpiresByType image/x-icon                    "access plus 1 month"
+  ExpiresByType image/vnd.microsoft.icon        "access plus 1 month"
 
   # Sitemap / robots / manifest — krátký cache (mění se nezávisle na buildu)
   ExpiresByType application/manifest+json       "access plus 1 week"
@@ -129,9 +141,10 @@ DirectoryIndex index.html
     Header set Cache-Control "public, max-age=31536000, immutable"
   </FilesMatch>
 
-  # Obrázky → long cache, ALE ne immutable (og-image musí jít update)
+  # Obrázky → 30 dní, ne immutable. Názvy nejsou hashované — po výměně fotky
+  # pod stejným slugem se změna propíše vracejícím se návštěvníkům do měsíce.
   <FilesMatch "\.(webp|avif|svg|jpg|jpeg|png|gif|ico)$">
-    Header set Cache-Control "public, max-age=15552000"
+    Header set Cache-Control "public, max-age=2592000"
   </FilesMatch>
 
   # Favicony — krátký cache (1 den), aby update favikony rychle prošel browsery.

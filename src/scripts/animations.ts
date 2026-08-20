@@ -76,20 +76,27 @@ function animateHero() {
   }
 }
 
-// 3. Image parallax — jemný svislý posun při scrollu
+// 3. Image parallax — oversized-img: obrázek je v CSS vyšší než pás
+// (h-[130%] + top-[-15%], viz sekce na /opravy) a při scrollu v něm klouže.
+// Žádný zoom — celý efekt je čistá translace v přebytku výšky.
+// Kontrakt: ±10 yPercent obrázku = ±13 % výšky pásu < 15% slack z top-[-15%],
+// takže se nikdy neodhalí okraj. Reduced motion: obrázek staticky vycentrovaný.
 function animateParallax() {
   gsap.utils.toArray<HTMLElement>('[data-anim="parallax"]').forEach((el) => {
-    gsap.set(el, { scale: 1.1 });
-    gsap.to(el, {
-      yPercent: 10,
-      ease: 'none',
-      scrollTrigger: {
-        trigger: el.parentElement as HTMLElement,
-        start: 'top bottom',
-        end: 'bottom top',
-        scrub: true,
+    gsap.fromTo(
+      el,
+      { yPercent: -10 },
+      {
+        yPercent: 10,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: el.parentElement as HTMLElement,
+          start: 'top bottom',
+          end: 'bottom top',
+          scrub: true,
+        },
       },
-    });
+    );
   });
 }
 

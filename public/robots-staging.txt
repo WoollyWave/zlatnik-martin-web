@@ -1,0 +1,5 @@
+# Staging robots — servíruje se místo robots.txt na jakémkoli hostu mimo
+# *.zlatnik-martin.cz (viz pravidlo 1d v .htaccess). Staging kopie webu se
+# nesmí indexovat (duplicitní obsah vůči produkci).
+User-agent: *
+Disallow: /

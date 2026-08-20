@@ -54,6 +54,14 @@ const SIZE_MAP = {
   'homepage--hero': { w: 1200, h: 900, q: 85 },
   'zakazkova--hero': { w: 1920, h: 1080, q: 85 },
   'zakazkova--parallax': { w: 1920, h: 1080, q: 80 },
+  // Parallax pás na /opravy — tři dedikované cropy: portrét 4:5 mobil,
+  // 16:9 tablet, 2,35:1 desktop. Desktop crop je záměrně VYŠŠÍ než render
+  // pásu (~2,7–3,8:1): obraz v pásu klouže (oversized-img parallax, viz
+  // animations.ts), přebytek výšky je dráha posunu. Zdroj -pano je 3:2 master.
+  // Delší prefixy (-vyska/-pano) vyhrávají nad základním 16:9.
+  'opravy--parallax--brouseni-prstenu-vyska': { w: 640, h: 800, q: 82 },
+  'opravy--parallax--brouseni-prstenu-pano': { w: 1920, h: 817, q: 82 },
+  'opravy--parallax--brouseni-prstenu': { w: 1920, h: 1080, q: 82 },
   'detail-portfolio--vltavin--hero': { w: 1920, h: 1080, q: 85 },
 
   // Horizontální karty 4:3
