@@ -66,7 +66,6 @@ const t = locale === 'en'
   data-fallback-email={CONTACT_EMAIL}
   action="/send.php"
   method="POST"
-  novalidate
 >
   <input type="hidden" name="locale" value={locale} />
   <div class="absolute left-[-9999px]" aria-hidden="true">
@@ -161,6 +160,14 @@ const t = locale === 'en'
 
 <script>
   const form = document.querySelector<HTMLFormElement>('[data-contact-form]');
+
+  /* `novalidate` nasazujeme až tady, ne v HTML. S JS si validaci řídí
+     reportValidity() níž, ale BEZ JS je nativní kontrola prohlížeče jediná,
+     která existuje — s natvrdo zapsaným novalidate projde odeslání bez GDPR
+     souhlasu nebo s překlepem v e-mailu až na server, ten vrátí 422 a 303
+     zpět na statickou stránku s PRÁZDNÝM formulářem. Vyplněná poptávka je
+     pryč a zákazník ji podruhé nepíše. */
+  form?.setAttribute('novalidate', '');
   if (form) {
     const status = form.querySelector<HTMLParagraphElement>('[data-form-status]');
     const submitBtn = form.querySelector<HTMLButtonElement>('button[type="submit"]');

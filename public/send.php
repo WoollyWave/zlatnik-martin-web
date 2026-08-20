@@ -104,6 +104,12 @@ if (!$valid) {
     respond(false, $M['invalid_origin'], 403);
 }
 
+// Produkce vs. staging. Bez tohohle rozlišení dorazí testovací odeslání ze
+// stagingu do Martinovy schránky jako plnohodnotná poptávka a nejde je od
+// skutečné odlišit — jediným vodítkem by byla IP, kterou nikdo nekontroluje.
+$host    = $_SERVER['HTTP_HOST'] ?? '';
+$isProd  = (bool) preg_match('/(^|\.)zlatnik-martin\.cz(:[0-9]+)?$/i', $host);
+
 // --- 3) Honeypot — tichý úspěch pro boty -----------------------------------
 if (trim((string)($_POST['website'] ?? '')) !== '') {
     respond(true, $M['sent']);
@@ -151,9 +157,13 @@ foreach ([$name, $email, $phone] as $v) {
 }
 
 // --- 7) Sestavení e-mailu --------------------------------------------------
-$subject = '=?UTF-8?B?' . base64_encode('Poptávka z webu: ' . $name) . '?=';
+$subjectText = ($isProd ? '' : '[TEST – staging] ') . 'Poptávka z webu: ' . $name;
+$subject = '=?UTF-8?B?' . base64_encode($subjectText) . '?=';
 
-$body  = "Nová zpráva z kontaktního formuláře na zlatnik-martin.cz\n";
+$body  = $isProd
+    ? "Nová zpráva z kontaktního formuláře na zlatnik-martin.cz\n"
+    : "TESTOVACÍ ZPRÁVA ZE STAGINGU – nejde o skutečnou poptávku.\n\n"
+      . "Odesláno z: {$host}\n";
 $body .= str_repeat('-', 60) . "\n\n";
 $body .= "Jméno:    {$name}\n";
 $body .= "E-mail:   {$email}\n";
@@ -164,6 +174,7 @@ $body .= "\nZpráva:\n";
 $body .= ($message !== '' ? $message : '(bez textu zprávy)') . "\n\n";
 $body .= str_repeat('-', 60) . "\n";
 $body .= "IP:       {$ip}\n";
+$body .= "Web:      {$host}\n";
 $body .= "Čas:      " . date('Y-m-d H:i:s') . "\n";
 
 $fromHeader = '=?UTF-8?B?' . base64_encode(SENDER_NAME) . '?= <' . SENDER_FROM . '>';
