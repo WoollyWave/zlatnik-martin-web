@@ -23,10 +23,14 @@ export interface Product {
   material: string;
   category: 'prsteny' | 'nausnice' | 'privesky' | 'retizky' | 'sady';
   size?: string;
-  weightSilver: string;
-  priceSilver: string;
+  /** Stříbrná varianta. Volitelná — kusy vyrobené jen ve zlatě ji nemají a
+   *  hlavní cenou se pro ně stává `priceGold` (viz ProductCard/ProductDetailPage). */
+  weightSilver?: string;
+  priceSilver?: string;
   weightGold?: string;
   priceGold?: string;
+  /** Konec platnosti ceny (YYYY-MM-DD) — pro akční cenu. Jde do Offer.priceValidUntil. */
+  priceValidUntil?: string;
   goldNote?: string;
   description: string;
   image: string;
@@ -54,7 +58,13 @@ export interface Product {
   notesEn?: string[];
 }
 
-export const products: Product[] = [
+/**
+ * Katalog v pořadí, v jakém kusy vznikaly — NEJSTARŠÍ NAHOŘE.
+ * Nový šperk přidávej vždy na KONEC tohohle pole; o obrácení do „nejnovější
+ * první" se postará export `products` níž. Nepřidávej nahoru, rozbilo by to
+ * řazení na /skladem/ i výběr na homepage.
+ */
+const productsChronological: Product[] = [
   {
     slug: 'prsten-s-ametystem-kulaty',
     title: 'Prsten s ametystem',
@@ -571,4 +581,49 @@ export const products: Product[] = [
     priceGoldEn: 'CZK 55,500',
     goldNoteEn: 'as of 12 May 2026',
   },
+  {
+    // Kus jen ve zlatě — bez stříbrné varianty, hlavní cenou je proto priceGold.
+    slug: 'zlaty-zasnubni-prsten-s-briliantem',
+    title: 'Zlatý zásnubní prsten s briliantem',
+    material: 'Zlato 585/1000, briliant 0,50 ct (čistota SI1, barva E)',
+    category: 'prsteny',
+    size: '55 ½',
+    weightGold: '3 g',
+    priceGold: '50 000 Kč',
+    goldNote: 'Akční cena do 23. 8. 2026, běžná cena 60 000 Kč.',
+    priceValidUntil: '2026-08-23',
+    description: 'Ručně vyrobený zásnubní prsten ze zlata 585/1000 s briliantem 0,50 ct (čistota SI1, barva E). Čistá váha 3 g, velikost 55 ½.',
+    image: '/skladem/20.webp',
+    imageCard: '/skladem/karta/20.webp',
+    alt: 'Zlatý zásnubní prsten s briliantem, zlato 585/1000',
+    detailImages: [
+      { src: '/skladem/20.1.webp', alt: 'Zlatý zásnubní prsten s briliantem z boku', altEn: 'Gold diamond engagement ring from the side' },
+    ],
+    notes: [
+      'Briliant 0,50 ct, čistota SI1, barva E.',
+      'Úprava velikosti zdarma.',
+      'Čistá váha zlata 3 g, ryzost 585/1000.',
+    ],
+
+    slugEn: 'gold-diamond-engagement-ring',
+    titleEn: 'Gold diamond engagement ring',
+    materialEn: 'Gold 585/1000 (14 kt), 0.50 ct brilliant-cut diamond (SI1 clarity, E colour)',
+    descriptionEn: 'Handmade engagement ring in 585/1000 gold with a 0.50 ct brilliant-cut diamond (SI1 clarity, E colour). Net weight 3 g, size 55 ½.',
+    altEn: 'Gold engagement ring with a brilliant-cut diamond, 585/1000 gold',
+    priceGoldEn: 'CZK 50,000',
+    goldNoteEn: 'Promotional price until 23 August 2026, regular price CZK 60,000.',
+    sizeEn: '55 ½ (EU)',
+    notesEn: [
+      'Diamond 0.50 ct, SI1 clarity, E colour.',
+      'Resizing free of charge.',
+      'Net gold weight 3 g, 585/1000 fineness.',
+    ],
+  },
 ];
+
+/**
+ * Zobrazovací pořadí — nejnovější první. Čte ho /skladem/, ItemList schema,
+ * ukázka na homepage i navigace mezi detaily, takže stačí otočit tady na
+ * jednom místě.
+ */
+export const products: Product[] = [...productsChronological].reverse();

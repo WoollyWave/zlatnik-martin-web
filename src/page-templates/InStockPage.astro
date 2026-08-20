@@ -11,7 +11,7 @@ import IconArrowUpRight from '../components/IconArrowUpRight.astro';
 import FAQ from '../components/FAQ.astro';
 import { products } from '../data/products';
 import { SITE } from '../data/site';
-import { graph, productItemList, breadcrumbSchema, faqPageSchema } from '../lib/seo';
+import { graph, productItemList, breadcrumbSchema, faqPageSchema, siteEntities } from '../lib/seo';
 import type { Locale } from '../i18n';
 
 interface Props {
@@ -54,7 +54,7 @@ const t = isEn
       chainsHref: '/en/chains/',
     }
   : {
-      title: 'Stříbrné šperky a prsteny s vltavínem skladem | Zlatnictví Praha 5',
+      title: 'Šperky a prsteny s vltavínem skladem | Zlatnictví Praha 5',
       description: 'Hotové stříbrné šperky s přírodními kameny: ametyst, vltavín, opál, turmalín. K vyzvednutí v dílně Praha 5 nebo poštou. Zlatou variantu vyrobím do 3 týdnů.',
       breadcrumb: [
         { name: 'Domů', url: '/' },
@@ -113,7 +113,8 @@ const filterItems = [
 ];
 
 const jsonLd = graph(
-  productItemList(products),
+  productItemList(products, locale),
+  ...siteEntities(locale),
   faqPageSchema(faqItems),
   breadcrumbSchema(t.breadcrumb),
 );

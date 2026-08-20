@@ -6,7 +6,8 @@ import type { Locale } from '../i18n';
 interface Props {
   title: string;
   material: string;
-  priceSilver: string;
+  /** Volitelná — kusy jen ve zlatě ji nemají, hlavní cenou je pak `priceGold`. */
+  priceSilver?: string;
   priceGold?: string;
   goldNote?: string;
   href: string;
@@ -72,10 +73,11 @@ const labels = locale === 'en'
         {image.endsWith('.webp') && (
           <source type="image/avif" srcset={image.replace(/\.webp$/, '.avif')} />
         )}
+        {/* Bez srcset nemá `sizes` účinek (prohlížeč ho ignoruje) — 1200px zdroj
+            pokrývá slot karty (~400–660 px) i na retině. */}
         <img
           src={image}
           width="1200" height="800"
-          sizes="(min-width: 1024px) 660px, 100vw"
           alt={alt || title}
           loading="lazy"
           decoding="async"
@@ -117,17 +119,18 @@ const labels = locale === 'en'
         )}
       </div>
       <div class="flex-shrink-0 text-right whitespace-nowrap">
+        {/* Hlavní cena = stříbro; u kusů jen ve zlatě zaujme hlavní slot zlato. */}
         <div class="flex items-baseline justify-end gap-2">
-          <span class="text-[10px] uppercase tracking-[0.15em] text-text-muted font-sans font-medium">{labels.silver}</span>
-          <span class="font-sans font-medium text-[clamp(1rem,0.85rem+0.5vw,1.25rem)] text-gold-deep tracking-tight">{priceSilver}</span>
+          <span class="text-[10px] uppercase tracking-[0.15em] text-text-muted font-sans font-medium">{priceSilver ? labels.silver : labels.gold}</span>
+          <span class="font-sans font-medium text-[clamp(1rem,0.85rem+0.5vw,1.25rem)] text-gold-deep tracking-tight">{priceSilver || priceGold}</span>
         </div>
-        {priceGold && (
+        {priceSilver && priceGold && (
           <div class="mt-1 flex items-baseline justify-end gap-2">
             <span class="text-[10px] uppercase tracking-[0.15em] text-text-muted font-sans font-medium">{labels.gold}</span>
             <span class="font-sans text-[clamp(0.875rem,0.75rem+0.3vw,1rem)] text-text-secondary tracking-tight">{priceGold}</span>
           </div>
         )}
-        {goldNote && priceGold && (
+        {goldNote && priceSilver && priceGold && (
           <p class="mt-1 text-[10px] text-text-muted font-sans">({goldNote})</p>
         )}
       </div>

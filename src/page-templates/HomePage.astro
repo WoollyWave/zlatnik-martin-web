@@ -63,7 +63,7 @@ const t = isEn
       stockCtaLabel: 'Full stock',
     }
   : {
-      title: 'Zlatnictví Praha 5, Smíchov | Zlatník Martin Ševr, šperky na zakázku',
+      title: 'Zlatnictví Praha 5, Smíchov | Zlatník Martin Ševr',
       description: 'Zlatnictví a zlatnická dílna v Praze 5 na Smíchově. Šperky na zakázku, snubní prsteny, opravy, ruční výroba ze zlata a stříbra. 20+ let praxe. Pod Kesnerkou 46.',
       heroLabel: 'Zlatnická dílna Praha, Pod Kesnerkou',
       h1Line1: 'Šperky vyrobené <em>ručně</em>.',
@@ -131,11 +131,24 @@ const portfolioItems = portfolioCases.slice(0, 3).map((c, i) =>
       }
 );
 
-const skladem = products.slice(0, 3).map((p, i) =>
-  isEn
+const skladem = products.slice(0, 3).map((p, i) => {
+  // Hlavní cena = stříbro; u kusů jen ve zlatě zaujme hlavní slot zlato.
+  // Stejné pravidlo jako v ProductCard.astro — bez něj se u goldOnly kusu
+  // vypsalo `Stříbro · undefined`.
+  const silver = isEn ? p.priceSilverEn || p.priceSilver : p.priceSilver;
+  const gold = isEn ? p.priceGoldEn || p.priceGold : p.priceGold;
+  const priceTag = silver
+    ? `${isEn ? 'Silver' : 'Stříbro'} · ${silver}`
+    : gold
+      ? `${isEn ? 'Gold' : 'Zlato'} · ${gold}`
+      : null;
+  const material = isEn ? p.materialEn || p.material : p.material;
+  const tags = priceTag ? [material, priceTag] : [material];
+
+  return isEn
     ? {
         title: p.titleEn || p.title,
-        tags: [p.materialEn || p.material, `Silver · ${p.priceSilverEn || p.priceSilver}`],
+        tags,
         description: p.descriptionEn || p.description,
         href: `/en/jewelry/${p.slugEn || p.slug}/`,
         label: `In stock 0${i + 1}`,
@@ -145,15 +158,15 @@ const skladem = products.slice(0, 3).map((p, i) =>
       }
     : {
         title: p.title,
-        tags: [p.material, `Stříbro · ${p.priceSilver}`],
+        tags,
         description: p.description,
         href: `/sperky/${p.slug}/`,
         label: `Skladem 0${i + 1}`,
         image: p.imageCard || p.image,
         image2x: p.imageCard || p.image,
         alt: p.alt,
-      }
-);
+      };
+});
 
 const processSteps = isEn
   ? [
