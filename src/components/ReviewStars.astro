@@ -1,0 +1,24 @@
+---
+/**
+ * Hvězdičky hodnocení. Vytaženo z ProductDetailPage, aby produktové i firemní
+ * recenze vypadaly stejně a existovala jen jedna implementace.
+ *
+ * Glyf `★` místo SVG — je v obou self-hostovaných fontech, nestojí request
+ * a nezvětšuje inlinované CSS. Vizuálně je `aria-hidden`, protože pět hvězd
+ * po sobě čte odečítač jako „hvězda hvězda hvězda…"; skutečnou informaci nese
+ * `sr-only` text vedle.
+ */
+interface Props {
+  rating: 1 | 2 | 3 | 4 | 5;
+  /** Např. „z 5" / „out of 5" — text pro odečítače obrazovky. */
+  outOfLabel: string;
+  class?: string;
+}
+
+const { rating, outOfLabel, class: className = '' } = Astro.props;
+---
+
+<span class={`font-sans text-[12px] text-gold-deep ${className}`.trim()} aria-hidden="true"
+  >{'★'.repeat(rating)}<span class="text-border">{'★'.repeat(5 - rating)}</span></span
+>
+<span class="sr-only">{rating} {outOfLabel}</span>

@@ -11,6 +11,8 @@ import FAQ from '../components/FAQ.astro';
 import { SITE } from '../data/site';
 import { graph, jewelryCleaningServiceSchema, faqPageSchema, breadcrumbSchema, siteEntities } from '../lib/seo';
 import type { Locale } from '../i18n';
+import Reviews from '../components/Reviews.astro';
+import { reviewsFor } from '../data/reviews';
 
 interface Props {
   locale: Locale;
@@ -422,6 +424,9 @@ const HERO = '/images/o-dilne--galerie-1--ruka-retizek-stroj';
       </div>
     </div>
   </section>
+
+  <!-- ====== RECENZE ====== -->
+  <Reviews items={reviewsFor('cisteni')} locale={locale} size="md" />
 
   <!-- ====== FAQ ====== -->
   <section class="relative bg-bg-primary section-md overflow-hidden">

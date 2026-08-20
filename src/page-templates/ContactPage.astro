@@ -11,6 +11,8 @@ import FAQ from '../components/FAQ.astro';
 import { SITE } from '../data/site';
 import { graph, contactPageSchema, breadcrumbSchema, siteEntities, faqPageSchema } from '../lib/seo';
 import type { Locale } from '../i18n';
+import Reviews from '../components/Reviews.astro';
+import { featuredReviews } from '../data/reviews';
 
 interface Props {
   locale: Locale;
@@ -166,6 +168,9 @@ const contactMethods = [
       </div>
     </div>
   </section>
+
+  <!-- ====== RECENZE ====== -->
+  <Reviews items={featuredReviews} locale={locale} size="md" />
 
   <!-- ====== FORM + PHOTO ====== -->
   <section class="relative bg-bg-primary section-md overflow-hidden">

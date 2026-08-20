@@ -11,6 +11,8 @@ import PhotoFrame from '../components/PhotoFrame.astro';
 import { SITE } from '../data/site';
 import { graph, weddingRingsServiceSchema, faqPageSchema, breadcrumbSchema, siteEntities } from '../lib/seo';
 import type { Locale } from '../i18n';
+import Reviews from '../components/Reviews.astro';
+import { reviewsFor } from '../data/reviews';
 
 interface Props {
   locale: Locale;
@@ -480,6 +482,9 @@ const jsonLd = graph(
       </div>
     </div>
   </section>
+
+  <!-- ====== RECENZE ====== -->
+  <Reviews items={reviewsFor('snubni-prsteny')} locale={locale} size="md" />
 
   <!-- ====== FAQ ====== -->
   <section class="relative bg-bg-primary section-md overflow-hidden">

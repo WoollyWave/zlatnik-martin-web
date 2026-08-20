@@ -12,6 +12,8 @@ import ResponsivePicture from '../components/ResponsivePicture.astro';
 import { SITE } from '../data/site';
 import { graph, faqPageSchema, customJewelryServiceSchema, breadcrumbSchema, siteEntities } from '../lib/seo';
 import type { Locale } from '../i18n';
+import Reviews from '../components/Reviews.astro';
+import { reviewsFor } from '../data/reviews';
 
 interface Props {
   locale: Locale;
@@ -786,6 +788,9 @@ const jsonLd = graph(
       </div>
     </div>
   </section>
+
+  <!-- ====== RECENZE ====== -->
+  <Reviews items={[...reviewsFor('zakazkova-tvorba'), ...reviewsFor('expres')]} locale={locale} size="md" />
 
   <!-- ====== FAQ — bg-secondary ====== -->
   <section class="relative bg-bg-primary section-md overflow-hidden">

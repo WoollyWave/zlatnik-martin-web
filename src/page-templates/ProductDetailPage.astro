@@ -11,6 +11,7 @@ import ProductCard from '../components/ProductCard.astro';
 import PhotoFrame from '../components/PhotoFrame.astro';
 import { products, type Product } from '../data/products';
 import { productSchema, breadcrumbSchema, productPageGraph } from '../lib/seo';
+import ReviewStars from '../components/ReviewStars.astro';
 import { SITE } from '../data/site';
 import type { Locale } from '../i18n';
 
@@ -285,8 +286,7 @@ const primaryHeading = goldOnly ? t.goldHeading : t.silverHeading;
                   <li class="border border-border bg-bg-primary/60 p-4">
                     <div class="flex items-center justify-between gap-3">
                       <span class="font-sans text-[13px] font-medium text-text-primary">{r.author}</span>
-                      <span class="font-sans text-[12px] text-gold-deep" aria-hidden="true">{'★'.repeat(r.rating)}<span class="text-border">{'★'.repeat(5 - r.rating)}</span></span>
-                      <span class="sr-only">{r.rating} {t.reviewsOutOf}</span>
+                      <ReviewStars rating={r.rating} outOfLabel={t.reviewsOutOf} />
                     </div>
                     <p class="mt-2 body-md text-text-secondary leading-relaxed">{isEn ? r.textEn || r.text : r.text}</p>
                     <p class="mt-2 text-[11px] text-text-muted font-sans">{reviewDateFmt.format(new Date(r.date))}</p>

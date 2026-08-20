@@ -1,0 +1,115 @@
+---
+/**
+ * Blok recenzí přebraných z Firemního profilu Google.
+ *
+ * Vědomě BEZ JSON-LD: Google od 2019 ignoruje self-serving recenze o vlastní
+ * firmě v LocalBusiness markupu a od 7/2026 to má v pokynech explicitně,
+ * včetně vložených widgetů třetích stran. Hvězdičky ve výsledcích vyhledávání
+ * z toho nebudou a nemají být — ty už Martin má na svém profilu.
+ *
+ * Zveřejňovací věta pod blokem plyne z § 5a odst. 5 zákona č. 634/1992 Sb.:
+ * kdo uvádí spotřebitelské recenze, musí říct, jestli a jak ověřuje jejich
+ * původ. Zároveň se přiznává, že jde o výběr — na profilu jsou i nižší
+ * hodnocení, takže tvrdit opak by bylo klamavé.
+ */
+import ReviewStars from './ReviewStars.astro';
+import { reviewSummary, type BusinessReview } from '../data/reviews';
+
+interface Props {
+  items: BusinessReview[];
+  locale?: 'cs' | 'en';
+  /** Střídání pozadí sekcí — ať nevzniknou dva slepené bloky stejné barvy. */
+  bg?: 'primary' | 'secondary';
+  /** `md` na podstránkách, `lg` na homepage. */
+  size?: 'md' | 'lg';
+}
+
+const { items, locale = 'cs', bg = 'secondary', size = 'md' } = Astro.props;
+const isEn = locale === 'en';
+
+const t = isEn
+  ? {
+      label: 'Reviews',
+      headingPre: 'What people say',
+      headingEm: 'about my work',
+      outOf: 'out of 5',
+      translated: 'translated from Czech',
+      profileLink: 'Read all reviews on Google',
+      quoteOpen: '\u201C',
+      quoteClose: '\u201D',
+      summary: `${reviewSummary.ratingValue.toString().replace('.', '.')} out of 5 from ${reviewSummary.reviewCount} ratings on Google`,
+      disclosure:
+        'Reviews are taken from the Google Business Profile with the authors’ knowledge and shortened to initials unless the author agreed to their full name. This is a selection, not every rating. I do not verify them beyond the checks Google itself performs.',
+    }
+  : {
+      label: 'Recenze',
+      headingPre: 'Co o mé práci',
+      headingEm: 'říkají zákazníci',
+      outOf: 'z 5',
+      translated: 'přeloženo z češtiny',
+      profileLink: 'Přečíst všechny recenze na Googlu',
+      quoteOpen: '\u201E',
+      quoteClose: '\u201C',
+      summary: `${reviewSummary.ratingValue.toString().replace('.', ',')} z 5 z ${reviewSummary.reviewCount} hodnocení na Googlu`,
+      disclosure:
+        'Recenze přebírám z Firemního profilu Google. Jméno uvádím zkráceně, pokud autor nesouhlasil s uvedením celého. Jde o výběr, nikoli o všechna hodnocení. Neověřuji je nad rámec ověření, které provádí Google.',
+    };
+
+const dateFmt = new Intl.DateTimeFormat(isEn ? 'en-GB' : 'cs-CZ', {
+  month: 'long',
+  year: 'numeric',
+});
+/** `YYYY-MM` → 1. den měsíce, aby šlo formátovat; zobrazuje se jen měsíc a rok. */
+const fmtDate = (d: string) => dateFmt.format(new Date(`${d}-01T12:00:00`));
+
+const summaryDate = dateFmt.format(new Date(`${reviewSummary.summaryAsOf}-01T12:00:00`));
+const sectionBg = bg === 'primary' ? 'bg-bg-primary' : 'bg-bg-secondary';
+const sectionSize = size === 'lg' ? 'section-lg' : 'section-md';
+
+/* Mřížka podle počtu recenzí. Napevno tři sloupce nechávaly u stránek s jednou
+   nebo dvěma recenzemi (opravy, čištění) zbylou třetinu prázdnou a blok působil
+   nedodělaně. Třídy jsou vypsané celé, ne skládané z proměnných — Tailwind
+   scanuje zdroj staticky a interpolovaný název třídy by nevygeneroval. */
+const gridCols =
+  items.length === 1
+    ? 'grid-cols-1 max-w-2xl'
+    : items.length === 2
+      ? 'grid-cols-1 md:grid-cols-2 max-w-4xl'
+      : 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3';
+---
+
+<section class={`relative ${sectionBg} border-b border-border ${sectionSize} overflow-hidden`}>
+  <div class="radial-overlay"></div>
+  <div class="relative max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-14">
+
+    <div class="max-w-3xl mb-14" data-anim="up">
+      <span class="label-dot">{t.label}</span>
+      <h2 class="mt-5">{t.headingPre} <em>{t.headingEm}</em></h2>
+      <p class="mt-6 body-md text-text-secondary font-sans">
+        {t.summary} <span class="text-text-muted">· {summaryDate}</span>
+      </p>
+    </div>
+
+    <div class={`grid ${gridCols} gap-8 lg:gap-10`} data-anim="stagger">
+      {items.map((r) => (
+        <figure data-anim-child class="border border-border bg-bg-primary p-6 flex flex-col h-full">
+          <ReviewStars rating={r.rating} outOfLabel={t.outOf} />
+          <blockquote class="mt-4 flex-1">
+            <p class="body-md text-text-secondary leading-relaxed font-sans">{t.quoteOpen}{isEn ? r.textEn : r.text}{t.quoteClose}</p>
+          </blockquote>
+          <figcaption class="mt-5 pt-4 border-t border-divider">
+            <span class="font-sans text-[13px] font-medium text-text-primary">{r.author}</span>
+            <span class="block mt-1 text-[11px] text-text-muted font-sans">
+              {fmtDate(r.date)}{isEn ? ` · ${t.translated}` : ''}
+            </span>
+          </figcaption>
+        </figure>
+      ))}
+    </div>
+
+    <p class="mt-10 max-w-3xl text-[11px] text-text-muted font-sans leading-relaxed" data-anim="up">
+      {t.disclosure}{' '}
+      <a href={reviewSummary.profileUrl} rel="nofollow noopener" target="_blank">{t.profileLink}</a>
+    </p>
+  </div>
+</section>

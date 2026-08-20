@@ -12,6 +12,8 @@ import { portfolioCases } from '../data/portfolio';
 import { products } from '../data/products';
 import { homeGraph } from '../lib/seo';
 import type { Locale } from '../i18n';
+import Reviews from '../components/Reviews.astro';
+import { featuredReviews } from '../data/reviews';
 
 interface Props {
   locale: Locale;
@@ -508,6 +510,9 @@ const processSteps = isEn
 
     </div>
   </section>
+
+  <!-- ====== RECENZE ====== -->
+  <Reviews items={featuredReviews} locale={locale} size="lg" />
 
   <!-- ====== SKLADEM — Vertical list (stejný vzhled jako Selected Works) ====== -->
   <section class="bg-bg-primary border-b border-border section-lg">
