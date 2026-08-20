@@ -6,6 +6,9 @@ deploy-*/
 deploy\ */
 # zdrojové fotky před zpracováním (lokální, mimo deploy)
 images-selekce/
+# archiv nereferencovaných fotek z pre-deploy úklidu 7/2026 (~20 MB).
+# Originály zůstávají v git historii, do buildu ani na FTP se to nedostane.
+_nepouzite-obrazky-archiv/
 # generated types
 .astro/
 # graphify
