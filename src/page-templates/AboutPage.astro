@@ -63,7 +63,6 @@ const t = isEn
       certHeading: 'Hallmarked and certified',
       certAlt: 'Czech hallmarks, metal quality certification',
       certP1: 'All my pieces are made from certified materials and stamped with the Czech state hallmark. I work in line with Czech precious-metal regulations.',
-      certP2: 'Every piece comes with a certificate of authenticity.',
     }
   : {
       title: 'O zlatnické dílně Praha 5 | Martin Ševr, zlatník',
@@ -112,7 +111,6 @@ const t = isEn
       certHeading: 'Puncované a certifikované',
       certAlt: 'České puncovní značky, certifikát kvality kovů',
       certP1: 'Všechny moje šperky jsou vyrobeny z certifikovaných materiálů a opatřeny státním puncem. Pracuji v souladu s českou legislativou.',
-      certP2: 'Každý kus doprovázím certifikátem pravosti.',
     };
 
 const jsonLd = graph(
@@ -327,9 +325,6 @@ const jsonLd = graph(
           <h2 class="mt-5">{t.certHeading}</h2>
           <p class="mt-4 text-text-secondary body-lg">
             {t.certP1}
-          </p>
-          <p class="mt-4 text-text-secondary body-lg">
-            {t.certP2}
           </p>
         </div>
       </div>
