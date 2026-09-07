@@ -232,3 +232,40 @@ Po–Pá 10:00–18:00 — dva zdroje si odporovaly.
 - GSC za 29. 7. – 20. 8. nikdo neviděl; dnešní změny chtějí kontrolu za ~14 dní
 - `aggregateRating` čeká na recenze, 12 stříbrných vzorků snubáků na datový soubor
 - staging `web.vilim.sbs` běží na buildu z 10. 7. se starým `.htaccess`
+
+---
+
+## Krok 8. 9. 2026 — měření poptávek, ceny do schématu, telefon na mobilu
+
+Vyvoláno rozborem GA4 + GSC (podklad `_audit/analyza-2026-09-07.md`, data `_audit/data-2026-09-07.md`).
+**Zjištění, které mění zadání: návštěvnost z Googlu neklesá.** Prokliky/den 5,5 → 11,8 (+114 %),
+zobrazení/den 179 → 529 (+195 %) proti baseline 13. 5. – 25. 7. Domnělý propad je artefakt GA4,
+které kvůli basic consent mode měří jen souhlasící podmnožinu.
+
+- **Konverzní eventy** (`src/layouts/Layout.astro`, `src/components/ContactForm.astro`) — `tel_click`,
+  `whatsapp_click`, `email_click` delegovaným listenerem na `document`; `form_submit` až po `ok:true`
+  od `send.php`. Do 8. 9. hlásilo GA4 za 28 dní 488 návštěv a **0,00 klíčových událostí**.
+  `/ochrana-osobnich-udaju/` a `/en/privacy/` jsou vyjmuté — kontakt na správce není poptávka.
+  **Zbývá založit klíčové události v GA4** (Admin → Události), jinak se sbírají jen jako běžné eventy.
+- **Telefon v mobilní liště** (`src/components/Nav.astro`, `src/i18n/{cs,en}.ts`) — mobil je 64 %
+  prokliků z Googlu a číslo bylo dostupné až za hamburgerem. 44×44 px, ověřeno na 375 px viewportu
+  bez překryvu (logo končí na 69 px, ikona 162–206, přepínač 214–298, hamburger 306–350).
+- **Ceny služeb do `hasOfferCatalog`** (`src/lib/seo.ts`) — 7 z 8 `Offer` dostalo `minPrice`.
+  Ceny hotových kusů se dopočítávají z `products.ts`, aby se ručně zapsané minimum nerozešlo
+  s katalogem. Rytí zůstává bez ceny, na webu žádnou nemá.
+- **EN katalog anglicky** (`src/lib/seo.ts`) — dodělávka k `70cda35`; `hasOfferCatalog` jako jediný
+  zbytek schématu servíroval anglické mutaci české názvy služeb.
+- **`vatID` smazáno** (`src/lib/seo.ts`) — odvozovalo DIČ z IČO, ale Martin plátce DPH není
+  (ARES: `stavZdrojeDph: NEEXISTUJICI`). Nepravdivý zákonný identifikátor stál na všech 71 stránkách.
+- **Akční cena prstenu #20** (`src/data/products.ts`) — working tree rušil akci (60 000 Kč) a nebyl
+  commitnutý, zatímco HEAD držel 50 000 Kč s platností do 30. 9. Build z čistého stromu by zrušenou
+  akci vrátil na web i do `Offer`/`priceValidUntil`.
+- **Drobnosti** — fallback načtení GSAP 800 ms → 3 s (bez `requestIdleCallback` tahal 45 kB uprostřed
+  LCP okna); `preconnect` na googletagmanager pryč (měl `crossorigin`, spojení by se pro `<script src>`
+  nereužilo); `non_interaction` z `web-vitals.ts` (parametr Universal Analytics, GA4 ho ignoruje).
+- **Ověření:** `pnpm typecheck` 0 chyb, `pnpm build` 71 stránek, konverzní eventy odzkoušeny
+  v prohlížeči proti `dataLayer` (CZ i EN, výjimka na privacy potvrzena), konzole bez chyb.
+
+**Vědomě neuděláno:** zrušení preloadu italic řezu Playfair (−73 kB). Astro Fonts API neumí
+preloadovat jednotlivou variantu rodiny a rozdělení na dvě rodiny by rozbilo `h1 em`.
+Správná cesta je subset fontů, což je samostatná práce.
