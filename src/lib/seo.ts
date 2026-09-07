@@ -8,7 +8,7 @@
  * - BreadcrumbList na všech vnořených stránkách
  */
 import { SITE } from '../data/site';
-import type { Product } from '../data/products';
+import { products, type Product } from '../data/products';
 import type { PortfolioCase } from '../data/portfolio';
 
 // --- Sdílené entity (referencované přes @id) ----------------------------------
@@ -66,6 +66,48 @@ export function personSchema(locale: 'cs' | 'en' = 'cs') {
   };
 }
 
+/**
+ * Nejnižší cena hotového kusu v kategorii, počítaná ze `products.ts`.
+ * Záměrně se dopočítává, ne píše ručně — katalog skladem se mění s každým
+ * prodaným a přidaným kusem a ručně zapsané minimum by se s ním rozešlo.
+ * Bere stříbrnou variantu, protože ta je u každého kusu ta levnější.
+ */
+function inStockMinPrice(category: Product['category']): number | undefined {
+  const ceny = products
+    .filter((p) => p.category === category && p.priceSilver)
+    .map((p) => Number(p.priceSilver!.replace(/[^\d]/g, '')))
+    .filter((n) => Number.isFinite(n) && n > 0);
+  return ceny.length ? Math.min(...ceny) : undefined;
+}
+
+/**
+ * Offer pro katalog služeb. Cena je vždy „od" (`minPrice`), protože zlatnická
+ * práce se cení až po prohlídce — přesné `price` by tvrdilo víc, než web slibuje.
+ *
+ * Zdroje čísel, jediná povolená pravda (nic se nedopočítává):
+ *   18 000 / 12 000 / 2 500  → ceník v `CustomJewelryPage.astro` (~ř. 246–257)
+ *   400–900 / 300            → FAQ v `RepairsPage.astro` (~ř. 204)
+ *   skladem                  → dopočet z `products.ts`
+ * Když se cena na stránce změní, musí se změnit i tady — jinak Googlu tvrdíme
+ * něco jiného, než vidí návštěvník.
+ */
+function offer(isEn: boolean, nameCs: string, nameEn: string, minPrice?: number, maxPrice?: number) {
+  const service = { '@type': 'Service', name: isEn ? nameEn : nameCs };
+  if (!minPrice) return { '@type': 'Offer', itemOffered: service };
+  return {
+    '@type': 'Offer',
+    itemOffered: service,
+    priceCurrency: 'CZK',
+    priceSpecification: {
+      '@type': 'PriceSpecification',
+      priceCurrency: 'CZK',
+      minPrice,
+      ...(maxPrice ? { maxPrice } : {}),
+      valueAddedTaxIncluded: true,
+    },
+  };
+}
+
 /** JewelryStore — přesnější než LocalBusiness pro Googlový SERP. */
 export function jewelryStoreSchema(locale: 'cs' | 'en' = 'cs') {
   const isEn = locale === 'en';
@@ -108,7 +150,8 @@ export function jewelryStoreSchema(locale: 'cs' | 'en' = 'cs') {
     employee: { '@id': `${SITE.url}#person` },
     foundingDate: '2004',
     taxID: SITE.ico,
-    vatID: 'CZ' + SITE.ico,
+    // vatID záměrně chybí — Martin Ševr není plátce DPH (ARES: stavZdrojeDph NEEXISTUJICI).
+    // Odvozovat DIČ z IČO je nepravdivý zákonný identifikátor v strukturovaných datech.
     // GEO: město + čtvrť explicitně — dílna sídlí na Smíchově (Praha 5),
     // lokální dotazy „zlatnictví praha 5 / smíchov" jsou primární akviziční kanál.
     areaServed: isEn
@@ -140,32 +183,33 @@ export function jewelryStoreSchema(locale: 'cs' | 'en' = 'cs') {
        dostupnosti je Google Business Profile, na který míří `sameAs`. */
     hasOfferCatalog: {
       '@type': 'OfferCatalog',
-      name: 'Zlatnické služby',
+      name: isEn ? 'Goldsmith services' : 'Zlatnické služby',
       itemListElement: [
         {
           '@type': 'OfferCatalog',
-          name: 'Zakázková tvorba',
+          name: isEn ? 'Bespoke work' : 'Zakázková tvorba',
           itemListElement: [
-            { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Snubní prsteny na míru' } },
-            { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Zásnubní prsteny' } },
-            { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Autorská tvorba' } },
+            offer(isEn, 'Snubní prsteny na míru', 'Bespoke wedding rings', 18000),
+            offer(isEn, 'Zásnubní prsteny', 'Engagement rings', 12000),
+            offer(isEn, 'Autorská tvorba', 'One-off author pieces', 2500),
           ],
         },
         {
           '@type': 'OfferCatalog',
-          name: 'Hotové šperky skladem',
+          name: isEn ? 'Jewellery in stock' : 'Hotové šperky skladem',
           itemListElement: [
-            { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Stříbrné prsteny s kameny' } },
-            { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Přívěsky a řetízky' } },
+            offer(isEn, 'Stříbrné prsteny s kameny', 'Silver rings with stones', inStockMinPrice('prsteny')),
+            offer(isEn, 'Přívěsky a řetízky', 'Pendants and chains', inStockMinPrice('privesky')),
           ],
         },
         {
           '@type': 'OfferCatalog',
-          name: 'Opravy a úpravy',
+          name: isEn ? 'Repairs and alterations' : 'Opravy a úpravy',
           itemListElement: [
-            { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Zmenšení a zvětšení velikosti' } },
-            { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Rytí a personalizace' } },
-            { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Oprava ulomených částí' } },
+            offer(isEn, 'Zmenšení a zvětšení velikosti', 'Ring resizing', 400, 900),
+            // Rytí a personalizace — cena na webu není, radši žádná než vymyšlená.
+            offer(isEn, 'Rytí a personalizace', 'Engraving and personalisation'),
+            offer(isEn, 'Oprava ulomených částí', 'Repair of broken parts', 300),
           ],
         },
       ],
