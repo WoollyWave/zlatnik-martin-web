@@ -205,6 +205,12 @@ const t = locale === 'en'
 
         if (res.ok && data?.ok) {
           setStatus(data.message || 'Děkuji, ozvu se vám co nejdříve.', 'success');
+          // Konverze až po potvrzení od serveru — odeslaný formulář, který
+          // spadl, není poptávka. Bez souhlasu gtag jen tiše zařadí do fronty.
+          window.gtag?.('event', 'form_submit', {
+            form_name: 'kontakt',
+            page_path: window.location.pathname,
+          });
           form.reset();
         } else {
           const msg = data?.error || `${errorFallback} ${fallbackEmail}.`;

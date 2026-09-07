@@ -26,6 +26,7 @@ export const cs = {
   'nav.brandHomeAria': 'Martin Ševr, Domů',
   'nav.langSwitchAria': 'Přepnout na English',
   'nav.callCta': 'Zavolat',
+  'nav.callAria': 'Zavolat do dílny, +420 774 598 181',
 
   // --- Footer ---
   'footer.ctaHeadingDefault': 'Pojďme vytvořit šperk, který krásně <em>zestárne.</em>',

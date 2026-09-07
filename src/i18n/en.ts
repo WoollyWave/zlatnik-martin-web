@@ -27,6 +27,7 @@ export const en = {
   'nav.brandHomeAria': 'Martin Ševr, Home',
   'nav.langSwitchAria': 'Switch to Czech',
   'nav.callCta': 'Call',
+  'nav.callAria': 'Call the workshop, +420 774 598 181',
 
   // --- Footer ---
   'footer.ctaHeadingDefault': "Let's make a piece that <em>ages beautifully.</em>",

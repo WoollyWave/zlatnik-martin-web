@@ -181,8 +181,9 @@ const imgType = (url?: string) =>
     <Font cssVariable="--font-general-sans" preload />
     <Font cssVariable="--font-playfair" preload />
 
-    <!-- Preconnect na Google Tag Manager (gtag.js se načte deferred po user interaction) -->
-    <link rel="preconnect" href="https://www.googletagmanager.com" crossorigin />
+    <!-- Preconnect na googletagmanager schválně není: měl `crossorigin`, takže
+         spojení by se pro <script src> stejně nereužilo, a gtag.js se u většiny
+         návštěv nenačte vůbec (stahuje se až po souhlasu s cookies). -->
 
     <!-- JSON-LD — escape `</` aby string uvnitř nikdy nemohl předčasně uzavřít <script>. -->
     {jsonLd && (
@@ -280,9 +281,41 @@ const imgType = (url?: string) =>
         if ('requestIdleCallback' in window) {
           requestIdleCallback(loadAnimations, { timeout: 2500 });
         } else {
-          setTimeout(loadAnimations, 800);
+          // 3 s, ne 800 ms: prohlížeče bez requestIdleCallback (starší iOS Safari)
+          // jinak tahaly 45 kB GSAP přesně uprostřed LCP okna.
+          setTimeout(loadAnimations, 3000);
         }
       }
+    </script>
+
+    <!-- Konverzní měření. Do 8. 9. 2026 GA4 nehlásilo jedinou klíčovou událost:
+         web měl 488 návštěv za 28 dní a nula měřených poptávek, takže nešlo
+         poznat, který kanál nebo která stránka poptávku přivedla.
+         Delegovaný listener na document, ne ruční handlery na šesti šablonách —
+         ty by se při první úpravě rozešly. Odesílá se přes gtag, takže bez
+         souhlasu se jen řadí do dataLayer fronty a na Google nic neodejde. -->
+    <script>
+      const KONVERZE: Record<string, string> = {
+        'tel:': 'tel_click',
+        'mailto:': 'email_click',
+      };
+
+      document.addEventListener('click', (e) => {
+        const target = e.target as Element | null;
+        const odkaz = target?.closest?.('a[href]') as HTMLAnchorElement | null;
+        if (!odkaz) return;
+
+        const href = odkaz.getAttribute('href') || '';
+        const akce = href.includes('wa.me')
+          ? 'whatsapp_click'
+          : KONVERZE[Object.keys(KONVERZE).find((p) => href.startsWith(p)) || ''];
+        if (!akce) return;
+
+        // Na stránce o ochraně údajů je kontakt na správce, ne poptávka.
+        if (/^\/(en\/privacy|ochrana-osobnich-udaju)\//.test(window.location.pathname)) return;
+
+        window.gtag?.('event', akce, { page_path: window.location.pathname });
+      });
     </script>
 
     <script>

@@ -30,7 +30,8 @@ function sendToGA(metric: Metric): void {
     metric_delta: metric.delta,
     metric_rating: metric.rating,
     metric_navigation_type: metric.navigationType,
-    non_interaction: true,
+    // `non_interaction` sem nepatří — je to parametr Universal Analytics, GA4 ho
+    // ignoruje (míru zapojení řeší engagement_time_msec).
   });
 }
 
