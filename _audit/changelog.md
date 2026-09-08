@@ -269,3 +269,30 @@ které kvůli basic consent mode měří jen souhlasící podmnožinu.
 **Vědomě neuděláno:** zrušení preloadu italic řezu Playfair (−73 kB). Astro Fonts API neumí
 preloadovat jednotlivou variantu rodiny a rozdělení na dvě rodiny by rozbilo `h1 em`.
 Správná cesta je subset fontů, což je samostatná práce.
+
+### Nasazeno 8. 9. 2026 ~13:00
+
+Nahráno přes hPanel File Manager (Hostinger MCP konektor není v session autorizovaný,
+Google SSO na Hostingeru není k účtu propojené — přihlášení udělal Daniel ručně).
+Nahrán ZIP jen se **změněnými** soubory (76 souborů, 1,74 MB z celkových 47 MB) a rozbalen.
+
+**Past, kterou je potřeba znát:** Extract v hPanel File Manageru má pole „Choose folder name"
+jako **povinné** — nejde rozbalit „sem". Řešení: v „Select the destination" dvojklikem na `..`
+odnavigovat do `/files/`, jako název složky zadat `public_html` a zaškrtnout „Overwrite existing files".
+Chování bylo předem ověřeno testem na `_test_extract` (soubor vytvořený předem přežil vedle
+nových souborů z archivu) — **extract slučuje, cílovou složku nemaže**. Bez toho testu by
+zásah riskoval 47 MB fotek.
+
+Ověřeno na ostré doméně po nasazení:
+- `CZ87639114` 0 výskytů; 7 z 8 `Offer` nese `minPrice`; EN katalog anglicky („Bespoke wedding rings")
+- `tel_click` listener na stránce, telefon v mobilní liště
+- 10 klíčových URL vrací 200, `/_astro/*.js` 200, hero fotka 200 (nic se neztratilo)
+- `Last-Modified: Tue, 08 Sep 2026 11:00:01 GMT`
+- Nahrané ZIPy i testovací složka smazány (byly veřejně stažitelné na `/deploy-2026-09-08.zip`) — teď 404
+
+**V GA4 hotovo:** uchovávání dat událostí 2 → 14 měsíců.
+**V GA4 zbývá:** označit `tel_click`, `whatsapp_click`, `email_click`, `form_submit` jako klíčové
+události. Dnešní GA4 UI to umí jen hvězdičkou u události, která už reálně dorazila — v „Nedávných
+událostech" zatím nejsou, protože web běží pár minut a event pošle až návštěvník se souhlasem cookies.
+Do té doby zůstávají v seznamu jen `close_convert_lead`, `purchase`, `qualify_lead`, které nikdy nenastaly.
+
