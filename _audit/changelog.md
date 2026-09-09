@@ -296,3 +296,25 @@ události. Dnešní GA4 UI to umí jen hvězdičkou u události, která už reá
 událostech" zatím nejsou, protože web běží pár minut a event pošle až návštěvník se souhlasem cookies.
 Do té doby zůstávají v seznamu jen `close_convert_lead`, `purchase`, `qualify_lead`, které nikdy nenastaly.
 
+### 9. 9. 2026 — GA4 dokončeno, formulář ověřen
+
+**Kontaktní formulář doručuje.** Testovací poptávka odeslaná 8. 9. z `/kontakt/` Martinovi dorazila.
+Tím padá největší riziko z analýzy — web poptávky neztrácel.
+Zjištěno u toho, co zůstává otevřené: IP webserveru (147.93.92.199), ze které PHP `mail()` odesílá,
+**není v SPF domény** (rozbaleno na 5 `ip4` bloků, ani jeden ji nepokrývá), DKIM chybí, DMARC `p=none`.
+Doručování dnes funguje, ale stojí na vodě — při zpřísnění filtrů u Seznamu je tohle první, co selže.
+Navíc forwarder `formular@zlatnik-martin.cz` → `zlatnikmartin@email.cz` je ve stavu **Waiting confirmation**:
+formuláře se to netýká (`send.php` posílá na `zlatnikmartin@email.cz` napřímo), ale kdo napíše
+na `formular@`, tomu se zpráva k Martinovi nedostane.
+
+**Klíčové události v GA4 aktivovány:** `tel_click`, `whatsapp_click`, `form_submit`.
+`email_click` zatím nedorazil (na mailto klikne málokdo) — GA4 umí označit jen událost, která už nastala,
+takže se doznačí, až přijde.
+
+**Past, která by nafoukla konverze 2×:** stream měl zapnuté *Vylepšené měření → Interakce s formulářem*,
+které posílá vlastní `form_submit` — stejný název, jaký posílá náš kód z `ContactForm.astro`.
+Každé odeslání by se počítalo dvakrát. **Automatická varianta vypnuta**, náš event ponechán: posílá se
+až po `ok:true` od `send.php`, takže neměří odeslání, které na serveru selhalo.
+Cena za to je ztráta `form_start` (kolik lidí formulář rozdělá a nedokončí) — při jednotkách poptávek
+měsíčně to stejně nebyl použitelný signál.
+
