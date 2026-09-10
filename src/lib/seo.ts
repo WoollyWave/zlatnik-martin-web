@@ -134,7 +134,9 @@ export function jewelryStoreSchema(locale: 'cs' | 'en' = 'cs') {
     },
     founder: { '@id': `${SITE.url}#person` },
     employee: { '@id': `${SITE.url}#person` },
-    foundingDate: '2004',
+    // Datum vzniku živnosti podle ARES (ověřeno 10. 9. 2026). „20+ let praxe“ v textech
+    // je pravdivé zvlášť — praxe zlatníka je delší než jeho vlastní živnost.
+    foundingDate: '2011-02-24',
     taxID: SITE.ico,
     // vatID záměrně chybí — Martin Ševr není plátce DPH (ARES: stavZdrojeDph NEEXISTUJICI).
     // Odvozovat DIČ z IČO je nepravdivý zákonný identifikátor v strukturovaných datech.
