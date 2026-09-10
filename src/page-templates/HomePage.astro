@@ -61,7 +61,7 @@ const t = isEn
       methodHeading: 'From idea to finished piece in <em>three</em> steps.',
       servicesLabel: 'Services and prices',
       servicesHeading: 'What I make, and <em>what it costs</em>',
-      servicesLead: 'I make and repair everything myself at the workshop on Pod Kesnerkou in Prague 5, Smíchov. Prices are a guide; I give the exact figure after a consultation or once I have seen the piece.',
+      servicesLead: 'I make and repair everything myself at the workshop on Pod Kesnerkou in Prague 5, Smíchov. Visits are by phone appointment. Prices are a guide; I give the exact figure after a consultation or once I have seen the piece.',
       servicesPriceSr: 'Price',
       servicesTimeSr: 'Typical lead time',
       stockLabel: 'In stock',
@@ -108,7 +108,7 @@ const t = isEn
       methodHeading: 'Od nápadu ke šperku v <em>třech</em> krocích.',
       servicesLabel: 'Služby a ceny',
       servicesHeading: 'Co v dílně dělám a <em>za kolik</em>',
-      servicesLead: 'Všechno vyrábím a opravuji sám v dílně Pod Kesnerkou v Praze 5 na Smíchově. Ceny jsou orientační, přesnou řeknu po konzultaci nebo prohlídce šperku.',
+      servicesLead: 'Všechno vyrábím a opravuji sám v dílně Pod Kesnerkou v Praze 5 na Smíchově. Dílnu otevírám po telefonické dohodě. Ceny jsou orientační, přesnou řeknu po konzultaci nebo prohlídce šperku.',
       servicesPriceSr: 'Cena',
       servicesTimeSr: 'Běžný termín',
       stockLabel: 'Skladem',
@@ -136,7 +136,7 @@ const servicesRaw: { title: string; href: string; description: string; price: st
       { title: 'Custom jewellery', href: '/en/custom-jewelry/', description: 'A ring, pendant or earrings made to your idea, in silver or gold.', price: 'silver from CZK 2,500, gold from CZK 8,000', time: '2–3 weeks, more complex pieces 4–6' },
       { title: 'Bespoke wedding rings', href: '/en/wedding-rings/', description: 'Yellow, white and rose gold, 14k and 18k, made by hand from the first sketch to the handover.', price: 'a pair in 14k gold from CZK 18,000', time: '4–6 weeks from design approval' },
       { title: 'Jewellery repair', href: '/en/jewelry-repair/', description: 'Ring resizing, stone replacement, chain or clasp repair, engraving.', price: 'from CZK 300', time: 'most within 5 working days' },
-      { title: 'Jewellery cleaning', href: '/en/jewelry-cleaning/', description: 'Cleaning and polishing, and I check the stone settings while I am at it.', price: 'priced once I have seen the piece', time: 'usually while you wait' },
+      { title: 'Jewellery cleaning', href: '/en/jewelry-cleaning/', description: 'Cleaning and polishing, and I check the stone settings while I am at it.', price: 'priced once I have seen the piece', time: 'usually while you wait, call ahead' },
       { title: 'Royal gold chains', href: '/en/chains/', description: 'A Byzantine weave assembled by hand, link by link, in 14k gold.', price: 'bracelet from CZK 59,500' },
       { title: 'Jewellery in stock', href: '/en/in-stock/', description: 'Silver and gold rings and pendants with natural stones.', price: inStockFrom ? `from ${kc(inStockFrom)}` : 'see the stock list', time: 'ready now, by post within 2 working days' },
     ]
@@ -144,7 +144,7 @@ const servicesRaw: { title: string; href: string; description: string; price: st
       { title: 'Šperky na zakázku', href: '/zakazkova-tvorba/', description: 'Prsten, přívěsek nebo náušnice podle vaší představy, ze stříbra i zlata.', price: 'stříbro od 2 500 Kč, zlato od 8 000 Kč', time: '2–3 týdny, složitější kusy 4–6 týdnů' },
       { title: 'Snubní prsteny na míru', href: '/snubni-prsteny-na-miru/', description: 'Žluté, bílé i růžové zlato 14k a 18k, ručně od první skici po předání.', price: 'pár ze 14k zlata od 18 000 Kč', time: '4–6 týdnů od schválení návrhu' },
       { title: 'Opravy šperků', href: '/opravy-sperku-praha/', description: 'Zmenšení prstenu, výměna kamene, oprava řetízku nebo zapínání, rytí.', price: 'od 300 Kč', time: 'většina do 5 pracovních dnů' },
-      { title: 'Čištění šperků', href: '/cisteni-sperku/', description: 'Vyčištění a přeleštění, přitom zkontroluji, jestli drží kameny.', price: 'cena po prohlídce', time: 'obvykle na počkání' },
+      { title: 'Čištění šperků', href: '/cisteni-sperku/', description: 'Vyčištění a přeleštění, přitom zkontroluji, jestli drží kameny.', price: 'cena po prohlídce', time: 'obvykle na počkání, předem zavolejte' },
       { title: 'Královské řetězy', href: '/retezy/', description: 'Byzantský vzor skládaný ručně oko po oku ze 14k zlata.', price: 'náramek od 59 500 Kč' },
       { title: 'Hotové šperky skladem', href: '/skladem/', description: 'Stříbrné a zlaté prsteny a přívěsky s přírodními kameny.', price: inStockFrom ? `od ${kc(inStockFrom)}` : 'podle katalogu', time: 'ihned, poštou do 2 pracovních dnů' },
     ];
@@ -578,7 +578,7 @@ const processSteps = isEn
       <ul class="flex flex-col" role="list">
         {services.map((s, i) => (
           <li>
-            <a href={s.href} class="group grid grid-cols-[2.5rem_minmax(0,1fr)] md:grid-cols-[3rem_minmax(0,1fr)_minmax(0,17rem)] gap-x-5 md:gap-x-10 gap-y-3 border-t border-border py-7 md:py-9" data-anim="up">
+            <a href={s.href} class="group grid grid-cols-[2.5rem_minmax(0,1fr)] md:grid-cols-[3rem_minmax(0,1fr)_minmax(0,20rem)] gap-x-5 md:gap-x-10 gap-y-3 border-t border-border py-7 md:py-9" data-anim="up">
               <span class="pt-2 text-[11px] uppercase tracking-[0.2em] font-medium text-text-muted font-sans" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
               <div>
                 <h3 class="group-hover:text-gold-deep transition-colors duration-300">{s.title}</h3>

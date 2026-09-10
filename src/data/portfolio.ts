@@ -62,7 +62,7 @@ export const portfolioCases: PortfolioCase[] = [
 
     cardImage: '/images/portfolio--vltavin--card.webp',
     cardImage2x: '/images/portfolio--vltavin--card@2x.webp',
-    cardAlt: 'Autorský stříbrný prsten s surovým vltavínem',
+    cardAlt: 'Autorský stříbrný prsten se surovým vltavínem',
     cardLead: 'Surový vltavín z Čech, zasazený do ručně tepaného stříbra. Voskový model: autorský kus, jediný svého druhu.',
 
     perex: 'Autorská tvorba · Stříbro 925/1000 · 13 000 Kč',

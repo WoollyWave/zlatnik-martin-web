@@ -423,7 +423,7 @@ const productsChronological: Product[] = [
     priceSilver: '13 000 Kč',
     // BEZ priceSilverEn se na EN stránkách propíše česky formátovaná cena.
     priceSilverEn: 'CZK 13,000',
-    description: 'Autorský prsten s surovým vltavínem v ručně tepaném stříbře. Voskový model a následně odlitý. Jediný originální kus.',
+    description: 'Autorský prsten se surovým vltavínem v ručně tepaném stříbře. Voskový model a následně odlitý. Jediný originální kus.',
     image: '/skladem/14.webp',
     imageCard: '/skladem/karta/14.webp',
     detailImages: [
@@ -432,7 +432,7 @@ const productsChronological: Product[] = [
       { src: '/skladem/14.3.webp', alt: 'Vltavín originál, alternativní úhel', altEn: 'Moldavite original, alternative angle' },
       { src: '/skladem/14.4.webp', alt: 'Vltavín originál, další úhel', altEn: 'Moldavite original, another angle' },
     ],
-    alt: 'Autorský stříbrný prsten s surovým vltavínem',
+    alt: 'Autorský stříbrný prsten se surovým vltavínem',
     stockBadge: 'jediny-originalni-kus',
     notes: [
       'Nejde upravit: ani velikost, ani kámen.',
