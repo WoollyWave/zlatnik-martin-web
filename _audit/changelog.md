@@ -318,3 +318,46 @@ až po `ok:true` od `send.php`, takže neměří odeslání, které na serveru s
 Cena za to je ztráta `form_start` (kolik lidí formulář rozdělá a nedokončí) — při jednotkách poptávek
 měsíčně to stejně nebyl použitelný signál.
 
+---
+
+## Krok 10. 9. 2026 — služby a ceny na homepage, geo kotvy, písemná cesta k poptávce
+
+**`main` sloučen** fast-forwardem z `fix/mereni-a-ceny-2026-09-08` (83 commitů — `main` stál před celým
+refactorem). Build z `main` je s nasazeným stavem obsahově shodný; liší se jen `priceValidUntil`, které se
+odvozuje od dne buildu. **Push na GitHub zablokoval auto-mode klasifikátor — pushnout ručně.**
+
+- **Homepage: sekce „Služby a ceny"** (`src/page-templates/HomePage.astro`) — šest služeb s odkazem na
+  servisní stránku (anchor = její cílová fráze), orientační cenou a běžným termínem, CZ i EN. Homepage nese
+  ~70 % prokliků z Googlu a v `<main>` dosud neodkazovala na snubní prsteny, opravy, čištění ani řetězy.
+  Každé číslo je doslova ze stránky služby; skladem se dopočítává (`minInStockPrice()`).
+- **Termín zásnubního prstenu na homepage záměrně chybí** — web si v něm odporuje (`/zakazkova-tvorba/`
+  „3–4 týdny", `/snubni-prsteny-na-miru/` FAQ „6–8 týdnů s diamantem"). Rozhodne Martin.
+- **Geo kotvy v hero textech**: `/zakazkova-tvorba/` měla v `<main>` 1 267 slov a „Smíchov" ani
+  „na zakázku" ani jednou, přestože title zní „Šperky na zakázku Praha" (teď 0→1 obojí). Totéž na
+  snubních prstenech (+ cena 18 000 Kč už v heru), opravách a řetězech, CZ i EN.
+- **Konverze**: třetí, písemné CTA v patičce (`/kontakt/#form`); na kontaktu formulář nad recenzemi;
+  potvrzení odeslání s termínem 24 h a telefonem. „Týž den" web slibuje jen pro telefon a WhatsApp.
+- **Technika**: `minInStockPrice()` přesunut do `products.ts` a filtruje prodané kusy (dřív by schéma
+  po prodeji nejlevnějšího kusu tvrdilo neexistující cenu); první dvě karty skladem `eager`;
+  `czTypo()` v `src/lib/text.ts` pro českou sazbu nových textů.
+
+**Adversariální review** (5 úhlů: fakta, tón a sazba, SEO regrese, a11y, kód; každý nález ověřen
+skeptikem): 5 nálezů obstálo, 4 vyvráceny. Opraveno v `e6fc238`:
+- patička `sm:flex-wrap` — třetí CTA lámalo popisky uprostřed slova na 640 a 1024–1110 px
+- kotva `#form` na obalu formuláře, ne na sekci — na mobilu přistávala na fotce (`order-first`) a
+  `scroll-mt-28` se sčítal s globálním `scroll-padding-top`
+- „předem zavolejte" u čištění a „Dílnu otevírám po telefonické dohodě" v úvodu sekce — otevírací doba
+  se 20. 8. rušila právě proto, že lidé chodili bez ohlášení, „na počkání" by je k tomu znovu svádělo
+- „ke zlatníkovi" (vokalizace); karta 03 u snubních neodpovídala fotce
+- navíc „se surovým vltavínem" místo „s surovým" (2 produkty, 1 příběh portfolia)
+
+**Ověřeno před nasazením**: typecheck 0/0/0, 71 stránek, JSON-LD 68 bloků / 0 chyb. CTA ve foldu po
+prodloužení hero textů: mobil 375×812 na šesti stránkách (nejvíc +54 px u EN), desktop 1280×800
+na dvou (nejvíc +30 px, nejtěsnější snubní se 115 px rezervou). Patička na 640/1024/1100 px
+bez zalomení. Kotva `#form` na mobilu → první pole formuláře ve foldu.
+
+**Nasazeno** přes hPanel File Manager (74 souborů, ZIP 1,8 MB, postup viz 8. 9.). Ověřeno na ostré
+doméně: `Last-Modified: Thu, 10 Sep 2026 13:56:05 GMT`, 11 kontrol obsahu, JSON-LD, stavové kódy. ZIP smazán do koše (404).
+`send.php` na GET vrací 303 → `/kontakt/#form-error` (no-JS fallback, který je v repu); 8. 9. ještě
+vracel 405 — na serveru zřejmě běžela starší verze souboru. POST bez Origin → 403 JSON, PHP v pořádku.
+
