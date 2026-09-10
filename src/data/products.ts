@@ -626,3 +626,18 @@ const productsChronological: Product[] = [
  * jednom místě.
  */
 export const products: Product[] = [...productsChronological].reverse();
+
+/**
+ * Nejnižší cena kusu, který je právě k mání (bez prodaných), volitelně v jedné
+ * kategorii. Bere stříbrnou variantu — ta je u každého kusu ta levnější.
+ * Dopočítává se, ne píše ručně: katalog se mění s každým prodaným a přidaným
+ * kusem a ručně zapsané minimum by se s ním rozešlo (homepage, JSON-LD).
+ */
+export function minInStockPrice(category?: Product['category']): number | undefined {
+  const ceny = products
+    .filter((p) => !p.sold && p.priceSilver && (!category || p.category === category))
+    .map((p) => Number(p.priceSilver!.replace(/[^\d]/g, '')))
+    .filter((n) => Number.isFinite(n) && n > 0);
+  return ceny.length ? Math.min(...ceny) : undefined;
+}
+

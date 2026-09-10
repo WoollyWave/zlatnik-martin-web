@@ -34,6 +34,7 @@ export const cs = {
   'footer.ctaPrimaryDefault': 'Zavolat',
   'footer.ctaWhatsApp': 'Napsat na WhatsApp',
   'footer.ctaWhatsAppAria': 'Napsat na WhatsApp',
+  'footer.ctaMessage': 'Napsat zprávu',
   'footer.brandLine': 'Zlatnická dílna v centru Prahy',
   'footer.sitemapHeading': 'Stránky',
   'footer.contactHeading': 'Kontakt',

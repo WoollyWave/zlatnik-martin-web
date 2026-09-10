@@ -46,7 +46,7 @@ $MESSAGES = [
         'gdpr_required'  => 'Pro odeslání je nutné odsouhlasit zpracování osobních údajů.',
         'invalid_input'  => 'Neplatný formát vstupu.',
         'send_failed'    => 'Zprávu se nepodařilo odeslat. Napište prosím přímo na %s.',
-        'success'        => 'Děkuji, ozvu se vám co nejdříve.',
+        'success'        => 'Děkuji, zpráva dorazila. Ozvu se do 24 hodin. Když spěcháte, zavolejte na +420 774 598 181.',
     ],
     'en' => [
         'invalid_origin' => 'Invalid request origin.',
@@ -59,7 +59,7 @@ $MESSAGES = [
         'gdpr_required'  => 'Please agree to the processing of personal data.',
         'invalid_input'  => 'Invalid input format.',
         'send_failed'    => 'The message could not be sent. Please write directly to %s.',
-        'success'        => 'Thank you, I will get back to you as soon as possible.',
+        'success'        => 'Thank you, your message has arrived. I will reply within 24 hours. If it is urgent, call +420 774 598 181.',
     ],
 ];
 $M = $MESSAGES[$locale];

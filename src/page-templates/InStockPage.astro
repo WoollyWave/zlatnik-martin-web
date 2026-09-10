@@ -157,7 +157,7 @@ const priceDate = new Date(`${SITE.pricesAsOf}T12:00:00`).toLocaleDateString(t.d
       <FilterPills items={filterItems} activeIndex={0} ariaLabel={t.filterAria} />
 
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-10" id="products-grid">
-        {products.map((product) => (
+        {products.map((product, i) => (
           <ProductCard
             locale={locale}
             title={isEn ? (product.titleEn || product.title) : product.title}
@@ -173,6 +173,7 @@ const priceDate = new Date(`${SITE.pricesAsOf}T12:00:00`).toLocaleDateString(t.d
             stockBadge={product.stockBadge}
             sold={product.sold}
             headingLevel="h2"
+            loading={i < 2 ? 'eager' : 'lazy'}
           />
         ))}
       </div>

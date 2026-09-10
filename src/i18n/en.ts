@@ -35,6 +35,7 @@ export const en = {
   'footer.ctaPrimaryDefault': 'Call',
   'footer.ctaWhatsApp': 'Message on WhatsApp',
   'footer.ctaWhatsAppAria': 'Message on WhatsApp',
+  'footer.ctaMessage': 'Write a message',
   'footer.brandLine': 'Goldsmith workshop in central Prague',
   'footer.sitemapHeading': 'Pages',
   'footer.contactHeading': 'Contact',

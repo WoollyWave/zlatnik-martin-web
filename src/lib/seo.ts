@@ -8,7 +8,7 @@
  * - BreadcrumbList na všech vnořených stránkách
  */
 import { SITE } from '../data/site';
-import { products, type Product } from '../data/products';
+import { minInStockPrice, type Product } from '../data/products';
 import type { PortfolioCase } from '../data/portfolio';
 
 // --- Sdílené entity (referencované přes @id) ----------------------------------
@@ -64,20 +64,6 @@ export function personSchema(locale: 'cs' | 'en' = 'cs') {
         ],
     sameAs: [SITE.social.instagram, SITE.social.facebook],
   };
-}
-
-/**
- * Nejnižší cena hotového kusu v kategorii, počítaná ze `products.ts`.
- * Záměrně se dopočítává, ne píše ručně — katalog skladem se mění s každým
- * prodaným a přidaným kusem a ručně zapsané minimum by se s ním rozešlo.
- * Bere stříbrnou variantu, protože ta je u každého kusu ta levnější.
- */
-function inStockMinPrice(category: Product['category']): number | undefined {
-  const ceny = products
-    .filter((p) => p.category === category && p.priceSilver)
-    .map((p) => Number(p.priceSilver!.replace(/[^\d]/g, '')))
-    .filter((n) => Number.isFinite(n) && n > 0);
-  return ceny.length ? Math.min(...ceny) : undefined;
 }
 
 /**
@@ -198,8 +184,8 @@ export function jewelryStoreSchema(locale: 'cs' | 'en' = 'cs') {
           '@type': 'OfferCatalog',
           name: isEn ? 'Jewellery in stock' : 'Hotové šperky skladem',
           itemListElement: [
-            offer(isEn, 'Stříbrné prsteny s kameny', 'Silver rings with stones', inStockMinPrice('prsteny')),
-            offer(isEn, 'Přívěsky a řetízky', 'Pendants and chains', inStockMinPrice('privesky')),
+            offer(isEn, 'Stříbrné prsteny s kameny', 'Silver rings with stones', minInStockPrice('prsteny')),
+            offer(isEn, 'Přívěsky a řetízky', 'Pendants and chains', minInStockPrice('privesky')),
           ],
         },
         {

@@ -20,6 +20,8 @@ interface Props {
   /** `h2` na stránkách bez nadřazeného section h2, jinak `h3`. Default `h3`. */
   headingLevel?: 'h2' | 'h3';
   locale?: Locale;
+  /** První karty ve foldu `eager` (LCP listingu), zbytek líně. Default `lazy`. */
+  loading?: 'lazy' | 'eager';
 }
 
 const categoryLabelsCs: Record<string, string> = {
@@ -53,6 +55,7 @@ const {
   sold,
   headingLevel = 'h3',
   locale = 'cs',
+  loading = 'lazy',
 } = Astro.props;
 const Heading = headingLevel;
 const categoryMap = locale === 'en' ? categoryLabelsEn : categoryLabelsCs;
@@ -79,7 +82,7 @@ const labels = locale === 'en'
           src={image}
           width="1200" height="800"
           alt={alt || title}
-          loading="lazy"
+          loading={loading}
           decoding="async"
           class="absolute inset-0 w-full h-full object-cover object-center group-hover:scale-[1.03] transition-transform duration-700"
         />

@@ -26,7 +26,7 @@ const t = locale === 'en'
       submit: 'Send message',
       sending: 'Sending…',
       errorFallback: 'Could not send the message. Please write directly to',
-      flashSuccess: 'Thank you, your message has been sent. I will get back to you as soon as possible.',
+      flashSuccess: 'Thank you, your message has arrived. I will reply within 24 hours. If it is urgent, call +420 774 598 181.',
       flashError: 'The message could not be sent. Please write to me directly at',
     }
   : {
@@ -44,7 +44,7 @@ const t = locale === 'en'
       submit: 'Odeslat zprávu',
       sending: 'Odesílám…',
       errorFallback: 'Zprávu se nepodařilo odeslat. Napište prosím přímo na',
-      flashSuccess: 'Děkuji, zpráva byla odeslána. Ozvu se vám co nejdříve.',
+      flashSuccess: 'Děkuji, zpráva dorazila. Ozvu se do 24 hodin. Když spěcháte, zavolejte na +420 774 598 181.',
       flashError: 'Zprávu se nepodařilo odeslat. Napište mi prosím přímo na',
     };
 ---
@@ -62,6 +62,7 @@ const t = locale === 'en'
   class="space-y-6"
   data-contact-form
   data-sending-text={t.sending}
+  data-success-text={t.flashSuccess}
   data-error-fallback={t.errorFallback}
   data-fallback-email={CONTACT_EMAIL}
   action="/send.php"
@@ -173,6 +174,7 @@ const t = locale === 'en'
     const submitBtn = form.querySelector<HTMLButtonElement>('button[type="submit"]');
     const originalLabel = submitBtn?.textContent ?? '';
     const sendingText = form.dataset.sendingText || 'Odesílám…';
+    const successText = form.dataset.successText || '';
     const errorFallback = form.dataset.errorFallback || 'Zprávu se nepodařilo odeslat. Napište prosím přímo na';
     const fallbackEmail = form.dataset.fallbackEmail || '';
 
@@ -204,7 +206,7 @@ const t = locale === 'en'
         const data = await res.json().catch(() => null) as { ok?: boolean; message?: string; error?: string } | null;
 
         if (res.ok && data?.ok) {
-          setStatus(data.message || 'Děkuji, ozvu se vám co nejdříve.', 'success');
+          setStatus(data.message || successText, 'success');
           // Konverze až po potvrzení od serveru — odeslaný formulář, který
           // spadl, není poptávka. Bez souhlasu gtag jen tiše zařadí do fronty.
           window.gtag?.('event', 'form_submit', {
