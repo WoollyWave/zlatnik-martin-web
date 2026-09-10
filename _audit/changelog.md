@@ -361,3 +361,22 @@ doméně: `Last-Modified: Thu, 10 Sep 2026 13:56:05 GMT`, 11 kontrol obsahu, JSO
 `send.php` na GET vrací 303 → `/kontakt/#form-error` (no-JS fallback, který je v repu); 8. 9. ještě
 vracel 405 — na serveru zřejmě běžela starší verze souboru. POST bez Origin → 403 JSON, PHP v pořádku.
 
+### 10. 9. 2026 odpoledne — termín zásnubního prstenu, datum vzniku, e-mail
+
+Rozhodnutí Martina ze 10. 9. 2026, předané Danielem.
+
+- **Zásnubní prsten = 3–4 týdny.** Web si dosud odporoval: `/zakazkova-tvorba/` uváděla 3–4 týdny,
+  FAQ snubních prstenů řadilo „zásnubní s diamantem" mezi složitější kusy za 6–8 týdnů a meta description
+  stránky slibovala 4–8 týdnů. Sjednoceno v CZ i EN (`WeddingRingsPage.astro`); EN meta zkrácena na 143 znaků.
+- **`foundingDate` 2004 → `2011-02-24`** podle ARES (ověřeno přímo v API ARES). Mění JSON-LD na všech
+  71 stránkách. „20+ let praxe" v textech zůstává, praxe je delší než živnost.
+- **Forwarder `formular@` → `zlatnikmartin@email.cz`**: potvrzení znovu odesláno (hPanel → Forwarders → Resend).
+  Aktivní bude po Martinově kliku v e-mailu od Hostingeru.
+- **SPF/DKIM/DMARC: v pořádku, DNS se neměnil.** hPanel → Emails → Domain settings → Check status =
+  MX, SPF, DKIM i DMARC zelené. Tvrzení z 8. 9. („DKIM chybí, IP webserveru mimo SPF") bylo chybné:
+  kontrola hledala selektory `hostingermail1/2/3`, Hostinger používá `hostingermail-a/b/c` (aktivní `-a`);
+  odchozí pošta ze sdíleného hostingu jde přes `relay.mailchannels.net`, který SPF pokrývá.
+
+**Nasazeno** (71 souborů, ZIP 1,8 MB), `Last-Modified: Thu, 10 Sep 2026 14:20:54 GMT`. Na ostré doméně ověřeno 8 kontrol
+(datum, FAQ a meta CZ/EN, sekce Služby a ceny), JSON-LD validní. ZIP smazán do koše (404).
+
