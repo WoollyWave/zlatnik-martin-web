@@ -197,10 +197,15 @@ FileETag None
 
 # --- 8) LiteSpeed cache (Hostinger native) ---------------------------------
 <IfModule LiteSpeed>
-  # Public cache pro statické HTML — 1h na edge, browser cache řízen Cache-Control výše
+  # Public cache pro statické HTML — 1h na edge, browser cache řízen Cache-Control výše.
+  # PHP (send.php) z cache vynechat: `.*` do ní dřív pouštělo i skript, LiteSpeed držel jeho
+  # odpověď hodinu navzdory `Cache-Control: no-store` a nerozlišoval ani hlavičku Accept
+  # (11. 9. 2026: GET /send.php → X-LiteSpeed-Cache: hit, stará 405 místo 303).
   CacheLookup on
   RewriteEngine On
+  RewriteCond %{REQUEST_URI} !\.php$ [NC]
   RewriteRule .* - [E=Cache-Control:max-age=3600]
+  RewriteRule \.php$ - [NC,E=Cache-Control:no-cache]
 </IfModule>
 
 # --- 9) Block dotfiles + citlivé soubory -----------------------------------
@@ -211,6 +216,12 @@ FileETag None
 <FilesMatch "\.(env|ini|log|sh|sql|conf|bak|backup|swp|fla|psd|ai|sketch|md|yml|yaml)$">
   Require all denied
 </FilesMatch>
+
+# PHP na hostingu píše chybový log jako `error_log` BEZ přípony do adresáře skriptu —
+# pravidlo výš ho proto nechytí a byl by veřejně čitelný (cesty na disku, varování).
+<Files "error_log">
+  Require all denied
+</Files>
 
 # Povolit veřejné meta soubory
 <Files "site.webmanifest">

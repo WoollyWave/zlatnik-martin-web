@@ -28,6 +28,9 @@ const t = locale === 'en'
       errorFallback: 'Could not send the message. Please write directly to',
       flashSuccess: 'Thank you, your message has arrived. I will reply within 24 hours. If it is urgent, call +420 774 598 181.',
       flashError: 'The message could not be sent. Please write to me directly at',
+      timeout: 'Sending is taking unusually long and it is not clear whether your message arrived. Before sending it again, please call +420 774 598 181 or write directly to',
+      nameHint: 'Please enter your name.',
+      emailHint: 'Enter an email like name@domain.com.',
     }
   : {
       hpLabel: 'Website (nechte prázdné)',
@@ -46,6 +49,9 @@ const t = locale === 'en'
       errorFallback: 'Zprávu se nepodařilo odeslat. Napište prosím přímo na',
       flashSuccess: 'Děkuji, zpráva dorazila. Ozvu se do 24 hodin. Když spěcháte, zavolejte na +420 774 598 181.',
       flashError: 'Zprávu se nepodařilo odeslat. Napište mi prosím přímo na',
+      timeout: 'Odeslání trvá neobvykle dlouho a není jisté, jestli zpráva dorazila. Než ji pošlete znovu, zavolejte prosím na +420 774 598 181, nebo napište přímo na',
+      nameHint: 'Vyplňte prosím své jméno.',
+      emailHint: 'Zadejte e-mail ve tvaru jmeno@domena.cz.',
     };
 ---
 
@@ -65,6 +71,7 @@ const t = locale === 'en'
   data-success-text={t.flashSuccess}
   data-error-fallback={t.errorFallback}
   data-fallback-email={CONTACT_EMAIL}
+  data-timeout-text={t.timeout}
   action="/send.php"
   method="POST"
 >
@@ -84,6 +91,9 @@ const t = locale === 'en'
       autocomplete="name"
       required
       aria-required="true"
+      maxlength="120"
+      pattern={".*\\S.*"}
+      title={t.nameHint}
       class="w-full px-4 py-3 bg-white border border-border rounded-[2px] text-text-primary body-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-deep focus-visible:border-gold-deep transition-colors duration-200"
       placeholder={t.namePlaceholder}
     />
@@ -98,6 +108,9 @@ const t = locale === 'en'
       autocomplete="email"
       required
       aria-required="true"
+      maxlength="200"
+      pattern={"[^@\\s.]+(\\.[^@\\s.]+)*@[^@\\s.]+(\\.[^@\\s.]+)+"}
+      title={t.emailHint}
       class="w-full px-4 py-3 bg-white border border-border rounded-[2px] text-text-primary body-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-deep focus-visible:border-gold-deep transition-colors duration-200"
       placeholder={t.emailPlaceholder}
     />
@@ -110,6 +123,7 @@ const t = locale === 'en'
       id="phone"
       name="phone"
       autocomplete="tel"
+      maxlength="40"
       class="w-full px-4 py-3 bg-white border border-border rounded-[2px] text-text-primary body-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-deep focus-visible:border-gold-deep transition-colors duration-200"
       placeholder="+420 ..."
     />
@@ -140,9 +154,9 @@ const t = locale === 'en'
     </label>
   </div>
 
-  <p data-form-status role="status" aria-live="polite" class="hidden body-md"></p>
+  <p data-form-status role="status" aria-live="polite" class="body-md empty:mb-0"></p>
 
-  <Button type="submit" variant="primary">{t.submit}</Button>
+  <Button type="submit" variant="primary" class="aria-disabled:opacity-60 aria-disabled:cursor-progress">{t.submit}</Button>
 </form>
 
 <style>
@@ -160,71 +174,91 @@ const t = locale === 'en'
 </style>
 
 <script>
+  const TIMEOUT_MS = 20_000; // po změření TTFB send.php: max(15 000, 5× nejhorší hodnota)
   const form = document.querySelector<HTMLFormElement>('[data-contact-form]');
 
   /* `novalidate` nasazujeme až tady, ne v HTML. S JS si validaci řídí
      reportValidity() níž, ale BEZ JS je nativní kontrola prohlížeče jediná,
      která existuje — s natvrdo zapsaným novalidate projde odeslání bez GDPR
-     souhlasu nebo s překlepem v e-mailu až na server, ten vrátí 422 a 303
-     zpět na statickou stránku s PRÁZDNÝM formulářem. Vyplněná poptávka je
-     pryč a zákazník ji podruhé nepíše. */
+     souhlasu nebo s překlepem v e-mailu až na server. */
   form?.setAttribute('novalidate', '');
   if (form) {
     const status = form.querySelector<HTMLParagraphElement>('[data-form-status]');
     const submitBtn = form.querySelector<HTMLButtonElement>('button[type="submit"]');
     const originalLabel = submitBtn?.textContent ?? '';
-    const sendingText = form.dataset.sendingText || 'Odesílám…';
-    const successText = form.dataset.successText || '';
-    const errorFallback = form.dataset.errorFallback || 'Zprávu se nepodařilo odeslat. Napište prosím přímo na';
-    const fallbackEmail = form.dataset.fallbackEmail || '';
+    // Data atributy se renderují vždy (CZ i EN); natvrdo zapsané české fallbacky
+    // se nikdy nepoužily a jen maskovaly chybějící atribut.
+    const { sendingText = '', successText = '', errorFallback = '', timeoutText = '', fallbackEmail = '' } = form.dataset;
+    let sending = false;
 
-    function setStatus(message: string, kind: 'success' | 'error') {
+    // aria-disabled místo disabled: tlačítko zůstane fokusovatelné (disabled prvek
+    // s fokusem prohlížeč shodí na <body>); dvojí odeslání hlídá příznak `sending`.
+    function setBusy(busy: boolean) {
+      sending = busy;
+      if (!submitBtn) return;
+      submitBtn.setAttribute('aria-disabled', String(busy));
+      submitBtn.textContent = busy ? sendingText : originalLabel;
+    }
+
+    // Bez status.focus(): fokus zůstává na tlačítku, výsledek oznámí živá oblast.
+    function setStatus(kind: 'busy' | 'success' | 'error', message: string, withEmail = false) {
       if (!status) return;
+      status.classList.remove('text-success', 'text-error');
+      if (kind !== 'busy') status.classList.add(kind === 'success' ? 'text-success' : 'text-error');
       status.textContent = message;
-      status.classList.remove('hidden', 'text-success', 'text-error');
-      status.classList.add(kind === 'success' ? 'text-success' : 'text-error');
+      if (withEmail && fallbackEmail) {
+        const a = document.createElement('a');
+        a.href = `mailto:${fallbackEmail}`;
+        a.className = 'underline';
+        a.textContent = fallbackEmail;
+        status.append(' ', a, '.');
+      }
     }
 
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
+      if (sending) return;
       if (!form.reportValidity()) return;
 
+      // Tichý return zůstává (KL-5 vyvráceno): server by na vyplněný honeypot
+      // vrátil ok:true a zákazník by viděl falešný úspěch + falešná GA4 konverze.
       const honeypot = form.elements.namedItem('website') as HTMLInputElement | null;
       if (honeypot?.value) return;
 
-      if (submitBtn) {
-        submitBtn.disabled = true;
-        submitBtn.textContent = sendingText;
-      }
-
+      setBusy(true);
+      setStatus('busy', sendingText);
+      const ctrl = new AbortController();
+      const timer = window.setTimeout(() => ctrl.abort(), TIMEOUT_MS);
       try {
         const res = await fetch(form.action, {
           method: 'POST',
           body: new FormData(form),
-          headers: { 'Accept': 'application/json' },
+          headers: { Accept: 'application/json' },
+          signal: ctrl.signal,
         });
-        const data = await res.json().catch(() => null) as { ok?: boolean; message?: string; error?: string } | null;
-
+        const data = (await res.json().catch(() => null)) as { ok?: boolean; message?: string; error?: string } | null;
         if (res.ok && data?.ok) {
-          setStatus(data.message || successText, 'success');
+          setStatus('success', data.message || successText);
           // Konverze až po potvrzení od serveru — odeslaný formulář, který
           // spadl, není poptávka. Bez souhlasu gtag jen tiše zařadí do fronty.
-          window.gtag?.('event', 'form_submit', {
-            form_name: 'kontakt',
-            page_path: window.location.pathname,
-          });
+          window.gtag?.('event', 'form_submit', { form_name: 'kontakt', page_path: window.location.pathname });
           form.reset();
+        } else if (ctrl.signal.aborted) {
+          // abort během res.json() spolkne .catch → data === null; proto tahle větev před data?.error
+          setStatus('error', timeoutText, true);
+        } else if (data?.error) {
+          setStatus('error', data.error);
         } else {
-          const msg = data?.error || `${errorFallback} ${fallbackEmail}.`;
-          setStatus(msg, 'error');
+          setStatus('error', errorFallback, true);
         }
       } catch {
-        setStatus(`${errorFallback} ${fallbackEmail}.`, 'error');
+        // Po timeoutu může první požadavek na serveru ještě běžet. Razítko rate-limitu
+        // je až za validací, takže nový pokus 429 nemusí dostat a duplikát je možný.
+        // Proto text vyzývá nejdřív zavolat nebo napsat a teprve potom posílat znovu.
+        setStatus('error', ctrl.signal.aborted ? timeoutText : errorFallback, true);
       } finally {
-        if (submitBtn) {
-          submitBtn.disabled = false;
-          submitBtn.textContent = originalLabel;
-        }
+        window.clearTimeout(timer);
+        setBusy(false);
       }
     });
   }
