@@ -426,7 +426,12 @@ ZIP i testovací `error_log` smazány do koše.
 **Oprava záznamu z 10. 9.:** věta „`send.php` na GET vrací 303 … 8. 9. ještě vracel 405 — na serveru
 zřejmě běžela starší verze" nebyla podložená testem. GET vracel starou 405 z LSCache, skript sám 303 vracel.
 
+**Ostrý test** (se souhlasem Daniela): 11. 9. 2026 20:43 jedna označená poptávka přes živý formulář —
+zpráva 2 169 B s odstavcem 1 746 B bez Enteru (starý kód by porušil limit 998 B). Odpověď 200 a zelená
+hláška, `form-log` zapsal `odeslano` bez chyby, čas `+02:00`. Konverze nevznikla (bez souhlasu s cookies
+zůstal `form_submit` jen ve frontě). Doručení a vzhled zprávy potvrdí Martin.
+
 **Otevřené:** obálkový odesílatel (`ENVELOPE_FROM`) zůstává prázdný — zapne se až podle hlaviček skutečně
-doručeného e-mailu (zdroj testovací zprávy z 8. 9. v email.cz). E-maily s háčky v doméně (IDN) `filter_var`
+doručeného e-mailu (zdroj zkušební zprávy z 11. 9. v email.cz). E-maily s háčky v doméně (IDN) `filter_var`
 odmítá — vzácné, zákazník dostane hlášku a může napsat přímo.
 
