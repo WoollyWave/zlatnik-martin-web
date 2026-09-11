@@ -380,3 +380,53 @@ Rozhodnutí Martina ze 10. 9. 2026, předané Danielem.
 **Nasazeno** (71 souborů, ZIP 1,8 MB), `Last-Modified: Thu, 10 Sep 2026 14:20:54 GMT`. Na ostré doméně ověřeno 8 kontrol
 (datum, FAQ a meta CZ/EN, sekce Služby a ceny), JSON-LD validní. ZIP smazán do koše (404).
 
+---
+
+## Krok 11. 9. 2026 — e-mail z formuláře: krizové testy, send.php podle norem, cache LiteSpeedu
+
+Zadání Daniela: projít chyby v e-mailu z formuláře, udělat krizové a smoke testy, na nejtěžší úkoly Fable 5.1.
+
+**Jak se testovalo.** Lokálně PHP 8.3 (stejná řada jako produkce podle hPanelu), `mail()` přesměrovaný
+do souboru přes `sendmail_path`; každý sestavený e-mail hlídaly invarianty (délka řádku, encoded-words,
+CRLF, hlavičky). Sadu 49 útočných případů navrhl Fable 5.1, nálezy prošly adversariálním ověřením.
+Na produkci šly jen požadavky **bez `gdpr`** — souhlas se kontroluje jako poslední před `mail()`,
+takže e-mail odejít nemohl (`form-log` po testech obsahuje jen řádky `honeypot`).
+
+**Co krizové testy našly na nasazeném `send.php`:**
+- řádek těla až 4 000 B při 8bit (RFC 5322: 998) — Exim ≥ 4.95 takovou zprávu vrací, Postfix ji láme uprostřed slova
+- předmět jako jedno encoded-word o 366 znacích (RFC 2047: 75); smíšené CRLF/LF v těle; čas v UTC
+- NUL bajt → nezachycená výjimka a prázdná 500; `name[]` → Martinovi by přišlo jméno „Array"
+- neplatné UTF-8 a BIDI přepínače prošly až do předmětu
+- rate-limit: 7 z 8 souběžných odeslání z jedné IP prošlo
+- **GET `/send.php` servíroval LiteSpeed z cache** (`X-LiteSpeed-Cache: hit`, stará 405) — oddíl 8 `.htaccess`
+  pouštěl do LSCache všechno včetně PHP a přebíjel jeho `Cache-Control: no-store`
+
+**Opraveno v `e49bf69`** (podrobnosti v commit message):
+- `send.php`: tělo quoted-printable s jednotným CRLF, předmět dělený na encoded-words, Europe/Prague;
+  pole místo řetězce → 400, injekce CR/LF/NUL → 400, neplatné UTF-8 se nahradí; rate-limit pod `flock`
+  (8 souběžných → přesně 1 e-mail); IP návštěvníka z e-mailu pryč; bez JS chybová stránka s escapovaným
+  textem zákazníka ke zkopírování
+- **záznam poptávek** `/files/form-log/RRRR-MM.ndjson` (mimo `public_html`, adresář 0700, 90 dní) —
+  `mail()` hlásí jen předání poště, bez záznamu by ztracená poptávka nešla dohledat
+- `ContactForm.astro`: timeout 20 s, `aria-disabled`, `maxlength`/`pattern` podle serveru.
+  **Past Astra:** v atributu v uvozovkách zahodí zpětná lomítka — `pattern=".*\S.*"` se vyrenderoval
+  jako `.*S.*` a formulář by odmítl každé jméno bez velkého S. Proto `pattern={"…\\S…"}`
+- `.htaccess`: PHP vyjmuté z LSCache, `error_log` (výchozí log PHP na hostingu) blokovaný
+
+**Ověřeno:** sandbox 78/78, 0 porušených invariantů, PHP bez warningů. Smoke sada 50/50 lokálně
+a **73/73 na ostré doméně**: GET a cache, původ požadavku, honeypot, injekce, validace, cesta bez JS,
+nic venku (`/error_log` s testovacím souborem → 403, `/form-log/` → 404), 71 souborů bajt po bajtu = dist,
+40 náhodných souborů mimo ZIP přežilo extract, JSON-LD 68 bloků, každý inline skript má hash v CSP,
+hlavičky 16 URL beze změny proti stavu před nasazením. Živý formulář v prohlížeči: JS běží pod CSP,
+odeslání bez souhlasu → hláška serveru, žádná konverze.
+
+**Nasazeno** (73 souborů, ZIP 1,8 MB, sha256 na serveru ověřen), LiteSpeed cache vyčištěná v hPanelu.
+ZIP i testovací `error_log` smazány do koše.
+
+**Oprava záznamu z 10. 9.:** věta „`send.php` na GET vrací 303 … 8. 9. ještě vracel 405 — na serveru
+zřejmě běžela starší verze" nebyla podložená testem. GET vracel starou 405 z LSCache, skript sám 303 vracel.
+
+**Otevřené:** obálkový odesílatel (`ENVELOPE_FROM`) zůstává prázdný — zapne se až podle hlaviček skutečně
+doručeného e-mailu (zdroj testovací zprávy z 8. 9. v email.cz). E-maily s háčky v doméně (IDN) `filter_var`
+odmítá — vzácné, zákazník dostane hlášku a může napsat přímo.
+
