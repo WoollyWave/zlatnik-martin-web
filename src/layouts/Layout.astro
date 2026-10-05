@@ -4,6 +4,7 @@ import '../styles/global.css';
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
 import CookieBanner from '../components/CookieBanner.astro';
+import PostHog from '../components/PostHog.astro';
 import { getLocaleFromUrl, getAlternatePathStrict, useTranslations, type Locale } from '../i18n';
 import { buildSlugMaps } from '../lib/slug-maps';
 import { SITE } from '../data/site';
@@ -195,6 +196,7 @@ const imgType = (url?: string) =>
          Deferred provedení je v basic módu bezpečné: gtag.js se načítá až po souhlasu,
          do té doby gtag() jen řadí do dataLayer fronty. -->
     <script>
+      import { maSouhlas, STARY_SOUHLAS_KLIC } from '../lib/souhlas';
       window.dataLayer = window.dataLayer || [];
       // gtag.js vyžaduje v dataLayer `arguments` objekty — rest parametr (pole) by
       // commandy tiše zahodil. Proto klasická funkce s arguments.
@@ -210,10 +212,12 @@ const imgType = (url?: string) =>
         analytics_storage: 'denied',
         wait_for_update: 500,
       });
+      if (maSouhlas()) {
+        window.gtag!('consent', 'update', { analytics_storage: 'granted' });
+      }
+      // Starý souhlas platil jen pro GA4 (do 5. 10. 2026): smazat, lišta se zeptá znovu.
       try {
-        if (localStorage.getItem('cookie-consent') === 'granted') {
-          window.gtag!('consent', 'update', { analytics_storage: 'granted' });
-        }
+        localStorage.removeItem(STARY_SOUHLAS_KLIC);
       } catch {
         /* private mode bez localStorage — default denied zůstává */
       }
@@ -227,11 +231,13 @@ const imgType = (url?: string) =>
     </main>
     <Footer locale={currentLocale} ctaHeading={ctaHeading} ctaSubtitle={ctaSubtitle} ctaPrimaryLabel={ctaPrimaryLabel} ctaPrimaryHref={ctaPrimaryHref} animate={!noAnimations} />
     <CookieBanner locale={currentLocale} />
+    <PostHog />
 
     <!-- GA gtag.js — Consent Mode v2 BASIC: skript se načte VÝHRADNĚ po souhlasu.
          Bez souhlasu (nebo při odmítnutí) na Google neodejde jediný request.
          Po souhlasu se načítá deferred (interakce/idle) — kritické pro PageSpeed. -->
     <script>
+      import { maSouhlas } from '../lib/souhlas';
       const GA_ID = 'G-4XK17M8XVJ';
 
       function loadGA() {
@@ -246,15 +252,14 @@ const imgType = (url?: string) =>
       }
       // Volá CookieBanner okamžitě po kliknutí na „Souhlasím".
       window.__loadGA = loadGA;
+      // Odvolání souhlasu v běžícím dokumentu (Nastavení cookies v patičce): GA4 už nic nepošle.
+      window.__stopGA = () => {
+        window.gtag?.('consent', 'update', { analytics_storage: 'denied' });
+        (window as unknown as Record<string, unknown>)[`ga-disable-${GA_ID}`] = true;
+      };
 
       // Deferred load jen pro vracející se návštěvníky s dříve uděleným souhlasem.
-      let consent: string | null = null;
-      try {
-        consent = localStorage.getItem('cookie-consent');
-      } catch {
-        /* bez localStorage = bez souhlasu = GA se nenačte */
-      }
-      if (consent === 'granted') {
+      if (maSouhlas()) {
         const triggers = ['scroll', 'click', 'keydown', 'touchstart', 'mousemove'];
         const once = () => {
           triggers.forEach((e) => window.removeEventListener(e, once));
@@ -299,21 +304,35 @@ const imgType = (url?: string) =>
         'tel:': 'tel_click',
         'mailto:': 'email_click',
       };
+      // PostHog (5. 10. 2026): jednotné události pro Signal Loop, vlastnosti jen slugy.
+      const KANAL: Record<string, string> = {
+        tel_click: 'phone',
+        email_click: 'email',
+        whatsapp_click: 'whatsapp',
+      };
 
       document.addEventListener('click', (e) => {
         const target = e.target as Element | null;
+
+        // Hlavní výzvy k akci nesou data-cta se slugem (Button.astro, Nav, Footer).
+        const cta = target?.closest?.('[data-cta]')?.getAttribute('data-cta');
+        if (cta) window.__zlPostHog?.udalost('cta_click', { cta });
+
         const odkaz = target?.closest?.('a[href]') as HTMLAnchorElement | null;
         if (!odkaz) return;
 
         const href = odkaz.getAttribute('href') || '';
+        const mapa = /^https:\/\/(www\.)?google\.com\/maps\//.test(href);
         const akce = href.includes('wa.me')
           ? 'whatsapp_click'
           : KONVERZE[Object.keys(KONVERZE).find((p) => href.startsWith(p)) || ''];
-        if (!akce) return;
+        if (!akce && !mapa) return;
 
         // Na stránce o ochraně údajů je kontakt na správce, ne poptávka.
         if (/^\/(en\/privacy|ochrana-osobnich-udaju)\//.test(window.location.pathname)) return;
 
+        window.__zlPostHog?.udalost('contact_click', { channel: mapa ? 'map' : KANAL[akce ?? ''] });
+        if (!akce) return;
         window.gtag?.('event', akce, { page_path: window.location.pathname });
       });
     </script>
@@ -322,13 +341,8 @@ const imgType = (url?: string) =>
       // Core Web Vitals → GA4. Lazy-load až po idle — nesmí konkurovat LCP/INP měření samému.
       // Gate na souhlas: web-vitals posílá eventy přes gtag, které bez souhlasu stejně
       // neodejdou — bez consentu tedy 6 KB JS vůbec nestahujeme.
-      let vitalsConsent: string | null = null;
-      try {
-        vitalsConsent = localStorage.getItem('cookie-consent');
-      } catch {
-        /* private mode bez localStorage — bez souhlasu, vitals se nenačtou */
-      }
-      if (vitalsConsent === 'granted') {
+      import { maSouhlas } from '../lib/souhlas';
+      if (maSouhlas()) {
         const loadVitals = () => import('../scripts/web-vitals.ts');
         if ('requestIdleCallback' in window) {
           requestIdleCallback(loadVitals, { timeout: 4000 });

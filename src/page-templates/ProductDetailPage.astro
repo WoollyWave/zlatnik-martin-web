@@ -298,8 +298,8 @@ const primaryHeading = goldOnly ? t.goldHeading : t.silverHeading;
 
           <!-- CTA -->
           <div class="mt-8 flex flex-col sm:flex-row gap-4">
-            <Button href={t.ctaHref} variant="primary">{isSold ? t.ctaSoldPrimary : t.ctaPrimary}</Button>
-            <Button href={SITE.whatsapp} variant="secondary">{t.ctaWhatsapp}</Button>
+            <Button cta="produkt-poptavka" href={t.ctaHref} variant="primary">{isSold ? t.ctaSoldPrimary : t.ctaPrimary}</Button>
+            <Button cta="produkt-whatsapp" href={SITE.whatsapp} variant="secondary">{t.ctaWhatsapp}</Button>
           </div>
 
           <p class="mt-4 body-md text-text-secondary">

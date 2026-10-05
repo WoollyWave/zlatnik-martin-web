@@ -435,3 +435,30 @@ zůstal `form_submit` jen ve frontě). Doručení a vzhled zprávy potvrdí Mart
 doručeného e-mailu (zdroj zkušební zprávy z 11. 9. v email.cz). E-maily s háčky v doméně (IDN) `filter_var`
 odmítá — vzácné, zákazník dostane hlášku a může napsat přímo.
 
+
+---
+
+## 5. 10. 2026: PostHog po souhlasu
+
+Kliky, tepelné mapy, hloubka scrollu, web vitals a záznamy průchodu webem s maskovanými poli formuláře,
+jako podklad pro vyhodnocení webu (data si stahuje Signal Loop). Organizace „Zlatnická dílna Praha“
+v PostHog EU, projekt 294701, Martin je Owner.
+
+- `src/components/PostHog.astro`: `posthog-js` 1.435.8 (pevná verze) dynamickým importem až po souhlasu.
+  Data jdou přes spravovanou proxy PostHogu `k3z.zlatnik-martin.cz` (CNAME u Hostingeru), adblokery ji neznají.
+  Úložiště jen localStorage `ph_*`, žádné cookies; IP se neukládá (nastavení projektu).
+- **Nový klíč souhlasu `cookie-consent-2`** (`src/lib/souhlas.ts`): nový dodavatel = lišta se zeptá všech
+  znovu, starý klíč se maže. Text lišty zmiňuje PostHog, lišta je `ph-no-capture`.
+- **Odvolání souhlasu** (čl. 7 odst. 3 GDPR): v patičce tlačítko „Nastavení cookies“ otevře lištu znovu.
+  Odmítnutí nejdřív zastaví PostHog, pak GA4 (`ga-disable`) a smaže `_ga*` a `ph_*`. Do teď odvolat nešlo,
+  ač to zásady slibovaly.
+- Jednotné události pro Signal Loop: `generate_lead` (`form: kontakt`) po potvrzení serveru,
+  `contact_click` (`channel`: phone, email, whatsapp, map), `cta_click` se slugem z `data-cta`
+  (hero, navigace, patička, detail šperku, realizace). Pole formuláře s osobními údaji `ph-no-capture`.
+- CSP: proxy v `script-src` a `connect-src`, `worker-src 'self' blob:` pro nahrávky.
+- Zásady (CZ i EN): bod 2.4 PostHog, cookies, zpracovatelé, odvolání; účinnost od 5. 10. 2026.
+
+**Ověřeno lokálně:** bez souhlasu 0 požadavků na proxy a nic `ph_*`; po souhlasu události v projektu
+(`$pageview`, `$autocapture`, `$web_vitals`, `contact_click`, `cta_click`, `interni = true`);
+po odvolání 0 požadavků a `ph_*` smazané; opětovný souhlas měří znovu. Konzole bez chyb CSP.
+Interní návštěvy: `?interni=1` (zruší `?interni=0`).

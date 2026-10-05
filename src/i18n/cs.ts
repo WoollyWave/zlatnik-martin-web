@@ -40,6 +40,7 @@ export const cs = {
   'footer.contactHeading': 'Kontakt',
   'footer.legalHeading': 'Informace',
   'footer.privacy': 'Ochrana osobních údajů',
+  'footer.cookies': 'Nastavení cookies',
   'footer.copyright': '© {year} Martin Ševr · Zlatnická dílna Praha',
   'footer.designedBy': 'Web: Vilim.One',
   'footer.businessId': 'IČO',

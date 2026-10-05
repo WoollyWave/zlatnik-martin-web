@@ -1,5 +1,6 @@
 ---
-// Cookie banner — GDPR souhlas pro GA4. Skrytý dokud JS nezjistí, že rozhodnutí ještě neexistuje.
+// Cookie banner: GDPR souhlas pro GA4 a PostHog (od 5. 10. 2026). Skrytý, dokud JS nezjistí,
+// že rozhodnutí ještě neexistuje, nebo dokud ho neotevře Nastavení cookies v patičce.
 import type { Locale } from '../i18n';
 
 interface Props {
@@ -10,7 +11,7 @@ const { locale = 'cs' } = Astro.props;
 const t = locale === 'en'
   ? {
       heading: 'Cookies and analytics',
-      body: 'I use Google Analytics to improve this site: anonymous statistics about how you browse. No advertising cookies. More in the',
+      body: 'I use Google Analytics and PostHog to improve this site: statistics about how you move around the pages, where you click and where you leave. What you type into forms is never recorded. No advertising cookies. More in the',
       privacyLabel: 'privacy policy',
       privacyHref: '/en/privacy/',
       decline: 'Decline',
@@ -18,7 +19,7 @@ const t = locale === 'en'
     }
   : {
       heading: 'Cookies a měření návštěvnosti',
-      body: 'Pro zlepšování webu používám Google Analytics: anonymní statistiky o tom, jak se na stránce pohybujete. Žádné reklamní cookies. Více v',
+      body: 'Pro zlepšování webu používám Google Analytics a PostHog: statistiky o tom, jak se po stránkách pohybujete, kam klikáte a kde odcházíte. Obsah vyplněných polí se nikdy nezaznamenává. Žádné reklamní cookies. Více v',
       privacyLabel: 'ochraně osobních údajů',
       privacyHref: '/ochrana-osobnich-udaju/',
       decline: 'Odmítnout',
@@ -26,9 +27,10 @@ const t = locale === 'en'
     };
 ---
 
+<!-- ph-no-capture: klik na Odmítnout by PostHog ještě stihl zaznamenat, lišta do měření nepatří. -->
 <div
   id="cookie-banner"
-  class="fixed bottom-0 inset-x-0 z-[100] invisible opacity-0 translate-y-4 transition-all duration-500 px-4 sm:px-6 pb-4 sm:pb-6"
+  class="ph-no-capture fixed bottom-0 inset-x-0 z-[100] invisible opacity-0 translate-y-4 transition-all duration-500 px-4 sm:px-6 pb-4 sm:pb-6"
   aria-hidden="true"
 >
   <div class="max-w-[1100px] mx-auto pointer-events-auto bg-bg-primary border border-border shadow-soft">
@@ -64,7 +66,7 @@ const t = locale === 'en'
 </div>
 
 <script>
-  const STORAGE_KEY = 'cookie-consent';
+  import { SOUHLAS_KLIC } from '../lib/souhlas';
   const banner = document.getElementById('cookie-banner');
   if (!banner) {
     // Banner missing — fail silently
@@ -81,29 +83,59 @@ const t = locale === 'en'
     };
 
     let decided: string | null = null;
-    try { decided = localStorage.getItem(STORAGE_KEY); } catch (e) {}
+    try { decided = localStorage.getItem(SOUHLAS_KLIC); } catch (e) {}
 
     if (!decided) {
       // Drobné zpoždění aby se stránka načetla a nepřekrývala hero
       window.setTimeout(show, 600);
     }
 
+    // Úložiště měření se maže při KAŽDÉM odmítnutí: mohla ho znovu založit jiná
+    // záložka, která měřila ještě před odvoláním. GA4 má cookies _ga, _ga_<ID> na
+    // doméně bez www, PostHog localStorage a sessionStorage pod ph_<token>_*.
+    // Klíč __ph_opt_in_out_* zůstává: je to jen příznak odmítnutí bez identifikátoru.
+    const smazUlozisteMereni = () => {
+      const domena = location.hostname.replace(/^www\./, '');
+      document.cookie
+        .split(';')
+        .map((c) => c.trim().split('=')[0])
+        .filter((n) => /^(_ga|ph_)/.test(n))
+        .forEach((n) => {
+          ['', `; domain=.${domena}`, `; domain=${domena}`].forEach((d) => {
+            document.cookie = `${n}=; Max-Age=0; path=/${d}`;
+          });
+        });
+      (['localStorage', 'sessionStorage'] as const).forEach((druh) => {
+        try {
+          const u = window[druh];
+          Object.keys(u).filter((k) => /^ph_/.test(k)).forEach((k) => u.removeItem(k));
+        } catch (e) { /* zablokované úložiště: není co mazat */ }
+      });
+    };
+
     const grant = () => {
-      try { localStorage.setItem(STORAGE_KEY, 'granted'); } catch (e) {}
+      try { localStorage.setItem(SOUHLAS_KLIC, 'granted'); } catch (e) {}
       window.gtag?.('consent', 'update', {
         analytics_storage: 'granted',
       });
       // Basic consent mode: gtag.js se načítá až teď — před souhlasem neexistuje.
       window.__loadGA?.();
+      window.__zlPostHog?.start();
       hide();
     };
     const deny = () => {
-      try { localStorage.setItem(STORAGE_KEY, 'denied'); } catch (e) {}
-      // Default už je denied, jen schováme banner
+      // ODVOLÁNÍ (čl. 7 odst. 3 GDPR) i první odmítnutí. PostHog NEJDŘÍV zastavit,
+      // jinak při odchodu ze stránky pošle $pageleave a smazané úložiště zapíše znovu.
+      window.__zlPostHog?.stop();
+      window.__stopGA?.();
+      smazUlozisteMereni();
+      try { localStorage.setItem(SOUHLAS_KLIC, 'denied'); } catch (e) {}
       hide();
     };
 
     document.getElementById('cookie-accept')?.addEventListener('click', grant);
     document.getElementById('cookie-decline')?.addEventListener('click', deny);
+    // Nastavení cookies (patička): lišta se otevře znovu a volbu jde změnit.
+    document.querySelectorAll('[data-cookie-settings]').forEach((el) => el.addEventListener('click', show));
   }
 </script>

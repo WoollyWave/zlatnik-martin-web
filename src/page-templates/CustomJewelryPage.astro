@@ -481,8 +481,8 @@ const jsonLd = graph(
         {t.heroSubtitle}
       </p>
       <div class="mt-10 flex flex-col sm:flex-row gap-4 w-full sm:w-auto" data-anim="up">
-        <Button href="#process" variant="primary">{t.heroCta1}</Button>
-        <Button href={t.pricingAnchor} variant="secondary">{t.heroCta2}</Button>
+        <Button cta="hero-hlavni" href="#process" variant="primary">{t.heroCta1}</Button>
+        <Button cta="hero-vedlejsi" href={t.pricingAnchor} variant="secondary">{t.heroCta2}</Button>
       </div>
 
       <!-- CAD render pod tlačítky — v toku obsahu, takže nikdy nekoliduje
@@ -690,8 +690,8 @@ const jsonLd = graph(
           </div>
 
           <div class="mt-12 flex flex-col sm:flex-row gap-4">
-            <Button href={t.contactHref} variant="primary">{t.secondLifeCta}</Button>
-            <Button href={SITE.whatsapp} variant="secondary">{t.whatsappCta}</Button>
+            <Button cta="druhy-zivot-poptavka" href={t.contactHref} variant="primary">{t.secondLifeCta}</Button>
+            <Button cta="druhy-zivot-whatsapp" href={SITE.whatsapp} variant="secondary">{t.whatsappCta}</Button>
           </div>
         </div>
 
@@ -761,8 +761,8 @@ const jsonLd = graph(
               {t.expressBody}
             </p>
             <div class="mt-8 flex flex-col sm:flex-row gap-4">
-              <Button href={SITE.phoneHref} variant="primary">{t.expressCta1}</Button>
-              <Button href={SITE.whatsapp} variant="secondary">{t.whatsappCta}</Button>
+              <Button cta="expres-zavolat" href={SITE.phoneHref} variant="primary">{t.expressCta1}</Button>
+              <Button cta="expres-whatsapp" href={SITE.whatsapp} variant="secondary">{t.whatsappCta}</Button>
             </div>
           </div>
           <div class="hidden lg:flex items-center justify-center relative" data-anim="scale">

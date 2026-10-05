@@ -41,6 +41,7 @@ export const en = {
   'footer.contactHeading': 'Contact',
   'footer.legalHeading': 'Information',
   'footer.privacy': 'Privacy policy',
+  'footer.cookies': 'Cookie settings',
   'footer.copyright': '© {year} Martin Ševr · Goldsmith workshop, Prague',
   'footer.designedBy': 'Web: Vilim.One',
   'footer.businessId': 'Reg. no.',

@@ -94,7 +94,7 @@ const t = locale === 'en'
       maxlength="120"
       pattern={".*\\S.*"}
       title={t.nameHint}
-      class="w-full px-4 py-3 bg-white border border-border rounded-[2px] text-text-primary body-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-deep focus-visible:border-gold-deep transition-colors duration-200"
+      class="ph-no-capture w-full px-4 py-3 bg-white border border-border rounded-[2px] text-text-primary body-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-deep focus-visible:border-gold-deep transition-colors duration-200"
       placeholder={t.namePlaceholder}
     />
   </div>
@@ -111,7 +111,7 @@ const t = locale === 'en'
       maxlength="200"
       pattern={"[^@\\s.]+(\\.[^@\\s.]+)*@[^@\\s.]+(\\.[^@\\s.]+)+"}
       title={t.emailHint}
-      class="w-full px-4 py-3 bg-white border border-border rounded-[2px] text-text-primary body-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-deep focus-visible:border-gold-deep transition-colors duration-200"
+      class="ph-no-capture w-full px-4 py-3 bg-white border border-border rounded-[2px] text-text-primary body-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-deep focus-visible:border-gold-deep transition-colors duration-200"
       placeholder={t.emailPlaceholder}
     />
   </div>
@@ -124,7 +124,7 @@ const t = locale === 'en'
       name="phone"
       autocomplete="tel"
       maxlength="40"
-      class="w-full px-4 py-3 bg-white border border-border rounded-[2px] text-text-primary body-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-deep focus-visible:border-gold-deep transition-colors duration-200"
+      class="ph-no-capture w-full px-4 py-3 bg-white border border-border rounded-[2px] text-text-primary body-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-deep focus-visible:border-gold-deep transition-colors duration-200"
       placeholder="+420 ..."
     />
   </div>
@@ -135,7 +135,7 @@ const t = locale === 'en'
       id="message"
       name="message"
       rows="5"
-      class="w-full px-4 py-3 bg-white border border-border rounded-[2px] text-text-primary body-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-deep focus-visible:border-gold-deep transition-colors duration-200 resize-vertical"
+      class="ph-no-capture w-full px-4 py-3 bg-white border border-border rounded-[2px] text-text-primary body-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-deep focus-visible:border-gold-deep transition-colors duration-200 resize-vertical"
       placeholder={t.messagePlaceholder}
     ></textarea>
   </div>
@@ -242,6 +242,7 @@ const t = locale === 'en'
           // Konverze až po potvrzení od serveru — odeslaný formulář, který
           // spadl, není poptávka. Bez souhlasu gtag jen tiše zařadí do fronty.
           window.gtag?.('event', 'form_submit', { form_name: 'kontakt', page_path: window.location.pathname });
+          window.__zlPostHog?.udalost('generate_lead', { form: 'kontakt' });
           form.reset();
         } else if (ctrl.signal.aborted) {
           // abort během res.json() spolkne .catch → data === null; proto tahle větev před data?.error

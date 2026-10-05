@@ -92,17 +92,40 @@ import Layout from '../../layouts/Layout.astro';
         <strong>Transfer outside the EU:</strong> Google may process data in the USA. The transfer is covered by EU Standard Contractual Clauses and the EU-U.S. Data Privacy Framework.
       </p>
 
+      <h3>2.4 Website usage analysis: PostHog</h3>
+      <p>
+        If you consent in the cookie banner, I also use PostHog. It shows me where people click, how far they read, where they leave and how fast the pages load. I use this to make the site easier to find your way around.
+      </p>
+      <p>PostHog processes:</p>
+      <ul>
+        <li>Pages visited, clicks and scroll depth</li>
+        <li>Device type, browser, operating system and window size</li>
+        <li>Page load speed</li>
+        <li>A recording of how you move through the page (movement, scrolling and clicks); what you type into form fields is never recorded</li>
+        <li>A random visitor and session identifier (<code>ph_*</code> entries in browser storage)</li>
+      </ul>
+      <p>
+        PostHog does not store your IP address, and I do not link this data to your name or email.
+      </p>
+      <p>
+        <strong>Purpose:</strong> improving the website's content and usability.<br />
+        <strong>Legal basis:</strong> your consent (Art. 6(1)(a) GDPR), the same as for Google Analytics. You can withdraw consent at any time (see section 5).<br />
+        <strong>Retention:</strong> page recordings 30 days, other data no longer than 1 year.<br />
+        <strong>Processor:</strong> PostHog Inc. (2261 Market St., #4008, San Francisco, CA 94114, USA). Data is stored in the EU (Germany). Traffic goes through the subdomain k3z.zlatnik-martin.cz, which Cloudflare operates for PostHog.<br />
+        <strong>Transfer outside the EU:</strong> PostHog may exceptionally process data in the USA (support, subprocessors). The transfer is covered by EU Standard Contractual Clauses and the EU-U.S. Data Privacy Framework.
+      </p>
+
       <h2>3. Cookies</h2>
       <p>Cookies are small text files that the website stores in your browser. I use only two types:</p>
 
       <h3>3.1 Necessary cookies (technical)</h3>
       <p>
-        No consent required: used for basic site function and to store your cookie decision (<code>cookie-consent</code> in localStorage). Without them, the site would ask you again on every visit.
+        No consent required: used for basic site function and to store your cookie decision (<code>cookie-consent-2</code> in localStorage). Without them, the site would ask you again on every visit.
       </p>
 
-      <h3>3.2 Analytics cookies (Google Analytics)</h3>
+      <h3>3.2 Analytics cookies (Google Analytics and PostHog)</h3>
       <p>
-        Only with consent. Set only after you click "Agree" in the cookie banner. If you don't consent, no analytics cookies are set (Consent Mode v2 blocks their activation).
+        Only with consent. Set only after you click "Agree" in the cookie banner. If you don't consent, no analytics cookies are set (Consent Mode v2 blocks their activation) and PostHog is not loaded at all. PostHog uses no cookies; it keeps its <code>ph_*</code> entries in browser storage (localStorage).
       </p>
       <p class="body-md text-text-secondary">
         I don't use advertising cookies, retargeting, or any other marketing tracking.
@@ -115,6 +138,7 @@ import Layout from '../../layouts/Layout.astro';
       <ul>
         <li><strong>Hostinger International Ltd</strong> (Cyprus): web and email hosting</li>
         <li><strong>Google Ireland Limited / Google LLC</strong>: only if you consent to analytics cookies</li>
+        <li><strong>PostHog Inc.</strong> (USA, data in the EU): only if you consent to analytics cookies</li>
         <li><strong>Accountant</strong>: for bookkeeping</li>
       </ul>
       <p>
@@ -130,7 +154,7 @@ import Layout from '../../layouts/Layout.astro';
         <li><strong>Right to restriction</strong> (Art. 18): you can ask that I only store your data without further processing.</li>
         <li><strong>Right to data portability</strong> (Art. 20): you have the right to obtain your data in a structured, machine-readable format.</li>
         <li><strong>Right to object</strong> (Art. 21): to processing based on legitimate interest.</li>
-        <li><strong>Right to withdraw consent</strong> (Art. 7(3)): you can withdraw consent to analytics cookies at any time by deleting the <code>cookie-consent</code> entry in your browser or toggling the cookie banner. Withdrawal does not affect processing that took place before withdrawal.</li>
+        <li><strong>Right to withdraw consent</strong> (Art. 7(3)): you can withdraw consent to analytics cookies at any time with the "Cookie settings" button in the site footer and choosing "Decline". This deletes the Google Analytics and PostHog entries from your browser. Withdrawal does not affect processing that took place before withdrawal.</li>
         <li><strong>Right to lodge a complaint</strong> with a supervisory authority: <a href="https://www.uoou.cz" target="_blank" rel="noopener noreferrer">Czech Office for Personal Data Protection</a>, Pplk. Sochora 27, 170 00 Praha 7.</li>
       </ul>
       <p>
@@ -158,7 +182,7 @@ import Layout from '../../layouts/Layout.astro';
       </p>
 
       <p class="text-text-muted body-md mt-12">
-        Effective: 13 May 2026
+        Effective: 5 October 2026
       </p>
 
       </div>

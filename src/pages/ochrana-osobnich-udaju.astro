@@ -93,6 +93,29 @@ import Layout from '../layouts/Layout.astro';
         <strong>Předání mimo EU:</strong> Google může zpracovávat data v USA. Předání je kryto Standardními smluvními doložkami EU a rámcem EU-U.S. Data Privacy Framework.
       </p>
 
+      <h3>2.4 Analýza používání webu: PostHog</h3>
+      <p>
+        Pokud udělíte souhlas v cookie liště, používám také službu PostHog. Ukazuje mi, kam lidé na stránkách klikají, jak daleko je dočtou, kde odcházejí a jak rychle se stránky načítají. Podle toho web upravuji, aby se v něm dalo snáz zorientovat.
+      </p>
+      <p>PostHog zpracovává:</p>
+      <ul>
+        <li>Navštívené stránky, kliknutí a hloubku posunu stránkou</li>
+        <li>Typ zařízení, prohlížeč, operační systém a velikost okna</li>
+        <li>Rychlost načítání stránek</li>
+        <li>Záznam průchodu stránkou (pohyb, posun a kliknutí); obsah vyplněných polí formuláře se nezaznamenává</li>
+        <li>Náhodný identifikátor návštěvníka a relace (záznamy `ph_*` v úložišti prohlížeče)</li>
+      </ul>
+      <p>
+        IP adresu PostHog neukládá a údaje nespojuji s vaším jménem ani e-mailem.
+      </p>
+      <p>
+        <strong>Účel:</strong> zlepšování obsahu a ovládání webu.<br />
+        <strong>Právní základ:</strong> váš souhlas (čl. 6 odst. 1 písm. a GDPR), stejný jako u Google Analytics. Souhlas můžete kdykoli odvolat (viz bod 5).<br />
+        <strong>Doba uchování:</strong> záznamy průchodu stránkou 30 dní, ostatní údaje nejvýš 1 rok.<br />
+        <strong>Zpracovatel:</strong> PostHog Inc. (2261 Market St., #4008, San Francisco, CA 94114, USA). Data ukládá v EU (Německo). Provoz jde přes subdoménu k3z.zlatnik-martin.cz, kterou pro PostHog zajišťuje Cloudflare.<br />
+        <strong>Předání mimo EU:</strong> PostHog může údaje výjimečně zpracovat v USA (podpora, subdodavatelé). Předání je kryto Standardními smluvními doložkami EU a rámcem EU-U.S. Data Privacy Framework.
+      </p>
+
       <h2>3. Cookies</h2>
       <p>
         Cookies jsou drobné textové soubory, které web ukládá do vašeho prohlížeče. Používám pouze dva typy:
@@ -100,12 +123,12 @@ import Layout from '../layouts/Layout.astro';
 
       <h3>3.1 Nezbytné cookies (technické)</h3>
       <p>
-        Bez souhlasu: slouží k základnímu fungování webu a uložení vašeho rozhodnutí ohledně cookies (`cookie-consent` v localStorage). Bez nich by se vás stránka opakovaně ptala.
+        Bez souhlasu: slouží k základnímu fungování webu a uložení vašeho rozhodnutí ohledně cookies (`cookie-consent-2` v localStorage). Bez nich by se vás stránka opakovaně ptala.
       </p>
 
-      <h3>3.2 Analytické cookies (Google Analytics)</h3>
+      <h3>3.2 Analytické cookies (Google Analytics a PostHog)</h3>
       <p>
-        Pouze se souhlasem. Nastavují se až po kliknutí na „Souhlasím" v cookie liště. Pokud souhlas neudělíte, žádné analytické cookies se nenastavují (Consent Mode v2 blokuje jejich aktivaci).
+        Pouze se souhlasem. Nastavují se až po kliknutí na „Souhlasím" v cookie liště. Pokud souhlas neudělíte, žádné analytické cookies se nenastavují (Consent Mode v2 blokuje jejich aktivaci) a PostHog se vůbec nenačte. PostHog cookies nepoužívá, své záznamy `ph_*` ukládá do úložiště prohlížeče (localStorage).
       </p>
       <p class="body-md text-text-secondary">
         Nepoužívám reklamní cookies, retargeting, ani jiné marketingové sledování.
@@ -118,6 +141,7 @@ import Layout from '../layouts/Layout.astro';
       <ul>
         <li><strong>Hostinger International Ltd</strong> (Kypr): hosting webu a e-mailu</li>
         <li><strong>Google Ireland Limited / Google LLC</strong>: pouze pokud udělíte souhlas s analytickými cookies</li>
+        <li><strong>PostHog Inc.</strong> (USA, data v EU): pouze pokud udělíte souhlas s analytickými cookies</li>
         <li><strong>Účetní</strong>: pro zpracování účetnictví</li>
       </ul>
       <p>
@@ -133,7 +157,7 @@ import Layout from '../layouts/Layout.astro';
         <li><strong>Právo na omezení zpracování</strong> (čl. 18): můžete požádat, abych vaše údaje pouze uchovával, ale dále s nimi nepracoval.</li>
         <li><strong>Právo na přenositelnost</strong> (čl. 20): máte právo získat své údaje ve strukturovaném strojově čitelném formátu.</li>
         <li><strong>Právo vznést námitku</strong> (čl. 21): proti zpracování na základě oprávněného zájmu.</li>
-        <li><strong>Právo odvolat souhlas</strong> (čl. 7 odst. 3): souhlas s analytickými cookies můžete kdykoli odvolat smazáním souboru `cookie-consent` v nastavení prohlížeče nebo přepnutím v cookie liště. Odvolání souhlasu nemá vliv na zpracování, ke kterému došlo před odvoláním.</li>
+        <li><strong>Právo odvolat souhlas</strong> (čl. 7 odst. 3): souhlas s analytickými cookies můžete kdykoli odvolat tlačítkem „Nastavení cookies" v patičce webu a volbou „Odmítnout". Záznamy Google Analytics a PostHogu se tím z vašeho prohlížeče smažou. Odvolání souhlasu nemá vliv na zpracování, ke kterému došlo před odvoláním.</li>
         <li><strong>Právo podat stížnost</strong> u dozorového úřadu: <a href="https://www.uoou.cz" target="_blank" rel="noopener noreferrer">Úřad pro ochranu osobních údajů</a>, Pplk. Sochora 27, 170 00 Praha 7.</li>
       </ul>
       <p>
@@ -161,7 +185,7 @@ import Layout from '../layouts/Layout.astro';
       </p>
 
       <p class="text-text-muted body-md mt-12">
-        Účinnost od: 13. května 2026
+        Účinnost od: 5. října 2026
       </p>
 
       </div>

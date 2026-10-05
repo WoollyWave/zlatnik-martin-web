@@ -6,8 +6,10 @@ interface Props {
   class?: string;
   type?: 'button' | 'submit';
   ariaLabel?: string;
+  /** Slug výzvy k akci pro událost cta_click (PostHog, jednotná pro Signal Loop). */
+  cta?: string;
 }
-const { href, variant = 'primary', class: className = '', type = 'button', ariaLabel } = Astro.props;
+const { href, variant = 'primary', class: className = '', type = 'button', ariaLabel, cta } = Astro.props;
 
 const base = 'inline-flex items-center justify-center font-sans font-medium transition-[background-color,color,border-color,box-shadow] duration-300 cursor-pointer';
 
@@ -21,12 +23,12 @@ const classes = `${variants[variant]} ${className}`.trim();
 ---
 
 {href ? (
-  <a href={href} class={classes} aria-label={ariaLabel}>
+  <a href={href} class={classes} aria-label={ariaLabel} data-cta={cta}>
     <slot />
     {variant === 'text' && <IconArrowUpRight class="w-3.5 h-3.5" />}
   </a>
 ) : (
-  <button type={type} class={classes} aria-label={ariaLabel}>
+  <button type={type} class={classes} aria-label={ariaLabel} data-cta={cta}>
     <slot />
   </button>
 )}

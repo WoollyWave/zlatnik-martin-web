@@ -44,7 +44,11 @@ export default defineConfig({
         "default-src 'self'",
         "img-src 'self' data: https://www.googletagmanager.com https://*.google-analytics.com https://*.googletagmanager.com",
         "font-src 'self'",
-        "connect-src 'self' https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com",
+        // k3z.zlatnik-martin.cz = spravovaná proxy PostHogu (5. 10. 2026, src/components/PostHog.astro):
+        // hity, vzdálená konfigurace a rozšíření (nahrávky, web vitals) jdou přes ni.
+        "connect-src 'self' https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com https://k3z.zlatnik-martin.cz",
+        // Nahrávky PostHogu komprimují data ve web workeru z blob: adresy.
+        "worker-src 'self' blob:",
         'frame-src https://www.google.com https://maps.google.com',
         "base-uri 'self'",
         "form-action 'self' mailto:",
@@ -53,7 +57,8 @@ export default defineConfig({
       ],
       scriptDirective: {
         // gtag.js se injektuje dynamicky → potřebuje explicitní doménu (hash nestačí).
-        resources: ["'self'", 'https://www.googletagmanager.com', 'https://*.googletagmanager.com'],
+        // PostHog dotahuje rozšíření (nahrávky, web vitals, dead clicks) z proxy jako skripty.
+        resources: ["'self'", 'https://www.googletagmanager.com', 'https://*.googletagmanager.com', 'https://k3z.zlatnik-martin.cz'],
       },
       styleDirective: {
         resources: ["'self'"],

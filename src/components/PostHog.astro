@@ -1,0 +1,112 @@
+---
+// PostHog (EU cloud, 5. 10. 2026): kliky, tepelné mapy, hloubka scrollu, web vitals
+// a záznamy průchodu webem s maskovanými poli formuláře.
+//
+// SOUHLAS: stejná kategorie jako GA4 (CookieBanner.astro). Do souhlasu se knihovna
+// nestahuje (dynamický import), neodchází žádný požadavek a nic se neukládá.
+// Lišta volá window.__zlPostHog.start() po „Souhlasím" a stop() při odmítnutí;
+// stop() musí proběhnout PŘED mazáním ph_* (jinak PostHog při odchodu ze stránky
+// pošle $pageleave a smazaný záznam zapíše znovu, ověřeno u Ma Maison 30. 9. 2026).
+//
+// ÚLOŽIŠTĚ: jen localStorage pod ph_<token>_*, žádné cookies. opt_out_capturing()
+// s opt_out_persistence_by_default úložiště po odvolání nepoužívá.
+//
+// PROXY: k3z.zlatnik-martin.cz je spravovaná proxy PostHogu (CNAME v DNS u Hostingeru),
+// adblokery ji neznají. CSP ji má v script-src a connect-src (astro.config.mjs),
+// nahrávky potřebují worker-src blob:.
+---
+
+<script>
+  import type { PostHog } from 'posthog-js';
+  import { maSouhlas } from '../lib/souhlas';
+
+  // Veřejný token projektu zlatnik-martin.cz (organizace Zlatnická dílna Praha).
+  // Slouží jen k zápisu událostí, obdoba ID GA4.
+  const TOKEN = 'phc_kHmc8qJdhExptyS99QtbNShKkhzcLnSrbLDX5tFsbQYr';
+  const PROXY = 'https://k3z.zlatnik-martin.cz';
+  const INTERNI_KLIC = 'zl-interni';
+
+  let ph: PostHog | null = null;
+  let nacitani: Promise<PostHog | null> | null = null;
+  let bezi = false;
+
+  // Interní provoz: návštěva s ?interni=1 si příznak zapamatuje (?interni=0 ho zruší)
+  // a události nesou interni=true, takže je filtr v PostHogu vyřadí z přehledů.
+  try {
+    const param = new URLSearchParams(location.search).get('interni');
+    if (param === '1') localStorage.setItem(INTERNI_KLIC, '1');
+    if (param === '0') localStorage.removeItem(INTERNI_KLIC);
+  } catch {
+    /* bez localStorage se interní provoz neoznačí */
+  }
+  const interni = () => {
+    try { return localStorage.getItem(INTERNI_KLIC) === '1'; } catch { return false; }
+  };
+
+  const nacti = () => (nacitani ??= import('posthog-js')
+    .then(({ default: posthog }) => {
+      posthog.init(TOKEN, {
+        api_host: PROXY,
+        ui_host: 'https://eu.posthog.com',
+        defaults: '2026-08-30',
+        persistence: 'localStorage',
+        person_profiles: 'identified_only', // identify() se nevolá, návštěvníci zůstanou anonymní
+        autocapture: true,                  // podklad klikové tepelné mapy
+        capture_pageview: 'history_change',
+        capture_pageleave: true,            // podklad hloubky scrollu
+        capture_heatmaps: true,
+        capture_dead_clicks: true,
+        rageclick: true,
+        capture_performance: true,          // web vitals: LCP, INP, CLS, FCP
+        session_recording: { maskAllInputs: true, recordBody: false, recordHeaders: false },
+        opt_out_persistence_by_default: true,
+        disable_surveys: true,
+      });
+      if (interni()) posthog.register({ interni: true });
+      ph = posthog;
+      return posthog;
+    })
+    // Knihovna se nestáhla (síť, blokátor): při dalším souhlasu zkusit znovu.
+    .catch(() => { nacitani = null; return null; }));
+
+  const start = () => {
+    if (bezi) return;
+    bezi = true;
+    void nacti().then((p) => {
+      if (!p) return;
+      // Odvoláno během stahování knihovny.
+      if (!bezi) { p.opt_out_capturing(); return; }
+      // Dřívější odvolání v tomto prohlížeči nesmí přebít nový souhlas z lišty.
+      // init() pak zobrazení stránky nezapsal, proto ho zapsat ručně.
+      if (p.has_opted_out_capturing()) {
+        p.opt_in_capturing({ captureEventName: false });
+        p.capture('$pageview');
+      }
+    });
+  };
+
+  const stop = () => {
+    bezi = false;
+    ph?.opt_out_capturing();
+  };
+
+  window.__zlPostHog = {
+    start,
+    stop,
+    // Vlastní události (generate_lead, contact_click, cta_click; jednotné pro Signal Loop).
+    // Beacon: klik na telefon nebo WhatsApp hned opouští stránku a běžný požadavek by se ztratil.
+    udalost: (nazev, vlastnosti) => {
+      if (!bezi || !ph) return;
+      try { ph.capture(nazev, vlastnosti, { transport: 'sendBeacon' }); } catch { /* měření nesmí nic rozbít */ }
+    },
+  };
+
+  // Vracející se návštěvník se souhlasem: knihovnu stáhnout až v klidu, nesmí brzdit LCP.
+  if (maSouhlas()) {
+    if ('requestIdleCallback' in window) {
+      requestIdleCallback(start, { timeout: 3000 });
+    } else {
+      setTimeout(start, 2000);
+    }
+  }
+</script>
