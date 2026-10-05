@@ -17,12 +17,19 @@ zlatnikmartin@email.cz). Fotky Betty. Staging `vilim.sbs`. Varianta na Webflow j
 - Upload přes hPanel → File Manager: ZIP jen změněných souborů, Extract do `public_html` s přepsáním
   (slučuje, nic nemaže). **Nahraný ZIP pak smazat** — v `public_html` je veřejně stažitelný; v mazacím
   dialogu je „Skip trash bin" předem zaškrtnuté, odškrtnout. Přihlášení do hPanelu dělá Daniel.
+- Místo ZIPu jde i SSH (`u631572809@147.93.92.199`, port 65002, klíč `~/.ssh/pragointer_ed25519`):
+  `rsync -rct dist/ …:domains/zlatnik-martin.cz/public_html/` bez `--delete`, předtím `-n` jako náhled
+  (5. 10. 2026 ověřeno; HTML LiteSpeed necachuje, čištění cache nebylo potřeba).
 - `.htaccess` je skrytý a nese redirecty, CSP, cache i staging guard — při uploadu nesmí vypadnout.
   LiteSpeed ignoruje `Header … env=` (noindex jednou šel i na produkci) — host-based logika jen přes mod_rewrite.
 - Hostinger CDN (hcdn) je vypnutý, degradoval HTTP/3 — ověřit po každé migraci.
 - Stav se ověřuje curlem proti ostré doméně, ne proti gitu ani File Manageru.
 - Poptávky se logují mimo web do `/files/form-log/RRRR-MM.ndjson` (0700, 90 dní) — důkaz, když zákazník
   tvrdí, že psal, a Martinovi nic nepřišlo.
+- **Po každém nahrání `node scripts/oznam-nasazeni.mjs`** (Signal Loop si nasazení zapíše k výsledkům;
+  tajemství v `~/.config/signal-loop/deploy-zlatnik.secret`). Denní součty poptávek z form-log posílá
+  `server/signal-loop-push.php`, nasazený mimo web do `~/domains/zlatnik-martin.cz/signal-loop/`
+  (cron hPanelu `30 0 * * *` UTC; počty bez jmen a textů). Po změně skriptu ho nahrát znovu přes SSH.
 
 ## Web a obsah
 

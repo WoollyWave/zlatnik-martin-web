@@ -33,3 +33,4 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+.claude/settings.local.json
