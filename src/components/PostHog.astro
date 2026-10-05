@@ -50,7 +50,9 @@
         ui_host: 'https://eu.posthog.com',
         defaults: '2026-08-30',
         persistence: 'localStorage',
-        person_profiles: 'identified_only', // identify() se nevolá, návštěvníci zůstanou anonymní
+        // Profil i pro anonymní návštěvníky (5. 10. 2026, Daniel: maximum měření): kohorty,
+        // retence a stickiness po lidech. identify() se nevolá, profil nenese jméno ani e-mail.
+        person_profiles: 'always',
         autocapture: true,                  // podklad klikové tepelné mapy
         capture_pageview: 'history_change',
         capture_pageleave: true,            // podklad hloubky scrollu
@@ -58,9 +60,12 @@
         capture_dead_clicks: true,
         rageclick: true,
         capture_performance: true,          // web vitals: LCP, INP, CLS, FCP
+        // Těla a hlavičky požadavků nikdy, ani když je zapne UI: POST formuláře nese jméno a e-mail.
+        // Konzole a časování požadavků se nahrávají podle nastavení projektu.
         session_recording: { maskAllInputs: true, recordBody: false, recordHeaders: false },
         opt_out_persistence_by_default: true,
-        disable_surveys: true,
+        // Dotazníky povolené (surveys_opt_in v projektu). Pozor: první dotazník ověřit proti CSP,
+        // PostHog vkládá styly, které hashová CSP (astro.config.mjs) může zablokovat.
       });
       if (interni()) posthog.register({ interni: true });
       ph = posthog;

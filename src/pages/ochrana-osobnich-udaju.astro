@@ -101,17 +101,18 @@ import Layout from '../layouts/Layout.astro';
       <ul>
         <li>Navštívené stránky, kliknutí a hloubku posunu stránkou</li>
         <li>Typ zařízení, prohlížeč, operační systém a velikost okna</li>
-        <li>Rychlost načítání stránek</li>
+        <li>Přibližná poloha (země, město) odhadnutá z IP adresy</li>
+        <li>Rychlost načítání stránek a chyby, které stránka v prohlížeči hlásí</li>
         <li>Záznam průchodu stránkou (pohyb, posun a kliknutí); obsah vyplněných polí formuláře se nezaznamenává</li>
         <li>Náhodný identifikátor návštěvníka a relace (záznamy `ph_*` v úložišti prohlížeče)</li>
       </ul>
       <p>
-        IP adresu PostHog neukládá a údaje nespojuji s vaším jménem ani e-mailem.
+        Samotnou IP adresu PostHog neukládá a údaje nespojuji s vaším jménem ani e-mailem.
       </p>
       <p>
         <strong>Účel:</strong> zlepšování obsahu a ovládání webu.<br />
         <strong>Právní základ:</strong> váš souhlas (čl. 6 odst. 1 písm. a GDPR), stejný jako u Google Analytics. Souhlas můžete kdykoli odvolat (viz bod 5).<br />
-        <strong>Doba uchování:</strong> záznamy průchodu stránkou 30 dní, ostatní údaje nejvýš 1 rok.<br />
+        <strong>Doba uchování:</strong> záznamy průchodu stránkou 90 dní, ostatní údaje nejvýš 7 let.<br />
         <strong>Zpracovatel:</strong> PostHog Inc. (2261 Market St., #4008, San Francisco, CA 94114, USA). Data ukládá v EU (Německo). Provoz jde přes subdoménu k3z.zlatnik-martin.cz, kterou pro PostHog zajišťuje Cloudflare.<br />
         <strong>Předání mimo EU:</strong> PostHog může údaje výjimečně zpracovat v USA (podpora, subdodavatelé). Předání je kryto Standardními smluvními doložkami EU a rámcem EU-U.S. Data Privacy Framework.
       </p>

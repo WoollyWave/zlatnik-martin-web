@@ -462,3 +462,11 @@ v PostHog EU, projekt 294701, Martin je Owner.
 (`$pageview`, `$autocapture`, `$web_vitals`, `contact_click`, `cta_click`, `interni = true`);
 po odvolání 0 požadavků a `ph_*` smazané; opětovný souhlas měří znovu. Konzole bez chyb CSP.
 Interní návštěvy: `?interni=1` (zruší `?interni=0`).
+
+### 5. 10. 2026 večer: maximum měření (karta v organizaci)
+
+Daniel přidal do organizace kartu, všechny produkty mají limit 0 USD (platí jen bezplatné množství,
+nad něj se data zahodí). V projektu: tepelné mapy ze všech stránek, konzole v nahrávkách, nahrávky
+90 dní, dotazníky povolené, filtr botů. V kódu `person_profiles: 'always'` (kohorty, retence po lidech;
+`identify()` se dál nevolá). Těla a hlavičky požadavků se nenahrávají: POST formuláře nese jméno a e-mail.
+Zásady: poloha odhadnutá z IP, chyby stránky, nahrávky 90 dní, ostatní údaje nejvýš 7 let (placený tarif).
