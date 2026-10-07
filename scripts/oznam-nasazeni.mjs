@@ -32,7 +32,8 @@ const payload = {
   tool: 'other', // ZIP přes hPanel File Manager
   ref: 'main',
   commit: values.commit ?? git('rev-parse', 'HEAD'),
-  summary: (values.summary ?? git('log', '-1', '--pretty=%s')).slice(0, 200),
+  // po znacích, ne po jednotkách UTF-16: rozpůlené emoji by Postgres odmítl a server vrátil 500
+  summary: Array.from(values.summary ?? git('log', '-1', '--pretty=%s')).slice(0, 200).join(''),
 }
 if (!values.at) {
   const actor = git('config', 'user.email')
